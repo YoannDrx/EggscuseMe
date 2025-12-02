@@ -171,6 +171,9 @@ export const auth = betterAuth({
 
       organizationCreation: {
         async afterCreate(data) {
+          // Skip Stripe customer creation if not configured (will throw at runtime if used)
+          if (!env.STRIPE_SECRET_KEY) return;
+
           const stripeCustomer = await stripe.customers.create({
             email: data.user.email,
             name: data.organization.name,
