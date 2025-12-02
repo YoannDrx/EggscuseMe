@@ -7,6 +7,7 @@ EggscuseMe is a web application that helps you manage the freshness of your eggs
 ## The Problem
 
 Every year, millions of eggs are thrown away due to confusion about expiration dates and optimal usage. People don't know:
+
 - When eggs are truly expired vs. just past their "best by" date
 - Which cooking method is best for eggs at different stages of freshness
 - How to track multiple egg boxes in their fridge
@@ -14,6 +15,7 @@ Every year, millions of eggs are thrown away due to confusion about expiration d
 ## The Solution
 
 EggscuseMe provides:
+
 - **Virtual Fridge**: Track all your egg boxes with color-coded freshness indicators
 - **Smart Recommendations**: Know exactly what to cook based on egg freshness
 - **Intelligent Timer**: Get perfect cooking times adjusted for egg size and temperature
@@ -21,12 +23,12 @@ EggscuseMe provides:
 
 ## Egg Freshness Rules
 
-| Period | Status | Recommended Use |
-|--------|--------|-----------------|
-| Day 0-9 | Extra-fresh | Soft-boiled, poached, raw (mayonnaise, mousse) |
-| Day 10-21 | Fresh | Fried, scrambled, omelette, baking |
-| Day 22-28 | Cook thoroughly | Hard-boiled only |
-| Day 29+ | Expired | Discard |
+| Period    | Status          | Recommended Use                                |
+| --------- | --------------- | ---------------------------------------------- |
+| Day 0-9   | Extra-fresh     | Soft-boiled, poached, raw (mayonnaise, mousse) |
+| Day 10-21 | Fresh           | Fried, scrambled, omelette, baking             |
+| Day 22-28 | Cook thoroughly | Hard-boiled only                               |
+| Day 29+   | Expired         | Discard                                        |
 
 ## Tech Stack
 
@@ -109,11 +111,13 @@ pnpm test:e2e:ci  # Run e2e tests
 ## Features
 
 ### Free Plan
+
 - Track up to 2 egg boxes
 - Basic timer
 - Freshness recommendations
 
 ### Premium Plan (2.99/month)
+
 - Unlimited egg boxes
 - Full consumption history
 - Detailed statistics
@@ -128,7 +132,3 @@ Contributions are welcome! Please read our contributing guidelines before submit
 ## License
 
 MIT License - see LICENSE file for details.
-
----
-
-Built with [NOW.TS](https://nowts.app) boilerplate.
