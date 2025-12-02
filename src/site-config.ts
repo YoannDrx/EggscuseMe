@@ -1,22 +1,23 @@
 export const SiteConfig = {
-  title: "NOW.TS",
-  description: "Collect and showcase powerful video and text testimonials",
-  prodUrl: "https://demo.nowts.app",
-  appId: "nowts",
-  domain: "demo.nowts.app",
+  title: "EggscuseMe",
+  description:
+    "Stop throwing away your eggs. Track freshness, get cooking recommendations, and reduce food waste.",
+  prodUrl: "https://eggscuseme.app",
+  appId: "eggscuseme",
+  domain: "eggscuseme.app",
   appIcon: "/images/icon.png",
   company: {
-    name: "NOW.TS LLC",
-    address: "421 Rue de Paris, France", // Remove if not needed
+    name: "EggscuseMe",
+    address: "Paris, France",
   },
   brand: {
-    primary: "#007291", // You can adjust this to your brand color
+    primary: "#D4A853", // Golden egg yolk color
   },
   team: {
-    image: "https://melvynx.com/images/me/twitter-en.jpg",
-    website: "https://melvynx.com",
-    twitter: "https://twitter.com/melvyn_me",
-    name: "Melvynx",
+    image: "",
+    website: "",
+    twitter: "",
+    name: "EggscuseMe Team",
   },
   features: {
     /**
@@ -31,5 +32,17 @@ export const SiteConfig = {
      * The logic is located in middleware.ts
      */
     enableLandingRedirection: true as boolean,
+  },
+
+  // EggscuseMe-specific config
+  freshness: {
+    extraFreshDays: 9, // Day 0-9: Extra-fresh
+    freshDays: 21, // Day 10-21: Fresh
+    cookThoroughlyDays: 28, // Day 22-28: Cook thoroughly
+    // Day 29+: Expired
+  },
+
+  freePlan: {
+    maxEggBoxes: 2, // Free users can track up to 2 egg boxes
   },
 };

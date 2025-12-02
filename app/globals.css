@@ -44,6 +44,16 @@
   --color-info: var(--info);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  /* EggscuseMe Freshness Colors */
+  --color-fresh-extra: var(--fresh-extra);
+  --color-fresh-extra-foreground: var(--fresh-extra-foreground);
+  --color-fresh: var(--fresh);
+  --color-fresh-foreground: var(--fresh-foreground);
+  --color-fresh-cook: var(--fresh-cook);
+  --color-fresh-cook-foreground: var(--fresh-cook-foreground);
+  --color-expired: var(--expired);
+  --color-expired-foreground: var(--expired-foreground);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -136,6 +146,16 @@
   --warning-foreground: hsl(24 97% 93%);
   --info: hsl(221.2 83.2% 53.3%);
   --info-foreground: hsl(210 40% 98%);
+
+  /* EggscuseMe Freshness Colors (Light Mode) */
+  --fresh-extra: oklch(0.70 0.20 145);           /* Vibrant green - Extra-fresh */
+  --fresh-extra-foreground: oklch(0.98 0.01 145);
+  --fresh: oklch(0.75 0.15 90);                  /* Golden yellow - Fresh */
+  --fresh-foreground: oklch(0.20 0.02 60);
+  --fresh-cook: oklch(0.65 0.18 30);             /* Orange - Cook thoroughly */
+  --fresh-cook-foreground: oklch(0.98 0.01 30);
+  --expired: oklch(0.55 0.12 25);                /* Red-brown - Expired */
+  --expired-foreground: oklch(0.98 0.01 25);
 }
 
 .dark {
@@ -201,6 +221,16 @@
   --warning-foreground: hsl(24deg 97% 93.2%);
   --info: hsl(217.2 91.2% 59.8%);
   --info-foreground: hsl(222.2 47.4% 11.2%);
+
+  /* EggscuseMe Freshness Colors (Dark Mode - more vibrant) */
+  --fresh-extra: oklch(0.72 0.18 145);           /* Vibrant green - Extra-fresh */
+  --fresh-extra-foreground: oklch(0.15 0.02 145);
+  --fresh: oklch(0.78 0.14 90);                  /* Golden yellow - Fresh */
+  --fresh-foreground: oklch(0.15 0.02 60);
+  --fresh-cook: oklch(0.68 0.16 30);             /* Orange - Cook thoroughly */
+  --fresh-cook-foreground: oklch(0.15 0.02 30);
+  --expired: oklch(0.58 0.14 25);                /* Red-brown - Expired */
+  --expired-foreground: oklch(0.98 0.01 25);
 }
 
 @layer base {

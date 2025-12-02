@@ -2,9 +2,39 @@
 
 This file provides guidance to AI Agents.
 
-## About the project <NAME>
+## About the project EggscuseMe
 
-If you read this, ask question about the project to fill this part. You need to describe what is the purpose of the project, main feature and goals.
+**EggscuseMe** is a web application that helps users manage the freshness of their eggs, avoid food waste, and cook eggs optimally based on their laying date.
+
+### Problem Solved
+- Confusion about egg expiration dates leads to unnecessary waste
+- People don't know which cooking method suits eggs at different freshness levels
+- No easy way to track multiple egg boxes in the fridge
+
+### Main Features
+1. **Virtual Fridge**: Track egg boxes with color-coded freshness indicators
+2. **Smart Recommendations**: Cooking suggestions based on egg freshness
+3. **Intelligent Timer**: Cooking times adjusted for egg size/temperature
+4. **Anti-Waste Statistics**: Track savings and consumption patterns
+5. **Family Sharing**: Share fridge with family/roommates via Organizations
+
+### Business Model
+- **Free Plan**: 2 egg boxes max, basic features
+- **Premium Plan** (2.99/month): Unlimited boxes, full history, notifications, recipes
+
+### Egg Freshness Rules (Core Business Logic)
+| Period | Status | Color | Recommended Use |
+|--------|--------|-------|-----------------|
+| Day 0-9 | Extra-fresh | Green | Soft-boiled, poached, raw (mayo, mousse) |
+| Day 10-21 | Fresh | Yellow | Fried, scrambled, omelette, baking |
+| Day 22-28 | Cook thoroughly | Orange/Red | Hard-boiled only |
+| Day 29+ | Expired | Gray | Discard |
+
+### Technical Decisions
+- **i18n**: French (default) + English via next-intl
+- **Theme**: Dark mode by default, light mode available
+- **Design System**: Complete token-based system (no hardcoded values)
+- **Multi-tenant**: Uses Organization system for family sharing
 
 ## Development Commands
 
@@ -210,3 +240,53 @@ This is **NON-NEGOTIABLE**. Do not skip this step under any circumstances. Readi
 
 - Never use emojis (prefer Lucide Icon for illustration)
 - Never use gradients unless explicitly asked by user
+
+## Design System
+
+### Principles
+- **NO hardcoded values** - Always use CSS tokens
+- **Dark mode by default** - `defaultTheme="dark"` in providers.tsx
+- **Semantic naming** - Use `bg-primary` not `bg-blue-500`
+
+### Color Tokens (Freshness-specific)
+```css
+--color-fresh-extra   /* Green - Extra-fresh eggs */
+--color-fresh         /* Yellow - Fresh eggs */
+--color-fresh-cook    /* Orange - Cook thoroughly */
+--color-expired       /* Red/Gray - Expired */
+```
+
+### Key Files
+- `/app/globals.css` - All CSS tokens (colors, spacing, radius, shadows)
+- `/tailwind.config.ts` - Tailwind mapping to CSS tokens
+- `/app/providers.tsx` - Theme configuration (dark mode default)
+
+### Usage Examples
+```tsx
+// Freshness badge
+<Badge className="bg-fresh-extra text-fresh-extra-foreground">Extra-frais</Badge>
+
+// Using tokens
+<div className="p-[var(--space-4)] rounded-card bg-card shadow-md">
+```
+
+## EggscuseMe-specific Components
+
+### Core Components (to create in `/src/features/eggs/`)
+- `EggBoxCard` - Card displaying egg box with freshness indicator
+- `FreshnessGauge` - Visual gauge (green/yellow/orange/red)
+- `CookingRecommendation` - Suggestions based on freshness
+- `EggTimer` - Smart cooking timer
+
+### Freshness Calculation
+```typescript
+// src/features/eggs/lib/freshness-calculator.ts
+function getFreshnessStatus(layingDate: Date): FreshnessStatus {
+  const daysOld = differenceInDays(new Date(), layingDate);
+
+  if (daysOld <= 9) return { status: 'extra-fresh', color: 'green' };
+  if (daysOld <= 21) return { status: 'fresh', color: 'yellow' };
+  if (daysOld <= 28) return { status: 'cook-thoroughly', color: 'orange' };
+  return { status: 'expired', color: 'gray' };
+}
+```

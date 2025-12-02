@@ -1,16 +1,18 @@
 import { buttonVariants } from "@/components/ui/button";
+import { getOrgEggBoxesAction } from "@/features/eggs";
 import {
   Layout,
   LayoutActions,
   LayoutContent,
+  LayoutDescription,
   LayoutHeader,
   LayoutTitle,
 } from "@/features/page/layout";
-import { hasPermission } from "@/lib/auth/auth-org";
+import { Timer } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import InformationCards from "./information-cards";
-import { SubscribersChart } from "./subscribers-charts";
+import { EggBoxGrid } from "./egg-box-grid";
+import { EggStatsCards } from "./egg-stats-cards";
 
 export default function Page(props: PageProps<"/orgs/[orgSlug]">) {
   return (
@@ -22,27 +24,33 @@ export default function Page(props: PageProps<"/orgs/[orgSlug]">) {
 
 async function RoutePage(props: PageProps<"/orgs/[orgSlug]">) {
   const params = await props.params;
+  const result = await getOrgEggBoxesAction();
+  const eggBoxes = result.data?.eggBoxes ?? [];
 
   return (
     <Layout size="lg">
       <LayoutHeader>
-        <LayoutTitle>Dashboard</LayoutTitle>
+        <LayoutTitle>My Fridge</LayoutTitle>
+        <LayoutDescription>
+          Track your eggs and reduce food waste
+        </LayoutDescription>
       </LayoutHeader>
       <LayoutActions>
-        {(await hasPermission({
-          member: ["create"],
-        })) ? (
-          <Link
-            href={`/orgs/${params.orgSlug}/settings/members`}
-            className={buttonVariants({ variant: "outline" })}
-          >
-            Invite member
-          </Link>
-        ) : null}
+        <Link
+          href={`/orgs/${params.orgSlug}/timer`}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          <Timer className="mr-2 size-4" />
+          Cooking Timer
+        </Link>
       </LayoutActions>
       <LayoutContent className="flex flex-col gap-4 lg:gap-8">
-        <InformationCards />
-        <SubscribersChart />
+        <Suspense
+          fallback={<div className="bg-muted h-32 animate-pulse rounded-lg" />}
+        >
+          <EggStatsCards />
+        </Suspense>
+        <EggBoxGrid eggBoxes={eggBoxes} />
       </LayoutContent>
     </Layout>
   );

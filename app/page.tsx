@@ -1,21 +1,14 @@
-import { EmailFormSection } from "@/features/email/email-form-section";
-import { BentoGridSection } from "@/features/landing/bento-section";
-import { CTASectionCard } from "@/features/landing/cta/cta-card-section";
-import { CTAImageSection } from "@/features/landing/cta/cta-image-section";
-import { CtaSection } from "@/features/landing/cta/cta-section";
+import { CircleSvg } from "@/components/svg/circle-svg";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FAQSection } from "@/features/landing/faq-section";
-import { FeaturesSection } from "@/features/landing/feature-section";
-import { Hero } from "@/features/landing/hero";
 import { LandingHeader } from "@/features/landing/landing-header";
-import { PainSection } from "@/features/landing/pain";
-import { ReviewGrid } from "@/features/landing/review/review-grid";
-import { ReviewSingle } from "@/features/landing/review/review-single";
-import { ReviewTriple } from "@/features/landing/review/review-triple";
 import { SectionDivider } from "@/features/landing/section-divider";
-import { StatsSection } from "@/features/landing/stats-section";
 import { Footer } from "@/features/layout/footer";
 import { Pricing } from "@/features/plans/pricing-section";
-import Image from "next/image";
+import { Typography } from "@/components/nowts/typography";
+import { Egg, Clock, TrendingDown, Sparkles, Timer, Users } from "lucide-react";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -24,245 +17,337 @@ export default function HomePage() {
 
       <LandingHeader />
 
-      <Hero />
+      {/* Hero Section */}
+      <section className="relative isolate flex flex-col">
+        <div className="bg-grid absolute inset-0 [mask-image:linear-gradient(180deg,transparent,var(--foreground),transparent)]"></div>
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        >
+          <div
+            style={{
+              clipPath:
+                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            }}
+            className="from-primary relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr to-amber-400 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+          />
+        </div>
+        <main className="relative py-24 sm:py-32 lg:pb-40">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <Typography
+                variant="h1"
+                className="text-5xl font-semibold tracking-tight text-balance sm:text-7xl lg:text-7xl"
+              >
+                Stop throwing away your{" "}
+                <span className="relative inline-block">
+                  <span>eggs</span>
+                  <CircleSvg className="fill-primary absolute inset-0" />
+                </span>
+              </Typography>
+              <Typography
+                variant="large"
+                className="text-muted-foreground mt-8 text-lg font-medium text-pretty sm:text-xl/8"
+              >
+                Track freshness, get cooking recommendations, and reduce food
+                waste. Know exactly what to cook based on your eggs&apos; age.
+              </Typography>
+              <div className="mt-10 flex items-center justify-center gap-x-6">
+                <Link
+                  href="/auth/signin"
+                  className={buttonVariants({ size: "lg", variant: "default" })}
+                >
+                  Create my free fridge
+                </Link>
+                <Link
+                  href="#features"
+                  className={buttonVariants({ size: "lg", variant: "link" })}
+                >
+                  Learn more <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
 
-      <StatsSection />
+            {/* Freshness preview cards */}
+            <div className="mx-auto mt-16 grid max-w-4xl gap-4 sm:grid-cols-4">
+              <Card className="border-fresh-extra bg-fresh-extra/10">
+                <CardContent className="p-4 text-center">
+                  <div className="text-fresh-extra text-2xl font-bold">
+                    0-9 days
+                  </div>
+                  <p className="text-muted-foreground text-sm">Extra-fresh</p>
+                </CardContent>
+              </Card>
+              <Card className="border-fresh bg-fresh/10">
+                <CardContent className="p-4 text-center">
+                  <div className="text-fresh text-2xl font-bold">
+                    10-21 days
+                  </div>
+                  <p className="text-muted-foreground text-sm">Fresh</p>
+                </CardContent>
+              </Card>
+              <Card className="border-fresh-cook bg-fresh-cook/10">
+                <CardContent className="p-4 text-center">
+                  <div className="text-fresh-cook text-2xl font-bold">
+                    22-28 days
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    Cook thoroughly
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-expired bg-expired/10">
+                <CardContent className="p-4 text-center">
+                  <div className="text-expired text-2xl font-bold">
+                    29+ days
+                  </div>
+                  <p className="text-muted-foreground text-sm">Expired</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </main>
+      </section>
 
-      <BentoGridSection />
+      {/* Stats Section */}
+      <section className="border-y py-16">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <Typography variant="h2" className="text-3xl font-bold">
+              The food waste problem
+            </Typography>
+            <Typography className="text-muted-foreground mt-4">
+              Every year, millions of eggs are thrown away due to confusion
+              about expiration dates
+            </Typography>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-3">
+            <div className="text-center">
+              <div className="text-primary text-4xl font-bold">10B+</div>
+              <p className="text-muted-foreground mt-2">
+                Eggs thrown away annually in Europe
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="text-primary text-4xl font-bold">30%</div>
+              <p className="text-muted-foreground mt-2">
+                Of purchased eggs end up in the trash
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="text-primary text-4xl font-bold">2 weeks</div>
+              <p className="text-muted-foreground mt-2">
+                Of freshness lost due to lack of knowledge
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <PainSection />
+      {/* Features Section */}
+      <section id="features" className="py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <Typography variant="h2" className="text-3xl font-bold">
+              Everything you need to save your eggs
+            </Typography>
+            <Typography className="text-muted-foreground mt-4">
+              Simple tools to track freshness, get recommendations, and reduce
+              waste
+            </Typography>
+          </div>
+
+          <div className="mx-auto mt-16 grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <Egg className="text-primary mb-2 size-8" />
+                <CardTitle>Virtual Fridge</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Track all your egg boxes with color-coded freshness
+                  indicators. Never lose track of what&apos;s in your fridge.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <Sparkles className="text-primary mb-2 size-8" />
+                <CardTitle>Smart Recommendations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Get cooking suggestions based on your eggs&apos; age.
+                  Soft-boiled, fried, or hard-boiled? We&apos;ll tell you.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <Timer className="text-primary mb-2 size-8" />
+                <CardTitle>Intelligent Timer</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Perfect cooking times adjusted for egg size and temperature.
+                  Get perfect results every time.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <TrendingDown className="text-primary mb-2 size-8" />
+                <CardTitle>Anti-Waste Tracking</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Track how many eggs you&apos;ve saved from waste and how much
+                  money you&apos;ve saved.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <Clock className="text-primary mb-2 size-8" />
+                <CardTitle>Expiration Alerts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Get notified before your eggs expire so you can use them in
+                  time.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <Users className="text-primary mb-2 size-8" />
+                <CardTitle>Family Sharing</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Share your fridge with family or roommates. Everyone stays in
+                  sync.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       <SectionDivider />
 
-      <ReviewTriple
-        reviews={[
-          {
-            image: "https://i.pravatar.cc/300?u=a1",
-            name: "Sophie",
-            review: `Threader **has completely transformed the way I manage my social media** content. The ability to schedule posts and use AI for content suggestions has saved me hours each week.`,
-            role: "Digital Marketer",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=a2",
-            name: "Alex",
-            review: `Using Threader has significantly boosted my online engagement. **The analytics tool helps me understand what works**, allowing me to refine my strategy and grow my follower base.`,
-            role: "Social Media Influencer",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=a3",
-            name: "Jordan",
-            review: `The ease of scheduling and the AI-generated content features are game-changers. **Threader's user-friendly interface** makes it perfect for anyone looking to enhance their online presence.`,
-            role: "Entrepreneur",
-          },
-        ]}
-      />
+      {/* How it works */}
+      <section className="py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <Typography variant="h2" className="text-3xl font-bold">
+              3 simple steps
+            </Typography>
+            <Typography className="text-muted-foreground mt-4">
+              Start reducing waste in minutes
+            </Typography>
+          </div>
 
-      <SectionDivider />
-
-      <ReviewSingle
-        image="https://i.pravatar.cc/300?u=5"
-        name="Michel"
-        review={`Threader **has completely transformed** the way I manage my social media content. The ability to schedule posts and use AI for content suggestions **has saved me hours each week.**`}
-        role="Digital Marketer"
-        compagnyImage="https://1000logos.net/wp-content/uploads/2017/03/McDonalds-Logo-2003.png"
-        key={1}
-      />
-
-      <FeaturesSection
-        features={[
-          {
-            badge: "⏰ Schedule",
-            title: "Schedule your post",
-            description: "Schedule your post on the Threader in a few clicks.",
-            component: (
-              <Image
-                src="/images/placeholder1.gif"
-                alt=""
-                width={200}
-                height={100}
-                className="h-auto w-full object-cover"
-                unoptimized
-              />
-            ),
-          },
-          {
-            badge: "📅 Calendar",
-            title: "See what you scheduled",
-            description:
-              "With the calendar view, you can see what you scheduled and when.",
-            component: (
-              <Image
-                src="/images/placeholder1.gif"
-                alt=""
-                width={200}
-                height={100}
-                className="h-auto w-full object-cover"
-              />
-            ),
-          },
-          {
-            badge: "👁️ Preview",
-            title: "Preview your post",
-            description:
-              "Preview your post before scheduling it to see how it will look like.",
-            component: (
-              <Image
-                src="/images/placeholder1.gif"
-                alt=""
-                width={200}
-                height={100}
-                className="h-auto w-full object-cover"
-                unoptimized
-              />
-            ),
-          },
-          {
-            badge: "🔄 Repost",
-            title: "Schedule repost",
-            description:
-              "Automatically repost your post after a certain amount of time.",
-            component: (
-              <Image
-                src="/images/placeholder1.gif"
-                alt=""
-                width={200}
-                height={100}
-                className="h-auto w-full object-cover"
-                unoptimized
-              />
-            ),
-          },
-        ]}
-      />
-
-      <CTAImageSection />
-
-      <CTASectionCard />
-
-      <CtaSection />
+          <div className="mx-auto mt-16 grid max-w-4xl gap-8 sm:grid-cols-3">
+            <div className="text-center">
+              <div className="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full text-2xl font-bold">
+                1
+              </div>
+              <h3 className="mt-6 text-lg font-semibold">Add your eggs</h3>
+              <p className="text-muted-foreground mt-2">
+                Enter the laying date when you buy a new box
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full text-2xl font-bold">
+                2
+              </div>
+              <h3 className="mt-6 text-lg font-semibold">Track freshness</h3>
+              <p className="text-muted-foreground mt-2">
+                Color codes show you exactly how fresh each box is
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full text-2xl font-bold">
+                3
+              </div>
+              <h3 className="mt-6 text-lg font-semibold">Cook perfectly</h3>
+              <p className="text-muted-foreground mt-2">
+                Get recommendations and use the timer for perfect results
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Pricing />
 
       <FAQSection
         faq={[
           {
-            question: "What is Threader?",
+            question: "How do I know if an egg is still good?",
             answer:
-              "Threader is an innovative platform designed to help you write, schedule, and publish content to your account with the assistance of AI, enhancing your business's online presence.",
+              "An egg can be safely consumed up to 28 days after laying. EggscuseMe tracks this for you and tells you exactly what cooking method is best for each stage of freshness.",
           },
           {
-            question: "How does AI Content Generation work?",
+            question:
+              "What's the difference between 'use by' and 'best before' dates?",
             answer:
-              "Our AI Content Generation feature leverages the power of artificial intelligence to create unique and engaging content for your Threads, making content creation easier and more efficient.",
+              "The 'use by' date (DCR) is typically 28 days after laying. The 'best before' date on boxes is often set shorter as a precaution by retailers. EggscuseMe uses the actual laying date for accurate tracking.",
           },
           {
-            question: "Can I schedule my threads in advance?",
+            question: "Can I eat raw eggs?",
             answer:
-              "Yes, with Threader, you can schedule your threads for a specific time, allowing you to maintain a consistent online presence without the need to manually post every day.",
+              "Yes, but only within the first 9 days after laying (extra-fresh). After that, prefer cooking methods that heat the yolk well, like frying or hard-boiling.",
           },
           {
-            question: "What is the Now.TS project?",
+            question: "How does the freshness color coding work?",
             answer:
-              "Now.TS is a new project announced on our platform that enables users to create professional Next.js applications in days, streamlining the development process.",
+              "Green (0-9 days): Extra-fresh, perfect for soft-boiled or raw. Yellow (10-21 days): Fresh, great for fried or scrambled. Orange (22-28 days): Cook thoroughly, best hard-boiled. Red (29+ days): Expired, discard.",
           },
           {
-            question: "How can I get more followers?",
+            question: "Can I share my fridge with family?",
             answer:
-              "To gain more followers, focus on creating content related to Next.js, as our analysis shows it's highly engaging. Utilize our research tools to understand trends and improve your content strategy.",
+              "Yes! EggscuseMe supports organizations, so you can share your virtual fridge with family members or roommates. Everyone can add, consume, and track eggs together.",
           },
           {
-            question: "What are the benefits of posting with Threader?",
+            question: "Is there a free plan?",
             answer:
-              "Posting with Threader allows you to schedule posts, avoid daily manual postings, track your scheduled content easily, and maintain consistency in your online activity.",
-          },
-          {
-            question: "What pricing plans does Threader offer?",
-            answer:
-              "Threader offers two pricing plans: THREADER FREE, perfect for tiny creators, allowing you to schedule 1 post in advance; and THREADER PREMIUM, ideal for content creators, offering unlimited scheduling, post previews, and auto-reposting features.",
+              "Yes! The free plan lets you track up to 2 egg boxes with basic features. Premium unlocks unlimited boxes, detailed statistics, and notifications.",
           },
         ]}
       />
 
       <SectionDivider />
 
-      <ReviewGrid
-        reviews={[
-          {
-            image: "https://i.pravatar.cc/300?u=b1",
-            name: "Eva",
-            review:
-              "Since I started using Threader, my content creation process has been streamlined. The AI suggestions are spot on, helping me to connect better with my audience. Highly recommend for anyone looking to elevate their content game.",
-            role: "Content Creator",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b2",
-            name: "Lucas",
-            review:
-              "Threader's scheduling feature is a lifesaver. It allows me to plan my content calendar efficiently, ensuring I never miss posting on the optimal days and times. Fantastic tool for social media managers.",
-            role: "Social Media Manager",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b3",
-            name: "Mia",
-            review:
-              "The analytics provided by Threader are invaluable. They've given me insights into what my audience loves, helping me double my engagement rate in just a few months.",
-            role: "Digital Marketer",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b4",
-            name: "Noah",
-            review:
-              "I was skeptical about AI-generated content, but Threader changed my mind. The content feels personal and has significantly increased my interaction rates.",
-            role: "Blogger",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b5",
-            name: "Isabella",
-            review:
-              "Threader's user interface is incredibly user-friendly. I was able to onboard my team in no time, and we've seen a marked improvement in our social media performance.",
-            role: "Team Leader",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b6",
-            name: "Oliver",
-            review:
-              "Auto-reposting with Threader is a feature I didn't know I needed. It's great for getting more mileage out of your best content without any extra effort.",
-            role: "Freelancer",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b7",
-            name: "Sophia",
-            review:
-              "Joining the Threader community has opened up networking opportunities with fellow content creators. It's more than just a tool; it's a platform for growth.",
-            role: "Influencer",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b8",
-            name: "Elijah",
-            review:
-              "The calendar view in Threader helps me visualize my content strategy for the entire month. It's been a game changer for my planning process.",
-            role: "Strategist",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b9",
-            name: "Charlotte",
-            review:
-              "I appreciate the flexibility in Threader's pricing plans. It's accessible for creators at any stage of their journey, from beginners to established influencers.",
-            role: "Entrepreneur",
-          },
-          {
-            image: "https://i.pravatar.cc/300?u=b10",
-            name: "James",
-            review:
-              "The customer support team at Threader is fantastic. They've been quick to respond and helpful with any questions I've had. Great service overall.",
-            role: "Customer",
-          },
-        ]}
-      />
-
-      <EmailFormSection />
-
-      <SectionDivider />
+      {/* Final CTA */}
+      <section className="py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="bg-primary/10 mx-auto max-w-2xl rounded-2xl p-8 text-center sm:p-12">
+            <Egg className="text-primary mx-auto size-12" />
+            <Typography variant="h2" className="mt-6 text-3xl font-bold">
+              Ready to save your eggs?
+            </Typography>
+            <Typography className="text-muted-foreground mt-4">
+              Join thousands of users reducing their food waste. It&apos;s free
+              to get started.
+            </Typography>
+            <div className="mt-8">
+              <Link
+                href="/auth/signin"
+                className={buttonVariants({ size: "lg" })}
+              >
+                Create my free fridge
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

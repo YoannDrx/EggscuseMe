@@ -1,0 +1,87 @@
+// EggscuseMe - Egg Management Schema
+
+model EggBox {
+  id         String   @id @default(nanoid(11))
+  name       String? // Custom name like "Boîte du marché"
+  layingDate DateTime // Date when eggs were laid
+  quantity   Int      @default(6) // Initial quantity
+  remaining  Int      @default(6) // Remaining eggs
+  size       EggSize  @default(M)
+  source     String? // "Carrefour", "Fermier local", etc.
+  barcode    String? // Barcode if scanned
+
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  consumptions EggConsumption[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([organizationId])
+  @@map("egg_box")
+}
+
+enum EggSize {
+  S // Small (< 53g)
+  M // Medium (53-63g)
+  L // Large (63-73g)
+  XL // Extra Large (> 73g)
+}
+
+model EggConsumption {
+  id          String      @id @default(nanoid(11))
+  eggBoxId    String
+  eggBox      EggBox      @relation(fields: [eggBoxId], references: [id], onDelete: Cascade)
+  quantity    Int         @default(1)
+  cookingType CookingType
+  rating      Int? // 1-5 stars (optional)
+  notes       String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([eggBoxId])
+  @@index([userId])
+  @@map("egg_consumption")
+}
+
+enum CookingType {
+  SOFT_BOILED // À la coque
+  POACHED // Poché
+  RAW // Cru (mayonnaise, etc.)
+  FRIED // Au plat
+  SCRAMBLED // Brouillés
+  OMELETTE // Omelette
+  HARD_BOILED // Dur
+  BAKING // Pâtisserie
+  OTHER // Autre
+}
+
+model UserPreferences {
+  id     String @id @default(nanoid(11))
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  defaultEggSize   EggSize        @default(M)
+  preferredYolk    YolkPreference @default(RUNNY)
+  notifyDaysBefore Int            @default(2) // Notify X days before expiration
+  notifyEnabled    Boolean        @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+enum YolkPreference {
+  RUNNY // Très coulant
+  SOFT // Baveux
+  MEDIUM // Mi-cuit
+  HARD // Bien cuit
+}

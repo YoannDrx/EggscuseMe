@@ -1,5 +1,6 @@
 "use client";
 
+import { LanguageSwitcher } from "@/components/nowts/language-switcher";
 import { LogoSvg } from "@/components/svg/logo-svg";
 import { SiteConfig } from "@/site-config";
 import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
@@ -96,6 +97,7 @@ export function LandingHeader() {
           <Link href="#pricing">Pricing</Link>
           <Link href="/posts">Blog</Link>
           <AuthButtonClient />
+          <LanguageSwitcher />
           <ThemeToggle />
         </motion.nav>
       </div>

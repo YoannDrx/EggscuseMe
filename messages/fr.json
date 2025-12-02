@@ -1,0 +1,258 @@
+{
+  "common": {
+    "appName": "EggscuseMe",
+    "tagline": "Arrêtez de jeter vos œufs",
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "noResults": "Aucun résultat",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "freshness": {
+    "extraFresh": "Extra-frais",
+    "extraFreshDescription": "Parfait pour les œufs coque, pochés ou crus",
+    "fresh": "Frais",
+    "freshDescription": "Idéal pour les œufs au plat, brouillés ou en omelette",
+    "cookThoroughly": "À cuire",
+    "cookThoroughlyDescription": "À consommer uniquement bien cuit (œufs durs)",
+    "expired": "Périmé",
+    "expiredDescription": "À jeter - ne pas consommer",
+    "daysOld": "{count, plural, =0 {Aujourd'hui} =1 {1 jour} other {# jours}}",
+    "daysRemaining": "{count, plural, =0 {Dernier jour} =1 {1 jour restant} other {# jours restants}}"
+  },
+  "cooking": {
+    "softBoiled": "À la coque",
+    "softBoiledDescription": "Blanc cuit, jaune coulant",
+    "poached": "Poché",
+    "poachedDescription": "Cuit dans l'eau sans coquille",
+    "raw": "Cru",
+    "rawDescription": "Mayonnaise, mousse, tiramisu",
+    "fried": "Au plat",
+    "friedDescription": "Cuit à la poêle",
+    "scrambled": "Brouillés",
+    "scrambledDescription": "Mélangés et cuits à feu doux",
+    "omelette": "Omelette",
+    "omeletteDescription": "Battus et cuits à la poêle",
+    "hardBoiled": "Dur",
+    "hardBoiledDescription": "Blanc et jaune entièrement cuits",
+    "baking": "Pâtisserie",
+    "bakingDescription": "Pour gâteaux et desserts",
+    "other": "Autre",
+    "otherDescription": "Autre utilisation"
+  },
+  "eggSize": {
+    "S": "Petit",
+    "SDescription": "Moins de 53g",
+    "M": "Moyen",
+    "MDescription": "53-63g",
+    "L": "Gros",
+    "LDescription": "63-73g",
+    "XL": "Très gros",
+    "XLDescription": "Plus de 73g"
+  },
+  "dashboard": {
+    "title": "Mon Frigo",
+    "subtitle": "Gérez vos œufs et évitez le gaspillage",
+    "addBox": "Ajouter une boîte",
+    "eggsRemaining": "{count, plural, =0 {Aucun œuf} =1 {1 œuf restant} other {# œufs restants}}",
+    "noBoxes": "Aucune boîte d'œufs",
+    "noBoxesDescription": "Ajoutez votre première boîte pour commencer à suivre vos œufs",
+    "quickActions": "Actions rapides",
+    "viewAll": "Voir tout",
+    "expiringsSoon": "Expire bientôt",
+    "stats": {
+      "title": "Statistiques",
+      "eggsSaved": "Œufs sauvés",
+      "moneySaved": "Économies",
+      "boxesTracked": "Boîtes suivies",
+      "avgConsumption": "Consommation moyenne"
+    }
+  },
+  "eggBox": {
+    "title": "Boîte d'œufs",
+    "name": "Nom de la boîte",
+    "namePlaceholder": "Ex: Boîte du marché",
+    "layingDate": "Date de ponte",
+    "layingDateHelp": "La date à laquelle les œufs ont été pondus",
+    "purchaseDate": "Date d'achat",
+    "quantity": "Quantité",
+    "quantityHelp": "Nombre d'œufs dans la boîte",
+    "remaining": "Restants",
+    "size": "Taille des œufs",
+    "source": "Provenance",
+    "sourcePlaceholder": "Ex: Carrefour, Fermier local",
+    "addSuccess": "Boîte ajoutée avec succès",
+    "updateSuccess": "Boîte mise à jour",
+    "deleteSuccess": "Boîte supprimée",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette boîte ?",
+    "consume": "Consommer",
+    "consumeTitle": "Consommer des œufs",
+    "consumeQuantity": "Combien d'œufs ?",
+    "consumeCookingType": "Type de cuisson",
+    "consumeSuccess": "Consommation enregistrée"
+  },
+  "timer": {
+    "title": "Minuteur",
+    "subtitle": "Cuisson parfaite à chaque fois",
+    "selectCookingType": "Type de cuisson",
+    "selectEggSize": "Taille de l'œuf",
+    "eggTemperature": "Température de l'œuf",
+    "fromFridge": "Sorti du frigo",
+    "roomTemperature": "Température ambiante",
+    "yolkPreference": "Préférence du jaune",
+    "runny": "Très coulant",
+    "soft": "Baveux",
+    "medium": "Mi-cuit",
+    "hard": "Bien cuit",
+    "start": "Démarrer",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "reset": "Réinitialiser",
+    "done": "C'est prêt !",
+    "cookingTime": "Temps de cuisson",
+    "minutes": "{count} min",
+    "seconds": "{count} sec"
+  },
+  "landing": {
+    "hero": {
+      "title": "Arrêtez de jeter vos œufs",
+      "subtitle": "Cuisinez-les parfaitement",
+      "description": "EggscuseMe vous aide à gérer la fraîcheur de vos œufs, éviter le gaspillage alimentaire et cuisiner parfaitement selon leur âge.",
+      "cta": "Créer mon frigo gratuit",
+      "ctaSecondary": "En savoir plus"
+    },
+    "problem": {
+      "title": "Le problème",
+      "stat1": "10 milliards",
+      "stat1Label": "d'œufs jetés chaque année en France",
+      "stat2": "30%",
+      "stat2Label": "des œufs achetés finissent à la poubelle",
+      "stat3": "2 semaines",
+      "stat3Label": "de fraîcheur perdues par méconnaissance"
+    },
+    "features": {
+      "title": "Comment ça marche",
+      "fridge": {
+        "title": "Frigo Virtuel",
+        "description": "Suivez toutes vos boîtes d'œufs avec des indicateurs de fraîcheur colorés"
+      },
+      "recommendations": {
+        "title": "Recommandations",
+        "description": "Savez exactement quoi cuisiner selon l'âge de vos œufs"
+      },
+      "timer": {
+        "title": "Minuteur Intelligent",
+        "description": "Temps de cuisson ajustés selon la taille et la température"
+      },
+      "stats": {
+        "title": "Anti-Gaspi",
+        "description": "Suivez vos économies et les œufs que vous avez sauvés"
+      }
+    },
+    "howItWorks": {
+      "title": "3 étapes simples",
+      "step1": {
+        "title": "Ajoutez vos œufs",
+        "description": "Scannez ou entrez la date de ponte de vos boîtes"
+      },
+      "step2": {
+        "title": "Suivez la fraîcheur",
+        "description": "Code couleur intuitif : vert, jaune, orange, rouge"
+      },
+      "step3": {
+        "title": "Cuisinez parfaitement",
+        "description": "Recettes et minuteur adaptés à l'âge de vos œufs"
+      }
+    },
+    "pricing": {
+      "title": "Tarifs",
+      "free": {
+        "title": "Gratuit",
+        "price": "0€",
+        "description": "Pour commencer",
+        "features": [
+          "2 boîtes d'œufs max",
+          "Minuteur basique",
+          "Recommandations de cuisson"
+        ],
+        "cta": "Commencer gratuitement"
+      },
+      "premium": {
+        "title": "Premium",
+        "price": "2,99€",
+        "period": "/mois",
+        "description": "Pour les amateurs d'œufs",
+        "features": [
+          "Boîtes illimitées",
+          "Historique complet",
+          "Statistiques détaillées",
+          "Notifications push",
+          "Recettes exclusives",
+          "Export des données"
+        ],
+        "cta": "Essayer Premium"
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "Comment savoir si un œuf est encore bon ?",
+        "answer": "Un œuf peut être consommé jusqu'à 28 jours après la ponte. EggscuseMe vous indique exactement quoi cuisiner selon l'âge de vos œufs."
+      },
+      "q2": {
+        "question": "Quelle est la différence entre DCR et DDM ?",
+        "answer": "La DCR (Date de Consommation Recommandée) est 28 jours après la ponte. La DDM (Date de Durabilité Minimale) sur les boîtes est souvent plus courte par précaution."
+      },
+      "q3": {
+        "question": "Puis-je manger des œufs crus ?",
+        "answer": "Oui, mais seulement dans les 9 premiers jours après la ponte (extra-frais). Après, préférez les cuissons qui chauffent bien le jaune."
+      }
+    },
+    "cta": {
+      "title": "Prêt à sauver vos œufs ?",
+      "description": "Rejoignez des milliers d'utilisateurs qui réduisent leur gaspillage alimentaire",
+      "button": "Créer mon frigo gratuit"
+    }
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "signOut": "Se déconnecter",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "orContinueWith": "Ou continuer avec"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeSystem": "Système",
+    "notifications": "Notifications",
+    "notificationsEnabled": "Activer les notifications",
+    "notifyDaysBefore": "Notifier X jours avant expiration",
+    "defaultEggSize": "Taille d'œuf par défaut",
+    "preferredYolk": "Préférence de cuisson du jaune"
+  },
+  "errors": {
+    "generic": "Une erreur est survenue",
+    "notFound": "Page non trouvée",
+    "unauthorized": "Accès non autorisé",
+    "limitReached": "Limite atteinte",
+    "limitReachedDescription": "Vous avez atteint la limite de {limit} boîtes. Passez à Premium pour des boîtes illimitées.",
+    "upgradeToPremium": "Passer à Premium"
+  }
+}

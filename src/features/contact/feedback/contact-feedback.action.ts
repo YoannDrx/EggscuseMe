@@ -24,7 +24,7 @@ export const feedbackAction = action
     });
 
     await sendEmail({
-      to: env.NEXT_PUBLIC_EMAIL_CONTACT,
+      to: env.NEXT_PUBLIC_EMAIL_CONTACT ?? "contact@eggscuseme.app",
       subject: `New feedback from ${email}`,
       text: `Review: ${feedback.review}\n\nMessage: ${feedback.message}`,
       replyTo: email,
