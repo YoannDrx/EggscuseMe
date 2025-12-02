@@ -49,6 +49,12 @@ export async function generateMetadata(props: PostParams): Promise<Metadata> {
 export async function generateStaticParams() {
   const posts = await getPosts();
 
+  // Next.js 16 Cache Components require at least one result
+  // Return a placeholder slug that will trigger notFound() if no posts exist
+  if (posts.length === 0) {
+    return [{ slug: "_placeholder" }];
+  }
+
   return posts.map((post) => ({
     slug: post.slug,
   }));
