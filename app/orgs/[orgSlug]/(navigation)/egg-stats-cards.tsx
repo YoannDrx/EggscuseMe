@@ -4,7 +4,7 @@ import {
   calculateFreshness,
   type FreshnessStatus,
 } from "@/features/eggs/lib/freshness-calculator";
-import { Coins, Egg, Package, TrendingUp } from "lucide-react";
+import { Coins, Egg, Leaf, TrendingUp } from "lucide-react";
 
 export async function EggStatsCards() {
   const result = await getOrgEggBoxesAction();
@@ -35,54 +35,68 @@ export async function EggStatsCards() {
   const moneySaved = (totalConsumed * 0.25).toFixed(2);
 
   return (
-    <div className="flex w-full items-start gap-4 max-lg:flex-col lg:gap-8">
-      <Card className="w-full flex-1">
+    <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Total Eggs */}
+      <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Eggs Tracked</CardTitle>
-          <Egg className="text-muted-foreground size-4" />
+          <CardTitle className="text-sm font-medium">Œufs suivis</CardTitle>
+          <div className="bg-primary/10 flex size-9 items-center justify-center rounded-full">
+            <Egg className="text-primary size-5" />
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalEggs}</div>
-          <p className="text-muted-foreground text-xs">
-            in {totalBoxes} box{totalBoxes !== 1 ? "es" : ""}
+          <div className="font-heading text-3xl font-bold">{totalEggs}</div>
+          <p className="text-muted-foreground text-sm">
+            dans {totalBoxes} boîte{totalBoxes !== 1 ? "s" : ""}
           </p>
         </CardContent>
       </Card>
 
-      <Card className="w-full flex-1">
+      {/* Extra-Fresh */}
+      <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Extra-Fresh</CardTitle>
-          <Package className="text-fresh-extra size-4" />
+          <CardTitle className="text-sm font-medium">Extra-frais</CardTitle>
+          <div className="bg-fresh-extra/20 flex size-9 items-center justify-center rounded-full">
+            <Leaf className="text-fresh-extra size-5" />
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="text-fresh-extra text-2xl font-bold">
+          <div className="font-heading text-fresh-extra text-3xl font-bold">
             {freshnessCounts["extra-fresh"]}
           </div>
-          <p className="text-muted-foreground text-xs">
-            Perfect for soft-boiled
+          <p className="text-muted-foreground text-sm">
+            Parfaits pour œufs à la coque
           </p>
         </CardContent>
       </Card>
 
-      <Card className="w-full flex-1">
+      {/* Eggs Saved */}
+      <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Eggs Saved</CardTitle>
-          <TrendingUp className="text-muted-foreground size-4" />
+          <CardTitle className="text-sm font-medium">Anti-gaspi</CardTitle>
+          <div className="flex size-9 items-center justify-center rounded-full bg-emerald-500/10">
+            <TrendingUp className="size-5 text-emerald-600" />
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalConsumed}</div>
-          <p className="text-muted-foreground text-xs">consumed, not wasted</p>
+          <div className="font-heading text-3xl font-bold">{totalConsumed}</div>
+          <p className="text-muted-foreground text-sm">
+            œufs consommés, pas gaspillés
+          </p>
         </CardContent>
       </Card>
 
-      <Card className="w-full flex-1">
+      {/* Money Saved */}
+      <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Money Saved</CardTitle>
-          <Coins className="text-muted-foreground size-4" />
+          <CardTitle className="text-sm font-medium">Économies</CardTitle>
+          <div className="flex size-9 items-center justify-center rounded-full bg-amber-500/10">
+            <Coins className="size-5 text-amber-600" />
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{moneySaved}€</div>
-          <p className="text-muted-foreground text-xs">estimated savings</p>
+          <div className="font-heading text-3xl font-bold">{moneySaved}€</div>
+          <p className="text-muted-foreground text-sm">économisés environ</p>
         </CardContent>
       </Card>
     </div>

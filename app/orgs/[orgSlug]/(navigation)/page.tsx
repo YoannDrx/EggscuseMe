@@ -1,5 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { getOrgEggBoxesAction } from "@/features/eggs";
+import { Eggy } from "@/features/mascot";
 import {
   Layout,
   LayoutActions,
@@ -30,23 +31,37 @@ async function RoutePage(props: PageProps<"/orgs/[orgSlug]">) {
   return (
     <Layout size="lg">
       <LayoutHeader>
-        <LayoutTitle>My Fridge</LayoutTitle>
-        <LayoutDescription>
-          Track your eggs and reduce food waste
-        </LayoutDescription>
+        <div className="flex items-center gap-3">
+          <Eggy mood="happy" size="md" className="hidden sm:block" />
+          <div>
+            <LayoutTitle className="font-heading">Mon Frigo</LayoutTitle>
+            <LayoutDescription>
+              Suivez vos œufs et réduisez le gaspillage alimentaire
+            </LayoutDescription>
+          </div>
+        </div>
       </LayoutHeader>
       <LayoutActions>
         <Link
           href={`/orgs/${params.orgSlug}/timer`}
-          className={buttonVariants({ variant: "outline" })}
+          className={buttonVariants({ variant: "neubrutalism-outline" })}
         >
           <Timer className="mr-2 size-4" />
-          Cooking Timer
+          Minuteur
         </Link>
       </LayoutActions>
-      <LayoutContent className="flex flex-col gap-4 lg:gap-8">
+      <LayoutContent className="flex flex-col gap-6 lg:gap-8">
         <Suspense
-          fallback={<div className="bg-muted h-32 animate-pulse rounded-lg" />}
+          fallback={
+            <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-muted h-32 animate-pulse rounded-2xl"
+                />
+              ))}
+            </div>
+          }
         >
           <EggStatsCards />
         </Suspense>

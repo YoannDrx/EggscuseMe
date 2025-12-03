@@ -1,3 +1,4 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Layout,
   LayoutContent,
@@ -6,20 +7,27 @@ import {
   LayoutTitle,
 } from "@/features/page/layout";
 import { EggTimer } from "@/features/timer";
-import { getCookingTips } from "@/features/timer/cooking-times";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Lightbulb } from "lucide-react";
+import { getCookingTipsFr } from "@/features/timer/cooking-times";
+import { Eggy } from "@/features/mascot";
+import { ChefHat, Lightbulb } from "lucide-react";
 
 export default function TimerPage() {
-  const tips = getCookingTips();
+  const tips = getCookingTipsFr();
 
   return (
     <Layout size="lg">
       <LayoutHeader>
-        <LayoutTitle>Cooking Timer</LayoutTitle>
-        <LayoutDescription>
-          Get perfect eggs every time with our smart timer
-        </LayoutDescription>
+        <div className="flex items-center gap-3">
+          <Eggy mood="chef" size="md" className="hidden sm:block" />
+          <div>
+            <LayoutTitle className="font-heading">
+              Minuteur de cuisson
+            </LayoutTitle>
+            <LayoutDescription>
+              Des œufs parfaits à chaque fois grâce à notre minuteur intelligent
+            </LayoutDescription>
+          </div>
+        </div>
       </LayoutHeader>
       <LayoutContent className="flex flex-col gap-8 lg:flex-row">
         <div className="flex justify-center lg:justify-start">
@@ -27,62 +35,73 @@ export default function TimerPage() {
         </div>
 
         <div className="flex-1 space-y-6">
-          <Card>
+          {/* Tips Card */}
+          <Card variant="sunny">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Lightbulb className="size-5" />
-                Cooking Tips
+              <CardTitle className="font-heading flex items-center gap-2 text-lg">
+                <div className="bg-primary/10 flex size-8 items-center justify-center rounded-full">
+                  <Lightbulb className="text-primary size-4" />
+                </div>
+                Conseils de cuisson
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {tips.map((tip, index) => (
                   <li
                     key={index}
-                    className="text-muted-foreground flex gap-2 text-sm"
+                    className="text-muted-foreground flex gap-3 text-sm"
                   >
-                    <span className="text-primary font-medium">
-                      {index + 1}.
+                    <span className="bg-primary/10 text-primary flex size-6 shrink-0 items-center justify-center rounded-full font-medium">
+                      {index + 1}
                     </span>
-                    {tip}
+                    <span className="pt-0.5">{tip}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Cooking Guide */}
+          <Card variant="sunny">
             <CardHeader>
-              <CardTitle className="text-lg">Cooking Guide</CardTitle>
+              <CardTitle className="font-heading flex items-center gap-2 text-lg">
+                <div className="flex size-8 items-center justify-center rounded-full bg-amber-500/10">
+                  <ChefHat className="size-4 text-amber-600" />
+                </div>
+                Guide de cuisson
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <h4 className="text-fresh-extra font-medium">
-                    Runny (3 min)
+                <div className="bg-fresh-extra/10 rounded-xl p-4">
+                  <h4 className="font-heading text-fresh-extra font-semibold">
+                    Coulant (3 min)
                   </h4>
-                  <p className="text-muted-foreground text-sm">
-                    Liquid yolk, perfect for dipping soldiers
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    Jaune liquide, parfait pour les mouillettes
                   </p>
                 </div>
-                <div className="space-y-1">
-                  <h4 className="text-fresh font-medium">Soft (5-6 min)</h4>
-                  <p className="text-muted-foreground text-sm">
-                    Jammy yolk, great for ramen or salads
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-fresh-cook font-medium">
-                    Medium (7-8 min)
+                <div className="bg-fresh/10 rounded-xl p-4">
+                  <h4 className="font-heading text-fresh font-semibold">
+                    Mollet (5-6 min)
                   </h4>
-                  <p className="text-muted-foreground text-sm">
-                    Creamy center, slightly firm
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    Jaune onctueux, idéal pour les ramen ou salades
                   </p>
                 </div>
-                <div className="space-y-1">
-                  <h4 className="font-medium">Hard (10+ min)</h4>
-                  <p className="text-muted-foreground text-sm">
-                    Fully set yolk, ideal for sandwiches
+                <div className="bg-fresh-cook/10 rounded-xl p-4">
+                  <h4 className="font-heading text-fresh-cook font-semibold">
+                    Mi-cuit (7-8 min)
+                  </h4>
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    Centre crémeux, légèrement ferme
+                  </p>
+                </div>
+                <div className="bg-muted rounded-xl p-4">
+                  <h4 className="font-heading font-semibold">Dur (10+ min)</h4>
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    Jaune bien cuit, parfait pour les sandwichs
                   </p>
                 </div>
               </div>

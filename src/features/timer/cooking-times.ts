@@ -88,6 +88,21 @@ export function getCookingDescription(yolkPreference: YolkPreference): string {
 }
 
 /**
+ * Get cooking method description (French)
+ */
+export function getCookingDescriptionFr(
+  yolkPreference: YolkPreference,
+): string {
+  const descriptions: Record<YolkPreference, string> = {
+    runny: "Jaune très coulant, parfait pour les mouillettes",
+    soft: "Jaune mollet, onctueux",
+    medium: "Jaune crémeux, légèrement ferme",
+    hard: "Jaune bien cuit, idéal pour les salades",
+  };
+  return descriptions[yolkPreference];
+}
+
+/**
  * Get cooking tips
  */
 export function getCookingTips(): string[] {
@@ -99,3 +114,38 @@ export function getCookingTips(): string[] {
     "For easier peeling, use eggs that are at least a week old",
   ];
 }
+
+/**
+ * Get cooking tips (French)
+ */
+export function getCookingTipsFr(): string[] {
+  return [
+    "Utilisez un minuteur pour des résultats précis",
+    "Commencez avec de l'eau bouillante pour un timing constant",
+    "Plongez délicatement les œufs avec une cuillère pour éviter les fissures",
+    "Transférez immédiatement dans un bain de glace pour stopper la cuisson",
+    "Pour un épluchage facile, utilisez des œufs d'au moins une semaine",
+  ];
+}
+
+/**
+ * Labels for UI (French)
+ */
+export const timerLabelsFr = {
+  sizes: {
+    S: "Petit (S)",
+    M: "Moyen (M)",
+    L: "Gros (L)",
+    XL: "Très gros (XL)",
+  } as Record<string, string>,
+  temperatures: {
+    fridge: "Du frigo",
+    room: "Température ambiante",
+  } as Record<EggTemperature, string>,
+  yolkPreferences: {
+    runny: "Coulant (très mollet)",
+    soft: "Mollet (onctueux)",
+    medium: "Mi-cuit (crémeux)",
+    hard: "Dur (bien cuit)",
+  } as Record<YolkPreference, string>,
+};

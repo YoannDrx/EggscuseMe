@@ -85,3 +85,24 @@ enum YolkPreference {
   MEDIUM // Mi-cuit
   HARD // Bien cuit
 }
+
+// Simple link-based invitations for sharing fridge access
+model FridgeInvite {
+  id             String       @id @default(nanoid(11))
+  code           String       @unique @default(nanoid(8)) // Short shareable code
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdById    String // User who created the invite
+
+  expiresAt      DateTime // When the link expires
+  maxUses        Int      @default(5) // Maximum number of uses
+  usedCount      Int      @default(0) // How many times used
+  isActive       Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code])
+  @@index([organizationId])
+  @@map("fridge_invite")
+}

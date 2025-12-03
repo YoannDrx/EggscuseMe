@@ -11,13 +11,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { EggSize } from "@/generated/prisma";
+import { Eggy } from "@/features/mascot";
 import { cn } from "@/lib/utils";
 import { Pause, Play, RotateCcw, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   calculateCookingTime,
   formatTime,
-  getCookingDescription,
+  getCookingDescriptionFr,
+  timerLabelsFr,
   type EggTemperature,
   type YolkPreference,
 } from "./cooking-times";
@@ -94,10 +96,15 @@ export function EggTimer() {
     totalTime > 0 ? ((totalTime - timeRemaining) / totalTime) * 100 : 0;
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          Egg Timer
+    <Card variant="sunny" className="w-full max-w-md">
+      <CardHeader className="pb-4">
+        <CardTitle className="font-heading flex items-center gap-3 text-xl">
+          <Eggy
+            mood={isDone ? "happy" : isRunning ? "chef" : "chef"}
+            size="sm"
+            animate={isRunning}
+          />
+          Minuteur de cuisson
           {isDone && (
             <Volume2 className="text-fresh-extra size-5 animate-pulse" />
           )}
@@ -106,70 +113,111 @@ export function EggTimer() {
       <CardContent className="space-y-6">
         {/* Timer Display */}
         <div className="relative flex flex-col items-center justify-center">
+          {/* Bubbles animation container */}
           <div
             className={cn(
-              "flex size-48 flex-col items-center justify-center rounded-full border-8 transition-colors",
+              "absolute inset-0 overflow-hidden rounded-full",
+              isRunning && "animate-bubbles",
+            )}
+          >
+            {isRunning &&
+              [...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-primary/20 absolute bottom-0 animate-[bubble_2s_ease-in-out_infinite] rounded-full"
+                  style={{
+                    width: `${8 + Math.random() * 12}px`,
+                    height: `${8 + Math.random() * 12}px`,
+                    left: `${10 + Math.random() * 80}%`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    animationDuration: `${1.5 + Math.random() * 1}s`,
+                  }}
+                />
+              ))}
+          </div>
+
+          {/* Timer circle */}
+          <div
+            className={cn(
+              "relative flex size-52 flex-col items-center justify-center rounded-full border-[6px] transition-all duration-500",
               isDone
                 ? "border-fresh-extra bg-fresh-extra/10"
                 : isRunning
-                  ? "border-primary bg-primary/10"
-                  : "border-muted bg-muted/50",
+                  ? "border-primary/30 bg-gradient-to-b from-blue-50 to-blue-100"
+                  : "border-muted bg-muted/30",
             )}
           >
             <span
               className={cn(
-                "text-5xl font-bold tabular-nums",
+                "font-heading text-5xl font-bold tabular-nums",
                 isDone && "text-fresh-extra",
               )}
             >
               {formatTime(timeRemaining)}
             </span>
             <span className="text-muted-foreground text-sm">
-              {isDone ? "Done!" : getCookingDescription(yolkPreference)}
+              {isDone
+                ? "C'est prêt !"
+                : getCookingDescriptionFr(yolkPreference)}
             </span>
           </div>
 
           {/* Progress ring */}
-          {isRunning && (
-            <svg className="absolute inset-0 -rotate-90" viewBox="0 0 200 200">
+          <svg className="absolute inset-0 -rotate-90" viewBox="0 0 220 220">
+            <circle
+              cx="110"
+              cy="110"
+              r="100"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="6"
+              className="text-transparent"
+            />
+            {(isRunning || progress > 0) && (
               <circle
-                cx="100"
-                cy="100"
-                r="90"
+                cx="110"
+                cy="110"
+                r="100"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="8"
-                className="text-primary/20"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeDasharray={628.32}
+                strokeDashoffset={628.32 * (1 - progress / 100)}
+                className={cn(
+                  "transition-all duration-1000",
+                  isDone ? "text-fresh-extra" : "text-primary",
+                )}
               />
-              <circle
-                cx="100"
-                cy="100"
-                r="90"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="8"
-                strokeDasharray={565.48}
-                strokeDashoffset={565.48 * (1 - progress / 100)}
-                className="text-primary transition-all duration-1000"
-              />
-            </svg>
-          )}
+            )}
+          </svg>
         </div>
 
         {/* Controls */}
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-3">
           {!isRunning ? (
-            <Button onClick={handleStart} size="lg" disabled={isDone}>
+            <Button
+              variant="neubrutalism"
+              onClick={handleStart}
+              size="lg"
+              disabled={isDone}
+              className="min-w-32"
+            >
               <Play className="mr-2 size-5" />
-              {timeRemaining < totalTime ? "Resume" : "Start"}
+              {timeRemaining < totalTime ? "Reprendre" : "Démarrer"}
             </Button>
           ) : (
-            <Button onClick={handlePause} size="lg" variant="outline">
+            <Button
+              variant="neubrutalism-outline"
+              onClick={handlePause}
+              size="lg"
+              className="min-w-32"
+            >
               <Pause className="mr-2 size-5" />
               Pause
             </Button>
           )}
-          <Button onClick={handleReset} size="lg" variant="ghost">
+          <Button variant="ghost" onClick={handleReset} size="lg">
             <RotateCcw className="mr-2 size-5" />
             Reset
           </Button>
@@ -177,57 +225,68 @@ export function EggTimer() {
 
         {/* Settings */}
         {!isRunning && (
-          <div className="grid gap-4 pt-4">
+          <div className="bg-muted/30 space-y-4 rounded-xl p-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Egg Size</Label>
+                <Label className="text-sm font-medium">Taille</Label>
                 <Select
                   value={size}
                   onValueChange={(v) => setSize(v as EggSize)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-foreground/20">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="S">Small (S)</SelectItem>
-                    <SelectItem value="M">Medium (M)</SelectItem>
-                    <SelectItem value="L">Large (L)</SelectItem>
-                    <SelectItem value="XL">Extra Large (XL)</SelectItem>
+                    {Object.entries(timerLabelsFr.sizes).map(
+                      ([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ),
+                    )}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label>Temperature</Label>
+                <Label className="text-sm font-medium">Température</Label>
                 <Select
                   value={temperature}
                   onValueChange={(v) => setTemperature(v as EggTemperature)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-foreground/20">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fridge">From Fridge</SelectItem>
-                    <SelectItem value="room">Room Temperature</SelectItem>
+                    {Object.entries(timerLabelsFr.temperatures).map(
+                      ([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ),
+                    )}
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Yolk Preference</Label>
+              <Label className="text-sm font-medium">Cuisson du jaune</Label>
               <Select
                 value={yolkPreference}
                 onValueChange={(v) => setYolkPreference(v as YolkPreference)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="border-foreground/20">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="runny">Runny (very soft)</SelectItem>
-                  <SelectItem value="soft">Soft (jammy)</SelectItem>
-                  <SelectItem value="medium">Medium (creamy)</SelectItem>
-                  <SelectItem value="hard">Hard (fully cooked)</SelectItem>
+                  {Object.entries(timerLabelsFr.yolkPreferences).map(
+                    ([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
             </div>

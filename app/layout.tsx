@@ -7,7 +7,7 @@ import { getServerUrl } from "@/lib/server-url";
 import { cn } from "@/lib/utils";
 import { SiteConfig } from "@/site-config";
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Space_Grotesk } from "next/font/google";
+import { Fredoka, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -22,19 +22,24 @@ export const metadata: Metadata = {
   metadataBase: new URL(getServerUrl()),
 };
 
-const CaptionFont = Space_Grotesk({
+// Heading font - Rounded, friendly, egg-like
+const HeadingFont = Fredoka({
   subsets: ["latin"],
-  variable: "--font-caption",
+  variable: "--font-heading",
+  weight: ["400", "500", "600", "700"],
 });
 
-const GeistSans = Inter({
+// Body font - Modern, clean, very readable
+const BodyFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
 });
 
-const GeistMono = Geist_Mono({
+// Monospace font for code
+const MonoFont = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
 });
 
 // Loading fallback for Suspense
@@ -88,9 +93,9 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
         suppressHydrationWarning
         className={cn(
           "bg-background h-full font-sans antialiased",
-          GeistMono.variable,
-          GeistSans.variable,
-          CaptionFont.variable,
+          HeadingFont.variable,
+          BodyFont.variable,
+          MonoFont.variable,
         )}
       >
         <Suspense fallback={<LoadingFallback />}>

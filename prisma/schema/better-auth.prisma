@@ -95,7 +95,8 @@ model Organization {
   email            String?
 
   // EggscuseMe relations
-  eggBoxes EggBox[]
+  eggBoxes      EggBox[]
+  fridgeInvites FridgeInvite[]
 
   @@unique([slug])
   @@map("organization")
