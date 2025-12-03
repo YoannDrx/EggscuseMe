@@ -1,6 +1,6 @@
-# AGENTS.md
+# CLAUDE.md
 
-This file provides guidance to AI Agents.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## About the project EggscuseMe
 
@@ -51,12 +51,25 @@ This file provides guidance to AI Agents.
 
 ### Testing Commands
 
+- `pnpm test` - Run unit tests in watch mode
 - `pnpm test:ci` - Run unit tests in CI mode
+- `pnpm test:e2e` - Run e2e tests with UI (requires HEADLESS=0)
 - `pnpm test:e2e:ci` - Run e2e tests in CI mode (headless)
+
+**Run a single test:**
+```bash
+# Unit test (Vitest)
+pnpm test -- __tests__/path/to/test.test.ts
+
+# E2E test (Playwright)
+pnpm test:e2e:ci -- e2e/signup.spec.ts
+```
 
 ### Database Commands
 
+- `pnpm prisma:migrate` - Run database migrations
 - `pnpm prisma:seed` - Seed the database
+- `pnpm prisma:generate` - Regenerate Prisma client
 - `pnpm better-auth:migrate` - Generate better-auth Prisma schema
 
 ### Development Tools
