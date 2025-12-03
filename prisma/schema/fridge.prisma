@@ -1,0 +1,89 @@
+// EggscuseMe - Fridge System (Simplified architecture)
+// Replaces the complex Organization system with a simple Fridge model
+
+model Fridge {
+  id   String @id @default(nanoid(11))
+  name String @default("Mon Frigo")
+
+  // One fridge per user (owner)
+  ownerId String @unique
+  owner   User   @relation("OwnedFridge", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Guest members
+  members FridgeMember[]
+
+  // Egg boxes in this fridge
+  eggBoxes EggBox[]
+
+  // Share links for inviting guests
+  shareLinks FridgeShareLink[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("fridge")
+}
+
+model FridgeMember {
+  id String @id @default(nanoid(11))
+
+  fridgeId String
+  fridge   Fridge @relation(fields: [fridgeId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation("FridgeMemberships", fields: [userId], references: [id], onDelete: Cascade)
+
+  role FridgeRole @default(GUEST)
+
+  createdAt DateTime @default(now())
+
+  @@unique([fridgeId, userId])
+  @@index([userId])
+  @@map("fridge_member")
+}
+
+enum FridgeRole {
+  OWNER // Full control (but owner is defined via Fridge.ownerId)
+  GUEST // Can view and consume eggs
+}
+
+model FridgeShareLink {
+  id   String @id @default(nanoid(11))
+  code String @unique @default(nanoid(8)) // Short shareable code
+
+  fridgeId    String
+  fridge      Fridge @relation(fields: [fridgeId], references: [id], onDelete: Cascade)
+  createdById String // User who created the invite
+
+  expiresAt DateTime // When the link expires
+  maxUses   Int      @default(5) // Maximum number of uses
+  usedCount Int      @default(0) // How many times used
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code])
+  @@index([fridgeId])
+  @@map("fridge_share_link")
+}
+
+// User subscription - directly linked to User (not Organization)
+model UserSubscription {
+  id     String @id @default(nanoid(11))
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  plan                 String  @default("free") // free, pro, ultra
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  status               String? // active, trialing, canceled, past_due
+  periodStart          DateTime?
+  periodEnd            DateTime?
+  cancelAtPeriodEnd    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_subscription")
+}

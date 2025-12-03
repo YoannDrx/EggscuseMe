@@ -61,6 +61,45 @@ export const auth = betterAuth({
         after: async (user, _req) => {
           await setupResendCustomer(user);
 
+          // NEW SYSTEM: Create Fridge for user
+          try {
+            await prisma.fridge.create({
+              data: {
+                ownerId: user.id,
+                name: "Mon Frigo",
+              },
+            });
+            logger.debug("Fridge created for user", { userId: user.id });
+          } catch (err) {
+            logger.error("Failed to create fridge", { err, userId: user.id });
+          }
+
+          // NEW SYSTEM: Create Stripe customer on User (if Stripe is configured)
+          if (env.STRIPE_SECRET_KEY) {
+            try {
+              const stripeCustomer = await stripe.customers.create({
+                email: user.email,
+                name: user.name,
+                metadata: {
+                  userId: user.id,
+                },
+              });
+              await prisma.user.update({
+                where: { id: user.id },
+                data: { stripeCustomerId: stripeCustomer.id },
+              });
+              logger.debug("Stripe customer created for user", {
+                userId: user.id,
+              });
+            } catch (err) {
+              logger.error("Failed to create Stripe customer", {
+                err,
+                userId: user.id,
+              });
+            }
+          }
+
+          // LEGACY: Also create Organization for backwards compatibility during migration
           const emailName = user.email.slice(0, 8);
           try {
             await auth.api.createOrganization({

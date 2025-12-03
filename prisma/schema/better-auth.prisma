@@ -24,6 +24,12 @@ model User {
   eggConsumptions EggConsumption[]
   preferences     UserPreferences?
 
+  // NEW: Fridge system (replaces Organization for simple use cases)
+  stripeCustomerId   String? // Stripe customer ID directly on user
+  userSubscription   UserSubscription? // Subscription linked to user
+  ownedFridge        Fridge?           @relation("OwnedFridge") // One fridge per user
+  fridgeMemberships  FridgeMember[]    @relation("FridgeMemberships") // Guest access to other fridges
+
   role       String?
   banned     Boolean?
   banReason  String?

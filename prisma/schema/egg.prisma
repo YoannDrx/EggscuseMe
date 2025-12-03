@@ -12,8 +12,14 @@ model EggBox {
 
   userId         String
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // DEPRECATED: Keep for migration, will be removed later
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // NEW: Link to Fridge (simplified architecture)
+  fridgeId String?
+  fridge   Fridge? @relation(fields: [fridgeId], references: [id], onDelete: Cascade)
 
   consumptions EggConsumption[]
 
@@ -22,6 +28,7 @@ model EggBox {
 
   @@index([userId])
   @@index([organizationId])
+  @@index([fridgeId])
   @@map("egg_box")
 }
 

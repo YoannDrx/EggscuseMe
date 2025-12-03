@@ -66,6 +66,35 @@ export const POST = async (req: NextRequest) => {
   });
 };
 
+/**
+ * Find the owner of a payment - either a User (new system) or Organization (legacy)
+ */
+async function findPaymentOwner(customerId: string): Promise<{
+  type: "user" | "organization";
+  id: string;
+  entity: { id: string };
+} | null> {
+  // NEW SYSTEM: Try to find User by stripeCustomerId first
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId },
+  });
+
+  if (user) {
+    return { type: "user", id: user.id, entity: user };
+  }
+
+  // LEGACY SYSTEM: Fall back to Organization
+  const organization = await prisma.organization.findFirst({
+    where: { stripeCustomerId: customerId },
+  });
+
+  if (organization) {
+    return { type: "organization", id: organization.id, entity: organization };
+  }
+
+  return null;
+}
+
 const checkoutSessionCompleted = async (
   sessionData: Stripe.Checkout.Session,
   req: NextRequest,
@@ -86,20 +115,13 @@ const checkoutSessionCompleted = async (
       ? session.subscription
       : session.subscription.id;
 
-  // Find organization by Stripe customer ID
-  const organization = await prisma.organization.findFirst({
-    where: { stripeCustomerId: customerId },
-    include: {
-      members: {
-        include: {
-          user: true,
-        },
-      },
-    },
-  });
+  // Find the owner (User or Organization)
+  const owner = await findPaymentOwner(customerId);
 
-  if (!organization) {
-    logger.error(`Organization not found for customer ID: ${customerId}`);
+  if (!owner) {
+    logger.error(
+      `No user or organization found for customer ID: ${customerId}`,
+    );
     return;
   }
 
@@ -120,47 +142,117 @@ const checkoutSessionCompleted = async (
     return;
   }
 
-  // Create or update subscription
-  const existingSubscription = await prisma.subscription.findFirst({
-    where: { referenceId: organization.id },
+  // Handle based on owner type
+  if (owner.type === "user") {
+    // NEW SYSTEM: Create/Update UserSubscription
+    await handleUserSubscription(
+      owner.id,
+      customerId,
+      subscriptionId,
+      stripeSubscription,
+      plan,
+      req,
+    );
+  } else {
+    // LEGACY SYSTEM: Create/Update Organization Subscription
+    await handleOrganizationSubscription(
+      owner.id,
+      customerId,
+      subscriptionId,
+      stripeSubscription,
+      plan,
+      req,
+    );
+  }
+};
+
+async function handleUserSubscription(
+  userId: string,
+  customerId: string,
+  subscriptionId: string,
+  stripeSubscription: Stripe.Subscription,
+  plan: (typeof AUTH_PLANS)[0],
+  _req: NextRequest,
+) {
+  const existingSubscription = await prisma.userSubscription.findUnique({
+    where: { userId },
   });
+
+  const subscriptionData = {
+    plan: plan.name,
+    stripeCustomerId: customerId,
+    stripeSubscriptionId: subscriptionId,
+    status: stripeSubscription.status,
+    periodStart: new Date(
+      stripeSubscription.items.data[0].current_period_start * 1000,
+    ),
+    periodEnd: new Date(
+      stripeSubscription.items.data[0].current_period_end * 1000,
+    ),
+    cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+  };
+
+  if (existingSubscription) {
+    await prisma.userSubscription.update({
+      where: { id: existingSubscription.id },
+      data: subscriptionData,
+    });
+  } else {
+    await prisma.userSubscription.create({
+      data: {
+        ...subscriptionData,
+        userId,
+      },
+    });
+  }
+
+  // Note: Skipping freeTrial callbacks for UserSubscription as they're designed for the legacy Organization system
+
+  logger.info(
+    `[NEW] UserSubscription created/updated for user: ${userId}, plan: ${plan.name}`,
+  );
+}
+
+async function handleOrganizationSubscription(
+  organizationId: string,
+  customerId: string,
+  subscriptionId: string,
+  stripeSubscription: Stripe.Subscription,
+  plan: (typeof AUTH_PLANS)[0],
+  req: NextRequest,
+) {
+  // Create or update subscription (legacy system)
+  const existingSubscription = await prisma.subscription.findFirst({
+    where: { referenceId: organizationId },
+  });
+
+  const subscriptionData = {
+    plan: plan.name,
+    stripeCustomerId: customerId,
+    stripeSubscriptionId: subscriptionId,
+    status: stripeSubscription.status,
+    periodStart: new Date(
+      stripeSubscription.items.data[0].current_period_start * 1000,
+    ),
+    periodEnd: new Date(
+      stripeSubscription.items.data[0].current_period_end * 1000,
+    ),
+    cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+    seats: stripeSubscription.items.data[0]?.quantity ?? 1,
+  };
 
   let dbSubscription;
   if (existingSubscription) {
     dbSubscription = await prisma.subscription.update({
       where: { id: existingSubscription.id },
-      data: {
-        plan: plan.name,
-        stripeCustomerId: customerId,
-        stripeSubscriptionId: subscriptionId,
-        status: stripeSubscription.status,
-        periodStart: new Date(
-          stripeSubscription.items.data[0].current_period_start * 1000,
-        ),
-        periodEnd: new Date(
-          stripeSubscription.items.data[0].current_period_end * 1000,
-        ),
-        cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-        seats: stripeSubscription.items.data[0]?.quantity ?? 1,
-      },
+      data: subscriptionData,
     });
   } else {
     dbSubscription = await prisma.subscription.create({
       data: {
         id: `sub_${Date.now()}`,
-        plan: plan.name,
-        referenceId: organization.id,
-        stripeCustomerId: customerId,
-        stripeSubscriptionId: subscriptionId,
-        status: stripeSubscription.status,
-        periodStart: new Date(
-          stripeSubscription.items.data[0].current_period_start * 1000,
-        ),
-        periodEnd: new Date(
-          stripeSubscription.items.data[0].current_period_end * 1000,
-        ),
-        cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-        seats: stripeSubscription.items.data[0]?.quantity ?? 1,
+        referenceId: organizationId,
+        ...subscriptionData,
       },
     });
   }
@@ -172,26 +264,64 @@ const checkoutSessionCompleted = async (
   ) {
     await plan.freeTrial.onTrialStart(dbSubscription, {
       req,
-      organizationId: organization.id,
+      organizationId,
       stripeCustomerId: customerId,
       subscriptionId: subscriptionId,
     });
   }
 
   logger.info(
-    `Subscription created/updated for organization: ${organization.id}, plan: ${plan.name}`,
+    `[LEGACY] Subscription created/updated for organization: ${organizationId}, plan: ${plan.name}`,
   );
-};
+}
 
 const customerSubscriptionUpdated = async (
   subscriptionData: Stripe.Subscription,
   req: NextRequest,
 ) => {
   const subscription = subscriptionData;
+  const customerId =
+    typeof subscription.customer === "string"
+      ? subscription.customer
+      : subscription.customer.id;
 
   logger.info("Processing customer.subscription.updated:", subscription.id);
 
-  // Find the subscription in our database
+  // Get plan from subscription metadata
+  const plan = getPlanFromSubscription(subscription);
+
+  // Try NEW system first: UserSubscription
+  const userSubscription = await prisma.userSubscription.findFirst({
+    where: { stripeSubscriptionId: subscription.id },
+  });
+
+  if (userSubscription) {
+    const planName = plan?.name ?? userSubscription.plan;
+
+    await prisma.userSubscription.update({
+      where: { id: userSubscription.id },
+      data: {
+        plan: planName,
+        status: subscription.status,
+        periodStart: new Date(
+          subscription.items.data[0].current_period_start * 1000,
+        ),
+        periodEnd: new Date(
+          subscription.items.data[0].current_period_end * 1000,
+        ),
+        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+      },
+    });
+
+    // Note: Skipping freeTrial callbacks for UserSubscription as they're designed for the legacy Organization system
+
+    logger.info(
+      `[NEW] UserSubscription updated: ${subscription.id}, status: ${subscription.status}`,
+    );
+    return;
+  }
+
+  // LEGACY system: Organization Subscription
   const dbSubscription = await prisma.subscription.findFirst({
     where: { stripeSubscriptionId: subscription.id },
   });
@@ -201,11 +331,8 @@ const customerSubscriptionUpdated = async (
     return;
   }
 
-  // Get plan from subscription metadata
-  const plan = getPlanFromSubscription(subscription);
-  const planName = plan?.name ?? dbSubscription.plan; // Keep current plan as fallback
+  const planName = plan?.name ?? dbSubscription.plan;
 
-  // Update subscription details
   const updatedSubscription = await prisma.subscription.update({
     where: { id: dbSubscription.id },
     data: {
@@ -222,7 +349,6 @@ const customerSubscriptionUpdated = async (
 
   // Handle trial transitions
   if (plan?.freeTrial) {
-    // Trial ended and became active
     if (
       subscription.status === "active" &&
       dbSubscription.status === "trialing" &&
@@ -233,13 +359,12 @@ const customerSubscriptionUpdated = async (
         {
           req,
           organizationId: updatedSubscription.referenceId,
-          stripeCustomerId: subscription.customer as string,
+          stripeCustomerId: customerId,
           subscriptionId: subscription.id,
         },
       );
     }
 
-    // Trial expired
     if (
       subscription.status === "incomplete_expired" &&
       dbSubscription.status === "trialing" &&
@@ -248,14 +373,14 @@ const customerSubscriptionUpdated = async (
       await plan.freeTrial.onTrialExpired(updatedSubscription, {
         req,
         organizationId: updatedSubscription.referenceId,
-        stripeCustomerId: subscription.customer as string,
+        stripeCustomerId: customerId,
         subscriptionId: subscription.id,
       });
     }
   }
 
   logger.info(
-    `Subscription updated: ${subscription.id}, status: ${subscription.status}, plan: ${planName}`,
+    `[LEGACY] Subscription updated: ${subscription.id}, status: ${subscription.status}`,
   );
 };
 
@@ -264,10 +389,41 @@ const customerSubscriptionDeleted = async (
   req: NextRequest,
 ) => {
   const subscription = subscriptionData;
+  const customerId =
+    typeof subscription.customer === "string"
+      ? subscription.customer
+      : subscription.customer.id;
 
   logger.info("Processing customer.subscription.deleted:", subscription.id);
 
-  // Find and update the subscription status
+  // Get plan from subscription metadata
+  const plan = getPlanFromSubscription(subscription);
+
+  // Try NEW system first: UserSubscription
+  const userSubscription = await prisma.userSubscription.findFirst({
+    where: { stripeSubscriptionId: subscription.id },
+  });
+
+  if (userSubscription) {
+    await prisma.userSubscription.update({
+      where: { id: userSubscription.id },
+      data: {
+        plan: "free",
+        status: "canceled",
+        cancelAtPeriodEnd: false,
+        periodEnd: new Date(),
+      },
+    });
+
+    // Note: Skipping onSubscriptionCanceled callback for UserSubscription as it's designed for the legacy Organization system
+
+    logger.info(
+      `[NEW] UserSubscription canceled and reverted to free: ${subscription.id}`,
+    );
+    return;
+  }
+
+  // LEGACY system: Organization Subscription
   const dbSubscription = await prisma.subscription.findFirst({
     where: { stripeSubscriptionId: subscription.id },
   });
@@ -277,31 +433,26 @@ const customerSubscriptionDeleted = async (
     return;
   }
 
-  // Get plan from subscription metadata
-  const plan = getPlanFromSubscription(subscription);
-
-  // Update subscription to canceled/free plan
   const updatedSubscription = await prisma.subscription.update({
     where: { id: dbSubscription.id },
     data: {
       plan: "free",
       status: "canceled",
       cancelAtPeriodEnd: false,
-      periodEnd: new Date(), // Set to current time since it's canceled
+      periodEnd: new Date(),
     },
   });
 
-  // Call onSubscriptionCanceled if available
   if (plan?.onSubscriptionCanceled) {
     await plan.onSubscriptionCanceled(updatedSubscription, {
       req,
       organizationId: updatedSubscription.referenceId,
-      stripeCustomerId: subscription.customer as string,
+      stripeCustomerId: customerId,
       subscriptionId: subscription.id,
     });
   }
 
   logger.info(
-    `Subscription canceled and reverted to free plan: ${subscription.id}`,
+    `[LEGACY] Subscription canceled and reverted to free plan: ${subscription.id}`,
   );
 };
