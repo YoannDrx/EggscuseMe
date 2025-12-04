@@ -3,14 +3,20 @@ import { expect, test } from "@playwright/test";
 import { createTestAccount } from "./utils/auth-test";
 
 test("sign up and verify account creation", async ({ page }) => {
+  // Enable console logging for debugging in CI
+  page.on("console", (msg) => {
+    if (msg.type() === "error") {
+      // eslint-disable-next-line no-console
+      console.log(`Browser console error: ${msg.text()}`);
+    }
+  });
+
   const userData = await createTestAccount({
     page,
     callbackURL: "/fridge",
   });
 
-  await page.waitForURL(/\/fridge.*/);
-
-  // Verify we're on the fridge page
+  // Verify we're on the fridge page (createTestAccount already waits for this)
   const currentUrl = page.url();
   expect(currentUrl).toMatch(/\/fridge.*/);
 
