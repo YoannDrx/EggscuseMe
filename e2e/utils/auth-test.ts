@@ -6,7 +6,7 @@ import { expect } from "@playwright/test";
 import { retry } from "./retry";
 
 export const getUserEmail = () =>
-  `playwright-test-${faker.internet.email().toLowerCase()}`;
+  `playwright-test-${Date.now()}-${faker.internet.email().toLowerCase()}`;
 
 /**
  * Helper function to create a test account
