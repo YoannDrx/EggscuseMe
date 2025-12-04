@@ -30,6 +30,11 @@ if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
   };
 }
 
+// Determine if we should use secure cookies
+// In CI, we run on http://localhost with NODE_ENV=production
+// Secure cookies don't work on HTTP, so we disable them in CI
+const useSecureCookies = env.CI ? false : env.NODE_ENV === "production";
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -97,6 +102,8 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: SiteConfig.appId,
+    // Disable secure cookies in CI (http://localhost with NODE_ENV=production)
+    useSecureCookies,
   },
   emailAndPassword: {
     enabled: true,
