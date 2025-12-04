@@ -1,107 +1,146 @@
-import { CircleSvg } from "@/components/svg/circle-svg";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FAQSection } from "@/features/landing/faq-section";
 import { LandingHeader } from "@/features/landing/landing-header";
 import { SectionDivider } from "@/features/landing/section-divider";
 import { Footer } from "@/features/layout/footer";
+import { Eggy } from "@/features/mascot";
 import { Pricing } from "@/features/plans/pricing-section";
 import { Typography } from "@/components/nowts/typography";
-import { Egg, Clock, TrendingDown, Sparkles, Timer, Users } from "lucide-react";
+import { Egg, Sparkles, Timer, Users, ScanLine, ChefHat } from "lucide-react";
 import Link from "next/link";
 
 export default function HomePage() {
   return (
     <div className="bg-background text-foreground relative flex h-fit flex-col">
-      <div className="mt-16"></div>
+      <div className="mt-16" />
 
       <LandingHeader />
 
-      {/* Hero Section */}
-      <section className="relative isolate flex flex-col">
-        <div className="bg-grid absolute inset-0 [mask-image:linear-gradient(180deg,transparent,var(--foreground),transparent)]"></div>
+      {/* Hero Section - Sunny Side UI */}
+      <section className="relative isolate flex flex-col overflow-hidden">
+        {/* Decorative gradient blob */}
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
         >
           <div
             style={{
               clipPath:
                 "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
             }}
-            className="from-primary relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr to-amber-400 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            className="from-primary relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr to-amber-400 opacity-25 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
           />
         </div>
-        <main className="relative py-24 sm:py-32 lg:pb-40">
+
+        <main className="relative py-20 sm:py-28 lg:pb-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
-              <Typography
-                variant="h1"
-                className="text-5xl font-semibold tracking-tight text-balance sm:text-7xl lg:text-7xl"
-              >
-                Stop throwing away your{" "}
+            <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+              {/* Mascot */}
+              <div className="mb-8">
+                <Eggy mood="happy" size="xl" />
+              </div>
+
+              {/* Title with Fredoka font */}
+              <h1 className="font-heading text-5xl font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+                Ne cassez plus que des{" "}
                 <span className="relative inline-block">
-                  <span>eggs</span>
-                  <CircleSvg className="fill-primary absolute inset-0" />
+                  <span className="text-primary">œufs</span>
+                  <svg
+                    className="absolute -bottom-2 left-0 w-full"
+                    viewBox="0 0 200 12"
+                    fill="none"
+                  >
+                    <path
+                      d="M2 8 Q50 2, 100 8 T198 8"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      className="text-primary"
+                    />
+                  </svg>
                 </span>
-              </Typography>
+              </h1>
+
               <Typography
                 variant="large"
-                className="text-muted-foreground mt-8 text-lg font-medium text-pretty sm:text-xl/8"
+                className="text-muted-foreground mt-8 max-w-2xl text-lg font-medium text-pretty sm:text-xl"
               >
-                Track freshness, get cooking recommendations, and reduce food
-                waste. Know exactly what to cook based on your eggs&apos; age.
+                Suivez la fraîcheur, recevez des recommandations de cuisine, et
+                réduisez le gaspillage alimentaire. Sachez exactement quoi
+                cuisiner selon l&apos;âge de vos œufs.
               </Typography>
-              <div className="mt-10 flex items-center justify-center gap-x-6">
+
+              {/* CTA Buttons - Neubrutalism style */}
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/auth/signin"
-                  className={buttonVariants({ size: "lg", variant: "default" })}
+                  className={buttonVariants({
+                    size: "xl",
+                    variant: "neubrutalism",
+                  })}
                 >
-                  Create my free fridge
+                  <Egg className="mr-2 size-5" />
+                  Créer mon frigo gratuit
                 </Link>
                 <Link
                   href="#features"
-                  className={buttonVariants({ size: "lg", variant: "link" })}
+                  className={buttonVariants({
+                    size: "xl",
+                    variant: "neubrutalism-outline",
+                  })}
                 >
-                  Learn more <span aria-hidden="true">→</span>
+                  En savoir plus
                 </Link>
               </div>
             </div>
 
-            {/* Freshness preview cards */}
-            <div className="mx-auto mt-16 grid max-w-4xl gap-4 sm:grid-cols-4">
-              <Card className="border-fresh-extra bg-fresh-extra/10">
-                <CardContent className="p-4 text-center">
+            {/* Freshness preview cards - Sunny style */}
+            <div className="mx-auto mt-20 grid max-w-4xl gap-4 sm:grid-cols-4">
+              <Card
+                variant="sunny"
+                className="border-fresh-extra/30 bg-fresh-extra/10"
+              >
+                <CardContent className="p-5 text-center">
                   <div className="text-fresh-extra text-2xl font-bold">
-                    0-9 days
+                    0-9 jours
                   </div>
-                  <p className="text-muted-foreground text-sm">Extra-fresh</p>
-                </CardContent>
-              </Card>
-              <Card className="border-fresh bg-fresh/10">
-                <CardContent className="p-4 text-center">
-                  <div className="text-fresh text-2xl font-bold">
-                    10-21 days
-                  </div>
-                  <p className="text-muted-foreground text-sm">Fresh</p>
-                </CardContent>
-              </Card>
-              <Card className="border-fresh-cook bg-fresh-cook/10">
-                <CardContent className="p-4 text-center">
-                  <div className="text-fresh-cook text-2xl font-bold">
-                    22-28 days
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    Cook thoroughly
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    Extra-frais
+                  </p>
+                  <p className="text-fresh-extra mt-2 text-xs">
+                    Coque, poché, cru
                   </p>
                 </CardContent>
               </Card>
-              <Card className="border-expired bg-expired/10">
-                <CardContent className="p-4 text-center">
-                  <div className="text-expired text-2xl font-bold">
-                    29+ days
+              <Card variant="sunny" className="border-fresh/30 bg-fresh/10">
+                <CardContent className="p-5 text-center">
+                  <div className="text-fresh text-2xl font-bold">
+                    10-21 jours
                   </div>
-                  <p className="text-muted-foreground text-sm">Expired</p>
+                  <p className="text-muted-foreground mt-1 text-sm">Frais</p>
+                  <p className="text-fresh mt-2 text-xs">Omelette, brouillés</p>
+                </CardContent>
+              </Card>
+              <Card
+                variant="sunny"
+                className="border-fresh-cook/30 bg-fresh-cook/10"
+              >
+                <CardContent className="p-5 text-center">
+                  <div className="text-fresh-cook text-2xl font-bold">
+                    22-28 jours
+                  </div>
+                  <p className="text-muted-foreground mt-1 text-sm">À cuire</p>
+                  <p className="text-fresh-cook mt-2 text-xs">Durs seulement</p>
+                </CardContent>
+              </Card>
+              <Card variant="sunny" className="border-expired/30 bg-expired/10">
+                <CardContent className="p-5 text-center">
+                  <div className="text-expired text-2xl font-bold">
+                    29+ jours
+                  </div>
+                  <p className="text-muted-foreground mt-1 text-sm">Expiré</p>
+                  <p className="text-expired mt-2 text-xs">À jeter</p>
                 </CardContent>
               </Card>
             </div>
@@ -110,128 +149,162 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="border-y py-16">
+      <section className="border-foreground/10 border-y py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Typography variant="h2" className="text-3xl font-bold">
-              The food waste problem
+            <Typography
+              variant="h2"
+              className="font-heading text-3xl font-bold"
+            >
+              Le problème du gaspillage
             </Typography>
             <Typography className="text-muted-foreground mt-4">
-              Every year, millions of eggs are thrown away due to confusion
-              about expiration dates
+              Chaque année, des millions d&apos;œufs sont jetés par confusion
+              sur les dates de péremption
             </Typography>
           </div>
-          <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-3">
-            <div className="text-center">
-              <div className="text-primary text-4xl font-bold">10B+</div>
-              <p className="text-muted-foreground mt-2">
-                Eggs thrown away annually in Europe
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-primary text-4xl font-bold">30%</div>
-              <p className="text-muted-foreground mt-2">
-                Of purchased eggs end up in the trash
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="text-primary text-4xl font-bold">2 weeks</div>
-              <p className="text-muted-foreground mt-2">
-                Of freshness lost due to lack of knowledge
-              </p>
-            </div>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-8 sm:grid-cols-3">
+            <Card variant="sunny-solid" className="text-center">
+              <CardContent className="p-6">
+                <div className="text-primary text-4xl font-bold">10B+</div>
+                <p className="text-muted-foreground mt-2">
+                  Œufs jetés chaque année en Europe
+                </p>
+              </CardContent>
+            </Card>
+            <Card variant="sunny-solid" className="text-center">
+              <CardContent className="p-6">
+                <div className="text-primary text-4xl font-bold">30%</div>
+                <p className="text-muted-foreground mt-2">
+                  Des œufs achetés finissent à la poubelle
+                </p>
+              </CardContent>
+            </Card>
+            <Card variant="sunny-solid" className="text-center">
+              <CardContent className="p-6">
+                <div className="text-primary text-4xl font-bold">
+                  2 semaines
+                </div>
+                <p className="text-muted-foreground mt-2">
+                  De fraîcheur perdues par manque d&apos;info
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Bento Grid */}
       <section id="features" className="py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Typography variant="h2" className="text-3xl font-bold">
-              Everything you need to save your eggs
+            <Typography
+              variant="h2"
+              className="font-heading text-3xl font-bold"
+            >
+              Tout pour sauver vos œufs
             </Typography>
             <Typography className="text-muted-foreground mt-4">
-              Simple tools to track freshness, get recommendations, and reduce
-              waste
+              Des outils simples pour suivre la fraîcheur et réduire le
+              gaspillage
             </Typography>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <Card>
+          <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Card variant="sunny-interactive">
               <CardHeader>
-                <Egg className="text-primary mb-2 size-8" />
-                <CardTitle>Virtual Fridge</CardTitle>
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-xl">
+                  <Egg className="text-primary size-6" />
+                </div>
+                <CardTitle className="font-heading mt-4">
+                  Frigo Virtuel
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Track all your egg boxes with color-coded freshness
-                  indicators. Never lose track of what&apos;s in your fridge.
+                  Suivez toutes vos boîtes d&apos;œufs avec des indicateurs de
+                  fraîcheur colorés. Ne perdez plus le fil.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card variant="sunny-interactive">
               <CardHeader>
-                <Sparkles className="text-primary mb-2 size-8" />
-                <CardTitle>Smart Recommendations</CardTitle>
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-xl">
+                  <Sparkles className="text-primary size-6" />
+                </div>
+                <CardTitle className="font-heading mt-4">
+                  Recommandations
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Get cooking suggestions based on your eggs&apos; age.
-                  Soft-boiled, fried, or hard-boiled? We&apos;ll tell you.
+                  Suggestions de cuisson selon l&apos;âge. Coque, frits ou
+                  durs&nbsp;? On vous dit tout.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card variant="sunny-interactive">
               <CardHeader>
-                <Timer className="text-primary mb-2 size-8" />
-                <CardTitle>Intelligent Timer</CardTitle>
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-xl">
+                  <Timer className="text-primary size-6" />
+                </div>
+                <CardTitle className="font-heading mt-4">
+                  Timer Intelligent
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Perfect cooking times adjusted for egg size and temperature.
-                  Get perfect results every time.
+                  Temps de cuisson ajustés à la taille et température. Résultats
+                  parfaits garantis.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card variant="sunny-interactive">
               <CardHeader>
-                <TrendingDown className="text-primary mb-2 size-8" />
-                <CardTitle>Anti-Waste Tracking</CardTitle>
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-xl">
+                  <ScanLine className="text-primary size-6" />
+                </div>
+                <CardTitle className="font-heading mt-4">Scanner</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Track how many eggs you&apos;ve saved from waste and how much
-                  money you&apos;ve saved.
+                  Scannez le code-barres pour ajouter une boîte en un instant.
+                  Date de ponte automatique.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card variant="sunny-interactive">
               <CardHeader>
-                <Clock className="text-primary mb-2 size-8" />
-                <CardTitle>Expiration Alerts</CardTitle>
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-xl">
+                  <ChefHat className="text-primary size-6" />
+                </div>
+                <CardTitle className="font-heading mt-4">Recettes</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Get notified before your eggs expire so you can use them in
-                  time.
+                  Suggestions de recettes basées sur vos œufs qui expirent
+                  bientôt. Anti-gaspi.
                 </p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card variant="sunny-interactive">
               <CardHeader>
-                <Users className="text-primary mb-2 size-8" />
-                <CardTitle>Family Sharing</CardTitle>
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-xl">
+                  <Users className="text-primary size-6" />
+                </div>
+                <CardTitle className="font-heading mt-4">
+                  Partage Famille
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Share your fridge with family or roommates. Everyone stays in
-                  sync.
+                  Partagez votre frigo avec famille ou colocs. Tout le monde
+                  synchronisé.
                 </p>
               </CardContent>
             </Card>
@@ -241,44 +314,67 @@ export default function HomePage() {
 
       <SectionDivider />
 
-      {/* How it works */}
+      {/* How it works - with mascot variations */}
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Typography variant="h2" className="text-3xl font-bold">
-              3 simple steps
+            <Typography
+              variant="h2"
+              className="font-heading text-3xl font-bold"
+            >
+              3 étapes simples
             </Typography>
             <Typography className="text-muted-foreground mt-4">
-              Start reducing waste in minutes
+              Commencez à réduire le gaspillage en quelques minutes
             </Typography>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-4xl gap-8 sm:grid-cols-3">
-            <div className="text-center">
-              <div className="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full text-2xl font-bold">
-                1
+          <div className="mx-auto mt-16 grid max-w-4xl gap-12 sm:grid-cols-3">
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <div className="border-foreground/20 bg-card shadow-[3px_3px_0px_var(--foreground,theme(colors.foreground))/0.08] flex size-20 items-center justify-center rounded-2xl border-[1.5px]">
+                  <span className="font-heading text-primary text-3xl font-bold">
+                    1
+                  </span>
+                </div>
               </div>
-              <h3 className="mt-6 text-lg font-semibold">Add your eggs</h3>
+              <h3 className="font-heading mt-6 text-lg font-semibold">
+                Ajoutez vos œufs
+              </h3>
               <p className="text-muted-foreground mt-2">
-                Enter the laying date when you buy a new box
+                Entrez la date de ponte à l&apos;achat d&apos;une nouvelle boîte
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full text-2xl font-bold">
-                2
+
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <div className="border-foreground/20 bg-card shadow-[3px_3px_0px_var(--foreground,theme(colors.foreground))/0.08] flex size-20 items-center justify-center rounded-2xl border-[1.5px]">
+                  <span className="font-heading text-primary text-3xl font-bold">
+                    2
+                  </span>
+                </div>
               </div>
-              <h3 className="mt-6 text-lg font-semibold">Track freshness</h3>
+              <h3 className="font-heading mt-6 text-lg font-semibold">
+                Suivez la fraîcheur
+              </h3>
               <p className="text-muted-foreground mt-2">
-                Color codes show you exactly how fresh each box is
+                Les codes couleur montrent la fraîcheur de chaque boîte
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-primary/10 text-primary mx-auto flex size-16 items-center justify-center rounded-full text-2xl font-bold">
-                3
+
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <div className="border-foreground/20 bg-card shadow-[3px_3px_0px_var(--foreground,theme(colors.foreground))/0.08] flex size-20 items-center justify-center rounded-2xl border-[1.5px]">
+                  <span className="font-heading text-primary text-3xl font-bold">
+                    3
+                  </span>
+                </div>
               </div>
-              <h3 className="mt-6 text-lg font-semibold">Cook perfectly</h3>
+              <h3 className="font-heading mt-6 text-lg font-semibold">
+                Cuisinez parfaitement
+              </h3>
               <p className="text-muted-foreground mt-2">
-                Get recommendations and use the timer for perfect results
+                Recommandations et timer pour des résultats parfaits
               </p>
             </div>
           </div>
@@ -290,62 +386,74 @@ export default function HomePage() {
       <FAQSection
         faq={[
           {
-            question: "How do I know if an egg is still good?",
+            question: "Comment savoir si un œuf est encore bon ?",
             answer:
-              "An egg can be safely consumed up to 28 days after laying. EggscuseMe tracks this for you and tells you exactly what cooking method is best for each stage of freshness.",
+              "Un œuf peut être consommé en toute sécurité jusqu'à 28 jours après la ponte. EggscuseMe fait le suivi pour vous et vous dit exactement quelle méthode de cuisson est la meilleure à chaque étape de fraîcheur.",
           },
           {
             question:
-              "What's the difference between 'use by' and 'best before' dates?",
+              "Quelle est la différence entre 'à consommer jusqu'au' et 'à consommer de préférence avant' ?",
             answer:
-              "The 'use by' date (DCR) is typically 28 days after laying. The 'best before' date on boxes is often set shorter as a precaution by retailers. EggscuseMe uses the actual laying date for accurate tracking.",
+              "La DCR (Date de Consommation Recommandée) est généralement 28 jours après la ponte. La date sur les boîtes est souvent plus courte par précaution des distributeurs. EggscuseMe utilise la date de ponte réelle pour un suivi précis.",
           },
           {
-            question: "Can I eat raw eggs?",
+            question: "Puis-je manger des œufs crus ?",
             answer:
-              "Yes, but only within the first 9 days after laying (extra-fresh). After that, prefer cooking methods that heat the yolk well, like frying or hard-boiling.",
+              "Oui, mais uniquement dans les 9 premiers jours après la ponte (extra-frais). Après, préférez des cuissons qui chauffent bien le jaune, comme au plat ou dur.",
           },
           {
-            question: "How does the freshness color coding work?",
+            question: "Comment fonctionne le code couleur de fraîcheur ?",
             answer:
-              "Green (0-9 days): Extra-fresh, perfect for soft-boiled or raw. Yellow (10-21 days): Fresh, great for fried or scrambled. Orange (22-28 days): Cook thoroughly, best hard-boiled. Red (29+ days): Expired, discard.",
+              "Vert (0-9 jours) : Extra-frais, parfait pour coque ou cru. Jaune (10-21 jours) : Frais, idéal pour omelette ou au plat. Orange (22-28 jours) : À bien cuire, meilleur dur. Gris (29+ jours) : Expiré, à jeter.",
           },
           {
-            question: "Can I share my fridge with family?",
+            question: "Puis-je partager mon frigo avec ma famille ?",
             answer:
-              "Yes! EggscuseMe supports organizations, so you can share your virtual fridge with family members or roommates. Everyone can add, consume, and track eggs together.",
+              "Oui ! EggscuseMe supporte les organisations. Partagez votre frigo virtuel avec famille ou colocs. Tout le monde peut ajouter, consommer et suivre les œufs ensemble.",
           },
           {
-            question: "Is there a free plan?",
+            question: "Y a-t-il un plan gratuit ?",
             answer:
-              "Yes! The free plan lets you track up to 2 egg boxes with basic features. Premium unlocks unlimited boxes, detailed statistics, and notifications.",
+              "Oui ! Le plan gratuit permet de suivre jusqu'à 2 boîtes d'œufs avec les fonctionnalités de base. Premium débloque les boîtes illimitées, statistiques détaillées et notifications.",
           },
         ]}
       />
 
       <SectionDivider />
 
-      {/* Final CTA */}
+      {/* Final CTA with mascot */}
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="bg-primary/10 mx-auto max-w-2xl rounded-2xl p-8 text-center sm:p-12">
-            <Egg className="text-primary mx-auto size-12" />
-            <Typography variant="h2" className="mt-6 text-3xl font-bold">
-              Ready to save your eggs?
+          <Card
+            variant="sunny-solid"
+            className="bg-primary/5 mx-auto max-w-2xl overflow-hidden p-8 text-center sm:p-12"
+          >
+            <div className="mx-auto w-fit">
+              <Eggy mood="chef" size="lg" />
+            </div>
+            <Typography
+              variant="h2"
+              className="font-heading mt-6 text-3xl font-bold"
+            >
+              Prêt à sauver vos œufs ?
             </Typography>
             <Typography className="text-muted-foreground mt-4">
-              Join thousands of users reducing their food waste. It&apos;s free
-              to get started.
+              Rejoignez des milliers d&apos;utilisateurs qui réduisent leur
+              gaspillage alimentaire. C&apos;est gratuit pour commencer.
             </Typography>
             <div className="mt-8">
               <Link
                 href="/auth/signin"
-                className={buttonVariants({ size: "lg" })}
+                className={buttonVariants({
+                  size: "xl",
+                  variant: "neubrutalism",
+                })}
               >
-                Create my free fridge
+                <Egg className="mr-2 size-5" />
+                Créer mon frigo gratuit
               </Link>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
 

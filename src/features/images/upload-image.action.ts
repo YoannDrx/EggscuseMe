@@ -1,12 +1,11 @@
 "use server";
 
-import { orgAction } from "@/lib/actions/safe-actions";
+import { authAction } from "@/lib/actions/safe-actions";
 import { ActionError } from "@/lib/errors/action-error";
 import { fileAdapter } from "@/lib/files/vercel-blob-adapter";
 import { z } from "zod";
 
-export const uploadImageAction = orgAction
-  .metadata({})
+export const uploadImageAction = authAction
   .inputSchema(
     z.object({
       formData: z.instanceof(FormData),

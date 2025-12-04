@@ -1,16 +1,11 @@
 export const CacheKeys = {
-  userOrgs: (userId: string) => `user:${userId}:orgs`,
-  orgMember: (orgSlug: string, userId: string) =>
-    `org:${orgSlug}:member:${userId}`,
-  orgBySlug: (slug: string) => `org:slug:${slug}`,
   sessionData: (sessionId: string) => `session:${sessionId}`,
-  orgSubscription: (orgId: string) => `org:${orgId}:subscription`,
+  userFridge: (userId: string) => `user:${userId}:fridge`,
+  userSubscription: (userId: string) => `user:${userId}:subscription`,
 } as const;
 
 export const CacheTTL = {
-  USER_ORGS: 60 * 10, // 10 minutes
-  ORG_MEMBER: 60 * 5, // 5 minutes
-  ORG_SLUG: 60 * 30, // 30 minutes
   SESSION_DATA: 60 * 15, // 15 minutes
-  ORG_SUBSCRIPTION: 60 * 60, // 1 hour
+  USER_FRIDGE: 60 * 10, // 10 minutes
+  USER_SUBSCRIPTION: 60 * 60, // 1 hour
 } as const;

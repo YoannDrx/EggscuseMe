@@ -123,6 +123,28 @@ export function formatDaysRemaining(daysRemaining: number): string {
 }
 
 /**
+ * Format days remaining for display (French)
+ */
+export function formatDaysRemainingFr(daysRemaining: number): string {
+  if (daysRemaining <= 0) return "Expiré";
+  if (daysRemaining === 1) return "1 jour restant";
+  return `${daysRemaining} jours restants`;
+}
+
+/**
+ * Get freshness description in French
+ */
+export function getFreshnessDescriptionFr(status: FreshnessStatus): string {
+  const descriptions: Record<FreshnessStatus, string> = {
+    "extra-fresh": "Parfait pour œufs à la coque, pochés ou crus",
+    fresh: "Idéal pour œufs au plat, brouillés ou pâtisserie",
+    "cook-thoroughly": "Uniquement bien cuits (œufs durs)",
+    expired: "Expiré - ne pas consommer",
+  };
+  return descriptions[status];
+}
+
+/**
  * Get cooking type display name
  */
 export function getCookingTypeLabel(type: CookingType): string {

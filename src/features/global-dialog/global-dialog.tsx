@@ -1,19 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import type { DialogType } from "./global-dialog.store";
 import { useGlobalDialogStore } from "./global-dialog.store";
 
-const OrgDialogPlan = dynamic(
-  async () =>
-    import("./org-plan-dialog").then((mod) => ({
-      default: mod.OrgPlanDialog,
-    })),
-  { ssr: false },
-);
-
-const DialogTypeMap: Record<DialogType, React.ComponentType> = {
-  "org-plan": OrgDialogPlan,
+// Placeholder for future dialogs - add new dialog components here
+const DialogTypeMap: Partial<Record<DialogType, React.ComponentType>> = {
+  // "fridge-plan": FridgePlanDialog, // Uncomment when implemented
 };
 
 /**
@@ -37,6 +29,10 @@ export const GlobalDialog = () => {
   }
 
   const DialogComponent = DialogTypeMap[dialogType];
+
+  if (!DialogComponent) {
+    return null;
+  }
 
   return <DialogComponent />;
 };

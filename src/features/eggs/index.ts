@@ -1,16 +1,13 @@
-// Actions
+// Actions - re-export from fridge
 export {
   createEggBoxAction,
-  createOrgEggBoxAction,
   updateEggBoxAction,
   deleteEggBoxAction,
   consumeEggsAction,
-  getEggBoxesAction,
-  getOrgEggBoxesAction,
-  getEggStatsAction,
-} from "./egg-box.action";
+  getFridgeStatsAction as getEggStatsAction,
+} from "@/features/fridge/fridge.action";
 
-// Schemas
+// Schemas - re-export from fridge
 export {
   CreateEggBoxSchema,
   UpdateEggBoxSchema,
@@ -21,15 +18,17 @@ export {
   type CreateEggBoxInput,
   type UpdateEggBoxInput,
   type ConsumeEggsInput,
-} from "./egg-box.schema";
+} from "@/features/fridge/fridge.schema";
 
 // Lib
 export {
   calculateFreshness,
   calculateExpirationProgress,
   formatDaysRemaining,
+  formatDaysRemainingFr,
   getFreshnessColorClass,
   getFreshnessBgClass,
+  getFreshnessDescriptionFr,
   getCookingTypeLabel,
   type FreshnessStatus,
   type FreshnessInfo,
@@ -38,3 +37,5 @@ export {
 // Components
 export { FreshnessBadge } from "./components/freshness-badge";
 export { EggBoxCard } from "./components/egg-box-card";
+export { EggSlot } from "./components/egg-slot";
+export { EggBoxVisual } from "./components/egg-box-visual";

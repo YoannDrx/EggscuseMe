@@ -9,7 +9,7 @@ test.describe("admin", () => {
   test("verify admin dashboard work", async ({ page }) => {
     const user = await createTestAccount({
       page,
-      callbackURL: "/orgs",
+      callbackURL: "/fridge",
       admin: true,
     });
     await signOutAccount({ page });

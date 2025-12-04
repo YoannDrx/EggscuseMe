@@ -2,10 +2,11 @@ import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { faker } from "@faker-js/faker";
 import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { retry } from "./retry";
 
 export const getUserEmail = () =>
-  `playwright-test-${faker.internet.email().toLowerCase()}`;
+  `playwright-test-${Date.now()}-${faker.internet.email().toLowerCase()}`;
 
 /**
  * Helper function to create a test account
@@ -24,8 +25,27 @@ export async function createTestAccount(options: {
     password: faker.internet.password({ length: 12, memorable: true }),
   };
 
+  // Track API responses for debugging
+  let signupResponse: { status: number; body: string } | null = null;
+  options.page.on("response", async (response) => {
+    if (response.url().includes("/api/auth/sign-up")) {
+      try {
+        signupResponse = {
+          status: response.status(),
+          body: await response.text(),
+        };
+        logger.info("Signup API response", signupResponse);
+      } catch {
+        // Ignore errors reading response
+      }
+    }
+  });
+
   // Navigate to signup page
   await options.page.goto(`/auth/signup?callbackUrl=${options.callbackURL}`);
+
+  // Wait for the form to be ready
+  await options.page.waitForLoadState("domcontentloaded");
 
   // Fill out the form
   await options.page.getByLabel("Name").fill(userData.name);
@@ -35,13 +55,32 @@ export async function createTestAccount(options: {
     .locator('input[name="verifyPassword"]')
     .fill(userData.password);
 
+  // Get the submit button and ensure it's ready
+  const submitButton = options.page.getByRole("button", { name: /sign up/i });
+  await expect(submitButton).toBeEnabled();
+
   // Submit the form
-  await options.page.getByRole("button", { name: /sign up/i }).click();
+  await submitButton.click();
 
   // Wait for navigation to complete - we should be redirected to the callback URL
   if (options.callbackURL) {
-    await options.page.waitForLoadState("networkidle");
-    // Extract pathname from callbackURL and match it regardless of domain
+    // First wait for any navigation to start (URL changes from /auth/signup)
+    try {
+      await options.page.waitForURL(
+        (url) => !url.pathname.includes("/auth/signup"),
+        { timeout: 45000 },
+      );
+    } catch (error) {
+      // Log debug info before re-throwing
+      logger.error("Timeout waiting for navigation. Debug info:", {
+        currentUrl: options.page.url(),
+        signupResponse,
+        userData: { email: userData.email, name: userData.name },
+      });
+      throw error;
+    }
+
+    // Then wait for the specific callback URL
     const callbackPath = new URL(options.callbackURL, "http://localhost")
       .pathname;
     await options.page.waitForURL(
@@ -49,7 +88,7 @@ export async function createTestAccount(options: {
         `^[^/]*//[^/]*${callbackPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,
       ),
       {
-        timeout: 30000,
+        timeout: 15000,
       },
     );
   }

@@ -12,16 +12,18 @@ export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
 
   return (
-    <section className="from-background to-muted/20 w-full bg-gradient-to-b py-12 md:py-24 lg:py-32">
+    <section
+      id="pricing"
+      className="from-background to-muted/20 w-full bg-gradient-to-b py-12 md:py-24 lg:py-32"
+    >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Choose Your Plan
+              Choisissez votre formule
             </h2>
             <p className="text-muted-foreground max-w-[700px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Select the perfect plan for your needs. Upgrade or downgrade at
-              any time.
+              Commencez gratuitement, passez au Premium quand vous le souhaitez.
             </p>
           </div>
 
@@ -34,7 +36,7 @@ export function Pricing() {
                   : "text-muted-foreground",
               )}
             >
-              Monthly
+              Mensuel
             </span>
             <Switch
               checked={isYearly}
@@ -49,21 +51,21 @@ export function Pricing() {
                   : "text-muted-foreground",
               )}
             >
-              <span className="text-sm font-medium">Yearly</span>
+              <span className="text-sm font-medium">Annuel</span>
               <Badge
                 variant="outline"
                 className="border-primary/20 bg-primary/10 text-primary ml-2"
               >
-                Save 20%
+                -17%
               </Badge>
             </div>
           </div>
         </div>
 
         <div
-          className="mt-16 grid gap-8 lg:gap-12"
+          className="mx-auto mt-16 grid max-w-3xl gap-8 lg:gap-12"
           style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           }}
         >
           {AUTH_PLANS.filter((p) => !p.isHidden).map((plan) => (
@@ -73,16 +75,16 @@ export function Pricing() {
 
         <div className="mt-16 text-center">
           <p className="text-muted-foreground">
-            All plans include basic features like unlimited access and community
-            support.
+            Tous les plans incluent le suivi de fraîcheur et les recommandations
+            de recettes.
           </p>
           <p className="text-muted-foreground mt-2">
-            Need a custom plan?{" "}
+            Une question ?{" "}
             <Link
               href="/contact"
               className="text-primary font-medium hover:underline"
             >
-              Contact us
+              Contactez-nous
             </Link>
           </p>
         </div>

@@ -1,19 +1,22 @@
-import type { Subscription } from "@/generated/prisma";
+import type { UserSubscription } from "@/generated/prisma";
 import { logger } from "@/lib/logger";
+import { SiteConfig } from "@/site-config";
 import {
-  Clock,
-  FolderArchive,
-  HardDrive,
-  HeadphonesIcon,
-  Shield,
+  Bell,
+  ChartLine,
+  Egg,
+  History,
+  Infinity as InfinityIcon,
+  Share2,
+  Sparkles,
   Users,
-  Zap,
 } from "lucide-react";
 
 const DEFAULT_LIMIT = {
-  projects: 5,
-  storage: 10,
-  members: 3,
+  eggBoxes: SiteConfig.freePlan.maxEggBoxes, // 2 boîtes max en gratuit
+  notifications: 0, // Pas de notifications en gratuit
+  advancedStats: 0, // Pas de stats avancées en gratuit
+  unlimitedHistory: 0, // Historique limité en gratuit
 };
 
 export type PlanLimit = typeof DEFAULT_LIMIT;
@@ -22,7 +25,7 @@ export type OverrideLimits = Partial<PlanLimit>;
 
 type HookCtx = {
   req: Request;
-  organizationId: string;
+  userId: string;
   stripeCustomerId: string;
   subscriptionId: string;
 };
@@ -37,20 +40,23 @@ export type AppAuthPlan = {
   group?: string;
   freeTrial?: {
     days: number;
-    onTrialStart?: (subscription: Subscription, ctx: HookCtx) => Promise<void>;
+    onTrialStart?: (
+      subscription: UserSubscription,
+      ctx: HookCtx,
+    ) => Promise<void>;
     onTrialEnd?: (
       data: {
-        subscription: Subscription;
+        subscription: UserSubscription;
       },
       ctx: HookCtx,
     ) => Promise<void>;
     onTrialExpired?: (
-      subscription: Subscription,
+      subscription: UserSubscription,
       ctx: HookCtx,
     ) => Promise<void>;
   };
-  onSubscriptionCanceled?: (
-    subscription: Subscription,
+  onUserSubscriptionCanceled?: (
+    subscription: UserSubscription,
     ctx: HookCtx,
   ) => Promise<void>;
 } & {
@@ -65,63 +71,40 @@ export type AppAuthPlan = {
 
 export const AUTH_PLANS: AppAuthPlan[] = [
   {
-    name: "free",
-    description:
-      "Perfect for individuals and small projects with essential features",
+    name: "gratuit",
+    description: "Parfait pour commencer à suivre vos oeufs",
     limits: DEFAULT_LIMIT,
     price: 0,
-    currency: "USD",
+    currency: "EUR",
     yearlyPrice: 0,
   },
   {
-    name: "pro",
+    name: "premium",
     isPopular: true,
-    description: "Ideal for growing teams with advanced collaboration needs",
-    priceId: process.env.STRIPE_PRO_PLAN_ID ?? "",
-    annualDiscountPriceId: process.env.STRIPE_PRO_YEARLY_PLAN_ID ?? "",
+    description: "Pour les familles qui veulent zéro gaspillage",
+    priceId: process.env.STRIPE_PREMIUM_PLAN_ID ?? "",
+    annualDiscountPriceId: process.env.STRIPE_PREMIUM_YEARLY_PLAN_ID ?? "",
     limits: {
-      projects: 20,
-      storage: 50,
-      members: 10,
+      eggBoxes: 999, // Illimité
+      notifications: 1, // Notifications activées
+      advancedStats: 1, // Stats avancées activées
+      unlimitedHistory: 1, // Historique illimité
     },
     freeTrial: {
-      days: 14,
+      days: 7,
       onTrialStart: async (subscription) => {
-        // Send a welcome email to the user
-        logger.debug(`Welcome email sent to ${subscription}`);
+        logger.debug(`Essai Premium démarré pour ${subscription.userId}`);
       },
       onTrialExpired: async (subscription) => {
-        // Handle trial expiration
-        logger.debug(`Trial expired for ${subscription}`);
+        logger.debug(`Essai Premium expiré pour ${subscription.userId}`);
       },
-      onTrialEnd: async (subscription) => {
-        // Handle trial end
-        logger.debug(`Trial ended for ${subscription}`);
+      onTrialEnd: async ({ subscription }) => {
+        logger.debug(`Essai Premium terminé pour ${subscription.userId}`);
       },
     },
-
-    price: 49,
-    yearlyPrice: 400,
-    currency: "USD",
-  },
-  {
-    name: "ultra",
-    isPopular: false,
-    description:
-      "Enterprise-grade solution for large teams with complex requirements",
-    priceId: process.env.STRIPE_ULTRA_PLAN_ID ?? "",
-    annualDiscountPriceId: process.env.STRIPE_ULTRA_YEARLY_PLAN_ID ?? "",
-    limits: {
-      projects: 100,
-      storage: 1000,
-      members: 100,
-    },
-    freeTrial: {
-      days: 14,
-    },
-    price: 100,
-    yearlyPrice: 1000,
-    currency: "USD",
+    price: 2.99,
+    yearlyPrice: 29.99, // ~2 mois gratuits
+    currency: "EUR",
   },
 ];
 
@@ -134,62 +117,79 @@ export const LIMITS_CONFIG: Record<
     description: string;
   }
 > = {
-  projects: {
-    icon: FolderArchive,
+  eggBoxes: {
+    icon: Egg,
     getLabel: (value: number) =>
-      `${value} ${value === 1 ? "Project" : "Projects"}`,
-    description: "Create and manage projects",
+      value >= 999
+        ? "Boîtes d'oeufs illimitées"
+        : `${value} boîte${value > 1 ? "s" : ""} d'oeufs`,
+    description: "Nombre de boîtes à suivre",
   },
-  storage: {
-    icon: HardDrive,
-    getLabel: (value: number) => `${value} GB Storage`,
-    description: "Cloud storage for your files",
-  },
-  members: {
-    icon: Users,
+  notifications: {
+    icon: Bell,
     getLabel: (value: number) =>
-      `${value} Team ${value === 1 ? "Member" : "Members"}`,
-    description: "Invite team members to collaborate",
+      value > 0 ? "Alertes d'expiration" : "Alertes d'expiration",
+    description: "Notifications avant péremption",
+  },
+  advancedStats: {
+    icon: ChartLine,
+    getLabel: (value: number) =>
+      value > 0 ? "Statistiques avancées" : "Statistiques de base",
+    description: "Graphiques et analyses détaillées",
+  },
+  unlimitedHistory: {
+    icon: History,
+    getLabel: (value: number) =>
+      value > 0 ? "Historique complet" : "Historique limité (30 jours)",
+    description: "Historique de consommation",
   },
 };
 
 // Additional features by plan
 export const ADDITIONAL_FEATURES = {
-  free: [
+  gratuit: [
     {
-      icon: Shield,
-      label: "Basic Security",
-      description: "Standard protection for your data",
+      icon: Egg,
+      label: "Suivi de fraîcheur",
+      description: "Indicateurs couleur pour chaque boîte",
+    },
+    {
+      icon: Share2,
+      label: "Partage limité",
+      description: "Invitez 1 personne à votre frigo",
     },
   ],
-  pro: [
+  premium: [
     {
-      icon: Zap,
-      label: "Priority Support",
-      description: "Get help when you need it most",
+      icon: InfinityIcon,
+      label: "Boîtes illimitées",
+      description: "Suivez autant de boîtes que vous voulez",
     },
     {
-      icon: HeadphonesIcon,
-      label: "24/7 Customer Service",
-      description: "Round-the-clock assistance",
+      icon: Bell,
+      label: "Alertes intelligentes",
+      description: "Notifications avant expiration",
     },
     {
-      icon: Clock,
-      label: "Advanced Analytics",
-      description: "Detailed insights and reporting",
+      icon: ChartLine,
+      label: "Dashboard avancé",
+      description: "Graphiques et export de données",
     },
-  ],
-  ultra: [
     {
-      icon: Zap,
-      label: "Priority Support",
-      description: "Get help when you need it most",
+      icon: Users,
+      label: "Partage famille",
+      description: "Invitez toute la famille",
+    },
+    {
+      icon: Sparkles,
+      label: "Recettes personnalisées",
+      description: "Suggestions basées sur vos oeufs",
     },
   ],
 };
 
 export const getPlanLimits = (
-  plan = "free",
+  plan = "gratuit",
   overrideLimits?: OverrideLimits | null,
 ): PlanLimit => {
   const planLimits = AUTH_PLANS.find((p) => p.name === plan)?.limits;
@@ -219,4 +219,20 @@ export const getPlanFeatures = (plan: AppAuthPlan): string[] => {
     ),
   ];
   return features;
+};
+
+// Helper pour vérifier si un utilisateur a accès à une feature premium
+export const hasPremiumAccess = (
+  planName: string | null | undefined,
+): boolean => {
+  return planName === "premium";
+};
+
+// Helper pour vérifier la limite de boîtes
+export const canAddEggBox = (
+  currentCount: number,
+  planName: string | null | undefined,
+): boolean => {
+  if (hasPremiumAccess(planName)) return true;
+  return currentCount < DEFAULT_LIMIT.eggBoxes;
 };

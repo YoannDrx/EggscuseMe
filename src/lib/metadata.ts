@@ -1,6 +1,4 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { unstable_cache as cache } from "next/cache";
-import { prisma } from "./prisma";
 
 /**
  * Add a suffix to the title of the parent metadata
@@ -25,31 +23,3 @@ export const combineWithParentMetadata =
       title: `${parentMetadata.title?.absolute} · ${metadata.title}`,
     };
   };
-
-/**
- * This method help us to cache the metadata to avoid to call the database every time.
- *
- * The cache is revalidate every 100 seconds.
- */
-export const orgMetadata = cache(
-  async (orgSlug: string): Promise<Metadata> => {
-    const org = await prisma.organization.findFirst({
-      where: {
-        slug: orgSlug,
-      },
-    });
-
-    if (!org) {
-      return {
-        title: "Organization not found",
-      };
-    }
-
-    return {
-      title: `${org.name}`,
-      description: "Your organization dashboard",
-    };
-  },
-  ["org-metadata"],
-  { revalidate: 100 },
-);

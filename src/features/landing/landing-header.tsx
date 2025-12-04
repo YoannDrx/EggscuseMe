@@ -2,11 +2,20 @@
 
 import { LanguageSwitcher } from "@/components/nowts/language-switcher";
 import { LogoSvg } from "@/components/svg/logo-svg";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { SiteConfig } from "@/site-config";
+import { Menu } from "lucide-react";
 import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AuthButtonClient } from "../auth/auth-button-client";
 import { ThemeToggle } from "../theme/theme-toggle";
 
@@ -49,11 +58,18 @@ function useBoundedScroll(threshold: number) {
 export function LandingHeader() {
   const { scrollYBoundedProgress } = useBoundedScroll(400);
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const scrollYBoundedProgressDelayed = useTransform(
     scrollYBoundedProgress,
     [0, 0.75, 1],
     [0, 0, 1],
   );
+
+  const navLinks = [
+    { href: "#features", label: "Fonctionnalités" },
+    { href: "#pricing", label: "Tarifs" },
+    { href: "/posts", label: "Blog" },
+  ];
 
   return (
     <motion.header
@@ -83,6 +99,8 @@ export function LandingHeader() {
             {SiteConfig.title}
           </motion.p>
         </div>
+
+        {/* Desktop Navigation */}
         <motion.nav
           style={{
             opacity: useTransform(
@@ -91,15 +109,54 @@ export function LandingHeader() {
               [1, 0],
             ),
           }}
-          className="text-muted-foreground flex items-center gap-4 text-sm font-medium"
+          className="text-muted-foreground hidden items-center gap-4 text-sm font-medium sm:flex"
         >
-          <Link href="#features">Features</Link>
-          <Link href="#pricing">Pricing</Link>
-          <Link href="/posts">Blog</Link>
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href}>
+              {link.label}
+            </Link>
+          ))}
           <AuthButtonClient />
           <LanguageSwitcher />
           <ThemeToggle />
         </motion.nav>
+
+        {/* Mobile Navigation */}
+        <div className="flex items-center gap-2 sm:hidden">
+          <ThemeToggle />
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Ouvrir le menu">
+                <Menu className="size-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px]">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2">
+                  <LogoSvg size={20} />
+                  {SiteConfig.title}
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="mt-8 flex flex-col gap-4">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-foreground hover:text-primary text-lg font-medium transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <hr className="border-border my-2" />
+                <div className="flex flex-col gap-3">
+                  <AuthButtonClient />
+                  <LanguageSwitcher />
+                </div>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </motion.header>
   );

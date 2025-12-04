@@ -10,10 +10,12 @@ model EggBox {
   source     String? // "Carrefour", "Fermier local", etc.
   barcode    String? // Barcode if scanned
 
-  userId         String
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Link to Fridge
+  fridgeId String?
+  fridge   Fridge? @relation(fields: [fridgeId], references: [id], onDelete: Cascade)
 
   consumptions EggConsumption[]
 
@@ -21,7 +23,7 @@ model EggBox {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
-  @@index([organizationId])
+  @@index([fridgeId])
   @@map("egg_box")
 }
 
