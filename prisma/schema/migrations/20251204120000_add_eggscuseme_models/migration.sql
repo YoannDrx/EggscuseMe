@@ -13,7 +13,7 @@ CREATE TYPE "FridgeRole" AS ENUM ('OWNER', 'GUEST');
 -- CreateEnum
 CREATE TYPE "YolkPreference" AS ENUM ('RUNNY', 'SOFT', 'MEDIUM', 'HARD');
 
-ALTER TABLE "public"."user" ADD COLUMN "stripeCustomerId" TEXT;
+-- Note: stripeCustomerId already exists in user table from initial migration
 
 -- CreateTable: fridge
 CREATE TABLE "public"."fridge" (
