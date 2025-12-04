@@ -63,7 +63,7 @@ test("password reset flow", async ({ page }) => {
       email: userData.email,
       password: newPassword,
     },
-    callbackURL: "/orgs",
+    callbackURL: "/fridge",
   });
 
   // Clean up - delete the test user

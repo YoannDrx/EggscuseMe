@@ -84,15 +84,20 @@ describe("SignUpCredentialsForm", () => {
       });
     });
 
-    // Check if redirect happened
-    expect(window.location.href).toBe("http://localhost:3000/orgs");
+    // Check if redirect happened (default is /fridge when no callbackUrl)
+    expect(window.location.href).toBe("http://localhost:3000/fridge");
   });
 
   it("should use custom callback URL from searchParams", async () => {
-    // Mock searchParams with custom callback
-    vi.mocked(useSearchParams).mockReturnValue(
-      createTestSearchParams({ callbackUrl: "/dashboard" }),
-    );
+    // Mock window.location with search params (getCallbackUrl uses window.location.search)
+    Object.defineProperty(window, "location", {
+      value: {
+        origin: "http://localhost:3000",
+        href: "http://localhost:3000/auth/signup?callbackUrl=/dashboard",
+        search: "?callbackUrl=/dashboard",
+      },
+      writable: true,
+    });
 
     const { user } = setup(<SignUpCredentialsForm />);
 
@@ -110,7 +115,7 @@ describe("SignUpCredentialsForm", () => {
       expect(authClient.signUp.email).toHaveBeenCalled();
     });
 
-    // Check if redirected to custom URL
-    expect(window.location.href).toBe("http://localhost:3000/orgs");
+    // Check if redirected to custom URL from searchParams
+    expect(window.location.href).toBe("http://localhost:3000/dashboard");
   });
 });
