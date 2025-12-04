@@ -19,6 +19,9 @@ export const SiteConfig = {
     twitter: "",
     name: "EggscuseMe Team",
   },
+  support: {
+    email: "contact@eggscuseme.app",
+  },
   features: {
     /**
      * If enable, you need to specify the logic of upload here : src/features/images/uploadImageAction.tsx
@@ -28,7 +31,7 @@ export const SiteConfig = {
      */
     enableImageUpload: false as boolean,
     /**
-     * If enable, the user will be redirected to `/orgs` when he visits the landing page at `/`
+     * If enable, the user will be redirected to `/fridge` when he visits the landing page at `/`
      * The logic is located in middleware.ts
      */
     enableLandingRedirection: true as boolean,

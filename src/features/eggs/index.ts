@@ -1,16 +1,13 @@
-// Actions
+// Actions - re-export from fridge
 export {
   createEggBoxAction,
-  createOrgEggBoxAction,
   updateEggBoxAction,
   deleteEggBoxAction,
   consumeEggsAction,
-  getEggBoxesAction,
-  getOrgEggBoxesAction,
-  getEggStatsAction,
-} from "./egg-box.action";
+  getFridgeStatsAction as getEggStatsAction,
+} from "@/features/fridge/fridge.action";
 
-// Schemas
+// Schemas - re-export from fridge
 export {
   CreateEggBoxSchema,
   UpdateEggBoxSchema,
@@ -21,7 +18,7 @@ export {
   type CreateEggBoxInput,
   type UpdateEggBoxInput,
   type ConsumeEggsInput,
-} from "./egg-box.schema";
+} from "@/features/fridge/fridge.schema";
 
 // Lib
 export {

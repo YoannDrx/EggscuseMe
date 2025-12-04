@@ -12,11 +12,10 @@ type InvitePageProps = {
 
 export default async function InvitePage({ params }: InvitePageProps) {
   const { code } = await params;
-  const result = await getInviteByCode(code);
+  const invite = await getInviteByCode(code);
 
   // Error state
-  if (result.error || !result.invite) {
-    const errorMessage = result.error || "Cette invitation n'existe pas.";
+  if (!invite) {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center p-4">
         <Card variant="sunny" className="w-full max-w-md text-center">
@@ -31,7 +30,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <CardContent className="space-y-4">
             <div className="text-destructive flex items-center justify-center gap-2">
               <AlertCircle className="size-5" />
-              <p>{errorMessage}</p>
+              <p>Cette invitation n'existe pas ou a expiré.</p>
             </div>
             <Link
               href="/"
@@ -45,8 +44,6 @@ export default async function InvitePage({ params }: InvitePageProps) {
     );
   }
 
-  const { invite } = result;
-
   return (
     <div className="bg-background flex min-h-screen items-center justify-center p-4">
       <Card variant="sunny" className="w-full max-w-md text-center">
@@ -59,25 +56,19 @@ export default async function InvitePage({ params }: InvitePageProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Organization info */}
+          {/* Fridge info */}
           <div className="bg-muted/50 flex flex-col items-center gap-3 rounded-xl p-4">
             <div className="bg-primary/10 flex size-16 items-center justify-center rounded-full">
-              {invite.organization.logo ? (
-                <img
-                  src={invite.organization.logo}
-                  alt={invite.organization.name}
-                  className="size-12 rounded-full object-cover"
-                />
-              ) : (
-                <Users className="text-primary size-8" />
-              )}
+              <Users className="text-primary size-8" />
             </div>
             <div>
               <h3 className="font-heading text-lg font-semibold">
-                {invite.organization.name}
+                {invite.fridge.name}
               </h3>
               <p className="text-muted-foreground text-sm">
-                Rejoignez ce frigo pour partager le suivi des œufs
+                {invite.fridge.owner.name
+                  ? `Frigo de ${invite.fridge.owner.name}`
+                  : "Rejoignez ce frigo pour partager le suivi des œufs"}
               </p>
             </div>
           </div>
@@ -99,12 +90,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
           </ul>
 
           {/* Action buttons */}
-          <AcceptInviteButton
-            code={code}
-            organizationSlug={
-              invite.organization.slug ?? invite.organization.id
-            }
-          />
+          <AcceptInviteButton code={code} />
 
           <p className="text-muted-foreground text-xs">
             En rejoignant, vous acceptez de partager l'accès au suivi des œufs

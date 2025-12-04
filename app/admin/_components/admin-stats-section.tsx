@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AUTH_PLANS } from "@/lib/auth/stripe/auth-plans";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
-import { Building2, Crown, DollarSign, Users } from "lucide-react";
+import { Crown, DollarSign, Egg, Users } from "lucide-react";
 import { cacheLife } from "next/dist/server/use-cache/cache-life";
 
 async function calculateTotalMRR() {
-  const subscriptions = await prisma.subscription.findMany({
+  const subscriptions = await prisma.userSubscription.findMany({
     where: {
       status: { in: ["active", "trialing", "past_due"] },
       stripeSubscriptionId: { not: null },
@@ -79,17 +79,18 @@ export async function AdminStatsSection() {
     (p) => p.name,
   );
 
-  const [totalOrgs, totalUsers, premiumOrgs, mrrInCents] = await Promise.all([
-    prisma.organization.count(),
-    prisma.user.count(),
-    prisma.subscription.count({
-      where: {
-        plan: { in: premiumPlanNames },
-        status: { in: ["active", "trialing", "past_due"] },
-      },
-    }),
-    calculateTotalMRR(),
-  ]);
+  const [totalFridges, totalUsers, premiumUsers, mrrInCents] =
+    await Promise.all([
+      prisma.fridge.count(),
+      prisma.user.count(),
+      prisma.userSubscription.count({
+        where: {
+          plan: { in: premiumPlanNames },
+          status: { in: ["active", "trialing", "past_due"] },
+        },
+      }),
+      calculateTotalMRR(),
+    ]);
 
   const mrrFormatted = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -98,10 +99,10 @@ export async function AdminStatsSection() {
 
   const stats = [
     {
-      title: "Total Organizations",
-      value: totalOrgs.toLocaleString(),
-      description: "Active organizations",
-      icon: Building2,
+      title: "Total Fridges",
+      value: totalFridges.toLocaleString(),
+      description: "Active fridges",
+      icon: Egg,
     },
     {
       title: "Total Users",
@@ -110,8 +111,8 @@ export async function AdminStatsSection() {
       icon: Users,
     },
     {
-      title: "Premium Organizations",
-      value: premiumOrgs.toLocaleString(),
+      title: "Premium Users",
+      value: premiumUsers.toLocaleString(),
       description: "Paid plan subscriptions",
       icon: Crown,
     },

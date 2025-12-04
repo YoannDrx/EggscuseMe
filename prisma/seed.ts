@@ -7,16 +7,20 @@ import { prisma } from "../src/lib/prisma";
 faker.seed(123);
 
 async function main() {
-  logger.info("🌱 Seeding database...");
+  logger.info("Seeding database...");
 
-  // Create 10 users
+  // Create 10 users with fridges
   const userCreatePromises = Array.from({ length: 10 }, async () => {
     const email = faker.internet.email();
-    return prisma.user.upsert({
+    const userId = nanoid(11);
+    const fridgeId = nanoid(11);
+
+    // Create user
+    const user = await prisma.user.upsert({
       where: { email },
       update: {},
       create: {
-        id: nanoid(11),
+        id: userId,
         name: faker.person.fullName(),
         email,
         emailVerified: faker.datatype.boolean(0.8), // 80% chance of being verified
@@ -25,107 +29,118 @@ async function main() {
         updatedAt: faker.date.recent(),
       },
     });
+
+    // Create fridge for user if doesn't exist
+    await prisma.fridge.upsert({
+      where: { ownerId: user.id },
+      update: {},
+      create: {
+        id: fridgeId,
+        name: `Frigo de ${user.name}`,
+        ownerId: user.id,
+      },
+    });
+
+    return user;
   });
 
   const users = await Promise.all(userCreatePromises);
-  users.forEach((user) => logger.info(`👤 Created user: ${user.name}`));
+  users.forEach((user) => logger.info(`Created user: ${user.name}`));
 
-  // Create 3 organizations
-  const memberPromises: Promise<unknown>[] = [];
-  const invitationPromises: Promise<unknown>[] = [];
-
-  // Prepare organization creation data
-  const orgData = Array.from({ length: 3 }, () => {
-    const orgName = faker.company.name();
-    const orgSlug = orgName.toLowerCase().replace(/[^a-z0-9]/g, "-");
-    return { orgName, orgSlug };
+  // Get all fridges
+  const fridges = await prisma.fridge.findMany({
+    include: { owner: true },
   });
 
-  // Create all organizations first
-  const organizations = await Promise.all(
-    orgData.map(async ({ orgName, orgSlug }) =>
-      prisma.organization
-        .upsert({
-          where: { slug: orgSlug },
-          update: {},
-          create: {
-            id: nanoid(11),
-            name: orgName,
-            slug: orgSlug,
-            logo: faker.image.url(),
-            email: faker.internet.email(),
-            createdAt: faker.date.past(),
-          },
-        })
-        .then((org) => {
-          logger.info(`🏢 Created organization: ${org.name}`);
-          return org;
-        }),
-    ),
+  fridges.forEach((fridge) =>
+    logger.info(`Created fridge: ${fridge.name} (owner: ${fridge.owner.name})`),
   );
 
-  // Process members and invitations for each organization
-  organizations.forEach((organization) => {
-    const roleOptions = ["owner", "admin", "member"];
+  // Add some egg boxes to each fridge
+  const eggBoxPromises: Promise<unknown>[] = [];
 
-    // Make sure each org has at least one owner
-    memberPromises.push(
-      prisma.member
-        .create({
+  for (const fridge of fridges) {
+    const boxCount = faker.number.int({ min: 1, max: 4 });
+
+    for (let i = 0; i < boxCount; i++) {
+      const quantity = faker.helpers.arrayElement([6, 10, 12, 30]);
+      const remaining = faker.number.int({ min: 0, max: quantity });
+      const daysAgo = faker.number.int({ min: 0, max: 25 });
+
+      eggBoxPromises.push(
+        prisma.eggBox.create({
           data: {
             id: nanoid(11),
-            organizationId: organization.id,
-            userId: users[0].id, // First user is always an owner
-            role: "owner",
-            createdAt: faker.date.past(),
+            name: faker.helpers.arrayElement([
+              "Bio",
+              "Plein air",
+              "Fermier",
+              "Label Rouge",
+              null,
+            ]),
+            layingDate: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000),
+            quantity,
+            remaining,
+            size: faker.helpers.arrayElement(["S", "M", "L", "XL"]),
+            source: faker.helpers.arrayElement([
+              "Carrefour",
+              "Fermier local",
+              "Marché",
+              "Bio c'est bon",
+              null,
+            ]),
+            userId: fridge.ownerId,
+            fridgeId: fridge.id,
           },
-        })
-        .then(() =>
-          logger.info(
-            `👑 Added ${users[0].name} as OWNER to ${organization.name}`,
-          ),
-        ),
-    );
-
-    // Add 2-4 more random members to each org
-    const memberCount = faker.number.int({ min: 2, max: 4 });
-    const memberIndices = faker.helpers.uniqueArray(
-      () => faker.number.int({ min: 1, max: users.length - 1 }),
-      memberCount,
-    );
-
-    for (const index of memberIndices) {
-      const user = users[index];
-      const role = faker.helpers.arrayElement(roleOptions);
-
-      memberPromises.push(
-        prisma.member
-          .create({
-            data: {
-              id: nanoid(11),
-              organizationId: organization.id,
-              userId: user.id,
-              role,
-              createdAt: faker.date.past(),
-            },
-          })
-          .then(() =>
-            logger.info(
-              `👥 Added ${user.name} as ${role} to ${organization.name}`,
-            ),
-          ),
+        }),
       );
     }
-  });
+  }
 
-  await Promise.all([...memberPromises, ...invitationPromises]);
+  await Promise.all(eggBoxPromises);
+  logger.info(`Created ${eggBoxPromises.length} egg boxes`);
 
-  logger.info("✅ Seeding completed!");
+  // Add some fridge members (guests)
+  const memberPromises: Promise<unknown>[] = [];
+
+  // First fridge gets 2 guest members
+  if (fridges.length > 0 && users.length > 2) {
+    const firstFridge = fridges[0];
+
+    for (let i = 1; i <= 2; i++) {
+      const guestUser = users[i];
+      if (guestUser.id !== firstFridge.ownerId) {
+        memberPromises.push(
+          prisma.fridgeMember
+            .create({
+              data: {
+                id: nanoid(11),
+                fridgeId: firstFridge.id,
+                userId: guestUser.id,
+                role: "GUEST",
+              },
+            })
+            .then(() =>
+              logger.info(
+                `Added ${guestUser.name} as guest to ${firstFridge.name}`,
+              ),
+            )
+            .catch(() => {
+              // Member might already exist, ignore
+            }),
+        );
+      }
+    }
+  }
+
+  await Promise.all(memberPromises);
+
+  logger.info("Seeding completed!");
 }
 
 main()
   .catch((e) => {
-    logger.error("❌ Error seeding database:", e);
+    logger.error("Error seeding database:", e);
     process.exit(1);
   })
   .finally(async () => {

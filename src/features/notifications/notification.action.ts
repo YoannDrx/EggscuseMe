@@ -6,7 +6,7 @@ import { authAction } from "@/lib/actions/safe-actions";
 import ExpirationWarningEmail from "@email/expiration-warning.email";
 import {
   getUsersWithExpiringEggs,
-  groupEggsByOrganization,
+  groupEggsByFridge,
 } from "./check-expiring-eggs";
 import { UpdateNotificationPreferencesSchema } from "./notification.schema";
 
@@ -59,6 +59,18 @@ export const updateNotificationPreferencesAction = authAction
     return { preferences: prefs };
   });
 
+type ExpiringEgg = {
+  id: string;
+  name: string | null;
+  remaining: number;
+  daysRemaining: number;
+  layingDate: Date;
+  fridge: {
+    id: string;
+    name: string;
+  } | null;
+};
+
 /**
  * Send expiration warning emails to all users with expiring eggs
  * This is called by the CRON job
@@ -76,25 +88,24 @@ export async function sendExpirationEmails(): Promise<{
   const emailPromises: Promise<{ error: Error | null }>[] = [];
 
   for (const userData of usersWithExpiringEggs) {
-    const eggsByOrg = groupEggsByOrganization(userData.eggs);
+    const eggsByFridge = groupEggsByFridge(userData.eggs);
 
-    // Send one email per organization
-    for (const [, orgData] of eggsByOrg) {
+    // Send one email per fridge
+    for (const [, fridgeData] of eggsByFridge) {
       const emailData = {
         userName: userData.userName,
-        eggs: orgData.eggs.map((egg) => ({
+        eggs: fridgeData.eggs.map((egg: ExpiringEgg) => ({
           name: egg.name ?? "Boîte d'oeufs",
           daysLeft: egg.daysRemaining,
           quantity: egg.remaining,
         })),
-        organizationName: orgData.orgName,
-        organizationSlug: orgData.orgSlug,
+        fridgeName: fridgeData.fridgeName,
       };
 
       emailPromises.push(
         sendEmail({
           to: userData.userEmail,
-          subject: `Alerte fraîcheur - ${orgData.eggs.length} boîte${orgData.eggs.length > 1 ? "s" : ""} bientôt périmée${orgData.eggs.length > 1 ? "s" : ""}`,
+          subject: `Alerte fraîcheur - ${fridgeData.eggs.length} boîte${fridgeData.eggs.length > 1 ? "s" : ""} bientôt périmée${fridgeData.eggs.length > 1 ? "s" : ""}`,
           html: ExpirationWarningEmail(emailData),
         }),
       );

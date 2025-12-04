@@ -40,8 +40,8 @@ export function EggBoxVisual({
   return (
     <div
       className={cn(
-        "rounded-xl bg-gradient-to-b from-amber-50 to-amber-100/50 p-3",
-        "border border-amber-200/50 shadow-inner",
+        "bg-primary/5 rounded-xl p-3",
+        "border-primary/20 border shadow-inner",
         className,
       )}
     >

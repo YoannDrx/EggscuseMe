@@ -13,18 +13,24 @@ import {
 import { SidebarNavigationMenu } from "@/components/ui/sidebar-utils";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
-import type { AuthOrganization } from "@/lib/auth/auth-type";
-import { ChevronDown } from "lucide-react";
-import { OrgsSelect } from "../../orgs/[orgSlug]/(navigation)/_navigation/orgs-select";
+import { SiteConfig } from "@/site-config";
+import { ChevronDown, Egg } from "lucide-react";
+import Link from "next/link";
 import { getAccountNavigation } from "./account.links";
 
-export function AccountSidebar({ userOrgs }: { userOrgs: AuthOrganization[] }) {
+export function AccountSidebar() {
   const links: NavigationGroup[] = getAccountNavigation();
 
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
-        <OrgsSelect orgs={userOrgs} />
+        <Link
+          href="/fridge"
+          className="hover:bg-accent flex items-center gap-2 rounded-md px-2 py-1.5 transition-colors"
+        >
+          <Egg className="size-5" />
+          <span className="font-semibold">{SiteConfig.title}</span>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         {links.map((link) => (

@@ -9,8 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  createCheckoutAction,
+  createPortalSessionAction,
+} from "@/features/fridge/billing.action";
 import { Eggy } from "@/features/mascot";
-import { ArrowLeft, Check, Crown, Sparkles, Zap } from "lucide-react";
+import { resolveActionResult } from "@/lib/actions/actions-utils";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowLeft, Check, Crown, Loader2, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useCurrentFridge } from "../../use-current-fridge";
@@ -34,21 +40,45 @@ const FREE_FEATURES = [
 export default function BillingPage() {
   const fridgeState = useCurrentFridge();
 
+  const upgradeMutation = useMutation({
+    mutationFn: async () => {
+      return resolveActionResult(
+        createCheckoutAction({
+          plan: "premium",
+          annual: false,
+          successUrl: "/fridge/settings/billing?success=true",
+          cancelUrl: "/fridge/settings/billing?canceled=true",
+        }),
+      );
+    },
+    onSuccess: (data) => {
+      toast.info("Redirection vers le paiement...");
+      window.location.href = data.url;
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const portalMutation = useMutation({
+    mutationFn: async () => {
+      return resolveActionResult(createPortalSessionAction());
+    },
+    onSuccess: (data) => {
+      toast.info("Ouverture du portail de gestion...");
+      window.location.href = data.url;
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   if (!fridgeState) {
     return null;
   }
 
   const isPremium = fridgeState.isPremium;
-
-  const handleUpgrade = () => {
-    // TODO: Implement Stripe checkout
-    toast.info("Redirection vers le paiement...");
-  };
-
-  const handleManageSubscription = () => {
-    // TODO: Implement Stripe customer portal
-    toast.info("Ouverture du portail de gestion...");
-  };
+  const isLoading = upgradeMutation.isPending || portalMutation.isPending;
 
   return (
     <div className="space-y-6">
@@ -101,12 +131,27 @@ export default function BillingPage() {
         </CardHeader>
         <CardContent>
           {isPremium ? (
-            <Button variant="outline" onClick={handleManageSubscription}>
+            <Button
+              variant="outline"
+              onClick={() => portalMutation.mutate()}
+              disabled={isLoading}
+            >
+              {portalMutation.isPending && (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              )}
               Gérer mon abonnement
             </Button>
           ) : (
-            <Button variant="neubrutalism" onClick={handleUpgrade}>
-              <Sparkles className="mr-2 size-4" />
+            <Button
+              variant="neubrutalism"
+              onClick={() => upgradeMutation.mutate()}
+              disabled={isLoading}
+            >
+              {upgradeMutation.isPending ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Sparkles className="mr-2 size-4" />
+              )}
               Passer Premium - 2,99€/mois
             </Button>
           )}
@@ -165,9 +210,14 @@ export default function BillingPage() {
               <Button
                 variant="neubrutalism"
                 className="mt-6 w-full"
-                onClick={handleUpgrade}
+                onClick={() => upgradeMutation.mutate()}
+                disabled={isLoading}
               >
-                <Sparkles className="mr-2 size-4" />
+                {upgradeMutation.isPending ? (
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                ) : (
+                  <Sparkles className="mr-2 size-4" />
+                )}
                 Choisir Premium
               </Button>
             )}

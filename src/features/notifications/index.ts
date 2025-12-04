@@ -13,5 +13,5 @@ export {
 
 export {
   getUsersWithExpiringEggs,
-  groupEggsByOrganization,
+  groupEggsByFridge,
 } from "./check-expiring-eggs";

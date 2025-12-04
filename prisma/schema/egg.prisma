@@ -10,14 +10,10 @@ model EggBox {
   source     String? // "Carrefour", "Fermier local", etc.
   barcode    String? // Barcode if scanned
 
-  userId         String
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // DEPRECATED: Keep for migration, will be removed later
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  // NEW: Link to Fridge (simplified architecture)
+  // Link to Fridge
   fridgeId String?
   fridge   Fridge? @relation(fields: [fridgeId], references: [id], onDelete: Cascade)
 
@@ -27,7 +23,6 @@ model EggBox {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
-  @@index([organizationId])
   @@index([fridgeId])
   @@map("egg_box")
 }
@@ -91,25 +86,4 @@ enum YolkPreference {
   SOFT // Baveux
   MEDIUM // Mi-cuit
   HARD // Bien cuit
-}
-
-// Simple link-based invitations for sharing fridge access
-model FridgeInvite {
-  id             String       @id @default(nanoid(11))
-  code           String       @unique @default(nanoid(8)) // Short shareable code
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  createdById    String // User who created the invite
-
-  expiresAt      DateTime // When the link expires
-  maxUses        Int      @default(5) // Maximum number of uses
-  usedCount      Int      @default(0) // How many times used
-  isActive       Boolean  @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([code])
-  @@index([organizationId])
-  @@map("fridge_invite")
 }

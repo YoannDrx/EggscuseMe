@@ -121,6 +121,7 @@ export async function getFridgeAccess(
 /**
  * Get or create fridge for the user
  * Creates a new fridge if user doesn't have one and isn't a guest anywhere
+ * Uses upsert to prevent race conditions (P2002 unique constraint errors)
  */
 export async function getOrCreateFridge(
   user: SessionUser,
@@ -131,13 +132,16 @@ export async function getOrCreateFridge(
     return existingAccess;
   }
 
-  // Create new fridge for user
-  const newFridge = await prisma.fridge.create({
-    data: {
+  // Use upsert to prevent race conditions when multiple requests
+  // try to create a fridge for the same user simultaneously
+  const fridge = await prisma.fridge.upsert({
+    where: { ownerId: user.id },
+    create: {
       id: nanoid(11),
       name: "Mon Frigo",
       ownerId: user.id,
     },
+    update: {}, // No updates needed if it already exists
     include: {
       eggBoxes: true,
       members: {
@@ -156,7 +160,7 @@ export async function getOrCreateFridge(
   const subscription = await getUserSubscription(user.id);
 
   return {
-    fridge: newFridge,
+    fridge,
     role: "OWNER",
     subscription,
     user,

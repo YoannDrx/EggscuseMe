@@ -5,27 +5,20 @@ import { createTestAccount } from "./utils/auth-test";
 test("sign up and verify account creation", async ({ page }) => {
   const userData = await createTestAccount({
     page,
-    callbackURL: "/orgs",
+    callbackURL: "/fridge",
   });
 
-  await page.waitForURL(/\/orgs\/.*/);
+  await page.waitForURL(/\/fridge.*/);
 
-  // Verify we're on an organization page
+  // Verify we're on the fridge page
   const currentUrl = page.url();
-  expect(currentUrl).toMatch(/\/orgs\/.*/);
-
-  // Extract organization slug from URL
-  const orgSlug = currentUrl.split("/orgs/")[1].split("/")[0];
+  expect(currentUrl).toMatch(/\/fridge.*/);
 
   // Verify the user was created in the database
   const user = await prisma.user.findUnique({
     where: { email: userData.email },
     include: {
-      members: {
-        include: {
-          organization: true,
-        },
-      },
+      ownedFridge: true,
     },
   });
 
@@ -35,14 +28,10 @@ test("sign up and verify account creation", async ({ page }) => {
   expect(user?.email).toBe(userData.email);
   expect(user?.emailVerified).toBe(false); // Email should not be verified yet
 
-  // Verify user is part of an organization
-  expect(user?.members.length).toBeGreaterThan(0);
+  // Verify user has a fridge
+  expect(user?.ownedFridge).not.toBeNull();
 
-  // Verify the organization slug matches the one in the URL
-  const userOrg = user?.members[0].organization;
-  expect(userOrg?.slug).toBe(orgSlug);
-
-  // Clean up - delete the test user and organization
+  // Clean up - delete the test user
   // This is optional but helps keep the test database clean
   if (user) {
     // Delete the user (cascade should handle related records)

@@ -1,198 +1,148 @@
 "use server";
 
-import { authAction, orgAction } from "@/lib/actions/safe-actions";
+import { authAction } from "@/lib/actions/safe-actions";
 import { ActionError } from "@/lib/errors/action-error";
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import {
-  AcceptInviteSchema,
-  CreateInviteSchema,
-  DeactivateInviteSchema,
-} from "./invite.schema";
+import { z } from "zod";
+
+const CreateInviteInputSchema = z.object({
+  maxUses: z.number().min(1).max(100).default(5),
+  expiresInDays: z.number().min(1).max(30).default(7),
+});
 
 /**
- * Create a new invite link for the current organization
+ * Create an invite link to share the user's fridge
  */
-export const createInviteAction = orgAction
-  .metadata({})
-  .inputSchema(CreateInviteSchema)
-  .action(async ({ parsedInput: data, ctx: { org } }) => {
-    // Check if user has permission to invite (owner or admin)
-    if (org.user.role !== "owner" && org.user.role !== "admin") {
-      throw new ActionError(
-        "Vous devez être propriétaire ou admin pour créer des invitations.",
-      );
+export const createInviteAction = authAction
+  .inputSchema(CreateInviteInputSchema)
+  .action(async ({ parsedInput: data, ctx: { user } }) => {
+    // Get user's fridge
+    const fridge = await prisma.fridge.findFirst({
+      where: { ownerId: user.id },
+    });
+
+    if (!fridge) {
+      throw new ActionError("Vous n'avez pas de frigo à partager.");
     }
 
-    // Calculate expiration date
+    // Create a new share link
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + data.expiresInDays);
 
-    const invite = await prisma.fridgeInvite.create({
+    const invite = await prisma.fridgeShareLink.create({
       data: {
-        organizationId: org.id,
-        createdById: org.user.id,
+        fridgeId: fridge.id,
+        createdById: user.id,
         maxUses: data.maxUses,
         expiresAt,
       },
     });
 
-    revalidatePath(`/orgs/${org.slug}`);
     return { invite };
   });
 
-/**
- * Get all active invites for the current organization
- */
-export const getInvitesAction = orgAction
-  .metadata({})
-  .action(async ({ ctx: { org } }) => {
-    const invites = await prisma.fridgeInvite.findMany({
-      where: {
-        organizationId: org.id,
-        isActive: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    return { invites };
-  });
+const AcceptInviteInputSchema = z.object({
+  code: z.string().min(1),
+});
 
 /**
- * Deactivate an invite link
- */
-export const deactivateInviteAction = orgAction
-  .metadata({})
-  .inputSchema(DeactivateInviteSchema)
-  .action(async ({ parsedInput: { id }, ctx: { org } }) => {
-    const invite = await prisma.fridgeInvite.findFirst({
-      where: {
-        id,
-        organizationId: org.id,
-      },
-    });
-
-    if (!invite) {
-      throw new ActionError("Invitation non trouvée.");
-    }
-
-    await prisma.fridgeInvite.update({
-      where: { id },
-      data: { isActive: false },
-    });
-
-    revalidatePath(`/orgs/${org.slug}`);
-    return { success: true };
-  });
-
-/**
- * Get invite details by code (public, no auth required)
- */
-export async function getInviteByCode(code: string) {
-  const invite = await prisma.fridgeInvite.findUnique({
-    where: { code },
-    include: {
-      organization: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          logo: true,
-        },
-      },
-    },
-  });
-
-  if (!invite) {
-    return { error: "Invitation non trouvée." };
-  }
-
-  if (!invite.isActive) {
-    return { error: "Cette invitation a été désactivée." };
-  }
-
-  if (invite.expiresAt < new Date()) {
-    return { error: "Cette invitation a expiré." };
-  }
-
-  if (invite.usedCount >= invite.maxUses) {
-    return {
-      error: "Cette invitation a atteint son nombre maximum d'utilisations.",
-    };
-  }
-
-  return { invite };
-}
-
-/**
- * Accept an invite and join the organization
+ * Accept an invite and join a fridge as a guest
  */
 export const acceptInviteAction = authAction
-  .inputSchema(AcceptInviteSchema)
+  .inputSchema(AcceptInviteInputSchema)
   .action(async ({ parsedInput: { code }, ctx: { user } }) => {
-    const invite = await prisma.fridgeInvite.findUnique({
-      where: { code },
+    // Find the share link
+    const shareLink = await prisma.fridgeShareLink.findFirst({
+      where: {
+        code,
+        isActive: true,
+        expiresAt: { gt: new Date() },
+      },
       include: {
-        organization: true,
+        fridge: true,
       },
     });
 
-    if (!invite) {
-      throw new ActionError("Invitation non trouvée.");
+    if (!shareLink) {
+      throw new ActionError("Ce lien d'invitation est invalide ou expiré.");
     }
 
-    if (!invite.isActive) {
-      throw new ActionError("Cette invitation a été désactivée.");
-    }
-
-    if (invite.expiresAt < new Date()) {
-      throw new ActionError("Cette invitation a expiré.");
-    }
-
-    if (invite.usedCount >= invite.maxUses) {
+    if (shareLink.usedCount >= shareLink.maxUses) {
       throw new ActionError(
-        "Cette invitation a atteint son nombre maximum d'utilisations.",
+        "Ce lien d'invitation a atteint son nombre maximum d'utilisations.",
       );
     }
 
     // Check if user is already a member
-    const existingMember = await prisma.member.findFirst({
+    const existingMembership = await prisma.fridgeMember.findFirst({
       where: {
+        fridgeId: shareLink.fridgeId,
         userId: user.id,
-        organizationId: invite.organizationId,
       },
     });
 
-    if (existingMember) {
-      return {
-        success: true,
-        alreadyMember: true,
-        organization: invite.organization,
-      };
+    if (existingMembership) {
+      throw new ActionError("Vous êtes déjà membre de ce frigo.");
     }
 
-    // Add user as member and increment usage count
+    // Check if user is the owner
+    if (shareLink.fridge.ownerId === user.id) {
+      throw new ActionError("Vous êtes déjà propriétaire de ce frigo.");
+    }
+
+    // Add user as guest and increment usage count
     await prisma.$transaction([
-      prisma.member.create({
+      prisma.fridgeMember.create({
         data: {
-          id: crypto.randomUUID(),
-          organizationId: invite.organizationId,
+          fridgeId: shareLink.fridgeId,
           userId: user.id,
-          role: "member",
-          createdAt: new Date(),
+          role: "GUEST",
         },
       }),
-      prisma.fridgeInvite.update({
-        where: { id: invite.id },
+      prisma.fridgeShareLink.update({
+        where: { id: shareLink.id },
         data: {
           usedCount: { increment: 1 },
         },
       }),
     ]);
 
-    return {
-      success: true,
-      alreadyMember: false,
-      organization: invite.organization,
-    };
+    return { fridge: shareLink.fridge };
   });
+
+/**
+ * Get invite by code (for preview before accepting)
+ */
+export async function getInviteByCode(code: string) {
+  const shareLink = await prisma.fridgeShareLink.findFirst({
+    where: {
+      code,
+      isActive: true,
+      expiresAt: { gt: new Date() },
+    },
+    include: {
+      fridge: {
+        select: {
+          id: true,
+          name: true,
+          owner: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!shareLink || shareLink.usedCount >= shareLink.maxUses) {
+    return null;
+  }
+
+  return {
+    code: shareLink.code,
+    fridge: shareLink.fridge,
+    expiresAt: shareLink.expiresAt,
+  };
+}

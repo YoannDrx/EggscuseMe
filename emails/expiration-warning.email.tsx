@@ -24,8 +24,7 @@ type ExpiringEgg = {
 type ExpirationWarningEmailProps = {
   userName: string;
   eggs: ExpiringEgg[];
-  organizationName: string;
-  organizationSlug: string;
+  fridgeName: string;
 };
 
 export default function ExpirationWarningEmail({
@@ -34,8 +33,7 @@ export default function ExpirationWarningEmail({
     { name: "Ferme du Coin", daysLeft: 2, quantity: 4 },
     { name: "Marché bio", daysLeft: 3, quantity: 6 },
   ],
-  organizationName = "Mon Frigo",
-  organizationSlug = "mon-frigo",
+  fridgeName = "Mon Frigo",
 }: ExpirationWarningEmailProps) {
   let baseUrl = getServerUrl();
 
@@ -43,14 +41,14 @@ export default function ExpirationWarningEmail({
     baseUrl = SiteConfig.prodUrl;
   }
 
-  const fridgeUrl = `${baseUrl}/orgs/${organizationSlug}`;
+  const fridgeUrl = `${baseUrl}/fridge`;
   const totalEggs = eggs.reduce((sum, egg) => sum + egg.quantity, 0);
 
   return (
     <Html>
       <Head />
       <Preview>
-        {`${totalEggs} oeufs vont bientôt expirer dans ${organizationName}`}
+        {`${totalEggs} oeufs vont bientôt expirer dans ${fridgeName}`}
       </Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-[#FDFBF7] font-sans">
@@ -77,7 +75,7 @@ export default function ExpirationWarningEmail({
             </Text>
 
             <Text className="text-base text-[#2D2D2D]">
-              Certains oeufs de votre frigo <strong>{organizationName}</strong>{" "}
+              Certains oeufs de votre frigo <strong>{fridgeName}</strong>{" "}
               arrivent bientôt à expiration. Il est temps de les cuisiner !
             </Text>
 

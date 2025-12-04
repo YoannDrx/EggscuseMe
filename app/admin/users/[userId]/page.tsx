@@ -19,7 +19,6 @@ import {
 } from "@/features/page/layout";
 import { getRequiredAdmin } from "@/lib/auth/auth-user";
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { UserDetailsCard } from "../../_components/user-details-card";
@@ -44,15 +43,8 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
       id: params.userId,
     },
     include: {
-      members: {
-        include: {
-          organization: {
-            include: {
-              subscription: true,
-            },
-          },
-        },
-      },
+      ownedFridge: true,
+      userSubscription: true,
       accounts: {
         orderBy: {
           createdAt: "desc",
@@ -70,7 +62,7 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
       <LayoutHeader>
         <LayoutTitle>User Details</LayoutTitle>
         <LayoutDescription>
-          View and manage user information and organization memberships
+          View and manage user information and subscription
         </LayoutDescription>
       </LayoutHeader>
       <LayoutActions>
@@ -81,62 +73,55 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
         <UserDetailsCard user={userData} />
         <Card>
           <CardHeader>
-            <CardTitle>Organizations</CardTitle>
+            <CardTitle>Fridge & Subscription</CardTitle>
           </CardHeader>
           <CardContent>
-            {userData.members.length === 0 ? (
+            {!userData.ownedFridge ? (
               <div className="text-muted-foreground py-4 text-center">
-                No organizations found
+                No fridge found
               </div>
             ) : (
               <ItemGroup>
-                {userData.members.map((memberRole) => (
-                  <Item key={memberRole.id} variant="outline" size="sm" asChild>
-                    <Link
-                      href={`/admin/organizations/${memberRole.organization.id}`}
-                    >
-                      <ItemMedia variant="image">
-                        <Avatar className="size-10">
-                          <AvatarImage
-                            src={memberRole.organization.logo ?? undefined}
-                            alt={memberRole.organization.name}
-                          />
-                          <AvatarFallback className="text-sm">
-                            {memberRole.organization.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                      </ItemMedia>
-                      <ItemContent>
-                        <ItemTitle>{memberRole.organization.name}</ItemTitle>
-                        <ItemDescription>
-                          {memberRole.organization.email} • Role:{" "}
-                          {memberRole.role}
-                          {memberRole.organization.subscription && (
-                            <>
-                              {" • "}
-                              <Badge
-                                variant={
-                                  memberRole.organization.subscription
-                                    .status === "active"
-                                    ? "default"
-                                    : memberRole.organization.subscription
-                                          .status === "canceled"
-                                      ? "destructive"
-                                      : "secondary"
-                                }
-                                className="text-xs"
-                              >
-                                {memberRole.organization.subscription.plan}
-                                {memberRole.organization.subscription.status &&
-                                  ` (${memberRole.organization.subscription.status})`}
-                              </Badge>
-                            </>
-                          )}
-                        </ItemDescription>
-                      </ItemContent>
-                    </Link>
-                  </Item>
-                ))}
+                <Item variant="outline" size="sm">
+                  <ItemMedia variant="image">
+                    <Avatar className="size-10">
+                      <AvatarImage
+                        src={undefined}
+                        alt={userData.ownedFridge.name}
+                      />
+                      <AvatarFallback className="text-sm">
+                        {userData.ownedFridge.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{userData.ownedFridge.name}</ItemTitle>
+                    <ItemDescription>
+                      Created:{" "}
+                      {userData.ownedFridge.createdAt.toLocaleDateString()}
+                      {userData.userSubscription && (
+                        <>
+                          {" • "}
+                          <Badge
+                            variant={
+                              userData.userSubscription.status === "active"
+                                ? "default"
+                                : userData.userSubscription.status ===
+                                    "canceled"
+                                  ? "destructive"
+                                  : "secondary"
+                            }
+                            className="text-xs"
+                          >
+                            {userData.userSubscription.plan}
+                            {userData.userSubscription.status &&
+                              ` (${userData.userSubscription.status})`}
+                          </Badge>
+                        </>
+                      )}
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
               </ItemGroup>
             )}
           </CardContent>

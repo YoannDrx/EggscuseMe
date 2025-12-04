@@ -102,8 +102,8 @@ export default function SettingsPage() {
               className="hover:border-primary/30 cursor-pointer transition-colors"
             >
               <CardHeader className="flex flex-row items-center gap-4">
-                <div className="flex size-12 items-center justify-center rounded-full bg-amber-500/10">
-                  <CreditCard className="size-6 text-amber-600" />
+                <div className="bg-primary/10 flex size-12 items-center justify-center rounded-full">
+                  <CreditCard className="text-primary size-6" />
                 </div>
                 <div>
                   <CardTitle className="font-heading text-lg">

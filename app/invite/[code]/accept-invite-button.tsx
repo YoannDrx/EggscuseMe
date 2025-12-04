@@ -10,13 +10,9 @@ import { toast } from "sonner";
 
 type AcceptInviteButtonProps = {
   code: string;
-  organizationSlug: string;
 };
 
-export function AcceptInviteButton({
-  code,
-  organizationSlug,
-}: AcceptInviteButtonProps) {
+export function AcceptInviteButton({ code }: AcceptInviteButtonProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -24,13 +20,11 @@ export function AcceptInviteButton({
     startTransition(async () => {
       const result = await acceptInviteAction({ code });
 
-      if (result.data?.success) {
-        if (result.data.alreadyMember) {
-          toast.info("Vous êtes déjà membre de ce frigo !");
-        } else {
-          toast.success("Bienvenue dans le frigo !");
-        }
-        router.push(`/orgs/${organizationSlug}`);
+      if (result.data?.fridge) {
+        toast.success("Bienvenue dans le frigo !");
+        router.push("/fridge");
+      } else if (result.serverError) {
+        toast.error(result.serverError);
       } else {
         toast.error("Impossible de rejoindre le frigo");
       }

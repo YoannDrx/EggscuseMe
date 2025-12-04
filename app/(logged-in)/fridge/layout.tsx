@@ -1,5 +1,6 @@
 import { getRequiredCurrentFridge } from "@/lib/fridge/get-fridge-access";
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { FridgeNavigation } from "./_navigation/fridge-navigation";
 import { InjectCurrentFridgeStore } from "./use-current-fridge";
 
@@ -13,6 +14,9 @@ export default async function FridgeLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Ensure dynamic rendering for auth-dependent content
+  await connection();
+
   const fridgeAccess = await getRequiredCurrentFridge();
 
   return (

@@ -66,8 +66,8 @@ export default function TimerPage() {
           <Card variant="sunny">
             <CardHeader>
               <CardTitle className="font-heading flex items-center gap-2 text-lg">
-                <div className="flex size-8 items-center justify-center rounded-full bg-amber-500/10">
-                  <ChefHat className="size-4 text-amber-600" />
+                <div className="bg-primary/10 flex size-8 items-center justify-center rounded-full">
+                  <ChefHat className="text-primary size-4" />
                 </div>
                 Guide de cuisson
               </CardTitle>

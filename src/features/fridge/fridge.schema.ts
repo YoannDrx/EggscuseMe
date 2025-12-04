@@ -1,10 +1,24 @@
 import { z } from "zod";
 
-// Re-export from eggs for convenience
-export {
-  CookingTypeSchema,
-  EggSizeSchema,
-} from "@/features/eggs/egg-box.schema";
+/**
+ * Schema for egg size
+ */
+export const EggSizeSchema = z.enum(["S", "M", "L", "XL"]);
+
+/**
+ * Schema for cooking types
+ */
+export const CookingTypeSchema = z.enum([
+  "SOFT_BOILED",
+  "POACHED",
+  "RAW",
+  "FRIED",
+  "SCRAMBLED",
+  "OMELETTE",
+  "HARD_BOILED",
+  "BAKING",
+  "OTHER",
+]);
 
 /**
  * Schema for creating an egg box (simplified - no organizationId needed)

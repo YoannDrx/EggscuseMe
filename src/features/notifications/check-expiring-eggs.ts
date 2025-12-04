@@ -9,10 +9,9 @@ type ExpiringEggBox = {
   remaining: number;
   daysRemaining: number;
   layingDate: Date;
-  organization: {
+  fridge: {
     id: string;
     name: string;
-    slug: string | null;
   } | null;
 };
 
@@ -54,11 +53,10 @@ export async function getUsersWithExpiringEggs(): Promise<
       remaining: { gt: 0 },
     },
     include: {
-      organization: {
+      fridge: {
         select: {
           id: true,
           name: true,
-          slug: true,
         },
       },
     },
@@ -97,7 +95,7 @@ export async function getUsersWithExpiringEggs(): Promise<
           remaining: box.remaining,
           daysRemaining,
           layingDate: box.layingDate,
-          organization: box.organization,
+          fridge: box.fridge,
         });
       }
     }
@@ -118,35 +116,31 @@ export async function getUsersWithExpiringEggs(): Promise<
 }
 
 /**
- * Group expiring eggs by organization for better email formatting
+ * Group expiring eggs by fridge for better email formatting
  */
-export function groupEggsByOrganization(eggs: ExpiringEggBox[]): Map<
+export function groupEggsByFridge(eggs: ExpiringEggBox[]): Map<
   string,
   {
-    orgName: string;
-    orgSlug: string;
+    fridgeName: string;
     eggs: ExpiringEggBox[];
   }
 > {
   const groups = new Map<
     string,
     {
-      orgName: string;
-      orgSlug: string;
+      fridgeName: string;
       eggs: ExpiringEggBox[];
     }
   >();
 
   for (const egg of eggs) {
-    const orgId = egg.organization?.id ?? "personal";
-    const orgName = egg.organization?.name ?? "Mon Frigo";
-    const orgSlug = egg.organization?.slug ?? egg.organization?.id ?? "";
+    const fridgeId = egg.fridge?.id ?? "personal";
+    const fridgeName = egg.fridge?.name ?? "Mon Frigo";
 
-    const existingGroup = groups.get(orgId);
+    const existingGroup = groups.get(fridgeId);
     if (!existingGroup) {
-      groups.set(orgId, {
-        orgName,
-        orgSlug,
+      groups.set(fridgeId, {
+        fridgeName,
         eggs: [egg],
       });
     } else {

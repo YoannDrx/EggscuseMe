@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { authClient } from "@/lib/auth-client";
 import type { AppAuthPlan } from "@/lib/auth/stripe/auth-plans";
 import {
   ADDITIONAL_FEATURES,
@@ -19,8 +18,8 @@ import { cn } from "@/lib/utils";
 import { Clock } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
+import { createCheckoutAction } from "../fridge/billing.action";
 import { LoadingButton } from "../form/submit-button";
-import { upgradeOrgAction } from "./plans.action";
 
 export function PricingCard({
   plan,
@@ -29,19 +28,19 @@ export function PricingCard({
   plan: AppAuthPlan;
   isYearly?: boolean;
 }) {
-  // Get the active organization
-  const { data: activeOrg } = authClient.useActiveOrganization();
-
-  const { execute: upgradeOrg, isPending } = useAction(upgradeOrgAction, {
-    onSuccess: (result) => {
-      if (result.data.url) {
-        window.location.href = result.data.url;
-      }
+  const { execute: createCheckout, isPending } = useAction(
+    createCheckoutAction,
+    {
+      onSuccess: (result) => {
+        if (result.data.url) {
+          window.location.href = result.data.url;
+        }
+      },
+      onError: (error) => {
+        toast.error(error.error.serverError ?? "Failed to start checkout");
+      },
     },
-    onError: (error) => {
-      toast.error(error.error.serverError ?? "Failed to upgrade plan");
-    },
-  });
+  );
 
   // Calculate pricing details
   const monthlyPrice = plan.price;
@@ -182,15 +181,11 @@ export function PricingCard({
             plan.isPopular ? "bg-primary hover:bg-primary/90" : "",
           )}
           onClick={() => {
-            if (!activeOrg) {
-              toast.error("No active organization");
-              return;
-            }
-            upgradeOrg({
+            createCheckout({
               plan: plan.name,
-              annual: isYearly,
-              successUrl: `/orgs/${activeOrg.slug}/settings/billing/success`,
-              cancelUrl: `/orgs/${activeOrg.slug}/settings/billing`,
+              annual: isYearly ?? false,
+              successUrl: `/fridge/settings/billing/success`,
+              cancelUrl: `/fridge/settings/billing`,
             });
           }}
         >

@@ -1,56 +1,23 @@
-import {
-  extractOrgSlug,
-  findUserOrganization,
-  handleRootRedirect,
-  isAdminRoute,
-  isReservedSlug,
-  redirectToOrgList,
-  redirectToRoot,
-  switchActiveOrganization,
-  validateAdminAccess,
-  validateSession,
-} from "@/lib/auth/middleware-utils";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+/**
+ * Simple proxy middleware - no longer handles organization routing
+ * Just handles admin access validation
+ */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Landing page is at /
+  // Don't redirect - let the homepage render
   if (pathname === "/") {
-    return handleRootRedirect(request) ?? NextResponse.next();
-  }
-
-  if (isAdminRoute(pathname)) {
-    const adminUser = await validateAdminAccess(request);
-    if (!adminUser) {
-      return redirectToRoot(request);
-    }
     return NextResponse.next();
   }
 
-  const slug = extractOrgSlug(pathname);
-  if (!slug) return NextResponse.next();
+  // Admin routes are handled by the admin layout
+  // No special middleware needed
 
-  if (isReservedSlug(slug)) {
-    return NextResponse.next();
-  }
-
-  const sessionData = await validateSession(request);
-  if (!sessionData) return NextResponse.next();
-
-  const { session, activeOrganisation } = sessionData;
-
-  if (activeOrganisation?.slug === slug) {
-    return NextResponse.next();
-  }
-
-  const org = await findUserOrganization(slug, session.session.userId);
-
-  if (!org) {
-    return redirectToOrgList(request);
-  }
-
-  return switchActiveOrganization(request, org.id);
+  return NextResponse.next();
 }
 
 export const config = {

@@ -143,7 +143,7 @@ export function EggTimer() {
               isDone
                 ? "border-fresh-extra bg-fresh-extra/10"
                 : isRunning
-                  ? "border-primary/30 bg-gradient-to-b from-blue-50 to-blue-100"
+                  ? "border-primary/30 bg-primary/5 dark:bg-primary/10"
                   : "border-muted bg-muted/30",
             )}
           >

@@ -1,7 +1,11 @@
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
 import {
+  AlertTriangle,
+  Bell,
   BookOpen,
+  ChartLine,
   CreditCard,
+  History,
   Home,
   Settings,
   Timer,
@@ -38,16 +42,26 @@ const FRIDGE_LINKS: NavigationGroup[] = [
         Icon: BookOpen,
         label: "Recettes",
       },
+      {
+        href: "/fridge/statistics",
+        Icon: ChartLine,
+        label: "Statistiques",
+      },
+      {
+        href: "/fridge/history",
+        Icon: History,
+        label: "Historique",
+      },
     ],
   },
   {
-    title: "Paramètres",
+    title: "Parametres",
     defaultOpenStartPath: "/fridge/settings",
     links: [
       {
         href: "/fridge/settings",
         Icon: Settings,
-        label: "Préférences",
+        label: "Preferences",
       },
       {
         href: "/fridge/settings/sharing",
@@ -55,9 +69,19 @@ const FRIDGE_LINKS: NavigationGroup[] = [
         label: "Partage",
       },
       {
+        href: "/fridge/settings/notifications",
+        Icon: Bell,
+        label: "Notifications",
+      },
+      {
         href: "/fridge/settings/billing",
         Icon: CreditCard,
         label: "Abonnement",
+      },
+      {
+        href: "/fridge/settings/danger",
+        Icon: AlertTriangle,
+        label: "Zone danger",
       },
     ],
   },
