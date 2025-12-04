@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
 import { faker } from "@faker-js/faker";
 import type { Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { retry } from "./retry";
 
 export const getUserEmail = () =>
@@ -27,6 +28,9 @@ export async function createTestAccount(options: {
   // Navigate to signup page
   await options.page.goto(`/auth/signup?callbackUrl=${options.callbackURL}`);
 
+  // Wait for the form to be ready
+  await options.page.waitForLoadState("domcontentloaded");
+
   // Fill out the form
   await options.page.getByLabel("Name").fill(userData.name);
   await options.page.getByLabel("Email").fill(userData.email);
@@ -35,13 +39,22 @@ export async function createTestAccount(options: {
     .locator('input[name="verifyPassword"]')
     .fill(userData.password);
 
+  // Get the submit button and ensure it's ready
+  const submitButton = options.page.getByRole("button", { name: /sign up/i });
+  await expect(submitButton).toBeEnabled();
+
   // Submit the form
-  await options.page.getByRole("button", { name: /sign up/i }).click();
+  await submitButton.click();
 
   // Wait for navigation to complete - we should be redirected to the callback URL
   if (options.callbackURL) {
-    await options.page.waitForLoadState("networkidle");
-    // Extract pathname from callbackURL and match it regardless of domain
+    // First wait for any navigation to start (URL changes from /auth/signup)
+    await options.page.waitForURL(
+      (url) => !url.pathname.includes("/auth/signup"),
+      { timeout: 45000 },
+    );
+
+    // Then wait for the specific callback URL
     const callbackPath = new URL(options.callbackURL, "http://localhost")
       .pathname;
     await options.page.waitForURL(
@@ -49,7 +62,7 @@ export async function createTestAccount(options: {
         `^[^/]*//[^/]*${callbackPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,
       ),
       {
-        timeout: 30000,
+        timeout: 15000,
       },
     );
   }
