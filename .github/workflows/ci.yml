@@ -1,0 +1,373 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  PNPM_VERSION: "10.14.0"
+  LOCAL_PG_URL: postgresql://postgres@localhost:5432/eggscuseme_test
+  LOCAL_REDIS_URL: redis://localhost:6379
+
+jobs:
+  lint-and-typecheck:
+    name: Lint, Types & Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Run ESLint
+        run: pnpm lint:ci
+
+      - name: Run TypeScript check
+        run: pnpm ts
+
+      - name: Run unit tests
+        run: pnpm test:ci
+
+  prisma:
+    name: Prisma Migrations Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint-and-typecheck
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: eggscuseme_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set database URLs (PR → local Postgres)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "DATABASE_URL=postgresql://postgres@localhost:5432/eggscuseme_test" >> $GITHUB_ENV
+          echo "DATABASE_URL_UNPOOLED=postgresql://postgres@localhost:5432/eggscuseme_test" >> $GITHUB_ENV
+
+      - name: Set database URLs (push → secrets)
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "DATABASE_URL_UNPOOLED=${{ secrets.DATABASE_URL_UNPOOLED }}" >> $GITHUB_ENV
+
+      - name: Wait for Postgres (PR)
+        if: github.event_name == 'pull_request'
+        run: pnpm dlx wait-on@latest tcp:localhost:5432 -t 20000
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Apply migrations
+        run: pnpm prisma migrate deploy
+
+      - name: Check Prisma schema format
+        run: pnpm prisma format --check
+
+      - name: Validate Prisma schema
+        run: pnpm prisma validate
+
+      - name: Check for pending schema changes
+        run: |
+          pnpm exec prisma migrate diff \
+            --from-url "$DATABASE_URL" \
+            --to-schema-datamodel prisma/schema \
+            --exit-code || {
+              echo ""
+              echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+              echo "❌ Schema drift detected"
+              echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+              echo "Run 'pnpm prisma:migrate' locally to create the migration"
+              echo "and commit it before pushing."
+              echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+              exit 1
+            }
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint-and-typecheck
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Build application
+        run: pnpm build
+        env:
+          DATABASE_URL: postgresql://postgres@localhost:5432/eggscuseme_test
+          DATABASE_URL_UNPOOLED: postgresql://postgres@localhost:5432/eggscuseme_test
+          REDIS_URL: redis://localhost:6379
+          BETTER_AUTH_SECRET: ci-placeholder
+          BETTER_AUTH_URL: http://localhost:3000
+          NEXT_PUBLIC_SITE_URL: https://example.com
+          NEXT_PUBLIC_POSTHOG_KEY: ci-placeholder
+          NEXT_PUBLIC_POSTHOG_HOST: https://app.posthog.com
+
+      - name: Check build output
+        run: |
+          if [ ! -d ".next" ]; then
+            echo "❌ Build failed: .next directory not found"
+            exit 1
+          fi
+          echo "✅ Build successful!"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: .next
+          retention-days: 1
+
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: build
+    if: github.event_name == 'pull_request'
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: eggscuseme_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis/redis-stack-server:6.2.6-v6
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    env:
+      BETTER_AUTH_SECRET: ci-placeholder
+      BETTER_AUTH_URL: http://localhost:3000
+      REDIS_URL: redis://localhost:6379
+      PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_EMAIL_CONTACT: contact@nowts.app
+      EMAIL_FROM: "NowTS <contact@nowts.app>"
+      NEXT_PUBLIC_POSTHOG_KEY: ci-placeholder
+      NEXT_PUBLIC_POSTHOG_HOST: https://app.posthog.com
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: stub
+      STRIPE_SECRET_KEY: stub
+      STRIPE_WEBHOOK_SECRET: stub
+      STRIPE_PRO_PLAN_ID: stub
+      STRIPE_PRO_YEARLY_PLAN_ID: stub
+      STRIPE_ULTRA_PLAN_ID: stub
+      STRIPE_ULTRA_YEARLY_PLAN_ID: stub
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set database URLs (PR → local Postgres)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "DATABASE_URL=postgresql://postgres@localhost:5432/eggscuseme_test" >> $GITHUB_ENV
+          echo "DATABASE_URL_UNPOOLED=postgresql://postgres@localhost:5432/eggscuseme_test" >> $GITHUB_ENV
+
+      - name: Set database URLs (push → secrets)
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "DATABASE_URL_UNPOOLED=${{ secrets.DATABASE_URL_UNPOOLED }}" >> $GITHUB_ENV
+
+      - name: Wait for Postgres
+        run: pnpm dlx wait-on@latest tcp:localhost:5432 -t 20000
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+
+      - name: Apply migrations
+        run: pnpm prisma migrate deploy
+
+      - name: Seed database for E2E (idempotent)
+        run: pnpm prisma:seed
+        env:
+          SKIP_SEED_IF_DATA_PRESENT: "1"
+
+      - name: Download build artifacts
+        id: download-build
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: build-artifacts
+          path: .next
+
+      - name: Build application (fallback if artifact missing)
+        if: steps.download-build.outcome == 'failure'
+        run: pnpm build
+        env:
+          DATABASE_URL: postgresql://postgres@localhost:5432/eggscuseme_test
+          DATABASE_URL_UNPOOLED: postgresql://postgres@localhost:5432/eggscuseme_test
+          REDIS_URL: redis://localhost:6379
+          BETTER_AUTH_SECRET: ci-placeholder
+          BETTER_AUTH_URL: http://localhost:3000
+          NEXT_PUBLIC_SITE_URL: https://example.com
+          NEXT_PUBLIC_POSTHOG_KEY: ci-placeholder
+          NEXT_PUBLIC_POSTHOG_HOST: https://app.posthog.com
+
+      - name: Start application in background
+        run: |
+          pnpm start &
+          pnpm dlx wait-on@latest http://localhost:3000 -t 60000
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ env.DATABASE_URL_UNPOOLED }}
+          REDIS_URL: redis://localhost:6379
+          BETTER_AUTH_SECRET: ${{ env.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL: ${{ env.BETTER_AUTH_URL }}
+          PORT: 3000
+
+      - name: Run Playwright tests
+        run: pnpm test:e2e:ci
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          BETTER_AUTH_SECRET: ${{ env.BETTER_AUTH_SECRET }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload test screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: test-results/
+          retention-days: 7
+
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, prisma, build]
+    if: success()
+
+    steps:
+      - name: CI Pipeline Summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ CI PIPELINE PASSED"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "📋 Jobs completed successfully:"
+          echo "  ✓ Lint, Types & Unit Tests"
+          echo "  ✓ Prisma Schema Validation"
+          echo "  ✓ Application Build"
+          echo ""
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "🎯 Next steps:"
+            echo "  • E2E tests will run automatically"
+            echo "  • Review changes and merge when ready"
+          else
+            echo "🚀 Deployment:"
+            echo "  • All checks passed on ${{ github.ref_name }}"
+            echo "  • Migrations applied in vercel-build if needed"
+          fi
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
