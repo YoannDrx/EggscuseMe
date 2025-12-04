@@ -11,6 +11,36 @@ test("sign up and verify account creation", async ({ page }) => {
     }
   });
 
+  // Capture page errors (uncaught exceptions)
+  page.on("pageerror", (error) => {
+    // eslint-disable-next-line no-console
+    console.log(`Browser page error: ${error.message}`);
+  });
+
+  // Log all network requests to /api/auth for debugging
+  page.on("request", (request) => {
+    if (request.url().includes("/api/auth")) {
+      // eslint-disable-next-line no-console
+      console.log(`API Request: ${request.method()} ${request.url()}`);
+    }
+  });
+
+  page.on("response", (response) => {
+    if (response.url().includes("/api/auth")) {
+      // eslint-disable-next-line no-console
+      console.log(`API Response: ${response.status()} ${response.url()}`);
+    }
+  });
+
+  page.on("requestfailed", (request) => {
+    if (request.url().includes("/api/auth")) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `API Request Failed: ${request.url()} - ${request.failure()?.errorText}`,
+      );
+    }
+  });
+
   const userData = await createTestAccount({
     page,
     callbackURL: "/fridge",

@@ -25,6 +25,22 @@ export async function createTestAccount(options: {
     password: faker.internet.password({ length: 12, memorable: true }),
   };
 
+  // Track API responses for debugging
+  let signupResponse: { status: number; body: string } | null = null;
+  options.page.on("response", async (response) => {
+    if (response.url().includes("/api/auth/sign-up")) {
+      try {
+        signupResponse = {
+          status: response.status(),
+          body: await response.text(),
+        };
+        logger.info("Signup API response", signupResponse);
+      } catch {
+        // Ignore errors reading response
+      }
+    }
+  });
+
   // Navigate to signup page
   await options.page.goto(`/auth/signup?callbackUrl=${options.callbackURL}`);
 
@@ -49,10 +65,20 @@ export async function createTestAccount(options: {
   // Wait for navigation to complete - we should be redirected to the callback URL
   if (options.callbackURL) {
     // First wait for any navigation to start (URL changes from /auth/signup)
-    await options.page.waitForURL(
-      (url) => !url.pathname.includes("/auth/signup"),
-      { timeout: 45000 },
-    );
+    try {
+      await options.page.waitForURL(
+        (url) => !url.pathname.includes("/auth/signup"),
+        { timeout: 45000 },
+      );
+    } catch (error) {
+      // Log debug info before re-throwing
+      logger.error("Timeout waiting for navigation. Debug info:", {
+        currentUrl: options.page.url(),
+        signupResponse,
+        userData: { email: userData.email, name: userData.name },
+      });
+      throw error;
+    }
 
     // Then wait for the specific callback URL
     const callbackPath = new URL(options.callbackURL, "http://localhost")
