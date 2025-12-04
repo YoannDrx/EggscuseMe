@@ -13,11 +13,7 @@ CREATE TYPE "FridgeRole" AS ENUM ('OWNER', 'GUEST');
 -- CreateEnum
 CREATE TYPE "YolkPreference" AS ENUM ('RUNNY', 'SOFT', 'MEDIUM', 'HARD');
 
--- AlterTable: Add stripeCustomerId back to user (was removed in migration 20250813011134)
 ALTER TABLE "public"."user" ADD COLUMN "stripeCustomerId" TEXT;
-
--- AlterTable: Add impersonatedBy to session
-ALTER TABLE "public"."session" ADD COLUMN "impersonatedBy" TEXT;
 
 -- CreateTable: fridge
 CREATE TABLE "public"."fridge" (
