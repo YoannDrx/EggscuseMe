@@ -1,6 +1,6 @@
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
-import { Timer, ChefHat, BarChart3, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { EggBoxGrid } from "./egg-box-grid";
@@ -22,13 +22,11 @@ async function FridgePageContent() {
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-950">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-stone-800 bg-stone-950/80 backdrop-blur-md">
+      {/* Mobile Header - Hidden on desktop (desktop uses sidebar header) */}
+      <header className="sticky top-0 z-40 border-b border-stone-800 bg-stone-950/80 backdrop-blur-md md:hidden">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="hidden sm:block">
-              <Eggy mood="happy" size="sm" />
-            </div>
+            <Eggy mood="happy" size="sm" />
             <div>
               <h1 className="text-xl font-bold text-white">
                 {fridge?.name ?? "Mon Frigo"}
@@ -38,9 +36,12 @@ async function FridgePageContent() {
               </p>
             </div>
           </div>
-          <div className="flex size-9 items-center justify-center rounded-full bg-amber-400/20">
+          <Link
+            href="/fridge/settings/profile"
+            className="flex size-9 items-center justify-center rounded-full bg-amber-400/20 transition-colors hover:bg-amber-400/30"
+          >
             <User className="size-4 text-amber-400" />
-          </div>
+          </Link>
         </div>
       </header>
 
@@ -56,77 +57,18 @@ async function FridgePageContent() {
           <EggBoxGrid eggBoxes={eggBoxes} canModify={role === "OWNER"} />
         </div>
       </main>
-
-      {/* Bottom Navigation - Mobile */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-stone-800 bg-stone-900/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm sm:hidden">
-        <div className="grid h-16 grid-cols-4">
-          <NavItem href="/fridge" icon={FridgeIcon} label="Frigo" active />
-          <NavItem href="/fridge/timer" icon={Timer} label="Timer" />
-          <NavItem href="/fridge/guide" icon={ChefHat} label="Guide" />
-          <NavItem href="/fridge/stats" icon={BarChart3} label="Stats" />
-        </div>
-      </nav>
-
-      {/* Bottom padding for mobile nav */}
-      <div className="h-16 sm:hidden" />
     </div>
-  );
-}
-
-function NavItem({
-  href,
-  icon: Icon,
-  label,
-  active = false,
-}: {
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  active?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-        active
-          ? "bg-amber-400/10 text-amber-400"
-          : "text-stone-500 hover:text-stone-300"
-      }`}
-    >
-      <Icon className="size-5" />
-      <span className="text-[10px] font-medium">{label}</span>
-    </Link>
-  );
-}
-
-function FridgeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M4 2h16a1 1 0 011 1v18a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" />
-      <path d="M3 9h18" />
-      <path d="M7 5v2" />
-      <path d="M7 12v5" />
-    </svg>
   );
 }
 
 function FridgePageSkeleton() {
   return (
     <div className="flex min-h-screen flex-col bg-stone-950">
-      {/* Header Skeleton */}
-      <header className="border-b border-stone-800 bg-stone-950">
+      {/* Header Skeleton - Mobile only */}
+      <header className="border-b border-stone-800 bg-stone-950 md:hidden">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="hidden size-10 animate-pulse rounded-full bg-stone-800 sm:block" />
+            <div className="size-10 animate-pulse rounded-full bg-stone-800" />
             <div className="space-y-2">
               <div className="h-6 w-32 animate-pulse rounded bg-stone-800" />
               <div className="h-3 w-24 animate-pulse rounded bg-stone-800" />

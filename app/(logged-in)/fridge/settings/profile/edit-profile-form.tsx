@@ -47,7 +47,7 @@ export const EditProfileCardForm = ({
       );
     },
     onSuccess: () => {
-      toast.success("Profile updated");
+      toast.success("Profil mis à jour");
       router.refresh();
     },
     onError: (error) => {
@@ -90,7 +90,7 @@ export const EditProfileCardForm = ({
       );
     },
     onSuccess: () => {
-      toast.success("Verification email sent");
+      toast.success("Email de vérification envoyé");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -99,9 +99,9 @@ export const EditProfileCardForm = ({
 
   return (
     <Form form={form}>
-      <Card>
+      <Card variant="sunny">
         <CardHeader>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <form.AppField name="image">
               {(field) => (
                 <AvatarUploader
@@ -113,12 +113,17 @@ export const EditProfileCardForm = ({
 
             <form.Subscribe selector={(state) => state.values.name}>
               {(name) => (
-                <CardTitle>
-                  {displayName({
-                    email: defaultValues.email,
-                    name: name,
-                  })}
-                </CardTitle>
+                <div>
+                  <CardTitle className="font-heading text-xl">
+                    {displayName({
+                      email: defaultValues.email,
+                      name: name,
+                    })}
+                  </CardTitle>
+                  <Typography variant="muted" className="text-sm">
+                    {defaultValues.email}
+                  </Typography>
+                </div>
               )}
             </form.Subscribe>
           </div>
@@ -127,9 +132,9 @@ export const EditProfileCardForm = ({
           <form.AppField name="name">
             {(field) => (
               <field.Field>
-                <field.Label>Name</field.Label>
+                <field.Label>Nom</field.Label>
                 <field.Content>
-                  <field.Input placeholder="" />
+                  <field.Input placeholder="Votre nom" />
                   <field.Message />
                 </field.Content>
               </field.Field>
@@ -139,8 +144,8 @@ export const EditProfileCardForm = ({
             <Label className="flex items-center gap-4">
               <span>Email</span>
               {defaultValues.emailVerified ? (
-                <InlineTooltip title="Email verified. If you change your email, you will need to verify it again.">
-                  <BadgeCheck size={16} />
+                <InlineTooltip title="Email vérifié">
+                  <BadgeCheck size={16} className="text-fresh-extra" />
                 </InlineTooltip>
               ) : (
                 <LoadingButton
@@ -151,28 +156,28 @@ export const EditProfileCardForm = ({
                   onClick={() => verifyEmailMutation.mutate()}
                   loading={verifyEmailMutation.isPending}
                 >
-                  Verify email
+                  Vérifier l&apos;email
                 </LoadingButton>
               )}
             </Label>
             <Typography>{defaultValues.email}</Typography>
           </div>
         </CardContent>
-        <CardFooter className="flex gap-2">
+        <CardFooter className="flex flex-wrap gap-2">
           <Link
             className={buttonVariants({ size: "sm", variant: "link" })}
-            href="/account/change-email"
+            href="/fridge/settings/security"
           >
-            Change email
+            Changer l&apos;email
           </Link>
           <Link
             className={buttonVariants({ size: "sm", variant: "link" })}
-            href="/account/change-password"
+            href="/fridge/settings/security"
           >
-            Change password
+            Changer le mot de passe
           </Link>
-          <div className="flex-1"></div>
-          <form.SubmitButton>Save</form.SubmitButton>
+          <div className="flex-1" />
+          <form.SubmitButton>Enregistrer</form.SubmitButton>
         </CardFooter>
       </Card>
     </Form>

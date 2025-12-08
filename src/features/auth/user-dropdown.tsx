@@ -7,25 +7,12 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-client";
-import {
-  LayoutDashboard,
-  Monitor,
-  Moon,
-  Settings,
-  Shield,
-  SunMedium,
-  SunMoon,
-} from "lucide-react";
+import { Shield, User } from "lucide-react";
 
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import { UserDropdownLogout } from "./user-dropdown-logout";
@@ -33,7 +20,6 @@ import { UserDropdownStopImpersonating } from "./user-dropdown-stop-impersonatin
 
 export const UserDropdown = ({ children }: PropsWithChildren) => {
   const session = useSession();
-  const theme = useTheme();
 
   if (!session.data?.user) {
     return null;
@@ -57,15 +43,9 @@ export const UserDropdown = ({ children }: PropsWithChildren) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/fridge">
-            <LayoutDashboard className="mr-2 size-4" />
-            Mon Frigo
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account">
-            <Settings className="mr-2 size-4" />
-            Account Settings
+          <Link href="/fridge/settings/profile">
+            <User className="mr-2 size-4" />
+            Mon profil
           </Link>
         </DropdownMenuItem>
         {session.data.user.role === "admin" && (
@@ -77,32 +57,6 @@ export const UserDropdown = ({ children }: PropsWithChildren) => {
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <SunMoon className="text-muted-foreground mr-4 size-4" />
-            <span>Theme</span>
-          </DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => theme.setTheme("dark")}>
-                <SunMedium className="mr-2 size-4" />
-                <span>Dark</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => theme.setTheme("light")}>
-                <Moon className="mr-2 size-4" />
-                <span>Light</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => theme.setTheme("system")}>
-                <Monitor className="mr-2 size-4" />
-                <span>System</span>
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-
-        <DropdownMenuSeparator />
-
         <DropdownMenuGroup>
           <UserDropdownLogout />
           {session.data.session.impersonatedBy ? (

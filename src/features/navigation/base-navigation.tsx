@@ -59,9 +59,9 @@ const BaseSidebar = () => {
             </SidebarMenuButtonLink>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButtonLink href="/account">
+            <SidebarMenuButtonLink href="/fridge/settings/profile">
               <User />
-              <span>Account</span>
+              <span>Mon profil</span>
             </SidebarMenuButtonLink>
           </SidebarMenuItem>
         </SidebarMenu>

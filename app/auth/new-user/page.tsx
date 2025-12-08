@@ -35,7 +35,7 @@ async function NewUserPage(props: PageProps<"/auth/new-user">) {
   const callbackUrl =
     typeof searchParams.callbackUrl === "string"
       ? searchParams.callbackUrl
-      : "/";
+      : "/fridge";
 
   redirect(callbackUrl);
 

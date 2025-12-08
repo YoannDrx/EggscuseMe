@@ -7,8 +7,11 @@ import {
   CreditCard,
   History,
   Home,
+  KeyRound,
+  Palette,
   Settings,
   Timer,
+  User,
   Users,
 } from "lucide-react";
 
@@ -16,11 +19,44 @@ export const getFridgeNavigation = (
   role: "OWNER" | "GUEST",
 ): NavigationGroup[] => {
   if (role === "GUEST") {
-    // Guests only see main menu
-    return [FRIDGE_LINKS[0]];
+    // Guests see main menu + limited settings (profile, security, appearance, danger)
+    return [FRIDGE_LINKS[0], GUEST_SETTINGS];
   }
   // Owners see everything
   return FRIDGE_LINKS;
+};
+
+// Settings section for guests (limited options)
+const GUEST_SETTINGS: NavigationGroup = {
+  title: "Paramètres",
+  defaultOpenStartPath: "/fridge/settings",
+  links: [
+    {
+      href: "/fridge/settings",
+      Icon: Settings,
+      label: "Paramètres",
+    },
+    {
+      href: "/fridge/settings/profile",
+      Icon: User,
+      label: "Mon profil",
+    },
+    {
+      href: "/fridge/settings/security",
+      Icon: KeyRound,
+      label: "Sécurité",
+    },
+    {
+      href: "/fridge/settings/appearance",
+      Icon: Palette,
+      label: "Apparence",
+    },
+    {
+      href: "/fridge/settings/danger",
+      Icon: AlertTriangle,
+      label: "Zone danger",
+    },
+  ],
 };
 
 const FRIDGE_LINKS: NavigationGroup[] = [
@@ -55,13 +91,28 @@ const FRIDGE_LINKS: NavigationGroup[] = [
     ],
   },
   {
-    title: "Parametres",
+    title: "Paramètres",
     defaultOpenStartPath: "/fridge/settings",
     links: [
       {
         href: "/fridge/settings",
         Icon: Settings,
-        label: "Preferences",
+        label: "Paramètres",
+      },
+      {
+        href: "/fridge/settings/profile",
+        Icon: User,
+        label: "Mon profil",
+      },
+      {
+        href: "/fridge/settings/security",
+        Icon: KeyRound,
+        label: "Sécurité",
+      },
+      {
+        href: "/fridge/settings/appearance",
+        Icon: Palette,
+        label: "Apparence",
       },
       {
         href: "/fridge/settings/sharing",

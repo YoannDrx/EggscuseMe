@@ -54,11 +54,11 @@ export function ConfirmDeletePage({
   };
 
   const handleCancel = () => {
-    router.push("/account");
+    router.push("/fridge");
   };
 
   if (!token) {
-    router.push("/account");
+    router.push("/fridge");
     return null;
   }
 

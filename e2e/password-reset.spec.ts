@@ -8,17 +8,14 @@ test("password reset flow", async ({ page }) => {
   // 1. Create a test account
   const userData = await createTestAccount({
     page,
-    callbackURL: "/account",
+    callbackURL: "/fridge/settings/profile",
   });
 
-  // Wait to be on the account page
-  // Wait 2 seconds to ensure everything is loaded
+  // Wait to be on the profile settings page
+  await page.waitForURL(/\/fridge\/settings\/profile/, { timeout: 10000 });
 
-  await page.waitForURL(/\/account/, { timeout: 10000 });
-
-  // 2. Sign out
-
-  await page.getByRole("button", { name: /sign out/i }).click();
+  // 2. Sign out (click on user dropdown or sidebar logout button)
+  await page.getByRole("button", { name: /sign out|déconnexion/i }).click();
   await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
 
   // 3. Go to forget password page

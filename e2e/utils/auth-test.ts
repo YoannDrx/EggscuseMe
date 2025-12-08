@@ -172,11 +172,11 @@ export async function signInAccount(options: {
 export async function signOutAccount(options: { page: Page }) {
   const { page } = options;
 
-  // Navigate to account page
-  await page.goto(`/account`);
+  // Navigate to fridge settings page
+  await page.goto(`/fridge/settings/profile`);
 
-  // Click the sign out button
-  await page.getByRole("button", { name: /sign out/i }).click();
+  // Click the sign out button (in sidebar or user dropdown)
+  await page.getByRole("button", { name: /sign out|déconnexion/i }).click();
 
   await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
 }

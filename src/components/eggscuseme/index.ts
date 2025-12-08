@@ -3,7 +3,7 @@ export { EggThemeProvider, useEggTheme, useThemeColors } from "./theme";
 export type { ThemeId, Theme, ThemeColors } from "./theme";
 
 // Navigation
-export { MobileShell, BottomNavBar, NavItem, type TabId } from "./navigation";
+export { BottomNavBar, PlusMenuSheet, type TabId } from "./navigation";
 
 // Shared Components
 export { BottomSheet, FloatingActionButton, PageHeader } from "./shared";

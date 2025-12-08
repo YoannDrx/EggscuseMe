@@ -12,11 +12,11 @@ test.describe("account", () => {
   test("delete account flow", async ({ page }) => {
     const userData = await createTestAccount({
       page,
-      callbackURL: "/account",
+      callbackURL: "/fridge/settings/profile",
     });
 
-    await page.getByRole("link", { name: "Danger" }).click();
-    await page.waitForURL(/\/account\/danger/, { timeout: 10000 });
+    await page.getByRole("link", { name: /danger|zone danger/i }).click();
+    await page.waitForURL(/\/fridge\/settings\/danger/, { timeout: 10000 });
     await page.getByRole("button", { name: "Delete" }).click();
 
     const deleteDialog = page.getByRole("alertdialog", {
@@ -71,7 +71,7 @@ test.describe("account", () => {
   });
 
   test("update name flow", async ({ page }) => {
-    await createTestAccount({ page, callbackURL: "/account" });
+    await createTestAccount({ page, callbackURL: "/fridge/settings/profile" });
 
     const newName = faker.person.fullName();
     const input = page.getByRole("textbox", { name: "Name" });
@@ -84,9 +84,13 @@ test.describe("account", () => {
   });
 
   test("change password flow", async ({ page }) => {
-    const userData = await createTestAccount({ page, callbackURL: "/account" });
+    const userData = await createTestAccount({
+      page,
+      callbackURL: "/fridge/settings/profile",
+    });
 
-    await page.getByRole("link", { name: /change password/i }).click();
+    await page.getByRole("link", { name: /security|sécurité/i }).click();
+    await page.waitForURL(/\/fridge\/settings\/security/, { timeout: 10000 });
 
     const newPassword = faker.internet.password({
       length: 12,
