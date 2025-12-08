@@ -19,12 +19,14 @@ import { SidebarNavigationMenu } from "@/components/ui/sidebar-utils";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
 import { getAdminNavigation } from "./admin-navigation.links";
 
 export function AdminSidebar() {
+  const t = useTranslations("admin.nav");
   const links: NavigationGroup[] = getAdminNavigation();
 
   return (
@@ -41,12 +43,12 @@ export function AdminSidebar() {
         {links.map((link) => (
           <ItemCollapsing
             defaultOpenStartPath={link.defaultOpenStartPath}
-            key={link.title}
+            key={link.titleKey}
           >
-            <SidebarGroup key={link.title}>
+            <SidebarGroup key={link.titleKey}>
               <SidebarGroupLabel asChild>
                 <CollapsibleTrigger>
-                  {link.title}
+                  {t(link.titleKey)}
                   <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                 </CollapsibleTrigger>
               </SidebarGroupLabel>

@@ -5,27 +5,27 @@ const ADMIN_PATH = `/admin`;
 
 const ADMIN_LINKS: NavigationGroup[] = [
   {
-    title: "Admin",
+    titleKey: "admin",
     links: [
       {
         href: ADMIN_PATH,
         Icon: Home,
-        label: "Dashboard",
+        labelKey: "dashboard",
       },
       {
         href: `${ADMIN_PATH}/users`,
         Icon: Users,
-        label: "Users",
+        labelKey: "users",
       },
       {
         href: `${ADMIN_PATH}/organizations`,
         Icon: Building2,
-        label: "Organizations",
+        labelKey: "organizations",
       },
       {
         href: `${ADMIN_PATH}/feedback`,
         Icon: MessageSquare,
-        label: "Feedback",
+        labelKey: "feedback",
       },
     ],
   },

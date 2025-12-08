@@ -73,11 +73,13 @@ export function FloatingBadge({
       <div className="flex items-center gap-2">
         <Icon className={cn("size-4", config.iconColor)} />
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-white">
+          <span className="text-foreground text-sm font-semibold">
             {config.text}
           </span>
           {config.subtext && (
-            <span className="text-[10px] text-stone-400">{config.subtext}</span>
+            <span className="text-muted-foreground text-[10px]">
+              {config.subtext}
+            </span>
           )}
         </div>
       </div>

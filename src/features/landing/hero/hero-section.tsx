@@ -8,16 +8,19 @@ import { PhoneMockup } from "./phone-mockup";
 import { PhoneAppPreview } from "./phone-app-preview";
 import { FloatingBadge } from "./floating-badge";
 import { SocialProof } from "./social-proof";
+import { useTranslations } from "next-intl";
 
 type HeroSectionProps = {
   className?: string;
 };
 
 export function HeroSection({ className }: HeroSectionProps) {
+  const t = useTranslations("landing");
+
   return (
     <section
       className={cn(
-        "relative min-h-screen overflow-hidden bg-stone-950 pt-24",
+        "bg-background relative min-h-screen overflow-hidden pt-24",
         className,
       )}
     >
@@ -40,7 +43,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             >
               <Sparkles className="size-4 text-amber-400" />
               <span className="text-sm font-medium text-amber-400">
-                Application #1 Anti-Gaspillage
+                {t("hero.badge")}
               </span>
             </motion.div>
 
@@ -51,10 +54,10 @@ export function HeroSection({ className }: HeroSectionProps) {
               transition={{ delay: 0.1, duration: 0.5 }}
               className="font-heading text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
             >
-              Ne jetez plus jamais{" "}
+              {t("hero.title")}{" "}
               <span className="relative">
                 <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                  un seul oeuf
+                  {t("hero.titleHighlight")}
                 </span>
                 <svg
                   className="absolute -bottom-2 left-0 w-full"
@@ -89,11 +92,9 @@ export function HeroSection({ className }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="mt-6 max-w-xl text-lg text-stone-400"
+              className="text-muted-foreground mt-6 max-w-xl text-lg"
             >
-              Suivez la fraicheur de vos oeufs, recevez des recommandations de
-              cuisson personnalisees et reduisez le gaspillage alimentaire.
-              Simple comme bonjour.
+              {t("hero.description")}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -108,13 +109,13 @@ export function HeroSection({ className }: HeroSectionProps) {
                 className="glow-button inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 font-semibold text-stone-900 transition-all hover:bg-amber-300"
               >
                 <Egg className="size-5" />
-                Creer mon frigo gratuit
+                {t("hero.cta")}
               </Link>
               <Link
                 href="#features"
-                className="inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-900/50 px-6 py-3 font-semibold text-white transition-all hover:border-stone-600 hover:bg-stone-800/50"
+                className="border-border bg-card/50 text-foreground hover:border-muted-foreground hover:bg-muted/50 inline-flex items-center gap-2 rounded-full border px-6 py-3 font-semibold transition-all"
               >
-                En savoir plus
+                {t("hero.ctaSecondary")}
               </Link>
             </motion.div>
 
@@ -162,13 +163,13 @@ export function HeroSection({ className }: HeroSectionProps) {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="mt-20 grid grid-cols-2 gap-8 border-t border-stone-800 pt-12 sm:grid-cols-4"
+          className="border-border mt-20 grid grid-cols-2 gap-8 border-t pt-12 sm:grid-cols-4"
         >
           {[
-            { value: "10K+", label: "Utilisateurs" },
-            { value: "2.4M", label: "Oeufs sauves" },
-            { value: "4.9/5", label: "Note App Store" },
-            { value: "0\u20AC", label: "Pour commencer" },
+            { value: "10K+", label: t("stats.users") },
+            { value: "2.4M", label: t("stats.eggsSaved") },
+            { value: "4.9/5", label: t("stats.appStoreRating") },
+            { value: "0€", label: t("stats.freeToStart") },
           ].map((stat, index) => (
             <div key={stat.label} className="text-center">
               <motion.div
@@ -179,7 +180,9 @@ export function HeroSection({ className }: HeroSectionProps) {
               >
                 {stat.value}
               </motion.div>
-              <div className="mt-1 text-sm text-stone-500">{stat.label}</div>
+              <div className="text-muted-foreground mt-1 text-sm">
+                {stat.label}
+              </div>
             </div>
           ))}
         </motion.div>

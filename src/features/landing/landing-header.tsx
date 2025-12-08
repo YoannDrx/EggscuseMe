@@ -1,6 +1,7 @@
 "use client";
 
-import { LanguageSwitcher } from "@/components/nowts/language-switcher";
+import { LanguageToggle } from "@/components/nowts/language-toggle";
+import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import { LogoSvg } from "@/components/svg/logo-svg";
 import { Button } from "@/components/ui/button";
 import { SiteConfig } from "@/site-config";
@@ -12,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AuthButtonClient } from "../auth/auth-button-client";
 import { MobileMenu } from "./mobile-menu";
+import { useTranslations } from "next-intl";
 
 function useBoundedScroll(threshold: number) {
   const { scrollY } = useScroll();
@@ -53,6 +55,7 @@ export function LandingHeader() {
   const { scrollYBoundedProgress } = useBoundedScroll(400);
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const t = useTranslations("landing.nav");
   const scrollYBoundedProgressDelayed = useTransform(
     scrollYBoundedProgress,
     [0, 0.75, 1],
@@ -60,9 +63,9 @@ export function LandingHeader() {
   );
 
   const navLinks = [
-    { href: "#features", label: "Fonctionnalites" },
-    { href: "#pricing", label: "Tarifs" },
-    { href: "/posts", label: "Blog" },
+    { href: "#features", label: t("features") },
+    { href: "#pricing", label: t("pricing") },
+    { href: "/posts", label: t("blog") },
   ];
 
   return (
@@ -70,15 +73,10 @@ export function LandingHeader() {
       <motion.header
         style={{
           height: useTransform(scrollYBoundedProgressDelayed, [0, 1], [80, 60]),
-          backgroundColor: useTransform(
-            scrollYBoundedProgressDelayed,
-            [0, 1],
-            ["rgba(12, 10, 9, 0)", "rgba(12, 10, 9, 0.95)"],
-          ),
         }}
         className={cn(
           "fixed inset-x-0 top-0 z-50 flex w-screen border-b border-transparent backdrop-blur-md transition-colors",
-          "border-stone-800/50",
+          "border-border/50 bg-background/95",
         )}
       >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 lg:px-8">
@@ -99,7 +97,7 @@ export function LandingHeader() {
                   [1, 0.9],
                 ),
               }}
-              className="flex origin-left items-center text-lg font-bold text-white max-sm:hidden"
+              className="text-foreground flex origin-left items-center text-lg font-bold max-sm:hidden"
             >
               {SiteConfig.title}
             </motion.p>
@@ -120,19 +118,20 @@ export function LandingHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-stone-400 transition-colors hover:text-white"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
               </Link>
             ))}
             <div className="flex items-center gap-3">
-              <LanguageSwitcher />
+              <LanguageToggle />
+              <ThemeSwitcher />
               <AuthButtonClient />
               <Link
                 href="/auth/signin"
-                className="glow-button rounded-full bg-amber-400 px-5 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-amber-300"
+                className="glow-button bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2 text-sm font-semibold transition-all"
               >
-                Commencer
+                {t("getStarted")}
               </Link>
             </div>
           </motion.nav>
@@ -142,9 +141,9 @@ export function LandingHeader() {
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Ouvrir le menu"
+              aria-label={t("openMenu")}
               onClick={() => setMobileMenuOpen(true)}
-              className="text-stone-300 hover:bg-stone-800 hover:text-white"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <Menu className="size-5" />
             </Button>

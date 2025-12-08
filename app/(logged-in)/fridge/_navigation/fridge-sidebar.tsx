@@ -1,5 +1,7 @@
 "use client";
 
+import { LanguageToggle } from "@/components/nowts/language-toggle";
+import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,6 +23,7 @@ import { Eggy } from "@/features/mascot";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { PropsWithChildren } from "react";
@@ -32,6 +35,7 @@ type FridgeSidebarProps = {
 };
 
 export function FridgeSidebar({ role }: FridgeSidebarProps) {
+  const t = useTranslations("fridge.nav");
   const links: NavigationGroup[] = getFridgeNavigation(role);
 
   return (
@@ -49,12 +53,12 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
         {links.map((link) => (
           <ItemCollapsing
             defaultOpenStartPath={link.defaultOpenStartPath}
-            key={link.title}
+            key={link.titleKey}
           >
-            <SidebarGroup key={link.title}>
+            <SidebarGroup key={link.titleKey}>
               <SidebarGroupLabel asChild>
                 <CollapsibleTrigger>
-                  {link.title}
+                  {t(link.titleKey)}
                   <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                 </CollapsibleTrigger>
               </SidebarGroupLabel>
@@ -70,11 +74,14 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
       <SidebarFooter className="flex flex-col gap-2">
         {role === "GUEST" && (
           <div className="bg-muted/50 rounded-lg p-3 text-sm">
-            <p className="text-muted-foreground">
-              Vous êtes invité sur ce frigo
-            </p>
+            <p className="text-muted-foreground">{t("guestNotice")}</p>
           </div>
         )}
+        {/* Theme and Language Toggles */}
+        <div className="flex items-center justify-center gap-2 py-2">
+          <LanguageToggle />
+          <ThemeSwitcher />
+        </div>
         <ContactFeedbackPopover />
         <SidebarUserButton />
       </SidebarFooter>

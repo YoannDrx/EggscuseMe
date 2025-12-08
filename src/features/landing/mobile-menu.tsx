@@ -1,5 +1,7 @@
 "use client";
 
+import { LanguageToggle } from "@/components/nowts/language-toggle";
+import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import { LogoSvg } from "@/components/svg/logo-svg";
 import { SiteConfig } from "@/site-config";
 import {
@@ -16,32 +18,12 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 type MobileMenuProps = {
   isOpen: boolean;
   onClose: () => void;
 };
-
-const navLinks = [
-  {
-    href: "#features",
-    label: "Fonctionnalites",
-    icon: Sparkles,
-    description: "Decouvrez nos outils",
-  },
-  {
-    href: "#pricing",
-    label: "Tarifs",
-    icon: CreditCard,
-    description: "Plans et abonnements",
-  },
-  {
-    href: "/posts",
-    label: "Blog",
-    icon: BookOpen,
-    description: "Conseils et astuces",
-  },
-];
 
 const socialLinks = [
   { icon: Twitter, href: "https://twitter.com/eggscuseme", label: "Twitter" },
@@ -83,6 +65,30 @@ const itemVariants = {
 };
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const t = useTranslations("landing.nav");
+  const tMenu = useTranslations("mobileMenu");
+
+  const navLinks = [
+    {
+      href: "#features",
+      label: t("features"),
+      icon: Sparkles,
+      description: tMenu("discoverTools"),
+    },
+    {
+      href: "#pricing",
+      label: t("pricing"),
+      icon: CreditCard,
+      description: tMenu("plansAndSubscriptions"),
+    },
+    {
+      href: "/posts",
+      label: t("blog"),
+      icon: BookOpen,
+      description: tMenu("tipsAndTricks"),
+    },
+  ];
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -91,7 +97,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           initial="closed"
           animate="open"
           exit="closed"
-          className="fixed inset-0 z-[100] flex flex-col overflow-hidden bg-stone-950"
+          className="bg-background fixed inset-0 z-[100] flex flex-col overflow-hidden"
         >
           {/* Animated background gradient */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -118,7 +124,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           >
             <div className="flex items-center gap-3">
               <LogoSvg size={32} />
-              <span className="text-xl font-bold text-white">
+              <span className="text-foreground text-xl font-bold">
                 {SiteConfig.title}
               </span>
             </div>
@@ -126,7 +132,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               onClick={onClose}
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
-              className="flex size-10 items-center justify-center rounded-full bg-stone-900 text-stone-400 transition-colors hover:bg-stone-800 hover:text-white"
+              className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground flex size-10 items-center justify-center rounded-full transition-colors"
             >
               <X className="size-5" />
             </motion.button>
@@ -142,9 +148,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           >
             <motion.p
               variants={itemVariants}
-              className="mb-6 text-xs font-semibold tracking-widest text-stone-500 uppercase"
+              className="text-muted-foreground mb-6 text-xs font-semibold tracking-widest uppercase"
             >
-              Navigation
+              {tMenu("navigation")}
             </motion.p>
 
             <div className="space-y-2">
@@ -153,20 +159,20 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <Link
                     href={link.href}
                     onClick={onClose}
-                    className="group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-stone-900/80"
+                    className="hover:bg-muted/80 group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300"
                   >
-                    <div className="flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400 transition-transform duration-300 group-hover:scale-110">
+                    <div className="from-primary/20 to-primary/10 text-primary flex size-12 items-center justify-center rounded-xl bg-gradient-to-br transition-transform duration-300 group-hover:scale-110">
                       <link.icon className="size-5" />
                     </div>
                     <div className="flex-1">
-                      <span className="block text-lg font-semibold text-white transition-colors group-hover:text-amber-400">
+                      <span className="text-foreground group-hover:text-primary block text-lg font-semibold transition-colors">
                         {link.label}
                       </span>
-                      <span className="text-sm text-stone-500">
+                      <span className="text-muted-foreground text-sm">
                         {link.description}
                       </span>
                     </div>
-                    <ArrowRight className="size-5 text-stone-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-amber-400" />
+                    <ArrowRight className="text-muted-foreground group-hover:text-primary size-5 transition-all duration-300 group-hover:translate-x-1" />
                   </Link>
                 </motion.div>
               ))}
@@ -174,26 +180,26 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
             {/* Auth Section */}
             <motion.div variants={itemVariants} className="mt-8">
-              <p className="mb-4 text-xs font-semibold tracking-widest text-stone-500 uppercase">
-                Compte
+              <p className="text-muted-foreground mb-4 text-xs font-semibold tracking-widest uppercase">
+                {tMenu("account")}
               </p>
               <Link
                 href="/auth/signin"
                 onClick={onClose}
-                className="group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-stone-900/80"
+                className="hover:bg-muted/80 group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300"
               >
-                <div className="flex size-12 items-center justify-center rounded-xl bg-stone-800 text-stone-400 transition-all duration-300 group-hover:bg-stone-700 group-hover:text-white">
+                <div className="bg-muted text-muted-foreground group-hover:bg-muted/80 group-hover:text-foreground flex size-12 items-center justify-center rounded-xl transition-all duration-300">
                   <User className="size-5" />
                 </div>
                 <div className="flex-1">
-                  <span className="block text-lg font-semibold text-white">
-                    Se connecter
+                  <span className="text-foreground block text-lg font-semibold">
+                    {tMenu("signIn")}
                   </span>
-                  <span className="text-sm text-stone-500">
-                    Accedez a votre frigo
+                  <span className="text-muted-foreground text-sm">
+                    {tMenu("accessYourFridge")}
                   </span>
                 </div>
-                <ArrowRight className="size-5 text-stone-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white" />
+                <ArrowRight className="text-muted-foreground group-hover:text-foreground size-5 transition-all duration-300 group-hover:translate-x-1" />
               </Link>
             </motion.div>
           </motion.nav>
@@ -203,11 +209,11 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <Link
               href="/auth/signin"
               onClick={onClose}
-              className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 px-6 py-4 font-semibold text-stone-900 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/25"
+              className="from-primary to-primary/90 text-primary-foreground hover:shadow-primary/25 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r px-6 py-4 font-semibold transition-all duration-300 hover:shadow-lg"
             >
-              <motion.div className="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <motion.div className="from-primary/80 to-primary absolute inset-0 bg-gradient-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <Zap className="relative size-5" />
-              <span className="relative">Commencer gratuitement</span>
+              <span className="relative">{tMenu("startFree")}</span>
               <ArrowRight className="relative size-5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
@@ -215,10 +221,16 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {/* Footer */}
           <motion.footer
             variants={itemVariants}
-            className="relative border-t border-stone-900 px-6 py-6"
+            className="border-border relative border-t px-6 py-6"
           >
+            {/* Theme and Language Toggles */}
+            <div className="mb-4 flex items-center justify-center gap-3">
+              <LanguageToggle />
+              <ThemeSwitcher />
+            </div>
+
             <div className="flex items-center justify-between">
-              <p className="text-xs text-stone-600">
+              <p className="text-muted-foreground text-xs">
                 © {new Date().getFullYear()} {SiteConfig.company.name}
               </p>
               <div className="flex gap-2">
@@ -228,7 +240,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-9 items-center justify-center rounded-full bg-stone-900 text-stone-500 transition-all duration-300 hover:scale-110 hover:bg-stone-800 hover:text-white"
+                    className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
                     aria-label={social.label}
                   >
                     <social.icon className="size-4" />

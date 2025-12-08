@@ -7,8 +7,8 @@ import { Refrigerator, Timer, ChefHat, BarChart3, User } from "lucide-react";
 const eggCards = [
   {
     status: "Extra Frais",
-    statusColor: "bg-emerald-500",
-    textColor: "text-emerald-400",
+    statusColor: "bg-fresh-extra",
+    textColor: "text-fresh-extra",
     suggestion: "Mousse choco",
     quantity: 6,
     daysLeft: "J-4",
@@ -16,8 +16,8 @@ const eggCards = [
   },
   {
     status: "Frais",
-    statusColor: "bg-amber-500",
-    textColor: "text-amber-400",
+    statusColor: "bg-fresh",
+    textColor: "text-fresh",
     suggestion: "Omelette",
     quantity: 4,
     daysLeft: "J-12",
@@ -25,8 +25,8 @@ const eggCards = [
   },
   {
     status: "A cuire",
-    statusColor: "bg-orange-500",
-    textColor: "text-orange-400",
+    statusColor: "bg-fresh-cook",
+    textColor: "text-fresh-cook",
     suggestion: "Oeuf dur",
     quantity: 2,
     daysLeft: "J-25",

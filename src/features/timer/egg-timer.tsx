@@ -14,17 +14,21 @@ import type { EggSize } from "@/generated/prisma";
 import { Eggy } from "@/features/mascot";
 import { cn } from "@/lib/utils";
 import { Pause, Play, RotateCcw, Volume2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   calculateCookingTime,
   formatTime,
-  getCookingDescriptionFr,
-  timerLabelsFr,
   type EggTemperature,
   type YolkPreference,
 } from "./cooking-times";
 
+const SIZES: EggSize[] = ["S", "M", "L", "XL"];
+const TEMPERATURES: EggTemperature[] = ["fridge", "room"];
+const YOLK_PREFERENCES: YolkPreference[] = ["runny", "soft", "medium", "hard"];
+
 export function EggTimer() {
+  const t = useTranslations("timer");
   const [size, setSize] = useState<EggSize>("M");
   const [temperature, setTemperature] = useState<EggTemperature>("fridge");
   const [yolkPreference, setYolkPreference] = useState<YolkPreference>("soft");
@@ -104,7 +108,7 @@ export function EggTimer() {
             size="sm"
             animate={isRunning}
           />
-          Minuteur de cuisson
+          {t("cookingTitle")}
           {isDone && (
             <Volume2 className="text-fresh-extra size-5 animate-pulse" />
           )}
@@ -156,9 +160,7 @@ export function EggTimer() {
               {formatTime(timeRemaining)}
             </span>
             <span className="text-muted-foreground text-sm">
-              {isDone
-                ? "C'est prêt !"
-                : getCookingDescriptionFr(yolkPreference)}
+              {isDone ? t("done") : t(`yolkDescriptions.${yolkPreference}`)}
             </span>
           </div>
 
@@ -204,7 +206,7 @@ export function EggTimer() {
               className="min-w-32"
             >
               <Play className="mr-2 size-5" />
-              {timeRemaining < totalTime ? "Reprendre" : "Démarrer"}
+              {timeRemaining < totalTime ? t("resume") : t("start")}
             </Button>
           ) : (
             <Button
@@ -214,12 +216,12 @@ export function EggTimer() {
               className="min-w-32"
             >
               <Pause className="mr-2 size-5" />
-              Pause
+              {t("pause")}
             </Button>
           )}
           <Button variant="ghost" onClick={handleReset} size="lg">
             <RotateCcw className="mr-2 size-5" />
-            Reset
+            {t("reset")}
           </Button>
         </div>
 
@@ -228,7 +230,7 @@ export function EggTimer() {
           <div className="bg-muted/30 space-y-4 rounded-xl p-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Taille</Label>
+                <Label className="text-sm font-medium">{t("size")}</Label>
                 <Select
                   value={size}
                   onValueChange={(v) => setSize(v as EggSize)}
@@ -237,19 +239,19 @@ export function EggTimer() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(timerLabelsFr.sizes).map(
-                      ([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ),
-                    )}
+                    {SIZES.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {t(`sizes.${value}`)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Température</Label>
+                <Label className="text-sm font-medium">
+                  {t("temperature")}
+                </Label>
                 <Select
                   value={temperature}
                   onValueChange={(v) => setTemperature(v as EggTemperature)}
@@ -258,20 +260,18 @@ export function EggTimer() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(timerLabelsFr.temperatures).map(
-                      ([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ),
-                    )}
+                    {TEMPERATURES.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {t(`temperatures.${value}`)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Cuisson du jaune</Label>
+              <Label className="text-sm font-medium">{t("yolkCooking")}</Label>
               <Select
                 value={yolkPreference}
                 onValueChange={(v) => setYolkPreference(v as YolkPreference)}
@@ -280,13 +280,11 @@ export function EggTimer() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(timerLabelsFr.yolkPreferences).map(
-                    ([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ),
-                  )}
+                  {YOLK_PREFERENCES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`yolkPreferences.${value}`)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

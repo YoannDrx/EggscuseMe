@@ -6,10 +6,12 @@ import { GradientCTA } from "@/features/landing/cta/gradient-cta";
 import { FAQSection } from "@/features/landing/faq-section";
 import { Pricing } from "@/features/plans/pricing-section";
 import { Footer } from "@/features/layout/footer";
+import { getTranslations } from "next-intl/server";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const t = await getTranslations("landing.faq");
   return (
-    <div className="relative flex min-h-screen flex-col bg-stone-950">
+    <div className="bg-background relative flex min-h-screen flex-col">
       {/* Navigation */}
       <LandingHeader />
 
@@ -23,48 +25,21 @@ export default function HomePage() {
       <BentoGrid />
 
       {/* Pricing Section */}
-      <div id="pricing" className="bg-stone-950">
+      <div id="pricing">
         <Pricing />
       </div>
 
       {/* FAQ Section */}
-      <div className="bg-stone-950">
-        <FAQSection
-          faq={[
-            {
-              question: "Comment savoir si un oeuf est encore bon ?",
-              answer:
-                "Un oeuf peut etre consomme en toute securite jusqu'a 28 jours apres la ponte. EggscuseMe fait le suivi pour vous et vous dit exactement quelle methode de cuisson est la meilleure a chaque etape de fraicheur.",
-            },
-            {
-              question:
-                "Quelle est la difference entre 'a consommer jusqu'au' et 'a consommer de preference avant' ?",
-              answer:
-                "La DCR (Date de Consommation Recommandee) est generalement 28 jours apres la ponte. La date sur les boites est souvent plus courte par precaution des distributeurs. EggscuseMe utilise la date de ponte reelle pour un suivi precis.",
-            },
-            {
-              question: "Puis-je manger des oeufs crus ?",
-              answer:
-                "Oui, mais uniquement dans les 9 premiers jours apres la ponte (extra-frais). Apres, preferez des cuissons qui chauffent bien le jaune, comme au plat ou dur.",
-            },
-            {
-              question: "Comment fonctionne le code couleur de fraicheur ?",
-              answer:
-                "Vert (0-9 jours) : Extra-frais, parfait pour coque ou cru. Jaune (10-21 jours) : Frais, ideal pour omelette ou au plat. Orange (22-28 jours) : A bien cuire, meilleur dur. Gris (29+ jours) : Expire, a jeter.",
-            },
-            {
-              question: "Puis-je partager mon frigo avec ma famille ?",
-              answer:
-                "Oui ! EggscuseMe supporte les organisations. Partagez votre frigo virtuel avec famille ou colocs. Tout le monde peut ajouter, consommer et suivre les oeufs ensemble.",
-            },
-            {
-              question: "Y a-t-il un plan gratuit ?",
-              answer:
-                "Oui ! Le plan gratuit permet de suivre jusqu'a 2 boites d'oeufs avec les fonctionnalites de base. Premium debloque les boites illimitees, statistiques detaillees et notifications.",
-            },
-          ]}
-        />
-      </div>
+      <FAQSection
+        faq={[
+          { question: t("q1.question"), answer: t("q1.answer") },
+          { question: t("q2.question"), answer: t("q2.answer") },
+          { question: t("q3.question"), answer: t("q3.answer") },
+          { question: t("q4.question"), answer: t("q4.answer") },
+          { question: t("q5.question"), answer: t("q5.answer") },
+          { question: t("q6.question"), answer: t("q6.answer") },
+        ]}
+      />
 
       {/* Final CTA */}
       <GradientCTA />

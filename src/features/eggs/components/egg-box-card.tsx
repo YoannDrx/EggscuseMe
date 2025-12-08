@@ -33,30 +33,30 @@ const sizeLabels: Record<string, string> = {
   XL: "Tres gros",
 };
 
-// Freshness color mappings for dark theme
+// Freshness color mappings using design system tokens
 const freshnessConfig = {
   "extra-fresh": {
-    dotColor: "bg-emerald-500",
-    textColor: "text-emerald-400",
-    barColor: "bg-emerald-500",
+    dotColor: "bg-fresh-extra",
+    textColor: "text-fresh-extra",
+    barColor: "bg-fresh-extra",
     label: "Extra Frais",
   },
   fresh: {
-    dotColor: "bg-amber-500",
-    textColor: "text-amber-400",
-    barColor: "bg-amber-500",
+    dotColor: "bg-fresh",
+    textColor: "text-fresh",
+    barColor: "bg-fresh",
     label: "Frais",
   },
   "cook-thoroughly": {
-    dotColor: "bg-orange-500",
-    textColor: "text-orange-400",
-    barColor: "bg-orange-500",
+    dotColor: "bg-fresh-cook",
+    textColor: "text-fresh-cook",
+    barColor: "bg-fresh-cook",
     label: "A cuire",
   },
   expired: {
-    dotColor: "bg-red-500",
-    textColor: "text-red-400",
-    barColor: "bg-red-500",
+    dotColor: "bg-expired",
+    textColor: "text-expired",
+    barColor: "bg-expired",
     label: "Expire",
   },
 };
@@ -94,8 +94,8 @@ export function EggBoxCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.3 }}
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-4",
-        "transition-all duration-200 hover:border-stone-700",
+        "border-border bg-card relative overflow-hidden rounded-2xl border p-4",
+        "hover:border-muted-foreground/30 transition-all duration-200",
         className,
       )}
     >
@@ -108,7 +108,7 @@ export function EggBoxCard({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-stone-500">
+          <span className="text-muted-foreground text-xs">
             {formatDaysRemainingFr(freshness.daysRemaining)}
           </span>
           <DropdownMenu>
@@ -116,20 +116,14 @@ export function EggBoxCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="size-7 text-stone-500 hover:bg-stone-800 hover:text-stone-300"
+                className="text-muted-foreground hover:bg-muted hover:text-foreground size-7"
               >
                 <MoreHorizontal className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="border-stone-800 bg-stone-900"
-            >
+            <DropdownMenuContent align="end">
               {onConsume && (
-                <DropdownMenuItem
-                  onClick={() => onConsume(eggBox)}
-                  className="text-stone-300 focus:bg-stone-800 focus:text-white"
-                >
+                <DropdownMenuItem onClick={() => onConsume(eggBox)}>
                   <Utensils className="mr-2 size-4" />
                   Consommer
                 </DropdownMenuItem>
@@ -138,7 +132,6 @@ export function EggBoxCard({
                 <DropdownMenuItem
                   variant="destructive"
                   onClick={() => onDelete(eggBox)}
-                  className="text-red-400 focus:bg-red-500/20 focus:text-red-400"
                 >
                   <Trash2 className="mr-2 size-4" />
                   Supprimer
@@ -151,30 +144,30 @@ export function EggBoxCard({
 
       {/* Name Row */}
       <div className="mb-2">
-        <h3 className="truncate font-semibold text-white">
+        <h3 className="text-foreground truncate font-semibold">
           {eggBox.name ??
             `Boite du ${eggBox.layingDate.toLocaleDateString("fr-FR")}`}
         </h3>
         {eggBox.source && (
-          <p className="text-xs text-stone-500">{eggBox.source}</p>
+          <p className="text-muted-foreground text-xs">{eggBox.source}</p>
         )}
       </div>
 
       {/* Content Row */}
       <div className="mb-4 flex items-end justify-between">
         <div className="flex-1">
-          <span className="text-xs text-stone-400">
+          <span className="text-muted-foreground text-xs">
             Pour: {getSuggestedUse()}
           </span>
-          <p className="text-xs text-stone-500">
+          <p className="text-muted-foreground text-xs">
             {getFreshnessDescriptionFr(freshness.status)}
           </p>
         </div>
         <div className="text-right">
-          <span className="text-2xl font-bold text-white">
+          <span className="text-foreground text-2xl font-bold">
             {eggBox.remaining}
           </span>
-          <span className="ml-1 text-xs text-stone-500">
+          <span className="text-muted-foreground ml-1 text-xs">
             / {eggBox.quantity} oeufs
           </span>
         </div>
@@ -182,17 +175,17 @@ export function EggBoxCard({
 
       {/* Size Badge */}
       <div className="mb-4 flex items-center gap-2">
-        <span className="rounded-full bg-stone-800 px-2 py-0.5 text-xs text-stone-400">
+        <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
           {sizeLabels[eggBox.size] ?? eggBox.size}
         </span>
-        <span className="text-xs text-stone-500">
+        <span className="text-muted-foreground text-xs">
           {freshness.daysOld} jour{freshness.daysOld > 1 ? "s" : ""} depuis
           ponte
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-800">
+      <div className="bg-muted absolute bottom-0 left-0 h-1 w-full">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${100 - progress}%` }}

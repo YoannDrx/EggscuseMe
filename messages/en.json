@@ -17,6 +17,15 @@
     "error": "Error",
     "success": "Success"
   },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "organizations": "Organizations",
+      "feedback": "Feedback"
+    }
+  },
   "freshness": {
     "extraFresh": "Extra-fresh",
     "extraFreshDescription": "Perfect for soft-boiled, poached, or raw eggs",
@@ -102,6 +111,7 @@
   },
   "timer": {
     "title": "Timer",
+    "cookingTitle": "Cooking Timer",
     "subtitle": "Perfect cooking every time",
     "selectCookingType": "Cooking type",
     "selectEggSize": "Egg size",
@@ -109,6 +119,7 @@
     "fromFridge": "From fridge",
     "roomTemperature": "Room temperature",
     "yolkPreference": "Yolk preference",
+    "yolkCooking": "Yolk doneness",
     "runny": "Runny",
     "soft": "Soft",
     "medium": "Medium",
@@ -120,15 +131,53 @@
     "done": "Done!",
     "cookingTime": "Cooking time",
     "minutes": "{count} min",
-    "seconds": "{count} sec"
+    "seconds": "{count} sec",
+    "size": "Size",
+    "temperature": "Temperature",
+    "sizes": {
+      "S": "Small (S)",
+      "M": "Medium (M)",
+      "L": "Large (L)",
+      "XL": "Extra Large (XL)"
+    },
+    "temperatures": {
+      "fridge": "From fridge",
+      "room": "Room temperature"
+    },
+    "yolkPreferences": {
+      "runny": "Runny (very soft)",
+      "soft": "Soft (jammy)",
+      "medium": "Medium (creamy)",
+      "hard": "Hard (fully cooked)"
+    },
+    "yolkDescriptions": {
+      "runny": "Very runny yolk, perfect for dipping",
+      "soft": "Soft, jammy yolk",
+      "medium": "Creamy yolk, slightly firm center",
+      "hard": "Fully cooked yolk, great for salads"
+    }
   },
   "landing": {
     "hero": {
-      "title": "Stop throwing away your eggs",
-      "subtitle": "Cook them perfectly",
-      "description": "EggscuseMe helps you manage egg freshness, avoid food waste, and cook perfectly based on their age.",
+      "badge": "#1 Anti-Waste App",
+      "title": "Never throw away",
+      "titleHighlight": "a single egg",
+      "description": "Track your eggs' freshness, get personalized cooking recommendations, and reduce food waste. Simple as that.",
       "cta": "Create my free fridge",
       "ctaSecondary": "Learn more"
+    },
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "blog": "Blog",
+      "getStarted": "Get Started",
+      "openMenu": "Open menu"
+    },
+    "stats": {
+      "users": "Users",
+      "eggsSaved": "Eggs saved",
+      "appStoreRating": "App Store Rating",
+      "freeToStart": "To get started"
     },
     "problem": {
       "title": "The problem",
@@ -174,7 +223,14 @@
       }
     },
     "pricing": {
-      "title": "Pricing",
+      "title": "Choose your plan",
+      "subtitle": "Start for free, upgrade to Premium when you're ready.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "discount": "-17%",
+      "footer": "All plans include freshness tracking and recipe recommendations.",
+      "question": "Have a question?",
+      "contactUs": "Contact us",
       "free": {
         "title": "Free",
         "price": "$0",
@@ -203,18 +259,30 @@
       }
     },
     "faq": {
-      "title": "FAQ",
+      "title": "Frequently Asked Questions",
       "q1": {
         "question": "How do I know if an egg is still good?",
-        "answer": "An egg can be consumed up to 28 days after laying. EggscuseMe tells you exactly what to cook based on your eggs' age."
+        "answer": "An egg can be safely consumed up to 28 days after laying. EggscuseMe tracks this for you and tells you exactly which cooking method is best at each freshness stage."
       },
       "q2": {
         "question": "What's the difference between 'use by' and 'best before'?",
-        "answer": "The 'use by' date is typically 28 days after laying. The 'best before' date on boxes is often shorter as a precaution."
+        "answer": "The recommended consumption date is typically 28 days after laying. The date on boxes is often shorter as a precaution from distributors. EggscuseMe uses the actual laying date for accurate tracking."
       },
       "q3": {
         "question": "Can I eat raw eggs?",
-        "answer": "Yes, but only within the first 9 days after laying (extra-fresh). After that, prefer cooking methods that heat the yolk well."
+        "answer": "Yes, but only within the first 9 days after laying (extra-fresh). After that, prefer cooking methods that heat the yolk well, like fried or hard-boiled."
+      },
+      "q4": {
+        "question": "How does the freshness color code work?",
+        "answer": "Green (0-9 days): Extra-fresh, perfect for soft-boiled or raw. Yellow (10-21 days): Fresh, ideal for omelette or fried. Orange (22-28 days): Cook thoroughly, best hard-boiled. Gray (29+ days): Expired, discard."
+      },
+      "q5": {
+        "question": "Can I share my fridge with my family?",
+        "answer": "Yes! EggscuseMe supports organizations. Share your virtual fridge with family or roommates. Everyone can add, consume, and track eggs together."
+      },
+      "q6": {
+        "question": "Is there a free plan?",
+        "answer": "Yes! The free plan lets you track up to 2 egg boxes with basic features. Premium unlocks unlimited boxes, detailed statistics, and notifications."
       }
     },
     "cta": {
@@ -254,5 +322,235 @@
     "limitReached": "Limit reached",
     "limitReachedDescription": "You've reached the limit of {limit} boxes. Upgrade to Premium for unlimited boxes.",
     "upgradeToPremium": "Upgrade to Premium"
+  },
+  "mobileMenu": {
+    "navigation": "Navigation",
+    "account": "Account",
+    "signIn": "Sign in",
+    "accessYourFridge": "Access your fridge",
+    "startFree": "Start for free",
+    "discoverTools": "Discover our tools",
+    "plansAndSubscriptions": "Plans and subscriptions",
+    "tipsAndTricks": "Tips and tricks"
+  },
+  "footer": {
+    "description": "The #1 app for tracking your eggs' freshness and reducing food waste. Simple, effective, free.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "features": "Features",
+    "pricing": "Pricing",
+    "myFridge": "My Fridge",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "careers": "Careers",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "allRightsReserved": "All rights reserved.",
+    "madeWithLove": "Made with love in"
+  },
+  "sharing": {
+    "invite": "Invite",
+    "inviteTitle": "Invite to fridge",
+    "inviteDescription": "Share access with your family or roommates",
+    "createLink": "Create invite link",
+    "creating": "Creating...",
+    "linkCopied": "Link copied!",
+    "copyError": "Unable to copy link",
+    "createError": "Unable to create invitation",
+    "shareTitle": "Join my fridge on EggscuseMe!",
+    "shareText": "I invite you to share my egg tracking",
+    "scanQr": "Scan this QR code to join",
+    "showLink": "Show link",
+    "inviteLink": "Invite link",
+    "share": "Share",
+    "validity": "Valid 7 days · 5 uses max"
+  },
+  "recipes": {
+    "urgentTitle": "Urgent anti-waste recipes",
+    "ideasTitle": "Recipe ideas",
+    "urgentDescription": "Some eggs are expiring soon! Here are some ideas to use them:",
+    "normalDescription": "Here are some recipes suited to your eggs' freshness:",
+    "viewAll": "View all recipes"
+  },
+  "fridge": {
+    "defaultName": "My Fridge",
+    "boxCount": "{count, plural, =0 {No boxes} =1 {1 box in progress} other {# boxes in progress}}",
+    "stats": {
+      "tracked": {
+        "title": "Tracked eggs",
+        "inBoxes": "{count, plural, =0 {in no boxes} =1 {in 1 box} other {in # boxes}}"
+      },
+      "extraFresh": {
+        "title": "Extra-fresh",
+        "description": "Perfect for soft-boiled eggs"
+      },
+      "antiWaste": {
+        "title": "Anti-waste",
+        "description": "eggs consumed, not wasted"
+      },
+      "savings": {
+        "title": "Savings",
+        "description": "saved approximately"
+      }
+    },
+    "grid": {
+      "thisBox": "this box",
+      "addBox": {
+        "title": "Add a box",
+        "description": "Add a new egg box to track"
+      },
+      "consume": {
+        "title": "Consume eggs",
+        "description": "Record eggs consumed from \"{name}\""
+      },
+      "delete": {
+        "title": "Delete this box?",
+        "description": "Are you sure you want to delete \"{name}\"? This action is irreversible.",
+        "confirm": "Delete",
+        "success": "Box deleted",
+        "error": "Failed to delete",
+        "ownerOnly": "Only the owner can delete boxes"
+      },
+      "empty": {
+        "title": "Your fridge is empty!",
+        "ownerDescription": "Add your first egg box to start tracking their freshness.",
+        "guestDescription": "The owner hasn't added any egg boxes yet.",
+        "addFirstBox": "Add my first box",
+        "orUse": "or use the",
+        "scanner": "scanner",
+        "forQuickAdd": "for quick add"
+      },
+      "urgent": {
+        "title": "{count, plural, =1 {1 box to consume quickly} other {# boxes to consume quickly}}",
+        "description": "These eggs are expiring soon. Perfect for hard-boiled eggs!"
+      },
+      "header": {
+        "title": "Your egg boxes",
+        "activeBoxes": "{count, plural, =0 {No active boxes} =1 {1 active box} other {# active boxes}}",
+        "add": "Add"
+      }
+    },
+    "nav": {
+      "menu": "Menu",
+      "myFridge": "My Fridge",
+      "timer": "Timer",
+      "recipes": "Recipes",
+      "statistics": "Statistics",
+      "history": "History",
+      "settings": "Settings",
+      "profile": "My Profile",
+      "security": "Security",
+      "appearance": "Appearance",
+      "sharing": "Sharing",
+      "notifications": "Notifications",
+      "billing": "Subscription",
+      "dangerZone": "Danger Zone",
+      "plus": "More",
+      "signOut": "Sign out",
+      "guestNotice": "You are a guest on this fridge"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your fridge and account",
+      "account": "Account",
+      "fridgeSection": "Fridge",
+      "dangerZone": "Danger Zone",
+      "profile": {
+        "title": "My Profile",
+        "description": "Name, email and avatar"
+      },
+      "security": {
+        "title": "Security",
+        "description": "Password and email"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "description": "App theme"
+      },
+      "sharing": {
+        "title": "Sharing",
+        "description": "Invite family and friends"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Expiration alerts"
+      },
+      "billing": {
+        "title": "Subscription",
+        "description": "Plan and payments"
+      },
+      "danger": {
+        "title": "Danger Zone",
+        "description": "Delete data, fridge or account"
+      },
+      "fridgeSettings": {
+        "title": "Fridge Settings",
+        "description": "Customize your fridge information",
+        "fridgeName": "Fridge name",
+        "save": "Save",
+        "saving": "Saving...",
+        "nameUpdated": "Fridge name updated"
+      },
+      "guestBanner": "You are a guest on this fridge"
+    },
+    "statistics": {
+      "title": "Statistics",
+      "subtitle": "Your consumption data over 90 days",
+      "loading": "Loading statistics...",
+      "noData": "No data available yet",
+      "exportCSV": "Export CSV",
+      "currentStock": "Current stock",
+      "consumed": "Consumed",
+      "last90days": "Over the last 90 days",
+      "savings": "Savings",
+      "antiWasteEstimate": "Anti-waste estimate",
+      "avgFreshness": "Average freshness",
+      "beforeExpiry": "Before expiry on average",
+      "dailyConsumption": "Daily consumption",
+      "cookingTypes": "Cooking types",
+      "monthlyConsumption": "Monthly consumption",
+      "currentFreshness": "Current stock freshness",
+      "freshnessAtConsumption": "Freshness at consumption",
+      "noEggsInStock": "No eggs in stock",
+      "eggs": "eggs",
+      "activeBoxes": "{count, plural, =1 {1 active box} other {# active boxes}}"
+    },
+    "history": {
+      "title": "History",
+      "subtitle": "Find all your past consumptions",
+      "filters": "Filters",
+      "cookingType": "Cooking type",
+      "allTypes": "All types",
+      "results": "{count, plural, =1 {1 result} other {# results}}",
+      "noConsumption": "No consumption found",
+      "date": "Date",
+      "box": "Box",
+      "quantity": "Quantity",
+      "type": "Type",
+      "rating": "Rating",
+      "comment": "Comment",
+      "page": "Page {current} of {total}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "emptyState": {
+      "title": "Your fridge is empty!",
+      "ownerDescription": "Add your first egg box to start tracking their freshness.",
+      "guestDescription": "The owner hasn't added any egg boxes yet.",
+      "addFirstBox": "Add my first box",
+      "useScanner": "or use the"
+    },
+    "urgentAlert": {
+      "title": "{count, plural, =1 {1 box to consume quickly} other {# boxes to consume quickly}}",
+      "description": "These eggs are expiring soon. Perfect for hard-boiled!"
+    },
+    "boxList": {
+      "title": "Your egg boxes",
+      "activeBoxes": "{count, plural, =1 {1 active box} other {# active boxes}}",
+      "add": "Add"
+    }
   }
 }

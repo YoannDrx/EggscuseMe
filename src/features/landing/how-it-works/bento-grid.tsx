@@ -11,7 +11,7 @@ type BentoGridProps = {
 
 export function BentoGrid({ className }: BentoGridProps) {
   return (
-    <section className={cn("bg-stone-950 py-24", className)}>
+    <section className={cn("bg-background py-24", className)}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Left Column - Steps */}
@@ -20,7 +20,7 @@ export function BentoGrid({ className }: BentoGridProps) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-sm font-semibold tracking-wider text-amber-400 uppercase"
+              className="text-primary text-sm font-semibold tracking-wider uppercase"
             >
               Comment ca marche
             </motion.span>
@@ -29,10 +29,10 @@ export function BentoGrid({ className }: BentoGridProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-heading mt-3 text-3xl font-bold text-white sm:text-4xl"
+              className="font-heading text-foreground mt-3 text-3xl font-bold sm:text-4xl"
             >
               Si simple que vous n&apos;aurez{" "}
-              <span className="text-amber-400">aucune excuse</span>.
+              <span className="text-primary">aucune excuse</span>.
             </motion.h2>
 
             {/* Steps List */}
@@ -62,14 +62,16 @@ export function BentoGrid({ className }: BentoGridProps) {
                   transition={{ delay: 0.2 + index * 0.1 }}
                   className="flex gap-4"
                 >
-                  <span className="font-heading text-4xl font-bold text-stone-800">
+                  <span className="font-heading text-muted text-4xl font-bold">
                     {step.num}
                   </span>
                   <div>
-                    <h3 className="font-heading text-lg font-semibold text-white">
+                    <h3 className="font-heading text-foreground text-lg font-semibold">
                       {step.title}
                     </h3>
-                    <p className="mt-1 text-sm text-stone-400">{step.desc}</p>
+                    <p className="text-muted-foreground mt-1 text-sm">
+                      {step.desc}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -84,18 +86,17 @@ export function BentoGrid({ className }: BentoGridProps) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="bento-item rounded-3xl border border-stone-800 bg-stone-900/50 p-6"
+              className="bento-item border-border bg-card/50 rounded-3xl border p-6"
             >
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="size-5 fill-amber-400 text-amber-400"
-                  />
+                  <Star key={i} className="fill-primary text-primary size-5" />
                 ))}
               </div>
-              <div className="mt-4 text-4xl font-bold text-white">4.9/5</div>
-              <p className="mt-1 text-sm text-stone-500">App Store</p>
+              <div className="text-foreground mt-4 text-4xl font-bold">
+                4.9/5
+              </div>
+              <p className="text-muted-foreground mt-1 text-sm">App Store</p>
             </motion.div>
 
             {/* Users Card */}
@@ -104,11 +105,15 @@ export function BentoGrid({ className }: BentoGridProps) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="bento-item rounded-3xl border border-stone-800 bg-stone-900/50 p-6"
+              className="bento-item border-border bg-card/50 rounded-3xl border p-6"
             >
-              <Users className="size-8 text-emerald-400" />
-              <div className="mt-4 text-4xl font-bold text-white">10K+</div>
-              <p className="mt-1 text-sm text-stone-500">Utilisateurs actifs</p>
+              <Users className="text-fresh size-8" />
+              <div className="text-foreground mt-4 text-4xl font-bold">
+                10K+
+              </div>
+              <p className="text-muted-foreground mt-1 text-sm">
+                Utilisateurs actifs
+              </p>
             </motion.div>
 
             {/* Eggs Saved Card */}
@@ -117,11 +122,13 @@ export function BentoGrid({ className }: BentoGridProps) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.5 }}
-              className="bento-item rounded-3xl border border-stone-800 bg-stone-900/50 p-6"
+              className="bento-item border-border bg-card/50 rounded-3xl border p-6"
             >
-              <Egg className="size-8 text-amber-400" />
-              <div className="mt-4 text-4xl font-bold text-white">2.4M</div>
-              <p className="mt-1 text-sm text-stone-500">Oeufs sauves</p>
+              <Egg className="text-primary size-8" />
+              <div className="text-foreground mt-4 text-4xl font-bold">
+                2.4M
+              </div>
+              <p className="text-muted-foreground mt-1 text-sm">Oeufs sauves</p>
             </motion.div>
 
             {/* Family Sharing Card */}
@@ -130,13 +137,13 @@ export function BentoGrid({ className }: BentoGridProps) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              className="bento-item rounded-3xl border border-stone-800 bg-amber-400/10 p-6"
+              className="bento-item border-border bg-primary/10 rounded-3xl border p-6"
             >
-              <Award className="size-8 text-amber-400" />
-              <div className="mt-4 text-lg font-semibold text-white">
+              <Award className="text-primary size-8" />
+              <div className="text-foreground mt-4 text-lg font-semibold">
                 Partage Familial
               </div>
-              <p className="mt-1 text-sm text-stone-400">
+              <p className="text-muted-foreground mt-1 text-sm">
                 Synchronisez avec votre famille
               </p>
             </motion.div>
@@ -147,17 +154,17 @@ export function BentoGrid({ className }: BentoGridProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.7 }}
-              className="col-span-2 flex items-center gap-4 rounded-3xl border border-stone-800 bg-stone-900/50 p-6"
+              className="border-border bg-card/50 col-span-2 flex items-center gap-4 rounded-3xl border p-6"
             >
               <div className="shrink-0">
                 <Eggy mood="happy" size="sm" />
               </div>
               <div>
-                <p className="text-sm text-stone-300 italic">
+                <p className="text-muted-foreground text-sm italic">
                   &quot;Depuis que j&apos;utilise EggscuseMe, je n&apos;ai plus
                   jamais jete un seul oeuf. L&apos;app est geniale !&quot;
                 </p>
-                <p className="mt-2 text-xs font-semibold text-amber-400">
+                <p className="text-primary mt-2 text-xs font-semibold">
                   Marie D. - Paris
                 </p>
               </div>

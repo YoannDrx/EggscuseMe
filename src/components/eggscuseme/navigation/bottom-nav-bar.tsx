@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { BarChart3, BookOpen, Menu, Refrigerator, Timer } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,16 +14,26 @@ export type TabId = "fridge" | "timer" | "recipes" | "stats" | "plus";
 type NavItemConfig = {
   id: TabId;
   icon: typeof Refrigerator;
-  label: string;
+  labelKey: string;
   href: string | null;
 };
 
 const navItems: NavItemConfig[] = [
-  { id: "fridge", icon: Refrigerator, label: "Frigo", href: "/fridge" },
-  { id: "timer", icon: Timer, label: "Timer", href: "/fridge/timer" },
-  { id: "recipes", icon: BookOpen, label: "Recettes", href: "/fridge/recipes" },
-  { id: "stats", icon: BarChart3, label: "Stats", href: "/fridge/statistics" },
-  { id: "plus", icon: Menu, label: "Plus", href: null },
+  { id: "fridge", icon: Refrigerator, labelKey: "myFridge", href: "/fridge" },
+  { id: "timer", icon: Timer, labelKey: "timer", href: "/fridge/timer" },
+  {
+    id: "recipes",
+    icon: BookOpen,
+    labelKey: "recipes",
+    href: "/fridge/recipes",
+  },
+  {
+    id: "stats",
+    icon: BarChart3,
+    labelKey: "statistics",
+    href: "/fridge/statistics",
+  },
+  { id: "plus", icon: Menu, labelKey: "plus", href: null },
 ];
 
 type BottomNavBarProps = {
@@ -30,6 +41,7 @@ type BottomNavBarProps = {
 };
 
 export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
+  const t = useTranslations("fridge.nav");
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
@@ -99,7 +111,7 @@ export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
                     isActive ? "text-white" : "text-stone-500",
                   )}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                 </span>
               </Link>
             );
@@ -118,7 +130,7 @@ export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
                 strokeWidth={2}
               />
               <span className="text-[10px] font-semibold text-stone-500">
-                {item.label}
+                {t(item.labelKey)}
               </span>
             </button>
           );

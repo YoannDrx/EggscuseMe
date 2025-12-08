@@ -24,6 +24,7 @@ import {
   Share2,
   User,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -79,6 +80,7 @@ function SettingsCard({
 }
 
 export default function SettingsPage() {
+  const t = useTranslations("fridge.settings");
   const fridgeState = useCurrentFridge();
   const [fridgeName, setFridgeName] = useState(
     fridgeState?.name ?? "Mon Frigo",
@@ -91,10 +93,12 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       await resolveActionResult(renameFridgeAction({ name: fridgeName }));
-      toast.success("Nom du frigo mis à jour");
+      toast.success(t("fridgeSettings.nameUpdated"));
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Une erreur est survenue",
+        error instanceof Error
+          ? error.message
+          : t("fridgeSettings.nameUpdated"),
       );
     } finally {
       setIsSaving(false);
@@ -111,68 +115,66 @@ export default function SettingsPage() {
       <div className="flex items-center gap-4">
         <Eggy mood="happy" size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Paramètres</h1>
-          <p className="text-muted-foreground">
-            Gérez votre frigo et votre compte
-          </p>
+          <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 
       {/* Section: Compte */}
       <div className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-stone-400">
-          Compte
+        <h2 className="font-heading text-muted-foreground text-lg font-semibold">
+          {t("account")}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <SettingsCard
             href="/fridge/settings/profile"
             icon={User}
-            title="Mon profil"
-            description="Nom, email et avatar"
+            title={t("profile.title")}
+            description={t("profile.description")}
           />
           <SettingsCard
             href="/fridge/settings/security"
             icon={KeyRound}
-            title="Sécurité"
-            description="Mot de passe et email"
+            title={t("security.title")}
+            description={t("security.description")}
           />
           <SettingsCard
             href="/fridge/settings/appearance"
             icon={Palette}
-            title="Apparence"
-            description="Thème de l'application"
+            title={t("appearance.title")}
+            description={t("appearance.description")}
           />
         </div>
       </div>
 
       {/* Section: Frigo */}
       <div className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-stone-400">
-          Frigo
+        <h2 className="font-heading text-muted-foreground text-lg font-semibold">
+          {t("fridgeSection")}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {isOwner && (
             <SettingsCard
               href="/fridge/settings/sharing"
               icon={Share2}
-              title="Partage"
-              description="Invitez famille et amis"
+              title={t("sharing.title")}
+              description={t("sharing.description")}
             />
           )}
           {isOwner && (
             <SettingsCard
               href="/fridge/settings/notifications"
               icon={Bell}
-              title="Notifications"
-              description="Alertes d'expiration"
+              title={t("notifications.title")}
+              description={t("notifications.description")}
             />
           )}
           {isOwner && (
             <SettingsCard
               href="/fridge/settings/billing"
               icon={CreditCard}
-              title="Abonnement"
-              description="Plan et paiements"
+              title={t("billing.title")}
+              description={t("billing.description")}
             />
           )}
         </div>
@@ -183,15 +185,17 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="font-heading flex items-center gap-2">
                 <Settings className="size-5" />
-                Paramètres du frigo
+                {t("fridgeSettings.title")}
               </CardTitle>
               <CardDescription>
-                Personnalisez les informations de votre frigo
+                {t("fridgeSettings.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fridgeName">Nom du frigo</Label>
+                <Label htmlFor="fridgeName">
+                  {t("fridgeSettings.fridgeName")}
+                </Label>
                 <div className="flex gap-2">
                   <Input
                     id="fridgeName"
@@ -203,7 +207,9 @@ export default function SettingsPage() {
                     onClick={handleSaveName}
                     disabled={isSaving || fridgeName === fridgeState.name}
                   >
-                    {isSaving ? "Enregistrement..." : "Enregistrer"}
+                    {isSaving
+                      ? t("fridgeSettings.saving")
+                      : t("fridgeSettings.save")}
                   </Button>
                 </div>
               </div>
@@ -216,14 +222,14 @@ export default function SettingsPage() {
 
       {/* Section: Zone de danger */}
       <div className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-stone-400">
-          Zone de danger
+        <h2 className="font-heading text-muted-foreground text-lg font-semibold">
+          {t("dangerZone")}
         </h2>
         <SettingsCard
           href="/fridge/settings/danger"
           icon={AlertTriangle}
-          title="Zone de danger"
-          description="Supprimer données, frigo ou compte"
+          title={t("danger.title")}
+          description={t("danger.description")}
           variant="danger"
         />
       </div>

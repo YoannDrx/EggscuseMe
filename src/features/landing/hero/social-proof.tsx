@@ -32,7 +32,7 @@ export function SocialProof({ className }: SocialProofProps) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.9 + index * 0.1, type: "spring" }}
             className={cn(
-              "flex size-10 items-center justify-center rounded-full border-2 border-stone-950 text-xs font-bold text-stone-900",
+              "border-background text-foreground flex size-10 items-center justify-center rounded-full border-2 text-xs font-bold",
               avatar.color,
             )}
           >
@@ -43,10 +43,12 @@ export function SocialProof({ className }: SocialProofProps) {
 
       {/* Text */}
       <div className="flex flex-col">
-        <span className="text-sm font-semibold text-white">
-          Rejoint par <span className="text-amber-400">+10,000</span>
+        <span className="text-foreground text-sm font-semibold">
+          Rejoint par <span className="text-primary">+10,000</span>
         </span>
-        <span className="text-xs text-stone-500">utilisateurs satisfaits</span>
+        <span className="text-muted-foreground text-xs">
+          utilisateurs satisfaits
+        </span>
       </div>
     </motion.div>
   );

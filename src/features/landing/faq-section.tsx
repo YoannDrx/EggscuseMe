@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { ClientMarkdown } from "../markdown/client-markdown";
 import { SectionLayout } from "./section-layout";
+import { useTranslations } from "next-intl";
 
 type Faq = {
   question: string;
@@ -20,6 +21,8 @@ type FeaturesPreviewProps = {
 };
 
 export const FAQSection = (props: FeaturesPreviewProps) => {
+  const t = useTranslations("landing.faq");
+
   return (
     <SectionLayout size="lg" className="flex max-lg:flex-col">
       <div className="flex-1 space-y-2">
@@ -27,7 +30,7 @@ export const FAQSection = (props: FeaturesPreviewProps) => {
           FAQ
         </Typography>
         <Typography variant="h2" className="text-5xl">
-          Frequently Asked Questions
+          {t("title")}
         </Typography>
       </div>
       <div className="flex-1">

@@ -5,20 +5,20 @@ import type { LucideIcon } from "lucide-react";
 export type FridgeRole = "OWNER" | "GUEST";
 
 export type NavigationGroup = {
-  title: string;
+  titleKey: string;
   roles?: FridgeRole[];
   links: NavigationLink[];
   defaultOpenStartPath?: string;
 };
 
-type NavigationLink = {
+export type NavigationLink = {
   href: string;
   Icon:
     | React.ForwardRefExoticComponent<
         IconProps & React.RefAttributes<SVGSVGElement>
       >
     | LucideIcon;
-  label: string;
+  labelKey: string;
   roles?: FridgeRole[];
   hidden?: boolean;
   links?: NavigationLink[];

@@ -1,14 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import type { EggBox } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { EggBoxCard } from "@/features/eggs/components/egg-box-card";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { deleteEggBoxAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
+import type { EggBox } from "@/generated/prisma";
 import { AlertTriangle, Plus, Scan } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AddEggBoxForm } from "./add-egg-box-form";
@@ -20,6 +21,7 @@ type EggBoxGridProps = {
 };
 
 export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
+  const t = useTranslations("fridge.grid");
   const router = useRouter();
 
   // Sort by freshness priority (most urgent first)
@@ -41,39 +43,43 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
 
   const handleAddBox = () => {
     dialogManager.custom({
-      title: "Ajouter une boite",
-      description: "Ajoutez une nouvelle boite d'oeufs a suivre",
+      title: t("addBox.title"),
+      description: t("addBox.description"),
       children: <AddEggBoxForm />,
     });
   };
 
   const handleConsume = (eggBox: EggBox) => {
     dialogManager.custom({
-      title: "Consommer des oeufs",
-      description: `Enregistrer les oeufs consommes de "${eggBox.name ?? "cette boite"}"`,
+      title: t("consume.title"),
+      description: t("consume.description", {
+        name: eggBox.name ?? t("thisBox"),
+      }),
       children: <ConsumeEggsForm eggBox={eggBox} />,
     });
   };
 
   const handleDelete = (eggBox: EggBox) => {
     if (!canModify) {
-      toast.error("Seul le proprietaire peut supprimer les boites");
+      toast.error(t("delete.ownerOnly"));
       return;
     }
 
     dialogManager.confirm({
-      title: "Supprimer cette boite ?",
-      description: `Etes-vous sur de vouloir supprimer "${eggBox.name ?? "cette boite"}" ? Cette action est irreversible.`,
+      title: t("delete.title"),
+      description: t("delete.description", {
+        name: eggBox.name ?? t("thisBox"),
+      }),
       action: {
-        label: "Supprimer",
+        label: t("delete.confirm"),
         variant: "destructive",
         onClick: async () => {
           const result = await deleteEggBoxAction({ id: eggBox.id });
           if (result.data?.success) {
-            toast.success("Boite supprimee");
+            toast.success(t("delete.success"));
             router.refresh();
           } else {
-            toast.error("Echec de la suppression");
+            toast.error(t("delete.error"));
           }
         },
       },
@@ -86,37 +92,37 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center rounded-2xl border-2 border-dashed border-stone-800 bg-stone-900/50 p-8 text-center"
+        className="border-border bg-card/50 flex flex-col items-center rounded-2xl border-2 border-dashed p-8 text-center"
       >
         <Eggy mood="sad" size="lg" />
-        <h3 className="mt-4 text-xl font-bold text-white">
-          Votre frigo est vide !
+        <h3 className="text-foreground mt-4 text-xl font-bold">
+          {t("empty.title")}
         </h3>
-        <p className="mt-2 max-w-sm text-sm text-stone-400">
+        <p className="text-muted-foreground mt-2 max-w-sm text-sm">
           {canModify
-            ? "Ajoutez votre premiere boite d'oeufs pour commencer a suivre leur fraicheur."
-            : "Le proprietaire n'a pas encore ajoute de boites d'oeufs."}
+            ? t("empty.ownerDescription")
+            : t("empty.guestDescription")}
         </p>
         {canModify && (
           <div className="mt-6 space-y-3">
             <Button
               onClick={handleAddBox}
-              className="glow-button rounded-full bg-amber-400 px-6 text-stone-900 hover:bg-amber-300"
+              className="glow-button bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6"
             >
               <Plus className="mr-2 size-4" />
-              Ajouter ma premiere boite
+              {t("empty.addFirstBox")}
             </Button>
-            <p className="text-xs text-stone-500">
-              ou utilisez le{" "}
+            <p className="text-muted-foreground text-xs">
+              {t("empty.orUse")}{" "}
               <button
                 type="button"
-                className="inline-flex items-center gap-1 text-amber-400 underline transition-colors hover:text-amber-300"
-                onClick={() => toast.info("Scanner a venir bientot !")}
+                className="text-primary hover:text-primary/80 inline-flex items-center gap-1 underline transition-colors"
+                onClick={handleAddBox}
               >
                 <Scan className="size-3" />
-                scanner
+                {t("empty.scanner")}
               </button>{" "}
-              pour un ajout rapide
+              {t("empty.forQuickAdd")}
             </p>
           </div>
         )}
@@ -137,13 +143,11 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
             <AlertTriangle className="size-5 text-orange-400" />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-orange-400">
-              {urgentBoxes.length} boite{urgentBoxes.length > 1 ? "s" : ""} a
-              consommer rapidement
+            <p className="text-fresh-cook font-medium">
+              {t("urgent.title", { count: urgentBoxes.length })}
             </p>
-            <p className="text-sm text-stone-400">
-              Ces oeufs arrivent bientot a expiration. Parfait pour des oeufs
-              durs !
+            <p className="text-muted-foreground text-sm">
+              {t("urgent.description")}
             </p>
           </div>
           <div className="hidden sm:block">
@@ -155,20 +159,21 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
       {/* Header with add button */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-bold text-white">Vos boites d'oeufs</h3>
-          <p className="text-sm text-stone-500">
-            {sortedBoxes.length} boite{sortedBoxes.length > 1 ? "s" : ""} active
-            {sortedBoxes.length > 1 ? "s" : ""}
+          <h3 className="text-foreground text-lg font-bold">
+            {t("header.title")}
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            {t("header.activeBoxes", { count: sortedBoxes.length })}
           </p>
         </div>
         {canModify && (
           <Button
             onClick={handleAddBox}
             variant="outline"
-            className="rounded-full border-stone-700 bg-stone-900 text-white hover:border-stone-600 hover:bg-stone-800"
+            className="border-border bg-card text-foreground hover:border-muted-foreground hover:bg-muted rounded-full"
           >
             <Plus className="mr-2 size-4" />
-            Ajouter
+            {t("header.add")}
           </Button>
         )}
       </div>
@@ -193,9 +198,9 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
           animate={{ scale: 1 }}
           transition={{ delay: 0.5, type: "spring" }}
           onClick={handleAddBox}
-          className="fixed right-4 bottom-24 z-40 flex size-14 items-center justify-center rounded-full bg-amber-400 shadow-lg shadow-amber-400/30 transition-transform hover:scale-105 active:scale-95 sm:hidden"
+          className="bg-primary shadow-primary/30 fixed right-4 bottom-24 z-40 flex size-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 sm:hidden"
         >
-          <Plus className="size-6 text-stone-900" />
+          <Plus className="text-primary-foreground size-6" />
         </motion.button>
       )}
     </div>

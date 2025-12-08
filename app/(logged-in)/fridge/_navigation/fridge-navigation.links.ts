@@ -28,111 +28,111 @@ export const getFridgeNavigation = (
 
 // Settings section for guests (limited options)
 const GUEST_SETTINGS: NavigationGroup = {
-  title: "Paramètres",
+  titleKey: "settings",
   defaultOpenStartPath: "/fridge/settings",
   links: [
     {
       href: "/fridge/settings",
       Icon: Settings,
-      label: "Paramètres",
+      labelKey: "settings",
     },
     {
       href: "/fridge/settings/profile",
       Icon: User,
-      label: "Mon profil",
+      labelKey: "profile",
     },
     {
       href: "/fridge/settings/security",
       Icon: KeyRound,
-      label: "Sécurité",
+      labelKey: "security",
     },
     {
       href: "/fridge/settings/appearance",
       Icon: Palette,
-      label: "Apparence",
+      labelKey: "appearance",
     },
     {
       href: "/fridge/settings/danger",
       Icon: AlertTriangle,
-      label: "Zone danger",
+      labelKey: "dangerZone",
     },
   ],
 };
 
 const FRIDGE_LINKS: NavigationGroup[] = [
   {
-    title: "Menu",
+    titleKey: "menu",
     links: [
       {
         href: "/fridge",
         Icon: Home,
-        label: "Mon Frigo",
+        labelKey: "myFridge",
       },
       {
         href: "/fridge/timer",
         Icon: Timer,
-        label: "Minuteur",
+        labelKey: "timer",
       },
       {
         href: "/fridge/recipes",
         Icon: BookOpen,
-        label: "Recettes",
+        labelKey: "recipes",
       },
       {
         href: "/fridge/statistics",
         Icon: ChartLine,
-        label: "Statistiques",
+        labelKey: "statistics",
       },
       {
         href: "/fridge/history",
         Icon: History,
-        label: "Historique",
+        labelKey: "history",
       },
     ],
   },
   {
-    title: "Paramètres",
+    titleKey: "settings",
     defaultOpenStartPath: "/fridge/settings",
     links: [
       {
         href: "/fridge/settings",
         Icon: Settings,
-        label: "Paramètres",
+        labelKey: "settings",
       },
       {
         href: "/fridge/settings/profile",
         Icon: User,
-        label: "Mon profil",
+        labelKey: "profile",
       },
       {
         href: "/fridge/settings/security",
         Icon: KeyRound,
-        label: "Sécurité",
+        labelKey: "security",
       },
       {
         href: "/fridge/settings/appearance",
         Icon: Palette,
-        label: "Apparence",
+        labelKey: "appearance",
       },
       {
         href: "/fridge/settings/sharing",
         Icon: Users,
-        label: "Partage",
+        labelKey: "sharing",
       },
       {
         href: "/fridge/settings/notifications",
         Icon: Bell,
-        label: "Notifications",
+        labelKey: "notifications",
       },
       {
         href: "/fridge/settings/billing",
         Icon: CreditCard,
-        label: "Abonnement",
+        labelKey: "billing",
       },
       {
         href: "/fridge/settings/danger",
         Icon: AlertTriangle,
-        label: "Zone danger",
+        labelKey: "dangerZone",
       },
     ],
   },

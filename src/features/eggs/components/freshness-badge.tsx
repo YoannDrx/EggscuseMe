@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Egg } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   type FreshnessStatus,
   getFreshnessBgClass,
@@ -15,18 +18,11 @@ type FreshnessBadgeProps = {
   className?: string;
 };
 
-const statusLabels: Record<FreshnessStatus, string> = {
-  "extra-fresh": "Extra-frais",
-  fresh: "Frais",
-  "cook-thoroughly": "À cuire",
-  expired: "Expiré",
-};
-
-const statusLabelsEn: Record<FreshnessStatus, string> = {
-  "extra-fresh": "Extra-fresh",
-  fresh: "Fresh",
-  "cook-thoroughly": "Cook thoroughly",
-  expired: "Expired",
+const statusToKey: Record<FreshnessStatus, string> = {
+  "extra-fresh": "extraFresh",
+  fresh: "fresh",
+  "cook-thoroughly": "cookThoroughly",
+  expired: "expired",
 };
 
 export function FreshnessBadge({
@@ -37,6 +33,7 @@ export function FreshnessBadge({
   variant = "default",
   className,
 }: FreshnessBadgeProps) {
+  const t = useTranslations("freshness");
   const sizeClasses = {
     sm: "px-2 py-0.5 text-xs gap-1",
     md: "px-3 py-1 text-sm gap-1.5",
@@ -81,10 +78,7 @@ export function FreshnessBadge({
           )}
         />
       )}
-      {showLabel && statusLabels[status]}
+      {showLabel && t(statusToKey[status])}
     </span>
   );
 }
-
-// Export English version for flexibility
-export { statusLabelsEn as freshnessLabelsEn };

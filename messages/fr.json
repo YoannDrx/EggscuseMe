@@ -17,6 +17,15 @@
     "error": "Erreur",
     "success": "Succès"
   },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "dashboard": "Tableau de bord",
+      "users": "Utilisateurs",
+      "organizations": "Organisations",
+      "feedback": "Retours"
+    }
+  },
   "freshness": {
     "extraFresh": "Extra-frais",
     "extraFreshDescription": "Parfait pour les œufs coque, pochés ou crus",
@@ -102,13 +111,15 @@
   },
   "timer": {
     "title": "Minuteur",
+    "cookingTitle": "Minuteur de cuisson",
     "subtitle": "Cuisson parfaite à chaque fois",
     "selectCookingType": "Type de cuisson",
     "selectEggSize": "Taille de l'œuf",
     "eggTemperature": "Température de l'œuf",
-    "fromFridge": "Sorti du frigo",
+    "fromFridge": "Du frigo",
     "roomTemperature": "Température ambiante",
     "yolkPreference": "Préférence du jaune",
+    "yolkCooking": "Cuisson du jaune",
     "runny": "Très coulant",
     "soft": "Baveux",
     "medium": "Mi-cuit",
@@ -120,15 +131,53 @@
     "done": "C'est prêt !",
     "cookingTime": "Temps de cuisson",
     "minutes": "{count} min",
-    "seconds": "{count} sec"
+    "seconds": "{count} sec",
+    "size": "Taille",
+    "temperature": "Température",
+    "sizes": {
+      "S": "Petit (S)",
+      "M": "Moyen (M)",
+      "L": "Gros (L)",
+      "XL": "Très gros (XL)"
+    },
+    "temperatures": {
+      "fridge": "Du frigo",
+      "room": "Température ambiante"
+    },
+    "yolkPreferences": {
+      "runny": "Coulant (très mollet)",
+      "soft": "Mollet (onctueux)",
+      "medium": "Mi-cuit (crémeux)",
+      "hard": "Dur (bien cuit)"
+    },
+    "yolkDescriptions": {
+      "runny": "Jaune très coulant, parfait pour les mouillettes",
+      "soft": "Jaune mollet, onctueux",
+      "medium": "Jaune crémeux, légèrement ferme",
+      "hard": "Jaune bien cuit, idéal pour les salades"
+    }
   },
   "landing": {
     "hero": {
-      "title": "Arrêtez de jeter vos œufs",
-      "subtitle": "Cuisinez-les parfaitement",
-      "description": "EggscuseMe vous aide à gérer la fraîcheur de vos œufs, éviter le gaspillage alimentaire et cuisiner parfaitement selon leur âge.",
+      "badge": "Application #1 Anti-Gaspillage",
+      "title": "Ne jetez plus jamais",
+      "titleHighlight": "un seul œuf",
+      "description": "Suivez la fraîcheur de vos œufs, recevez des recommandations de cuisson personnalisées et réduisez le gaspillage alimentaire. Simple comme bonjour.",
       "cta": "Créer mon frigo gratuit",
       "ctaSecondary": "En savoir plus"
+    },
+    "nav": {
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "blog": "Blog",
+      "getStarted": "Commencer",
+      "openMenu": "Ouvrir le menu"
+    },
+    "stats": {
+      "users": "Utilisateurs",
+      "eggsSaved": "Œufs sauvés",
+      "appStoreRating": "Note App Store",
+      "freeToStart": "Pour commencer"
     },
     "problem": {
       "title": "Le problème",
@@ -174,7 +223,14 @@
       }
     },
     "pricing": {
-      "title": "Tarifs",
+      "title": "Choisissez votre formule",
+      "subtitle": "Commencez gratuitement, passez au Premium quand vous le souhaitez.",
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "discount": "-17%",
+      "footer": "Tous les plans incluent le suivi de fraîcheur et les recommandations de recettes.",
+      "question": "Une question ?",
+      "contactUs": "Contactez-nous",
       "free": {
         "title": "Gratuit",
         "price": "0€",
@@ -206,15 +262,27 @@
       "title": "Questions fréquentes",
       "q1": {
         "question": "Comment savoir si un œuf est encore bon ?",
-        "answer": "Un œuf peut être consommé jusqu'à 28 jours après la ponte. EggscuseMe vous indique exactement quoi cuisiner selon l'âge de vos œufs."
+        "answer": "Un œuf peut être consommé en toute sécurité jusqu'à 28 jours après la ponte. EggscuseMe fait le suivi pour vous et vous dit exactement quelle méthode de cuisson est la meilleure à chaque étape de fraîcheur."
       },
       "q2": {
-        "question": "Quelle est la différence entre DCR et DDM ?",
-        "answer": "La DCR (Date de Consommation Recommandée) est 28 jours après la ponte. La DDM (Date de Durabilité Minimale) sur les boîtes est souvent plus courte par précaution."
+        "question": "Quelle est la différence entre 'à consommer jusqu'au' et 'à consommer de préférence avant' ?",
+        "answer": "La DCR (Date de Consommation Recommandée) est généralement 28 jours après la ponte. La date sur les boîtes est souvent plus courte par précaution des distributeurs. EggscuseMe utilise la date de ponte réelle pour un suivi précis."
       },
       "q3": {
         "question": "Puis-je manger des œufs crus ?",
-        "answer": "Oui, mais seulement dans les 9 premiers jours après la ponte (extra-frais). Après, préférez les cuissons qui chauffent bien le jaune."
+        "answer": "Oui, mais uniquement dans les 9 premiers jours après la ponte (extra-frais). Après, préférez des cuissons qui chauffent bien le jaune, comme au plat ou dur."
+      },
+      "q4": {
+        "question": "Comment fonctionne le code couleur de fraîcheur ?",
+        "answer": "Vert (0-9 jours) : Extra-frais, parfait pour coque ou cru. Jaune (10-21 jours) : Frais, idéal pour omelette ou au plat. Orange (22-28 jours) : À bien cuire, meilleur dur. Gris (29+ jours) : Expiré, à jeter."
+      },
+      "q5": {
+        "question": "Puis-je partager mon frigo avec ma famille ?",
+        "answer": "Oui ! EggscuseMe supporte les organisations. Partagez votre frigo virtuel avec famille ou colocs. Tout le monde peut ajouter, consommer et suivre les œufs ensemble."
+      },
+      "q6": {
+        "question": "Y a-t-il un plan gratuit ?",
+        "answer": "Oui ! Le plan gratuit permet de suivre jusqu'à 2 boîtes d'œufs avec les fonctionnalités de base. Premium débloque les boîtes illimitées, statistiques détaillées et notifications."
       }
     },
     "cta": {
@@ -254,5 +322,235 @@
     "limitReached": "Limite atteinte",
     "limitReachedDescription": "Vous avez atteint la limite de {limit} boîtes. Passez à Premium pour des boîtes illimitées.",
     "upgradeToPremium": "Passer à Premium"
+  },
+  "mobileMenu": {
+    "navigation": "Navigation",
+    "account": "Compte",
+    "signIn": "Se connecter",
+    "accessYourFridge": "Accédez à votre frigo",
+    "startFree": "Commencer gratuitement",
+    "discoverTools": "Découvrez nos outils",
+    "plansAndSubscriptions": "Plans et abonnements",
+    "tipsAndTricks": "Conseils et astuces"
+  },
+  "footer": {
+    "description": "L'application #1 pour suivre la fraîcheur de vos œufs et réduire le gaspillage alimentaire. Simple, efficace, gratuit.",
+    "product": "Produit",
+    "company": "Entreprise",
+    "legal": "Légal",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "myFridge": "Mon Frigo",
+    "blog": "Blog",
+    "about": "À propos",
+    "contact": "Contact",
+    "careers": "Carrières",
+    "terms": "CGU",
+    "privacy": "Confidentialité",
+    "cookies": "Cookies",
+    "allRightsReserved": "Tous droits réservés.",
+    "madeWithLove": "Fait avec amour à"
+  },
+  "sharing": {
+    "invite": "Inviter",
+    "inviteTitle": "Inviter au frigo",
+    "inviteDescription": "Partagez l'accès avec votre famille ou colocataires",
+    "createLink": "Créer un lien d'invitation",
+    "creating": "Création...",
+    "linkCopied": "Lien copié !",
+    "copyError": "Impossible de copier le lien",
+    "createError": "Impossible de créer l'invitation",
+    "shareTitle": "Rejoins mon frigo sur EggscuseMe !",
+    "shareText": "Je t'invite à partager mon suivi d'œufs",
+    "scanQr": "Scannez ce QR code pour rejoindre",
+    "showLink": "Afficher le lien",
+    "inviteLink": "Lien d'invitation",
+    "share": "Partager",
+    "validity": "Valide 7 jours · 5 utilisations max"
+  },
+  "recipes": {
+    "urgentTitle": "Recettes anti-gaspi urgentes",
+    "ideasTitle": "Idées recettes",
+    "urgentDescription": "Des œufs arrivent à expiration ! Voici quelques idées pour les utiliser :",
+    "normalDescription": "Voici quelques recettes adaptées à la fraîcheur de vos œufs :",
+    "viewAll": "Voir toutes les recettes"
+  },
+  "fridge": {
+    "defaultName": "Mon Frigo",
+    "boxCount": "{count, plural, =0 {Aucune boîte} =1 {1 boîte en cours} other {# boîtes en cours}}",
+    "stats": {
+      "tracked": {
+        "title": "Œufs suivis",
+        "inBoxes": "{count, plural, =0 {dans aucune boîte} =1 {dans 1 boîte} other {dans # boîtes}}"
+      },
+      "extraFresh": {
+        "title": "Extra-frais",
+        "description": "Parfaits pour œufs à la coque"
+      },
+      "antiWaste": {
+        "title": "Anti-gaspi",
+        "description": "œufs consommés, pas gaspillés"
+      },
+      "savings": {
+        "title": "Économies",
+        "description": "économisés environ"
+      }
+    },
+    "grid": {
+      "thisBox": "cette boîte",
+      "addBox": {
+        "title": "Ajouter une boîte",
+        "description": "Ajoutez une nouvelle boîte d'œufs à suivre"
+      },
+      "consume": {
+        "title": "Consommer des œufs",
+        "description": "Enregistrer les œufs consommés de \"{name}\""
+      },
+      "delete": {
+        "title": "Supprimer cette boîte ?",
+        "description": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
+        "confirm": "Supprimer",
+        "success": "Boîte supprimée",
+        "error": "Échec de la suppression",
+        "ownerOnly": "Seul le propriétaire peut supprimer les boîtes"
+      },
+      "empty": {
+        "title": "Votre frigo est vide !",
+        "ownerDescription": "Ajoutez votre première boîte d'œufs pour commencer à suivre leur fraîcheur.",
+        "guestDescription": "Le propriétaire n'a pas encore ajouté de boîtes d'œufs.",
+        "addFirstBox": "Ajouter ma première boîte",
+        "orUse": "ou utilisez le",
+        "scanner": "scanner",
+        "forQuickAdd": "pour un ajout rapide"
+      },
+      "urgent": {
+        "title": "{count, plural, =1 {1 boîte à consommer rapidement} other {# boîtes à consommer rapidement}}",
+        "description": "Ces œufs arrivent bientôt à expiration. Parfait pour des œufs durs !"
+      },
+      "header": {
+        "title": "Vos boîtes d'œufs",
+        "activeBoxes": "{count, plural, =0 {Aucune boîte active} =1 {1 boîte active} other {# boîtes actives}}",
+        "add": "Ajouter"
+      }
+    },
+    "nav": {
+      "menu": "Menu",
+      "myFridge": "Mon Frigo",
+      "timer": "Minuteur",
+      "recipes": "Recettes",
+      "statistics": "Statistiques",
+      "history": "Historique",
+      "settings": "Paramètres",
+      "profile": "Mon profil",
+      "security": "Sécurité",
+      "appearance": "Apparence",
+      "sharing": "Partage",
+      "notifications": "Notifications",
+      "billing": "Abonnement",
+      "dangerZone": "Zone danger",
+      "plus": "Plus",
+      "signOut": "Déconnexion",
+      "guestNotice": "Vous êtes invité sur ce frigo"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "subtitle": "Gérez votre frigo et votre compte",
+      "account": "Compte",
+      "fridgeSection": "Frigo",
+      "dangerZone": "Zone de danger",
+      "profile": {
+        "title": "Mon profil",
+        "description": "Nom, email et avatar"
+      },
+      "security": {
+        "title": "Sécurité",
+        "description": "Mot de passe et email"
+      },
+      "appearance": {
+        "title": "Apparence",
+        "description": "Thème de l'application"
+      },
+      "sharing": {
+        "title": "Partage",
+        "description": "Invitez famille et amis"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Alertes d'expiration"
+      },
+      "billing": {
+        "title": "Abonnement",
+        "description": "Plan et paiements"
+      },
+      "danger": {
+        "title": "Zone de danger",
+        "description": "Supprimer données, frigo ou compte"
+      },
+      "fridgeSettings": {
+        "title": "Paramètres du frigo",
+        "description": "Personnalisez les informations de votre frigo",
+        "fridgeName": "Nom du frigo",
+        "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "nameUpdated": "Nom du frigo mis à jour"
+      },
+      "guestBanner": "Vous êtes invité sur ce frigo"
+    },
+    "statistics": {
+      "title": "Statistiques",
+      "subtitle": "Vos données de consommation sur 90 jours",
+      "loading": "Chargement des statistiques...",
+      "noData": "Aucune donnée disponible pour le moment",
+      "exportCSV": "Exporter CSV",
+      "currentStock": "Stock actuel",
+      "consumed": "Consommés",
+      "last90days": "Sur les 90 derniers jours",
+      "savings": "Économies",
+      "antiWasteEstimate": "Estimation anti-gaspi",
+      "avgFreshness": "Fraîcheur moyenne",
+      "beforeExpiry": "Avant expiration en moyenne",
+      "dailyConsumption": "Consommation quotidienne",
+      "cookingTypes": "Types de cuisson",
+      "monthlyConsumption": "Consommation mensuelle",
+      "currentFreshness": "Fraîcheur du stock actuel",
+      "freshnessAtConsumption": "Fraîcheur à la consommation",
+      "noEggsInStock": "Aucun œuf en stock",
+      "eggs": "œufs",
+      "activeBoxes": "{count, plural, =1 {1 boîte active} other {# boîtes actives}}"
+    },
+    "history": {
+      "title": "Historique",
+      "subtitle": "Retrouvez toutes vos consommations passées",
+      "filters": "Filtres",
+      "cookingType": "Type de cuisson",
+      "allTypes": "Tous les types",
+      "results": "{count, plural, =1 {1 résultat} other {# résultats}}",
+      "noConsumption": "Aucune consommation trouvée",
+      "date": "Date",
+      "box": "Boîte",
+      "quantity": "Quantité",
+      "type": "Type",
+      "rating": "Note",
+      "comment": "Commentaire",
+      "page": "Page {current} sur {total}",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "emptyState": {
+      "title": "Votre frigo est vide !",
+      "ownerDescription": "Ajoutez votre première boîte d'œufs pour commencer à suivre leur fraîcheur.",
+      "guestDescription": "Le propriétaire n'a pas encore ajouté de boîtes d'œufs.",
+      "addFirstBox": "Ajouter ma première boîte",
+      "useScanner": "ou utilisez le"
+    },
+    "urgentAlert": {
+      "title": "{count, plural, =1 {1 boîte à consommer rapidement} other {# boîtes à consommer rapidement}}",
+      "description": "Ces œufs arrivent bientôt à expiration. Parfait pour des œufs durs !"
+    },
+    "boxList": {
+      "title": "Vos boîtes d'œufs",
+      "activeBoxes": "{count, plural, =1 {1 boîte active} other {# boîtes actives}}",
+      "add": "Ajouter"
+    }
   }
 }

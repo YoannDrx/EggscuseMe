@@ -1,6 +1,7 @@
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
 import { User } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Suspense } from "react";
 import { EggBoxGrid } from "./egg-box-grid";
@@ -15,32 +16,33 @@ export default function FridgePage() {
 }
 
 async function FridgePageContent() {
+  const t = await getTranslations("fridge");
   const result = await getMyFridgeAction();
   const fridge = result.data?.fridge;
   const role = result.data?.role ?? "GUEST";
   const eggBoxes = fridge?.eggBoxes ?? [];
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-950">
+    <div className="bg-background flex min-h-screen flex-col">
       {/* Mobile Header - Hidden on desktop (desktop uses sidebar header) */}
-      <header className="sticky top-0 z-40 border-b border-stone-800 bg-stone-950/80 backdrop-blur-md md:hidden">
+      <header className="border-border bg-background/80 sticky top-0 z-40 border-b backdrop-blur-md md:hidden">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Eggy mood="happy" size="sm" />
             <div>
-              <h1 className="text-xl font-bold text-white">
-                {fridge?.name ?? "Mon Frigo"}
+              <h1 className="text-foreground text-xl font-bold">
+                {fridge?.name ?? t("defaultName")}
               </h1>
-              <p className="text-xs text-stone-500">
-                {eggBoxes.length} boite{eggBoxes.length > 1 ? "s" : ""} en cours
+              <p className="text-muted-foreground text-xs">
+                {t("boxCount", { count: eggBoxes.length })}
               </p>
             </div>
           </div>
           <Link
             href="/fridge/settings/profile"
-            className="flex size-9 items-center justify-center rounded-full bg-amber-400/20 transition-colors hover:bg-amber-400/30"
+            className="bg-primary/20 hover:bg-primary/30 flex size-9 items-center justify-center rounded-full transition-colors"
           >
-            <User className="size-4 text-amber-400" />
+            <User className="text-primary size-4" />
           </Link>
         </div>
       </header>
@@ -63,18 +65,18 @@ async function FridgePageContent() {
 
 function FridgePageSkeleton() {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-950">
+    <div className="bg-background flex min-h-screen flex-col">
       {/* Header Skeleton - Mobile only */}
-      <header className="border-b border-stone-800 bg-stone-950 md:hidden">
+      <header className="border-border bg-background border-b md:hidden">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="size-10 animate-pulse rounded-full bg-stone-800" />
+            <div className="bg-muted size-10 animate-pulse rounded-full" />
             <div className="space-y-2">
-              <div className="h-6 w-32 animate-pulse rounded bg-stone-800" />
-              <div className="h-3 w-24 animate-pulse rounded bg-stone-800" />
+              <div className="bg-muted h-6 w-32 animate-pulse rounded" />
+              <div className="bg-muted h-3 w-24 animate-pulse rounded" />
             </div>
           </div>
-          <div className="size-9 animate-pulse rounded-full bg-stone-800" />
+          <div className="bg-muted size-9 animate-pulse rounded-full" />
         </div>
       </header>
 
@@ -84,10 +86,7 @@ function FridgePageSkeleton() {
           <StatsCardsSkeleton />
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="h-40 animate-pulse rounded-2xl bg-stone-900"
-              />
+              <div key={i} className="bg-card h-40 animate-pulse rounded-2xl" />
             ))}
           </div>
         </div>
@@ -102,7 +101,7 @@ function StatsCardsSkeleton() {
       {[...Array(4)].map((_, i) => (
         <div
           key={i}
-          className="h-24 animate-pulse rounded-2xl border border-stone-800 bg-stone-900"
+          className="border-border bg-card h-24 animate-pulse rounded-2xl border"
         />
       ))}
     </div>

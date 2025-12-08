@@ -18,6 +18,7 @@ import {
   Share2,
   Users,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { createInviteAction } from "./invite.action";
@@ -28,6 +29,7 @@ type InviteButtonProps = {
 };
 
 export function InviteButton({ className }: InviteButtonProps) {
+  const t = useTranslations("sharing");
   const [isPending, startTransition] = useTransition();
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -45,7 +47,7 @@ export function InviteButton({ className }: InviteButtonProps) {
         const link = `${window.location.origin}/invite/${code}`;
         setInviteLink(link);
       } else {
-        toast.error("Impossible de créer l'invitation");
+        toast.error(t("createError"));
       }
     });
   };
@@ -56,10 +58,10 @@ export function InviteButton({ className }: InviteButtonProps) {
     try {
       await navigator.clipboard.writeText(inviteLink);
       setCopied(true);
-      toast.success("Lien copié !");
+      toast.success(t("linkCopied"));
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error("Impossible de copier le lien");
+      toast.error(t("copyError"));
     }
   };
 
@@ -69,8 +71,8 @@ export function InviteButton({ className }: InviteButtonProps) {
     if (typeof navigator.share === "function") {
       try {
         await navigator.share({
-          title: "Rejoins mon frigo sur EggscuseMe !",
-          text: "Je t'invite à partager mon suivi d'œufs",
+          title: t("shareTitle"),
+          text: t("shareText"),
           url: inviteLink,
         });
       } catch {
@@ -86,7 +88,7 @@ export function InviteButton({ className }: InviteButtonProps) {
       <PopoverTrigger asChild>
         <Button variant="neubrutalism-outline" className={className}>
           <Users className="mr-2 size-4" />
-          Inviter
+          {t("invite")}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="end">
@@ -94,9 +96,9 @@ export function InviteButton({ className }: InviteButtonProps) {
           <div className="flex items-center gap-3">
             <Eggy mood="happy" size="sm" />
             <div>
-              <h4 className="font-heading font-semibold">Inviter au frigo</h4>
+              <h4 className="font-heading font-semibold">{t("inviteTitle")}</h4>
               <p className="text-muted-foreground text-xs">
-                Partagez l'accès avec votre famille ou colocataires
+                {t("inviteDescription")}
               </p>
             </div>
           </div>
@@ -111,12 +113,12 @@ export function InviteButton({ className }: InviteButtonProps) {
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
-                  Création...
+                  {t("creating")}
                 </>
               ) : (
                 <>
                   <LinkIcon className="mr-2 size-4" />
-                  Créer un lien d'invitation
+                  {t("createLink")}
                 </>
               )}
             </Button>
@@ -126,20 +128,20 @@ export function InviteButton({ className }: InviteButtonProps) {
                 <div className="flex flex-col items-center gap-2">
                   <QRCodeDisplay value={inviteLink} size={180} />
                   <p className="text-muted-foreground text-center text-xs">
-                    Scannez ce QR code pour rejoindre
+                    {t("scanQr")}
                   </p>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowQR(false)}
                   >
-                    Afficher le lien
+                    {t("showLink")}
                   </Button>
                 </div>
               ) : (
                 <>
                   <div className="space-y-2">
-                    <Label className="text-xs">Lien d'invitation</Label>
+                    <Label className="text-xs">{t("inviteLink")}</Label>
                     <div className="flex gap-2">
                       <Input
                         value={inviteLink}
@@ -178,14 +180,14 @@ export function InviteButton({ className }: InviteButtonProps) {
                       onClick={handleShare}
                     >
                       <Share2 className="mr-2 size-4" />
-                      Partager
+                      {t("share")}
                     </Button>
                   </div>
                 </>
               )}
 
               <p className="text-muted-foreground text-center text-xs">
-                Valide 7 jours · 5 utilisations max
+                {t("validity")}
               </p>
             </div>
           )}

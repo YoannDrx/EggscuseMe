@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eggy } from "@/features/mascot";
 import { AlertTriangle, ChefHat, ExternalLink } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { RecipeCard } from "./recipe-card";
 import type { RecipeSuggestion as RecipeSuggestionType } from "./types";
@@ -19,6 +20,7 @@ export function RecipeSuggestion({
   organizationSlug,
   showUrgentOnly = false,
 }: RecipeSuggestionProps) {
+  const t = useTranslations("recipes");
   const displayedSuggestions = showUrgentOnly
     ? suggestions.filter((s) => s.urgency === "high")
     : suggestions;
@@ -41,12 +43,12 @@ export function RecipeSuggestion({
           {hasUrgent ? (
             <>
               <AlertTriangle className="text-fresh-cook size-5" />
-              <span>Recettes anti-gaspi urgentes</span>
+              <span>{t("urgentTitle")}</span>
             </>
           ) : (
             <>
               <ChefHat className="text-primary size-5" />
-              <span>Idées recettes</span>
+              <span>{t("ideasTitle")}</span>
             </>
           )}
         </CardTitle>
@@ -56,9 +58,7 @@ export function RecipeSuggestion({
         <div className="flex items-start gap-3">
           <Eggy mood="chef" size="sm" />
           <p className="text-muted-foreground text-sm">
-            {hasUrgent
-              ? "Des oeufs arrivent à expiration ! Voici quelques idées pour les utiliser :"
-              : "Voici quelques recettes adaptées à la fraîcheur de vos oeufs :"}
+            {hasUrgent ? t("urgentDescription") : t("normalDescription")}
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export function RecipeSuggestion({
             })}
           >
             <ChefHat className="mr-2 size-4" />
-            Voir toutes les recettes
+            {t("viewAll")}
             <ExternalLink className="ml-2 size-3" />
           </Link>
         </div>

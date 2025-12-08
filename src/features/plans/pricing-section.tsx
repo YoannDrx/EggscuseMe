@@ -7,9 +7,11 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 import { PricingCard } from "./pricing-card";
+import { useTranslations } from "next-intl";
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
+  const t = useTranslations("landing.pricing");
 
   return (
     <section
@@ -20,10 +22,10 @@ export function Pricing() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Choisissez votre formule
+              {t("title")}
             </h2>
             <p className="text-muted-foreground max-w-[700px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Commencez gratuitement, passez au Premium quand vous le souhaitez.
+              {t("subtitle")}
             </p>
           </div>
 
@@ -36,7 +38,7 @@ export function Pricing() {
                   : "text-muted-foreground",
               )}
             >
-              Mensuel
+              {t("monthly")}
             </span>
             <Switch
               checked={isYearly}
@@ -51,12 +53,12 @@ export function Pricing() {
                   : "text-muted-foreground",
               )}
             >
-              <span className="text-sm font-medium">Annuel</span>
+              <span className="text-sm font-medium">{t("yearly")}</span>
               <Badge
                 variant="outline"
                 className="border-primary/20 bg-primary/10 text-primary ml-2"
               >
-                -17%
+                {t("discount")}
               </Badge>
             </div>
           </div>
@@ -74,17 +76,14 @@ export function Pricing() {
         </div>
 
         <div className="mt-16 text-center">
-          <p className="text-muted-foreground">
-            Tous les plans incluent le suivi de fraîcheur et les recommandations
-            de recettes.
-          </p>
+          <p className="text-muted-foreground">{t("footer")}</p>
           <p className="text-muted-foreground mt-2">
-            Une question ?{" "}
+            {t("question")}{" "}
             <Link
               href="/contact"
               className="text-primary font-medium hover:underline"
             >
-              Contactez-nous
+              {t("contactUs")}
             </Link>
           </p>
         </div>
