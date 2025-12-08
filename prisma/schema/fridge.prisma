@@ -73,9 +73,9 @@ model FridgeShareLink {
 
 // Invitation status for email invitations
 enum InvitationStatus {
-  PENDING   // Invitation sent, waiting for response
-  ACCEPTED  // Invitation accepted
-  EXPIRED   // Invitation expired (after 7 days)
+  PENDING // Invitation sent, waiting for response
+  ACCEPTED // Invitation accepted
+  EXPIRED // Invitation expired (after 7 days)
   CANCELLED // Invitation cancelled by owner
 }
 
@@ -90,11 +90,11 @@ model FridgeEmailInvitation {
   invitedById String
   invitedBy   User   @relation("SentInvitations", fields: [invitedById], references: [id], onDelete: Cascade)
 
-  email  String           // Email of the invited person
+  email  String // Email of the invited person
   status InvitationStatus @default(PENDING)
 
   acceptedById String? // User ID if accepted (can be different from original email)
-  acceptedBy   User?   @relation("ReceivedInvitations", fields: [acceptedById], references: [id], onDelete: SetNull)
+  acceptedBy   User?     @relation("ReceivedInvitations", fields: [acceptedById], references: [id], onDelete: SetNull)
   acceptedAt   DateTime?
 
   expiresAt  DateTime // Expiration date (7 days by default)
