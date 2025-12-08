@@ -366,14 +366,107 @@
     "showLink": "Afficher le lien",
     "inviteLink": "Lien d'invitation",
     "share": "Partager",
-    "validity": "Valide 7 jours · 5 utilisations max"
+    "validity": "Valide 7 jours · 5 utilisations max",
+    "emailInvite": {
+      "title": "Inviter par email",
+      "description": "Envoyez une invitation directement par email",
+      "placeholder": "email@exemple.com",
+      "send": "Inviter",
+      "sending": "Envoi...",
+      "success": "Invitation envoyée !",
+      "resent": "Email renvoyé !",
+      "cancelled": "Invitation annulée",
+      "errors": {
+        "alreadyMember": "Cette personne est déjà membre de votre frigo",
+        "alreadyInvited": "Une invitation est déjà en attente pour cet email",
+        "selfInvite": "Vous ne pouvez pas vous inviter vous-même",
+        "cooldown": "Veuillez attendre 5 minutes avant de renvoyer l'email"
+      }
+    },
+    "invitations": {
+      "title": "Invitations par email",
+      "pending": "En attente",
+      "accepted": "Acceptée",
+      "expired": "Expirée",
+      "cancelled": "Annulée",
+      "expiresOn": "Expire le {date}",
+      "acceptedBy": "Acceptée par {name}",
+      "noInvitations": "Aucune invitation envoyée",
+      "resend": "Renvoyer l'email",
+      "cancel": "Annuler l'invitation",
+      "cancelConfirm": {
+        "title": "Annuler cette invitation ?",
+        "description": "L'invitation pour {email} sera annulée"
+      }
+    },
+    "joinPage": {
+      "title": "Rejoindre un frigo",
+      "invalidTitle": "Invitation invalide",
+      "invalidDescription": "Cette invitation n'existe pas ou a expiré",
+      "invitedBy": "{name} vous invite à rejoindre son frigo",
+      "benefits": "En tant qu'invité, vous pourrez :",
+      "benefit1": "Voir les boîtes d'œufs et leur fraîcheur",
+      "benefit2": "Consommer des œufs et enregistrer vos repas",
+      "benefit3": "Accéder aux recettes et suggestions",
+      "benefit4": "Utiliser le minuteur intelligent",
+      "join": "Rejoindre le frigo",
+      "expiresOn": "Expire le {date}",
+      "canLeave": "Vous pourrez quitter ce frigo à tout moment"
+    }
   },
   "recipes": {
     "urgentTitle": "Recettes anti-gaspi urgentes",
     "ideasTitle": "Idées recettes",
     "urgentDescription": "Des œufs arrivent à expiration ! Voici quelques idées pour les utiliser :",
     "normalDescription": "Voici quelques recettes adaptées à la fraîcheur de vos œufs :",
-    "viewAll": "Voir toutes les recettes"
+    "viewAll": "Voir toutes les recettes",
+    "detail": {
+      "instructions": "Instructions",
+      "backToList": "Retour aux recettes",
+      "servings": "portions",
+      "freshnessTip": "Conseil fraîcheur",
+      "idealFor": "Recette idéale pour des œufs",
+      "egg": "œuf",
+      "eggs": "œufs"
+    },
+    "difficulty": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile"
+    },
+    "filters": {
+      "searchPlaceholder": "Rechercher une recette...",
+      "clearAll": "Effacer les filtres",
+      "noResults": "Aucune recette trouvée",
+      "noResultsHint": "Essayez de modifier vos critères de recherche",
+      "result": "recette",
+      "results": "recettes",
+      "time": {
+        "label": "Temps",
+        "all": "Tous",
+        "quick": "< 15 min",
+        "medium": "15-30 min",
+        "long": "> 30 min"
+      },
+      "eggs": {
+        "label": "Œufs",
+        "all": "Tous"
+      },
+      "difficulty": {
+        "label": "Difficulté",
+        "all": "Toutes"
+      },
+      "freshness": {
+        "label": "Fraîcheur",
+        "all": "Toutes",
+        "extraFresh": "Extra-frais",
+        "fresh": "Frais",
+        "cookThoroughly": "À cuire"
+      },
+      "tags": {
+        "label": "Catégories"
+      }
+    }
   },
   "fridge": {
     "defaultName": "Mon Frigo",

@@ -3,13 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
-import {
-  getAllTags,
-  getRecipeSuggestions,
-  RecipeCard,
-  RECIPES,
-} from "@/features/recipes";
-import { ChefHat, Egg, Filter, Sparkles } from "lucide-react";
+import { getRecipeSuggestions, RecipeCard, RECIPES } from "@/features/recipes";
+import { RecipeFilters } from "@/features/recipes/components/recipe-filters";
+import { RecipeGrid } from "@/features/recipes/components/recipe-grid";
+import { ChefHat, Egg, Sparkles } from "lucide-react";
 import { Suspense } from "react";
 
 export default function RecipesPage() {
@@ -41,28 +38,11 @@ export default function RecipesPage() {
           <Badge variant="secondary">{RECIPES.length}</Badge>
         </div>
 
-        {/* Tags filter */}
-        <div className="flex flex-wrap gap-2">
-          <Filter className="text-muted-foreground size-4" />
-          {getAllTags()
-            .slice(0, 10)
-            .map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="hover:bg-primary/10 cursor-pointer capitalize"
-              >
-                {tag}
-              </Badge>
-            ))}
-        </div>
+        {/* Filters */}
+        <RecipeFilters />
 
-        {/* Recipe grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {RECIPES.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
+        {/* Recipe grid with filtering */}
+        <RecipeGrid />
       </section>
     </div>
   );

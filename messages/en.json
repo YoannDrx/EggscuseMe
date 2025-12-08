@@ -366,14 +366,107 @@
     "showLink": "Show link",
     "inviteLink": "Invite link",
     "share": "Share",
-    "validity": "Valid 7 days · 5 uses max"
+    "validity": "Valid 7 days · 5 uses max",
+    "emailInvite": {
+      "title": "Invite by email",
+      "description": "Send an invitation directly by email",
+      "placeholder": "email@example.com",
+      "send": "Invite",
+      "sending": "Sending...",
+      "success": "Invitation sent!",
+      "resent": "Email resent!",
+      "cancelled": "Invitation cancelled",
+      "errors": {
+        "alreadyMember": "This person is already a member of your fridge",
+        "alreadyInvited": "An invitation is already pending for this email",
+        "selfInvite": "You cannot invite yourself",
+        "cooldown": "Please wait 5 minutes before resending the email"
+      }
+    },
+    "invitations": {
+      "title": "Email invitations",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "expiresOn": "Expires on {date}",
+      "acceptedBy": "Accepted by {name}",
+      "noInvitations": "No invitations sent",
+      "resend": "Resend email",
+      "cancel": "Cancel invitation",
+      "cancelConfirm": {
+        "title": "Cancel this invitation?",
+        "description": "The invitation for {email} will be cancelled"
+      }
+    },
+    "joinPage": {
+      "title": "Join a fridge",
+      "invalidTitle": "Invalid invitation",
+      "invalidDescription": "This invitation does not exist or has expired",
+      "invitedBy": "{name} invites you to join their fridge",
+      "benefits": "As a guest, you will be able to:",
+      "benefit1": "View egg boxes and their freshness",
+      "benefit2": "Consume eggs and record your meals",
+      "benefit3": "Access recipes and suggestions",
+      "benefit4": "Use the smart timer",
+      "join": "Join the fridge",
+      "expiresOn": "Expires on {date}",
+      "canLeave": "You can leave this fridge at any time"
+    }
   },
   "recipes": {
     "urgentTitle": "Urgent anti-waste recipes",
     "ideasTitle": "Recipe ideas",
     "urgentDescription": "Some eggs are expiring soon! Here are some ideas to use them:",
     "normalDescription": "Here are some recipes suited to your eggs' freshness:",
-    "viewAll": "View all recipes"
+    "viewAll": "View all recipes",
+    "detail": {
+      "instructions": "Instructions",
+      "backToList": "Back to recipes",
+      "servings": "servings",
+      "freshnessTip": "Freshness tip",
+      "idealFor": "Ideal recipe for",
+      "egg": "egg",
+      "eggs": "eggs"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "filters": {
+      "searchPlaceholder": "Search for a recipe...",
+      "clearAll": "Clear filters",
+      "noResults": "No recipes found",
+      "noResultsHint": "Try adjusting your search criteria",
+      "result": "recipe",
+      "results": "recipes",
+      "time": {
+        "label": "Time",
+        "all": "All",
+        "quick": "< 15 min",
+        "medium": "15-30 min",
+        "long": "> 30 min"
+      },
+      "eggs": {
+        "label": "Eggs",
+        "all": "All"
+      },
+      "difficulty": {
+        "label": "Difficulty",
+        "all": "All"
+      },
+      "freshness": {
+        "label": "Freshness",
+        "all": "All",
+        "extraFresh": "Extra-fresh",
+        "fresh": "Fresh",
+        "cookThoroughly": "Cook thoroughly"
+      },
+      "tags": {
+        "label": "Categories"
+      }
+    }
   },
   "fridge": {
     "defaultName": "My Fridge",

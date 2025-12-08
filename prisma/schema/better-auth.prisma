@@ -26,6 +26,10 @@ model User {
   ownedFridge       Fridge?           @relation("OwnedFridge") // One fridge per user
   fridgeMemberships FridgeMember[]    @relation("FridgeMemberships") // Guest access to other fridges
 
+  // Email invitations
+  sentInvitations     FridgeEmailInvitation[] @relation("SentInvitations") // Invitations sent by this user
+  receivedInvitations FridgeEmailInvitation[] @relation("ReceivedInvitations") // Invitations accepted by this user
+
   role       String?
   banned     Boolean?
   banReason  String?

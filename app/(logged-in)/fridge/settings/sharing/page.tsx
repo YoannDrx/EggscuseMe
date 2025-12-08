@@ -25,10 +25,13 @@ import {
   removeMemberAction,
 } from "@/features/fridge/sharing.action";
 import { Eggy } from "@/features/mascot";
+import { EmailInvitationsList } from "@/features/fridge/components/email-invitations-list";
+import { EmailInviteForm } from "@/features/fridge/components/email-invite-form";
 import {
   ArrowLeft,
   Copy,
   Link2,
+  Mail,
   MoreVertical,
   Share2,
   Trash2,
@@ -264,6 +267,25 @@ export default function SharingPage() {
                 ))}
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Email Invitations (Owner only) */}
+      {isOwner && (
+        <Card variant="sunny">
+          <CardHeader>
+            <CardTitle className="font-heading flex items-center gap-2">
+              <Mail className="size-5" />
+              Inviter par email
+            </CardTitle>
+            <CardDescription>
+              Envoyez une invitation directement par email
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <EmailInviteForm />
+            <EmailInvitationsList />
           </CardContent>
         </Card>
       )}
