@@ -2,7 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { getServerUrl } from "@/lib/server-url";
 import { faker } from "@faker-js/faker";
 import { expect, test } from "@playwright/test";
-import { createTestAccount, signInAccount } from "./utils/auth-test";
+import {
+  createTestAccount,
+  signInAccount,
+  signOutAccount,
+} from "./utils/auth-test";
 
 test("password reset flow", async ({ page }) => {
   // 1. Create a test account
@@ -15,20 +19,7 @@ test("password reset flow", async ({ page }) => {
   await page.waitForURL(/\/fridge\/settings\/profile/, { timeout: 10000 });
 
   // 2. Sign out - open user dropdown then click logout
-  await page.waitForLoadState("networkidle");
-  const userButton = page.locator('[data-testid="user-menu-trigger"]');
-  if (await userButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-    await userButton.click();
-    await page
-      .getByRole("menuitem", { name: /sign out|déconnexion|se déconnecter/i })
-      .click();
-  } else {
-    await page
-      .getByRole("link", { name: /sign out|déconnexion|se déconnecter/i })
-      .click();
-  }
-  // After sign out, user is redirected to homepage
-  await page.waitForURL(/^\/$|^\/\?/, { timeout: 10000 });
+  await signOutAccount({ page });
 
   // 3. Go to forget password page
   await page.goto(`${getServerUrl()}/auth/forget-password`);

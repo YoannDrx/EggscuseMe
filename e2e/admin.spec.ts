@@ -24,17 +24,18 @@ test.describe("admin", () => {
 
     await page.goto("/admin");
 
-    await expect(page.getByRole("link", { name: "Users" })).toBeVisible();
+    const usersLink = page.getByRole("link", { name: /users|utilisateurs/i });
+    const invitationsLink = page.getByRole("link", {
+      name: /invitations?/i,
+    });
 
-    await expect(
-      page.getByRole("link", { name: "Organizations" }),
-    ).toBeVisible();
+    await expect(usersLink).toBeVisible();
+    await expect(invitationsLink).toBeVisible();
 
-    await page.getByRole("link", { name: "Users" }).click();
-
+    await usersLink.click();
     await expect(page).toHaveURL("/admin/users");
 
-    await page.getByRole("link", { name: "Organizations" }).click();
-    await expect(page).toHaveURL("/admin/organizations");
+    await invitationsLink.click();
+    await expect(page).toHaveURL("/admin/invitations");
   });
 });
