@@ -47,6 +47,10 @@ export const RECIPES: Recipe[] = [
           "Crack the top of the shell and serve with buttered toast soldiers.",
       },
     ],
+    chefTip:
+      "Percez le pôle rond (poche d'air) avec une aiguille avant cuisson pour éviter l'éclatement. Baissez le feu à frémissement pour éviter que les œufs ne s'entrechoquent.",
+    chefTipEn:
+      "Pierce the round end (air pocket) with a needle before cooking to prevent cracking. Lower heat to a simmer to prevent eggs from bumping into each other.",
   },
   {
     id: "oeufs-poches",
@@ -132,6 +136,14 @@ export const RECIPES: Recipe[] = [
         textEn: "Adjust with a little lemon juice or vinegar to taste.",
       },
     ],
+    chefTip:
+      "Sortez l'œuf 30 min avant : tous les ingrédients doivent être à température ambiante pour une émulsion stable.",
+    chefTipEn:
+      "Take the egg out 30 min before: all ingredients must be at room temperature for a stable emulsion.",
+    safetyNote:
+      "Réservé aux œufs extra-frais. Déconseillé aux personnes fragiles (femmes enceintes, immunodéprimés). À consommer dans les 24h.",
+    safetyNoteEn:
+      "Use only extra-fresh eggs. Not recommended for vulnerable people (pregnant women, immunocompromised). Consume within 24 hours.",
   },
   {
     id: "mousse-chocolat",
@@ -184,6 +196,14 @@ export const RECIPES: Recipe[] = [
         textEn: "Divide into glasses and refrigerate for at least 2 hours.",
       },
     ],
+    chefTip:
+      "Ne battez pas les blancs trop fermes (bec d'oiseau suffit). Ajoutez une pincée de fleur de sel dans le chocolat fondu pour exhausser le goût du cacao.",
+    chefTipEn:
+      "Don't beat the whites too stiff (soft peaks are enough). Add a pinch of fleur de sel to the melted chocolate to enhance the cocoa flavor.",
+    safetyNote:
+      "Contient des œufs crus. À consommer dans les 24h et conserver au réfrigérateur.",
+    safetyNoteEn:
+      "Contains raw eggs. Consume within 24 hours and keep refrigerated.",
   },
   {
     id: "tiramisu",
@@ -244,6 +264,10 @@ export const RECIPES: Recipe[] = [
         textEn: "Dust with cocoa and refrigerate overnight.",
       },
     ],
+    safetyNote:
+      "Contient des œufs crus. À préparer la veille et conserver au réfrigérateur. Déconseillé aux personnes fragiles.",
+    safetyNoteEn:
+      "Contains raw eggs. Prepare the day before and keep refrigerated. Not recommended for vulnerable people.",
   },
   {
     id: "oeufs-brouilles",
@@ -422,6 +446,10 @@ export const RECIPES: Recipe[] = [
         textEn: "Serve on salad, asparagus or toast.",
       },
     ],
+    chefTip:
+      "Percez le pôle rond (poche d'air) avec une aiguille avant cuisson. Le bain d'eau glacée immédiat est essentiel pour stopper la cuisson.",
+    chefTipEn:
+      "Pierce the round end (air pocket) with a needle before cooking. The immediate ice bath is essential to stop cooking.",
   },
   {
     id: "oeufs-cocotte",
@@ -560,21 +588,31 @@ export const RECIPES: Recipe[] = [
       },
       {
         step: 5,
-        text: "Hors du feu, mélanger les pâtes avec le guanciale.",
-        textEn: "Off the heat, mix the pasta with the guanciale.",
+        text: "Verser les pâtes égouttées dans le bol contenant le mélange œufs/fromage (pas l'inverse).",
+        textEn:
+          "Pour the drained pasta into the bowl with the egg/cheese mixture (not the other way around).",
       },
       {
         step: 6,
-        text: "Ajouter le mélange oeufs/fromage et remuer vivement.",
-        textEn: "Add the egg/cheese mixture and stir quickly.",
+        text: "Remuer vivement pour enrober les pâtes. La chaleur des pâtes cuit doucement les œufs.",
+        textEn:
+          "Stir quickly to coat the pasta. The heat from the pasta gently cooks the eggs.",
       },
       {
         step: 7,
-        text: "Détendre avec l'eau de cuisson pour une sauce crémeuse. Poivrer généreusement.",
+        text: "Ajouter le guanciale et son gras, détendre avec l'eau de cuisson. Poivrer généreusement.",
         textEn:
-          "Thin with cooking water for a creamy sauce. Season generously with pepper.",
+          "Add the guanciale and its fat, thin with cooking water. Season generously with pepper.",
       },
     ],
+    chefTip:
+      "Ne mélangez jamais œufs et fromage dans la poêle chaude. Versez les pâtes dans le bol : la chaleur suffit à créer la crème sans cuire le jaune.",
+    chefTipEn:
+      "Never mix eggs and cheese in the hot pan. Pour pasta into the bowl: the heat is enough to create the cream without cooking the yolk.",
+    safetyNote:
+      "Les jaunes sont partiellement cuits par la chaleur des pâtes. Privilégier des œufs extra-frais.",
+    safetyNoteEn:
+      "The yolks are partially cooked by the pasta heat. Use extra-fresh eggs preferably.",
   },
   {
     id: "sabayon",
@@ -589,8 +627,8 @@ export const RECIPES: Recipe[] = [
     difficulty: "hard",
     time: 20,
     image: "/images/recipes/sabayon.jpg",
-    tags: ["dessert", "italien", "élégant"],
-    tagsEn: ["dessert", "italian", "elegant"],
+    tags: ["dessert", "italien", "élégant", "technique"],
+    tagsEn: ["dessert", "italian", "elegant", "technique"],
     servings: 4,
     instructions: [
       {
@@ -624,6 +662,14 @@ export const RECIPES: Recipe[] = [
         textEn: "Serve warm in glasses, plain or with fresh fruit.",
       },
     ],
+    chefTip:
+      "Fouettez sans arrêt au bain-marie pour éviter l'omelette sucrée. Le bol ne doit jamais toucher l'eau.",
+    chefTipEn:
+      "Whisk continuously over the double boiler to avoid a sweet omelette. The bowl should never touch the water.",
+    safetyNote:
+      "Cuisson délicate : les jaunes doivent atteindre 65-70°C. En cas de doute, privilégier des œufs extra-frais.",
+    safetyNoteEn:
+      "Delicate cooking: yolks must reach 65-70°C. When in doubt, use extra-fresh eggs.",
   },
 
   // ============================================
@@ -642,8 +688,8 @@ export const RECIPES: Recipe[] = [
     difficulty: "easy",
     time: 10,
     image: "/images/recipes/omelette.jpg",
-    tags: ["repas", "polyvalent", "classique"],
-    tagsEn: ["meal", "versatile", "classic"],
+    tags: ["repas", "polyvalent", "classique", "technique"],
+    tagsEn: ["meal", "versatile", "classic", "technique"],
     servings: 1,
     instructions: [
       {
@@ -673,6 +719,10 @@ export const RECIPES: Recipe[] = [
         textEn: "Fold the omelette in half or thirds and slide onto the plate.",
       },
     ],
+    chefTip:
+      "Des œufs de 10 jours donnent souvent une meilleure texture que des œufs du jour. Pour une omelette baveuse, retirez du feu quand le dessus est encore brillant.",
+    chefTipEn:
+      "10-day-old eggs often give a better texture than same-day eggs. For a runny omelette, remove from heat while the top is still glossy.",
   },
   {
     id: "croque-madame",
@@ -726,7 +776,7 @@ export const RECIPES: Recipe[] = [
     descriptionEn:
       "Thin and light, sweet or savory. A must for the whole family!",
     eggsRequired: 3,
-    freshness: ["extra-fresh", "fresh"],
+    freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 30,
     image: "/images/recipes/crepes.jpg",
@@ -775,7 +825,7 @@ export const RECIPES: Recipe[] = [
     descriptionEn:
       "Kids' favorite cake! Simple, fluffy, impossible to mess up.",
     eggsRequired: 3,
-    freshness: ["extra-fresh", "fresh"],
+    freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 45,
     image: "/images/recipes/gateau-yaourt.jpg",
@@ -1088,7 +1138,7 @@ export const RECIPES: Recipe[] = [
     descriptionEn:
       "Japanese rolled omelette, slightly sweet. Perfect for bento boxes!",
     eggsRequired: 3,
-    freshness: ["fresh"],
+    freshness: ["extra-fresh", "fresh"],
     difficulty: "medium",
     time: 20,
     image: "/images/recipes/tamagoyaki.jpg",
@@ -1137,7 +1187,7 @@ export const RECIPES: Recipe[] = [
       "Blancs en neige pochés sur crème anglaise. Un grand classique français !",
     descriptionEn: "Poached meringue floating on custard. A French classic!",
     eggsRequired: 4,
-    freshness: ["fresh"],
+    freshness: ["extra-fresh", "fresh"],
     difficulty: "medium",
     time: 40,
     image: "/images/recipes/ile-flottante.jpg",
@@ -1182,6 +1232,10 @@ export const RECIPES: Recipe[] = [
         textEn: "Place the islands on cold custard. Drizzle with caramel.",
       },
     ],
+    safetyNote:
+      "La crème anglaise doit atteindre 82-84°C (nappe à la cuillère) pour être pasteurisée. Les blancs sont cuits par le pochage.",
+    safetyNoteEn:
+      "The custard must reach 82-84°C (coats the spoon) to be pasteurized. The whites are cooked by poaching.",
   },
   {
     id: "riz-cantonais",
@@ -1253,23 +1307,24 @@ export const RECIPES: Recipe[] = [
     instructions: [
       {
         step: 1,
-        text: "Mettre les oeufs dans une casserole d'eau froide.",
-        textEn: "Put the eggs in a pot of cold water.",
+        text: "Porter une casserole d'eau à ébullition.",
+        textEn: "Bring a pot of water to a boil.",
       },
       {
         step: 2,
-        text: "Porter à ébullition.",
-        textEn: "Bring to a boil.",
+        text: "Plonger délicatement les œufs dans l'eau bouillante à l'aide d'une écumoire.",
+        textEn:
+          "Gently lower the eggs into boiling water using a slotted spoon.",
       },
       {
         step: 3,
-        text: "Compter 9-10 minutes à partir de l'ébullition.",
-        textEn: "Count 9-10 minutes from when it boils.",
+        text: "Cuire 10 minutes pour des œufs durs parfaits.",
+        textEn: "Cook for 10 minutes for perfect hard-boiled eggs.",
       },
       {
         step: 4,
-        text: "Plonger immédiatement dans l'eau glacée.",
-        textEn: "Immediately plunge into ice water.",
+        text: "Plonger immédiatement dans l'eau glacée pendant 5 minutes.",
+        textEn: "Immediately plunge into ice water for 5 minutes.",
       },
       {
         step: 5,
@@ -1277,6 +1332,10 @@ export const RECIPES: Recipe[] = [
         textEn: "Peel and use or keep in fridge up to 5 days.",
       },
     ],
+    chefTip:
+      "Départ eau bouillante = écalage facile. Les œufs de 15-20 jours s'écalent beaucoup mieux que les extra-frais.",
+    chefTipEn:
+      "Starting in boiling water = easy peeling. 15-20 day old eggs peel much better than extra-fresh ones.",
   },
   {
     id: "oeufs-mimosa",
@@ -1618,6 +1677,10 @@ export const RECIPES: Recipe[] = [
         textEn: "Pipe and bake according to desired shape at 180°C.",
       },
     ],
+    chefTip:
+      "Le dessèchement de la panade est crucial : la pâte doit se décoller des parois. Trop humide = choux plats, trop sèche = choux fissurés.",
+    chefTipEn:
+      "Drying out the panade is crucial: the dough must pull away from the sides. Too wet = flat puffs, too dry = cracked puffs.",
   },
   {
     id: "oeufs-marines-soja",
@@ -1627,7 +1690,7 @@ export const RECIPES: Recipe[] = [
       "Les oeufs des ramen, marinés dans une sauce soja sucrée. Addictifs !",
     descriptionEn: "Ramen eggs, marinated in sweet soy sauce. Addictive!",
     eggsRequired: 4,
-    freshness: ["fresh", "cook-thoroughly"],
+    freshness: ["extra-fresh", "fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 25,
     image: "/images/recipes/oeufs-marines-soja.jpg",

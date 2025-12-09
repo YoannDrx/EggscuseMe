@@ -3,12 +3,16 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Lightbulb, Tag } from "lucide-react";
+import { AlertTriangle, ChefHat, Lightbulb, Tag } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Recipe } from "./types";
 import { RecipeHero } from "./recipe-hero";
 import { RecipeSteps } from "./recipe-steps";
-import { getRecipeTags } from "./lib/recipe-i18n";
+import {
+  getRecipeTags,
+  getRecipeChefTip,
+  getRecipeSafetyNote,
+} from "./lib/recipe-i18n";
 
 type RecipeDetailContentProps = {
   recipe: Recipe;
@@ -34,11 +38,43 @@ export function RecipeDetailContent({
   const locale = useLocale();
   const t = useTranslations("recipes.detail");
   const tags = getRecipeTags(recipe, locale);
+  const chefTip = getRecipeChefTip(recipe, locale);
+  const safetyNote = getRecipeSafetyNote(recipe, locale);
 
   return (
     <div className={cn("mx-auto max-w-2xl space-y-6 pb-20", className)}>
       {/* Hero section */}
       <RecipeHero recipe={recipe} />
+
+      {/* Safety note - shown first if present */}
+      {safetyNote && (
+        <Card className="border-fresh-cook/30 bg-fresh-cook/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <AlertTriangle className="text-fresh-cook size-4" />
+              {t("safetyNote")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground text-sm">{safetyNote}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Chef tip */}
+      {chefTip && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <ChefHat className="text-primary size-4" />
+              {t("chefTip")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground text-sm">{chefTip}</p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Freshness tip */}
       <Card>

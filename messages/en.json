@@ -427,7 +427,9 @@
       "freshnessTip": "Freshness tip",
       "idealFor": "Ideal recipe for",
       "egg": "egg",
-      "eggs": "eggs"
+      "eggs": "eggs",
+      "chefTip": "Chef's Tip",
+      "safetyNote": "Safety Note"
     },
     "difficulty": {
       "easy": "Easy",

@@ -32,6 +32,28 @@ export function getInstructionText(
 }
 
 /**
+ * Get localized chef tip
+ */
+export function getRecipeChefTip(
+  recipe: Recipe,
+  locale: string,
+): string | undefined {
+  if (!recipe.chefTip) return undefined;
+  return locale === "en" ? recipe.chefTipEn : recipe.chefTip;
+}
+
+/**
+ * Get localized safety note
+ */
+export function getRecipeSafetyNote(
+  recipe: Recipe,
+  locale: string,
+): string | undefined {
+  if (!recipe.safetyNote) return undefined;
+  return locale === "en" ? recipe.safetyNoteEn : recipe.safetyNote;
+}
+
+/**
  * Get a fully localized recipe object
  */
 export function getLocalizedRecipe(
@@ -55,7 +77,7 @@ export function getLocalizedRecipe(
  */
 export type LocalizedRecipe = Omit<
   Recipe,
-  "nameEn" | "descriptionEn" | "tagsEn"
+  "nameEn" | "descriptionEn" | "tagsEn" | "chefTipEn" | "safetyNoteEn"
 > & {
   instructions: Omit<RecipeInstruction, "textEn">[];
 };

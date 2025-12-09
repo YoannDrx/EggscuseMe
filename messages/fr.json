@@ -427,7 +427,9 @@
       "freshnessTip": "Conseil fraîcheur",
       "idealFor": "Recette idéale pour des œufs",
       "egg": "œuf",
-      "eggs": "œufs"
+      "eggs": "œufs",
+      "chefTip": "Conseil du Chef",
+      "safetyNote": "Note de sécurité"
     },
     "difficulty": {
       "easy": "Facile",
