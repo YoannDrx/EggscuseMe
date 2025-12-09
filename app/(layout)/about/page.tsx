@@ -103,19 +103,17 @@ const COPY: Record<"fr" | "en", AboutSectionCopy> = {
       "Discover EggscuseMe, our anti-waste mission, and how we help families track their eggs to cut food waste.",
     metaOgDescription:
       "Learn how EggscuseMe helps families keep eggs fresh, reduce waste, and cook at the right time.",
-    metaKeywords: [
-      "food waste",
-      "eggs",
-      "freshness",
-      "kitchen",
-      "anti-waste",
-    ],
+    metaKeywords: ["food waste", "eggs", "freshness", "kitchen", "anti-waste"],
     heroEyebrow: "Our mission",
     heroTitle: "Zero wasted eggs",
     heroDescription:
       "EggscuseMe was born from a simple fact: too many eggs end up in the trash because nobody tracks them. We help families manage eggs better and cook at the right moment.",
     stats: [
-      { value: "30%", label: "of purchased eggs end up in the trash", icon: Egg },
+      {
+        value: "30%",
+        label: "of purchased eggs end up in the trash",
+        icon: Egg,
+      },
       { value: "2M", label: "eggs wasted per day in France", icon: Leaf },
       { value: "28", label: "days of maximum shelf life", icon: Timer },
       { value: "100%", label: "free to get started", icon: Heart },
@@ -163,7 +161,7 @@ const COPY: Record<"fr" | "en", AboutSectionCopy> = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
-  const copy = COPY[locale as "fr" | "en"] ?? COPY.en;
+  const copy = locale in COPY ? COPY[locale as "fr" | "en"] : COPY.en;
 
   return {
     title: copy.metaTitle,
@@ -180,7 +178,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   const locale = await getLocale();
-  const copy = COPY[locale as "fr" | "en"] ?? COPY.en;
+  const copy = locale in COPY ? COPY[locale as "fr" | "en"] : COPY.en;
 
   return (
     <div className="relative">

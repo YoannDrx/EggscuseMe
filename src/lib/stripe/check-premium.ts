@@ -109,16 +109,16 @@ export function getPremiumRequiredMessage(
   feature: string,
   locale: Locale = defaultLocale,
 ): string {
-  const copy = premiumMessages[locale] ?? premiumMessages.en;
+  const copy =
+    locale in premiumMessages ? premiumMessages[locale] : premiumMessages.en;
   return copy.premiumRequired(feature);
 }
 
 /**
  * Get error message for egg box limit reached
  */
-export function getEggBoxLimitMessage(
-  locale: Locale = defaultLocale,
-): string {
-  const copy = premiumMessages[locale] ?? premiumMessages.en;
+export function getEggBoxLimitMessage(locale: Locale = defaultLocale): string {
+  const copy =
+    locale in premiumMessages ? premiumMessages[locale] : premiumMessages.en;
   return copy.eggLimit(SiteConfig.freePlan.maxEggBoxes);
 }

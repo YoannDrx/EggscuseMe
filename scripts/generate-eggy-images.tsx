@@ -9,6 +9,7 @@
 
 import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
+import { logger } from "./db/utils";
 
 const OUTPUT_DIR = join(process.cwd(), "public/images/eggy");
 
@@ -92,27 +93,36 @@ function generateEggySvg(mood: EggyMood): string {
 }
 
 async function main() {
-  console.log("Generating Eggy PNG images...\n");
+  logger.step("Generating Eggy SVG images...");
 
   // Ensure output directory exists
   await mkdir(OUTPUT_DIR, { recursive: true });
 
-  for (const mood of MOODS) {
-    const svg = generateEggySvg(mood);
-    const outputPath = join(OUTPUT_DIR, `eggy-${mood}.svg`);
+  const generatedMoods = await Promise.all(
+    MOODS.map(async (mood) => {
+      const svg = generateEggySvg(mood);
+      const outputPath = join(OUTPUT_DIR, `eggy-${mood}.svg`);
 
-    await writeFile(outputPath, svg);
-    console.log(`Generated: eggy-${mood}.svg`);
-  }
+      await writeFile(outputPath, svg);
+      return mood;
+    }),
+  );
 
-  console.log(`\nSVG files saved to: ${OUTPUT_DIR}`);
-  console.log("\nTo convert to PNG, you can use:");
-  console.log("1. Figma: Import SVGs and export as PNG");
-  console.log("2. Online tool: https://svgtopng.com/");
-  console.log(
+  generatedMoods.forEach((mood) =>
+    logger.success(`Generated: eggy-${mood}.svg`),
+  );
+
+  logger.info(`SVG files saved to: ${OUTPUT_DIR}`);
+  logger.info("To convert to PNG, you can use:");
+  logger.info("1. Figma: Import SVGs and export as PNG");
+  logger.info("2. Online tool: https://svgtopng.com/");
+  logger.info(
     '3. ImageMagick: convert eggy-happy.svg -resize 160x192 eggy-happy.png"',
   );
-  console.log("\nOr install sharp and uncomment the PNG conversion code.");
+  logger.info("Or install sharp and uncomment the PNG conversion code.");
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  logger.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});

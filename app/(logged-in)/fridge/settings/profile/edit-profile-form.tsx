@@ -122,24 +122,26 @@ export const EditProfileCardForm = ({
                       name: name,
                     })}
                   </CardTitle>
-              <Typography variant="muted" className="text-sm">
-                {defaultValues.email}
-              </Typography>
-            </div>
-          )}
+                  <Typography variant="muted" className="text-sm">
+                    {defaultValues.email}
+                  </Typography>
+                </div>
+              )}
             </form.Subscribe>
           </div>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <form.AppField name="name">
             {(field) => (
-                <field.Field>
-                  <field.Label>{t("name")}</field.Label>
-                  <field.Content>
-                    <field.Input placeholder={t("namePlaceholder") ?? undefined} />
-                    <field.Message />
-                  </field.Content>
-                </field.Field>
+              <field.Field>
+                <field.Label>{t("name")}</field.Label>
+                <field.Content>
+                  <field.Input
+                    placeholder={t("namePlaceholder") || undefined}
+                  />
+                  <field.Message />
+                </field.Content>
+              </field.Field>
             )}
           </form.AppField>
           <div className="flex flex-col gap-2">

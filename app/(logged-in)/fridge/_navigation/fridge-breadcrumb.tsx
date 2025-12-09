@@ -42,9 +42,11 @@ export function FridgeBreadcrumb() {
         {paths.slice(1).map((path, index) => {
           const isLast = index === paths.slice(1).length - 1;
           const currentPath = `/${paths.slice(0, index + 2).join("/")}`;
-          const displayName = ROUTE_LABEL_KEYS[path as keyof typeof ROUTE_LABEL_KEYS]
-            ? t(ROUTE_LABEL_KEYS[path as keyof typeof ROUTE_LABEL_KEYS])
-            : path;
+          const labelKey =
+            path in ROUTE_LABEL_KEYS
+              ? ROUTE_LABEL_KEYS[path as keyof typeof ROUTE_LABEL_KEYS]
+              : null;
+          const displayName = labelKey ? t(labelKey) : path;
 
           return (
             <Fragment key={path + index}>

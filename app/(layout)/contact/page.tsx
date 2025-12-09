@@ -150,7 +150,7 @@ const COPY: Record<"fr" | "en", ContactCopy> = {
 
 async function getCopy(): Promise<ContactCopy> {
   const locale = await getLocale();
-  return COPY[locale as "fr" | "en"] ?? COPY.en;
+  return locale in COPY ? COPY[locale as "fr" | "en"] : COPY.en;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -182,38 +182,38 @@ export default async function ContactPage() {
         {/* Left Column - Info */}
         <div className="bg-muted/10 relative flex items-center justify-end px-6 py-24 backdrop-blur-sm sm:py-32 lg:px-12">
           <div className="relative z-10 mx-auto w-full max-w-xl lg:mx-0 lg:max-w-lg">
-          <Typography
-            variant="h1"
-            className="text-foreground text-4xl font-semibold tracking-tight text-pretty sm:text-5xl"
-          >
-            {copy.heroTitle}
-          </Typography>
-          <Typography
-            variant="p"
-            className="text-muted-foreground mt-6 text-lg/8"
-          >
-            {copy.heroDescription}
-          </Typography>
+            <Typography
+              variant="h1"
+              className="text-foreground text-4xl font-semibold tracking-tight text-pretty sm:text-5xl"
+            >
+              {copy.heroTitle}
+            </Typography>
+            <Typography
+              variant="p"
+              className="text-muted-foreground mt-6 text-lg/8"
+            >
+              {copy.heroDescription}
+            </Typography>
 
-          <dl className="text-muted-foreground mt-10 flex flex-col gap-4 text-base/7">
-            <div className="flex gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">{copy.srAddress}</span>
-                <Building2
-                  aria-hidden="true"
-                  className="text-muted-foreground size-6"
-                />
-              </dt>
+            <dl className="text-muted-foreground mt-10 flex flex-col gap-4 text-base/7">
+              <div className="flex gap-x-4">
+                <dt className="flex-none">
+                  <span className="sr-only">{copy.srAddress}</span>
+                  <Building2
+                    aria-hidden="true"
+                    className="text-muted-foreground size-6"
+                  />
+                </dt>
                 <dd>{SiteConfig.company.address}</dd>
-            </div>
-            <div className="flex gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">{copy.srEmail}</span>
-                <Mail
-                  aria-hidden="true"
-                  className="text-muted-foreground size-6"
-                />
-              </dt>
+              </div>
+              <div className="flex gap-x-4">
+                <dt className="flex-none">
+                  <span className="sr-only">{copy.srEmail}</span>
+                  <Mail
+                    aria-hidden="true"
+                    className="text-muted-foreground size-6"
+                  />
+                </dt>
                 <dd>
                   <a
                     href={`mailto:${SiteConfig.support.email}`}
@@ -222,48 +222,48 @@ export default async function ContactPage() {
                     {SiteConfig.support.email}
                   </a>
                 </dd>
-            </div>
-            <div className="flex gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">{copy.srHours}</span>
-                <Clock
-                  aria-hidden="true"
-                  className="text-muted-foreground size-6"
-                />
-              </dt>
-              <dd>
-                {copy.hours}
-                <br />
-                <span className="text-muted-foreground/70">
-                  {copy.timezone}
-                </span>
-              </dd>
-            </div>
-            <div className="flex gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">{copy.srResponse}</span>
-                <MessageSquare
-                  aria-hidden="true"
-                  className="text-muted-foreground size-6"
-                />
-              </dt>
-              <dd>{copy.responseDelay}</dd>
-            </div>
-          </dl>
+              </div>
+              <div className="flex gap-x-4">
+                <dt className="flex-none">
+                  <span className="sr-only">{copy.srHours}</span>
+                  <Clock
+                    aria-hidden="true"
+                    className="text-muted-foreground size-6"
+                  />
+                </dt>
+                <dd>
+                  {copy.hours}
+                  <br />
+                  <span className="text-muted-foreground/70">
+                    {copy.timezone}
+                  </span>
+                </dd>
+              </div>
+              <div className="flex gap-x-4">
+                <dt className="flex-none">
+                  <span className="sr-only">{copy.srResponse}</span>
+                  <MessageSquare
+                    aria-hidden="true"
+                    className="text-muted-foreground size-6"
+                  />
+                </dt>
+                <dd>{copy.responseDelay}</dd>
+              </div>
+            </dl>
 
-          {/* FAQ Section */}
-          <div className="mt-12">
-            <Typography
-              variant="h2"
-              className="text-foreground mb-4 text-xl font-semibold"
-            >
-              {copy.faqTitle}
-            </Typography>
-            <div className="space-y-4">
-              {copy.faqs.map((faq) => (
-                <div key={faq.question}>
-                  <Typography
-                    variant="p"
+            {/* FAQ Section */}
+            <div className="mt-12">
+              <Typography
+                variant="h2"
+                className="text-foreground mb-4 text-xl font-semibold"
+              >
+                {copy.faqTitle}
+              </Typography>
+              <div className="space-y-4">
+                {copy.faqs.map((faq) => (
+                  <div key={faq.question}>
+                    <Typography
+                      variant="p"
                       className="text-foreground font-medium"
                     >
                       {faq.question}

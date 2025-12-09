@@ -238,16 +238,16 @@ export default function HistoryPage() {
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                      <TableRow>
-                        <TableHead>{t("date")}</TableHead>
-                        <TableHead>{t("box")}</TableHead>
-                        <TableHead>{t("quantity")}</TableHead>
-                        <TableHead>{t("type")}</TableHead>
-                        <TableHead>{t("rating")}</TableHead>
-                        <TableHead>{t("comment")}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
+                        <TableRow>
+                          <TableHead>{t("date")}</TableHead>
+                          <TableHead>{t("box")}</TableHead>
+                          <TableHead>{t("quantity")}</TableHead>
+                          <TableHead>{t("type")}</TableHead>
+                          <TableHead>{t("rating")}</TableHead>
+                          <TableHead>{t("comment")}</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
                         {history.map((item) => (
                           <TableRow key={item.id}>
                             <TableCell className="whitespace-nowrap">
@@ -257,21 +257,23 @@ export default function HistoryPage() {
                                 year: "numeric",
                               })}
                             </TableCell>
-                              <TableCell className="font-medium">
-                                {item.eggBoxName}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline">
-                                  {t("eggCount", { count: item.quantity })}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                {tCooking(
-                                  COOKING_TYPE_OPTIONS[
-                                    item.cookingType as keyof typeof COOKING_TYPE_OPTIONS
-                                  ] ?? COOKING_TYPE_OPTIONS.OTHER,
-                                )}
-                              </TableCell>
+                            <TableCell className="font-medium">
+                              {item.eggBoxName}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">
+                                {t("eggCount", { count: item.quantity })}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {tCooking(
+                                item.cookingType in COOKING_TYPE_OPTIONS
+                                  ? COOKING_TYPE_OPTIONS[
+                                      item.cookingType as keyof typeof COOKING_TYPE_OPTIONS
+                                    ]
+                                  : COOKING_TYPE_OPTIONS.OTHER,
+                              )}
+                            </TableCell>
                             <TableCell>
                               {item.rating != null ? (
                                 <div className="flex items-center gap-1">
