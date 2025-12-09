@@ -203,5 +203,11 @@ export async function signOutAccount(options: { page: Page }) {
   }
 
   // After sign out, user is redirected to homepage
-  await page.waitForURL(/^\/$|^\/\?/, { timeout: 10000 });
+  await page.waitForURL(
+    (url) => {
+      const path = url.pathname;
+      return path === "/" || path === "/home";
+    },
+    { timeout: 15000 },
+  );
 }
