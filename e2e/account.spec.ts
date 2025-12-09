@@ -28,13 +28,17 @@ test.describe("account", () => {
     const deleteDialog = page.getByRole("alertdialog");
     await expect(deleteDialog).toBeVisible();
 
-    // Confirm text is "Supprimer" in French
+    // Confirm text is required ("Supprimer" FR / "Delete" EN)
     const confirmInput = deleteDialog.getByRole("textbox");
-    await confirmInput.fill("Supprimer");
-
     const deleteButton = deleteDialog.getByRole("button", {
       name: /supprimer|delete/i,
     });
+
+    await confirmInput.fill("Supprimer");
+    if (!(await deleteButton.isEnabled().catch(() => false))) {
+      await confirmInput.fill("Delete");
+    }
+
     await expect(deleteButton).toBeEnabled();
     await deleteButton.click();
 
