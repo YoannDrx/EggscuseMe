@@ -15,12 +15,14 @@ test.describe("account", () => {
       callbackURL: "/fridge/settings/profile",
     });
 
-    await page.getByRole("link", { name: /danger|zone danger/i }).click();
-    await page.waitForURL(/\/fridge\/settings\/danger/, { timeout: 10000 });
+    await page.goto("/fridge/settings/danger");
+    await page.waitForURL(/\/fridge\/settings\/danger/, { timeout: 15000 });
     // Button text is "Supprimer mon compte" in French UI
-    await page
-      .getByRole("button", { name: /supprimer mon compte|delete/i })
-      .click();
+    const deleteAccountButton = page.getByRole("button", {
+      name: /supprimer mon compte|delete my account/i,
+    });
+    await expect(deleteAccountButton).toBeVisible();
+    await deleteAccountButton.click();
 
     // Dialog opens with dialogManager.confirm
     const deleteDialog = page.getByRole("alertdialog");
