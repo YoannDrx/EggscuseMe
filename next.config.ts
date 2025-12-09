@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   typedRoutes: true,
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
+
   // Redirect legacy /account/* routes to new /fridge/settings/*
   async redirects() {
     return [

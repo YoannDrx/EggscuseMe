@@ -20,8 +20,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "easy",
     time: 5,
-    image:
-      "https://images.unsplash.com/photo-1482049016530-d79ae00e6e9b?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-coque.jpg",
     tags: ["petit-déjeuner", "rapide", "classique"],
     tagsEn: ["breakfast", "quick", "classic"],
     servings: 1,
@@ -60,8 +59,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "medium",
     time: 10,
-    image:
-      "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-poches.jpg",
     tags: ["brunch", "healthy", "élégant"],
     tagsEn: ["brunch", "healthy", "elegant"],
     servings: 1,
@@ -107,8 +105,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "medium",
     time: 10,
-    image:
-      "https://images.unsplash.com/photo-1587411768638-ec71f8e33b78?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/mayonnaise-maison.jpg",
     tags: ["sauce", "accompagnement", "fait-maison"],
     tagsEn: ["sauce", "side", "homemade"],
     servings: 4,
@@ -148,8 +145,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "medium",
     time: 30,
-    image:
-      "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/mousse-chocolat.jpg",
     tags: ["dessert", "chocolat", "gourmand"],
     tagsEn: ["dessert", "chocolate", "indulgent"],
     servings: 6,
@@ -201,8 +197,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "medium",
     time: 30,
-    image:
-      "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/tiramisu.jpg",
     tags: ["dessert", "italien", "café"],
     tagsEn: ["dessert", "italian", "coffee"],
     servings: 8,
@@ -262,8 +257,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 8,
-    image:
-      "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-brouilles.jpg",
     tags: ["petit-déjeuner", "rapide", "crémeux"],
     tagsEn: ["breakfast", "quick", "creamy"],
     servings: 2,
@@ -308,8 +302,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 5,
-    image:
-      "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-plat.jpg",
     tags: ["petit-déjeuner", "rapide", "simple"],
     tagsEn: ["breakfast", "quick", "simple"],
     servings: 1,
@@ -348,8 +341,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 25,
-    image:
-      "https://images.unsplash.com/photo-1590412200988-a436970781fa?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/shakshuka.jpg",
     tags: ["brunch", "épicé", "végétarien"],
     tagsEn: ["brunch", "spicy", "vegetarian"],
     servings: 2,
@@ -399,8 +391,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "easy",
     time: 6,
-    image:
-      "https://images.unsplash.com/photo-1482049016530-d79ae00e6e9b?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-mollets.jpg",
     tags: ["salade", "brunch", "technique"],
     tagsEn: ["salad", "brunch", "technique"],
     servings: 1,
@@ -443,8 +434,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "easy",
     time: 15,
-    image:
-      "https://images.unsplash.com/photo-1607116667981-b704e7f tried&w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-cocotte.jpg",
     tags: ["brunch", "réconfortant", "champignons"],
     tagsEn: ["brunch", "comfort", "mushrooms"],
     servings: 2,
@@ -493,8 +483,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "medium",
     time: 15,
-    image:
-      "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/galette-complete.jpg",
     tags: ["repas", "breton", "fromage"],
     tagsEn: ["meal", "breton", "cheese"],
     servings: 1,
@@ -543,8 +532,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "medium",
     time: 25,
-    image:
-      "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/carbonara.jpg",
     tags: ["repas", "italien", "pâtes"],
     tagsEn: ["meal", "italian", "pasta"],
     servings: 4,
@@ -600,8 +588,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh"],
     difficulty: "hard",
     time: 20,
-    image:
-      "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/sabayon.jpg",
     tags: ["dessert", "italien", "élégant"],
     tagsEn: ["dessert", "italian", "elegant"],
     servings: 4,
@@ -654,8 +641,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 10,
-    image:
-      "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/omelette.jpg",
     tags: ["repas", "polyvalent", "classique"],
     tagsEn: ["meal", "versatile", "classic"],
     servings: 1,
@@ -699,8 +685,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 15,
-    image:
-      "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/croque-madame.jpg",
     tags: ["repas", "fromage", "gourmand"],
     tagsEn: ["meal", "cheese", "indulgent"],
     servings: 1,
@@ -744,8 +729,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 30,
-    image:
-      "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/crepes.jpg",
     tags: ["dessert", "goûter", "famille"],
     tagsEn: ["dessert", "snack", "family"],
     servings: 8,
@@ -794,8 +778,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["extra-fresh", "fresh"],
     difficulty: "easy",
     time: 45,
-    image:
-      "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/gateau-yaourt.jpg",
     tags: ["dessert", "goûter", "enfants"],
     tagsEn: ["dessert", "snack", "kids"],
     servings: 8,
@@ -843,8 +826,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "medium",
     time: 60,
-    image:
-      "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/quiche-lorraine.jpg",
     tags: ["repas", "pique-nique", "classique"],
     tagsEn: ["meal", "picnic", "classic"],
     servings: 6,
@@ -899,8 +881,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "medium",
     time: 60,
-    image:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/flan-patissier.jpg",
     tags: ["dessert", "vanille", "boulangerie"],
     tagsEn: ["dessert", "vanilla", "bakery"],
     servings: 8,
@@ -954,8 +935,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 45,
-    image:
-      "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/clafoutis.jpg",
     tags: ["dessert", "fruits", "traditionnel"],
     tagsEn: ["dessert", "fruit", "traditional"],
     servings: 6,
@@ -1008,8 +988,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 35,
-    image:
-      "https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/tortilla.jpg",
     tags: ["repas", "tapas", "espagnol"],
     tagsEn: ["meal", "tapas", "spanish"],
     servings: 4,
@@ -1063,8 +1042,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 30,
-    image:
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/frittata.jpg",
     tags: ["repas", "végétarien", "anti-gaspi"],
     tagsEn: ["meal", "vegetarian", "anti-waste"],
     servings: 4,
@@ -1113,8 +1091,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh"],
     difficulty: "medium",
     time: 20,
-    image:
-      "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/tamagoyaki.jpg",
     tags: ["apéritif", "japonais", "bento"],
     tagsEn: ["appetizer", "japanese", "bento"],
     servings: 2,
@@ -1163,8 +1140,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh"],
     difficulty: "medium",
     time: 40,
-    image:
-      "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/ile-flottante.jpg",
     tags: ["dessert", "vanille", "français"],
     tagsEn: ["dessert", "vanilla", "french"],
     servings: 4,
@@ -1218,8 +1194,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 25,
-    image:
-      "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/riz-cantonais.jpg",
     tags: ["repas", "asiatique", "rapide"],
     tagsEn: ["meal", "asian", "quick"],
     servings: 4,
@@ -1271,8 +1246,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 12,
-    image:
-      "https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-durs.jpg",
     tags: ["préparation", "polyvalent", "meal-prep"],
     tagsEn: ["preparation", "versatile", "meal-prep"],
     servings: 4,
@@ -1315,8 +1289,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 25,
-    image:
-      "https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-mimosa.jpg",
     tags: ["apéritif", "buffet", "anti-gaspi"],
     tagsEn: ["appetizer", "buffet", "anti-waste"],
     servings: 6,
@@ -1365,8 +1338,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 20,
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/salade-nicoise.jpg",
     tags: ["salade", "été", "healthy"],
     tagsEn: ["salad", "summer", "healthy"],
     servings: 2,
@@ -1409,8 +1381,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 50,
-    image:
-      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/cake-sale.jpg",
     tags: ["apéritif", "pique-nique", "polyvalent"],
     tagsEn: ["appetizer", "picnic", "versatile"],
     servings: 8,
@@ -1459,8 +1430,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 15,
-    image:
-      "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/pain-perdu.jpg",
     tags: ["petit-déjeuner", "anti-gaspi", "sucré"],
     tagsEn: ["breakfast", "anti-waste", "sweet"],
     servings: 2,
@@ -1503,8 +1473,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 35,
-    image:
-      "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/brownies.jpg",
     tags: ["dessert", "chocolat", "gourmand"],
     tagsEn: ["dessert", "chocolate", "indulgent"],
     servings: 12,
@@ -1553,8 +1522,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "medium",
     time: 45,
-    image:
-      "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/gougeres.jpg",
     tags: ["apéritif", "fromage", "français"],
     tagsEn: ["appetizer", "cheese", "french"],
     servings: 20,
@@ -1608,8 +1576,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "medium",
     time: 50,
-    image:
-      "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/pate-a-choux.jpg",
     tags: ["dessert", "boulangerie", "technique"],
     tagsEn: ["dessert", "bakery", "technique"],
     servings: 12,
@@ -1663,8 +1630,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["fresh", "cook-thoroughly"],
     difficulty: "easy",
     time: 25,
-    image:
-      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-marines-soja.jpg",
     tags: ["asiatique", "ramen", "umami"],
     tagsEn: ["asian", "ramen", "umami"],
     servings: 4,
@@ -1713,8 +1679,7 @@ export const RECIPES: Recipe[] = [
     freshness: ["cook-thoroughly"],
     difficulty: "easy",
     time: 20,
-    image:
-      "https://images.unsplash.com/photo-1518569656558-1f25e69d93d7?w=800&h=600&fit=crop&q=80",
+    image: "/images/recipes/oeufs-vinaigres.jpg",
     tags: ["conserve", "anti-gaspi", "apéritif"],
     tagsEn: ["preserve", "anti-waste", "appetizer"],
     servings: 6,
