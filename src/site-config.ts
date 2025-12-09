@@ -5,7 +5,7 @@ export const SiteConfig = {
   prodUrl: "https://eggscuseme.app",
   appId: "eggscuseme",
   domain: "eggscuseme.app",
-  appIcon: "/images/icon.png",
+  appIcon: "/images/logo.svg",
   company: {
     name: "EggscuseMe",
     address: "Paris, France",

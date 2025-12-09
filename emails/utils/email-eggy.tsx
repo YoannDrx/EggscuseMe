@@ -19,13 +19,10 @@ const sizeMap = {
 /**
  * Eggy component for emails
  *
- * Since emails don't support inline SVGs, this component uses pre-generated
- * PNG images hosted in /public/images/eggy/
+ * Uses SVG images hosted in /public/images/eggy/
+ * Modern email clients (Gmail, Apple Mail, Outlook web) support SVG.
  *
- * To generate the images, run: pnpm email:generate-eggy
- * Or manually export from Figma/design tool
- *
- * Fallback: If images don't exist, uses the app icon
+ * To generate the images, run: pnpm tsx scripts/generate-eggy-images.tsx
  */
 export function EmailEggy({
   mood = "happy",
@@ -40,7 +37,8 @@ export function EmailEggy({
 
   const { width, height } = sizeMap[size];
 
-  const eggyUrl = `${baseUrl}/images/eggy/eggy-${mood}.png`;
+  // Use SVG files (modern email clients support them)
+  const eggyUrl = `${baseUrl}/images/eggy/eggy-${mood}.svg`;
 
   return (
     <Img
@@ -52,8 +50,6 @@ export function EmailEggy({
         margin: "0 auto",
         display: "block",
       }}
-      // Fallback handled via onerror in email clients that support it
-      // Most email clients will just show alt text if image fails
     />
   );
 }
@@ -68,5 +64,5 @@ export function getEggyImageUrl(mood: EmailEggyMood = "happy"): string {
     baseUrl = SiteConfig.prodUrl;
   }
 
-  return `${baseUrl}/images/eggy/eggy-${mood}.png`;
+  return `${baseUrl}/images/eggy/eggy-${mood}.svg`;
 }
