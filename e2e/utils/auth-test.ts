@@ -175,8 +175,26 @@ export async function signOutAccount(options: { page: Page }) {
   // Navigate to fridge settings page
   await page.goto(`/fridge/settings/profile`);
 
-  // Click the sign out button (in sidebar or user dropdown)
-  await page.getByRole("button", { name: /sign out|déconnexion/i }).click();
+  // Wait for page to load
+  await page.waitForLoadState("networkidle");
+
+  // On desktop: open the user dropdown in the sidebar footer, then click logout
+  // The user button contains the user's name/email and an avatar
+  const userButton = page.locator('[data-testid="user-menu-trigger"]');
+
+  // If user button exists (desktop sidebar), click it to open dropdown
+  if (await userButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await userButton.click();
+    // Wait for dropdown to open and click the logout menu item
+    await page
+      .getByRole("menuitem", { name: /sign out|déconnexion|se déconnecter/i })
+      .click();
+  } else {
+    // Fallback: try to find a direct sign out link (mobile menu or other layouts)
+    await page
+      .getByRole("link", { name: /sign out|déconnexion|se déconnecter/i })
+      .click();
+  }
 
   await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
 }

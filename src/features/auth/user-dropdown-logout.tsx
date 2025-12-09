@@ -5,8 +5,10 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export const UserDropdownLogout = () => {
+  const t = useTranslations("auth");
   const logout = useMutation({
     mutationFn: async () => signOut(),
     onSuccess: () => {
@@ -27,7 +29,7 @@ export const UserDropdownLogout = () => {
       ) : (
         <LogOut className="mr-2 size-4" />
       )}
-      <span>Logout</span>
+      <span>{t("signOut")}</span>
     </DropdownMenuItem>
   );
 };

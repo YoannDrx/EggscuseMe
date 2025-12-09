@@ -17,21 +17,29 @@ test.describe("account", () => {
 
     await page.getByRole("link", { name: /danger|zone danger/i }).click();
     await page.waitForURL(/\/fridge\/settings\/danger/, { timeout: 10000 });
-    await page.getByRole("button", { name: "Delete" }).click();
+    // Button text is "Supprimer mon compte" in French UI
+    await page
+      .getByRole("button", { name: /supprimer mon compte|delete/i })
+      .click();
 
-    const deleteDialog = page.getByRole("alertdialog", {
-      name: "Delete your account ?",
-    });
+    // Dialog opens with dialogManager.confirm
+    const deleteDialog = page.getByRole("alertdialog");
     await expect(deleteDialog).toBeVisible();
 
+    // Confirm text is "Supprimer" in French
     const confirmInput = deleteDialog.getByRole("textbox");
-    await confirmInput.fill("Delete");
+    await confirmInput.fill("Supprimer");
 
-    const deleteButton = deleteDialog.getByRole("button", { name: /delete/i });
+    const deleteButton = deleteDialog.getByRole("button", {
+      name: /supprimer|delete/i,
+    });
     await expect(deleteButton).toBeEnabled();
     await deleteButton.click();
 
-    await expect(page.getByText("Your deletion has been asked.")).toBeVisible();
+    // Toast message in French: "Demande de suppression envoyée"
+    await expect(
+      page.getByText(/demande de suppression|deletion has been asked/i),
+    ).toBeVisible();
 
     const verification = await prisma.verification.findFirst({
       where: {
@@ -74,11 +82,16 @@ test.describe("account", () => {
     await createTestAccount({ page, callbackURL: "/fridge/settings/profile" });
 
     const newName = faker.person.fullName();
-    const input = page.getByRole("textbox", { name: "Name" });
+    // Label is "Nom" in French UI
+    const input = page.getByRole("textbox", { name: /nom|name/i });
     await input.fill(newName);
-    await page.getByRole("button", { name: /save/i }).click();
+    // Button is "Enregistrer" in French UI
+    await page.getByRole("button", { name: /enregistrer|save/i }).click();
 
-    await expect(page.getByText("Profile updated")).toBeVisible();
+    // Toast message is "Profil mis à jour" in French
+    await expect(
+      page.getByText(/profil mis à jour|profile updated/i),
+    ).toBeVisible();
     await page.reload();
     await expect(input).toHaveValue(newName);
   });
@@ -99,7 +112,10 @@ test.describe("account", () => {
     await page.locator('input[name="currentPassword"]').fill(userData.password);
     await page.locator('input[name="newPassword"]').fill(newPassword);
     await page.locator('input[name="confirmPassword"]').fill(newPassword);
-    await page.getByRole("button", { name: /Change Password/i }).click();
+    // Button is "Changer le mot de passe" in French UI
+    await page
+      .getByRole("button", { name: /changer le mot de passe|change password/i })
+      .click();
 
     await signOutAccount({ page });
 

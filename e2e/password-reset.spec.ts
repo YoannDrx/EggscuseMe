@@ -14,8 +14,19 @@ test("password reset flow", async ({ page }) => {
   // Wait to be on the profile settings page
   await page.waitForURL(/\/fridge\/settings\/profile/, { timeout: 10000 });
 
-  // 2. Sign out (click on user dropdown or sidebar logout button)
-  await page.getByRole("button", { name: /sign out|déconnexion/i }).click();
+  // 2. Sign out - open user dropdown then click logout
+  await page.waitForLoadState("networkidle");
+  const userButton = page.locator('[data-testid="user-menu-trigger"]');
+  if (await userButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await userButton.click();
+    await page
+      .getByRole("menuitem", { name: /sign out|déconnexion|se déconnecter/i })
+      .click();
+  } else {
+    await page
+      .getByRole("link", { name: /sign out|déconnexion|se déconnecter/i })
+      .click();
+  }
   await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
 
   // 3. Go to forget password page
