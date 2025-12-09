@@ -37,24 +37,38 @@ import {
   Star,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-const COOKING_TYPE_LABELS: Record<string, string> = {
-  SOFT_BOILED: "A la coque",
-  POACHED: "Poché",
-  RAW: "Cru",
-  FRIED: "Au plat",
-  SCRAMBLED: "Brouillés",
-  OMELETTE: "Omelette",
-  HARD_BOILED: "Dur",
-  BAKING: "Pâtisserie",
-  OTHER: "Autre",
-};
+const COOKING_TYPE_OPTIONS = {
+  SOFT_BOILED: "softBoiled",
+  POACHED: "poached",
+  RAW: "raw",
+  FRIED: "fried",
+  SCRAMBLED: "scrambled",
+  OMELETTE: "omelette",
+  HARD_BOILED: "hardBoiled",
+  BAKING: "baking",
+  OTHER: "other",
+} as const;
 
-const COOKING_TYPES = Object.keys(COOKING_TYPE_LABELS);
+const COOKING_TYPES: (keyof typeof COOKING_TYPE_OPTIONS)[] = [
+  "SOFT_BOILED",
+  "POACHED",
+  "RAW",
+  "FRIED",
+  "SCRAMBLED",
+  "OMELETTE",
+  "HARD_BOILED",
+  "BAKING",
+  "OTHER",
+];
 
 export default function HistoryPage() {
   const isMobile = useIsMobile();
+  const locale = useLocale();
+  const t = useTranslations("fridge.history");
+  const tCooking = useTranslations("cooking");
   const [page, setPage] = useState(1);
   const [cookingTypeFilter, setCookingTypeFilter] = useState<string>("");
   const [filterModalOpen, setFilterModalOpen] = useState(false);
@@ -94,7 +108,7 @@ export default function HistoryPage() {
     <div className="space-y-4">
       <div>
         <label className="text-muted-foreground mb-2 block text-sm font-medium">
-          Type de cuisson
+          {t("cookingType")}
         </label>
         <Select
           value={cookingTypeFilter || "all"}
@@ -105,13 +119,13 @@ export default function HistoryPage() {
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Tous les types" />
+            <SelectValue placeholder={t("allTypes")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous les types</SelectItem>
+            <SelectItem value="all">{t("allTypes")}</SelectItem>
             {COOKING_TYPES.map((type) => (
               <SelectItem key={type} value={type}>
-                {COOKING_TYPE_LABELS[type]}
+                {tCooking(COOKING_TYPE_OPTIONS[type])}
               </SelectItem>
             ))}
           </SelectContent>
@@ -124,9 +138,9 @@ export default function HistoryPage() {
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
       <MobileHeader
-        title="Historique"
+        title={t("title")}
         subtitle={
-          total > 0 ? `${total} consommation${total > 1 ? "s" : ""}` : undefined
+          total > 0 ? t("consumptionCount", { count: total }) : undefined
         }
         rightAction={
           <Button
@@ -148,10 +162,8 @@ export default function HistoryPage() {
         <div className="flex items-center gap-4">
           <Eggy mood="happy" size="lg" />
           <div>
-            <h1 className="font-heading text-2xl font-bold">Historique</h1>
-            <p className="text-muted-foreground">
-              Retrouvez toutes vos consommations passées
-            </p>
+            <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
 
@@ -160,14 +172,14 @@ export default function HistoryPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <History className="size-4" />
-              Filtres
+              {t("filters")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-4">
               <div className="min-w-[200px]">
                 <label className="text-muted-foreground mb-2 block text-sm">
-                  Type de cuisson
+                  {t("cookingType")}
                 </label>
                 <Select
                   value={cookingTypeFilter || "all"}
@@ -177,13 +189,13 @@ export default function HistoryPage() {
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Tous les types" />
+                    <SelectValue placeholder={t("allTypes")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Tous les types</SelectItem>
+                    <SelectItem value="all">{t("allTypes")}</SelectItem>
                     {COOKING_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
-                        {COOKING_TYPE_LABELS[type]}
+                        {tCooking(COOKING_TYPE_OPTIONS[type])}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -193,7 +205,7 @@ export default function HistoryPage() {
               {total > 0 && (
                 <div className="flex items-end">
                   <Badge variant="secondary">
-                    {total} résultat{total > 1 ? "s" : ""}
+                    {t("results", { count: total })}
                   </Badge>
                 </div>
               )}
@@ -226,38 +238,40 @@ export default function HistoryPage() {
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Boîte</TableHead>
-                          <TableHead>Quantité</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Note</TableHead>
-                          <TableHead>Commentaire</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
+                      <TableRow>
+                        <TableHead>{t("date")}</TableHead>
+                        <TableHead>{t("box")}</TableHead>
+                        <TableHead>{t("quantity")}</TableHead>
+                        <TableHead>{t("type")}</TableHead>
+                        <TableHead>{t("rating")}</TableHead>
+                        <TableHead>{t("comment")}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
                         {history.map((item) => (
                           <TableRow key={item.id}>
                             <TableCell className="whitespace-nowrap">
-                              {new Date(item.date).toLocaleDateString("fr-FR", {
+                              {new Date(item.date).toLocaleDateString(locale, {
                                 day: "numeric",
                                 month: "short",
                                 year: "numeric",
                               })}
                             </TableCell>
-                            <TableCell className="font-medium">
-                              {item.eggBoxName}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline">
-                                {item.quantity} oeuf
-                                {item.quantity > 1 ? "s" : ""}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {COOKING_TYPE_LABELS[item.cookingType] ??
-                                item.cookingType}
-                            </TableCell>
+                              <TableCell className="font-medium">
+                                {item.eggBoxName}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="outline">
+                                  {t("eggCount", { count: item.quantity })}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {tCooking(
+                                  COOKING_TYPE_OPTIONS[
+                                    item.cookingType as keyof typeof COOKING_TYPE_OPTIONS
+                                  ] ?? COOKING_TYPE_OPTIONS.OTHER,
+                                )}
+                              </TableCell>
                             <TableCell>
                               {item.rating != null ? (
                                 <div className="flex items-center gap-1">
@@ -294,7 +308,7 @@ export default function HistoryPage() {
             {totalPages > 1 && (
               <div className="mt-6 flex items-center justify-between">
                 <p className="text-muted-foreground text-sm">
-                  Page {page} sur {totalPages}
+                  {t("page", { current: page, total: totalPages })}
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -304,7 +318,7 @@ export default function HistoryPage() {
                     disabled={page <= 1}
                   >
                     <ChevronLeft className="size-4" />
-                    <span className="hidden sm:inline">Précédent</span>
+                    <span className="hidden sm:inline">{t("previous")}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -312,7 +326,7 @@ export default function HistoryPage() {
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page >= totalPages}
                   >
-                    <span className="hidden sm:inline">Suivant</span>
+                    <span className="hidden sm:inline">{t("next")}</span>
                     <ChevronRight className="size-4" />
                   </Button>
                 </div>
@@ -326,8 +340,8 @@ export default function HistoryPage() {
       <ResponsiveModal
         open={filterModalOpen}
         onOpenChange={setFilterModalOpen}
-        title="Filtres"
-        description="Filtrer l'historique par type de cuisson"
+        title={t("filterModalTitle")}
+        description={t("filterDescription")}
       >
         {filterContent}
       </ResponsiveModal>

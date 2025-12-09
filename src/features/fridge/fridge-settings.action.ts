@@ -7,6 +7,7 @@ import {
   getOrCreateFridge,
 } from "@/lib/fridge/get-fridge-access";
 import { prisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -14,7 +15,7 @@ import { z } from "zod";
  * Schema for renaming a fridge
  */
 const RenameFridgeSchema = z.object({
-  name: z.string().min(1, "Le nom est requis").max(50, "Nom trop long"),
+  name: z.string(),
 });
 
 /**
@@ -24,15 +25,26 @@ const RenameFridgeSchema = z.object({
 export const renameFridgeAction = authAction
   .inputSchema(RenameFridgeSchema)
   .action(async ({ parsedInput: { name }, ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     if (!canModifyFridge(role)) {
-      throw new ActionError("Seul le propriétaire peut renommer le frigo.");
+      throw new ActionError(t("ownerOnlyRename"));
+    }
+
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      throw new ActionError(t("renameRequired"));
+    }
+
+    if (trimmedName.length > 50) {
+      throw new ActionError(t("renameTooLong"));
     }
 
     const updatedFridge = await prisma.fridge.update({
       where: { id: fridge.id },
-      data: { name },
+      data: { name: trimmedName },
     });
 
     revalidatePath("/fridge");
@@ -47,10 +59,11 @@ export const renameFridgeAction = authAction
  */
 export const clearFridgeHistoryAction = authAction.action(
   async ({ ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     if (!canModifyFridge(role)) {
-      throw new ActionError("Seul le propriétaire peut effacer l'historique.");
+      throw new ActionError(t("ownerOnlyHistory"));
     }
 
     // Delete all consumption records for all egg boxes in this fridge
@@ -75,10 +88,11 @@ export const clearFridgeHistoryAction = authAction.action(
  */
 export const clearFridgeDataAction = authAction.action(
   async ({ ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     if (!canModifyFridge(role)) {
-      throw new ActionError("Seul le propriétaire peut vider le frigo.");
+      throw new ActionError(t("ownerOnlyClear"));
     }
 
     // Delete all egg boxes (consumption records will cascade delete)
@@ -98,13 +112,12 @@ export const clearFridgeDataAction = authAction.action(
  */
 export const leaveFridgeAction = authAction.action(
   async ({ ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     // Only guests can leave - owners delete by deleting their account
     if (role === "OWNER") {
-      throw new ActionError(
-        "Les propriétaires ne peuvent pas quitter leur frigo. Supprimez votre compte pour supprimer le frigo.",
-      );
+      throw new ActionError(t("ownerCannotLeave"));
     }
 
     // Remove the user from fridge members
@@ -126,10 +139,11 @@ export const leaveFridgeAction = authAction.action(
  */
 export const exportFridgeDataAction = authAction.action(
   async ({ ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     if (!canModifyFridge(role)) {
-      throw new ActionError("Seul le propriétaire peut exporter les données.");
+      throw new ActionError(t("ownerOnlyExport"));
     }
 
     // Get all egg boxes with their consumption history

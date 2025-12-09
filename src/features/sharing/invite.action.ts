@@ -3,6 +3,7 @@
 import { authAction } from "@/lib/actions/safe-actions";
 import { ActionError } from "@/lib/errors/action-error";
 import { prisma } from "@/lib/prisma";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 const CreateInviteInputSchema = z.object({
@@ -16,13 +17,14 @@ const CreateInviteInputSchema = z.object({
 export const createInviteAction = authAction
   .inputSchema(CreateInviteInputSchema)
   .action(async ({ parsedInput: data, ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     // Get user's fridge
     const fridge = await prisma.fridge.findFirst({
       where: { ownerId: user.id },
     });
 
     if (!fridge) {
-      throw new ActionError("Vous n'avez pas de frigo à partager.");
+      throw new ActionError(t("noFridgeToShare"));
     }
 
     // Create a new share link
@@ -51,6 +53,7 @@ const AcceptInviteInputSchema = z.object({
 export const acceptInviteAction = authAction
   .inputSchema(AcceptInviteInputSchema)
   .action(async ({ parsedInput: { code }, ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     // Find the share link
     const shareLink = await prisma.fridgeShareLink.findFirst({
       where: {
@@ -64,13 +67,11 @@ export const acceptInviteAction = authAction
     });
 
     if (!shareLink) {
-      throw new ActionError("Ce lien d'invitation est invalide ou expiré.");
+      throw new ActionError(t("invalidOrExpired"));
     }
 
     if (shareLink.usedCount >= shareLink.maxUses) {
-      throw new ActionError(
-        "Ce lien d'invitation a atteint son nombre maximum d'utilisations.",
-      );
+      throw new ActionError(t("maxUsesReached"));
     }
 
     // Check if user is already a member
@@ -82,12 +83,12 @@ export const acceptInviteAction = authAction
     });
 
     if (existingMembership) {
-      throw new ActionError("Vous êtes déjà membre de ce frigo.");
+      throw new ActionError(t("alreadyMember"));
     }
 
     // Check if user is the owner
     if (shareLink.fridge.ownerId === user.id) {
-      throw new ActionError("Vous êtes déjà propriétaire de ce frigo.");
+      throw new ActionError(t("alreadyOwner"));
     }
 
     // Add user as guest and increment usage count

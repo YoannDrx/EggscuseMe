@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Eggy } from "@/features/mascot";
 import { AlertCircle, Camera, Scan, X } from "lucide-react";
 import { useCallback, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useBarcodeDetector } from "./use-barcode-detector";
 import {
   formatParsedInfo,
@@ -23,6 +24,8 @@ export function BarcodeScanner({
   onClose,
   className,
 }: BarcodeScannerProps) {
+  const t = useTranslations("scanner");
+  const locale = useLocale();
   const [parsedInfo, setParsedInfo] = useState<ParsedEggInfo | null>(null);
 
   const handleDetect = useCallback(
@@ -58,16 +61,15 @@ export function BarcodeScanner({
       >
         <Eggy mood="sad" size="lg" className="mb-4" />
         <h3 className="font-heading text-lg font-semibold">
-          Scanner non disponible
+          {t("unsupported")}
         </h3>
         <p className="text-muted-foreground mt-2 text-sm">
-          Votre navigateur ne supporte pas le scan de code-barres.
-          <br />
-          Utilisez Chrome ou Safari sur mobile pour cette fonctionnalité.
+          {t("unsupported")}
         </p>
         {onClose && (
           <Button variant="outline" className="mt-4" onClick={onClose}>
-            Fermer
+            <X className="mr-2 size-4" />
+            {t("stopScan")}
           </Button>
         )}
       </div>
@@ -103,7 +105,7 @@ export function BarcodeScanner({
             {/* Hint text */}
             <div className="absolute right-4 bottom-4 left-4 text-center">
               <p className="rounded-lg bg-black/60 px-3 py-2 text-sm text-white">
-                Alignez le code-barres dans le cadre
+                {t("align")}
               </p>
             </div>
           </div>
@@ -114,7 +116,7 @@ export function BarcodeScanner({
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
             <Scan className="text-muted-foreground mb-4 size-16" />
             <p className="text-muted-foreground">
-              Appuyez pour activer la caméra
+              {t("tapToEnable")}
             </p>
           </div>
         )}
@@ -149,7 +151,7 @@ export function BarcodeScanner({
             onClick={() => void startScanning()}
           >
             <Camera className="mr-2 size-5" />
-            Activer la caméra
+            {t("enableCamera")}
           </Button>
         ) : (
           <Button
@@ -158,7 +160,7 @@ export function BarcodeScanner({
             onClick={stopScanning}
           >
             <X className="mr-2 size-5" />
-            Arrêter le scan
+            {t("stopScan")}
           </Button>
         )}
       </div>
@@ -167,13 +169,13 @@ export function BarcodeScanner({
       {parsedInfo && (
         <div className="bg-fresh-extra/10 rounded-xl p-4">
           <h4 className="font-heading text-fresh-extra mb-2 font-semibold">
-            Code détecté !
+            {t("codeDetected")}
           </h4>
           <p className="text-muted-foreground mb-2 font-mono text-xs">
             {parsedInfo.rawCode}
           </p>
           <ul className="space-y-1 text-sm">
-            {formatParsedInfo(parsedInfo).map((line, i) => (
+            {formatParsedInfo(parsedInfo, locale).map((line, i) => (
               <li key={i}>{line}</li>
             ))}
           </ul>

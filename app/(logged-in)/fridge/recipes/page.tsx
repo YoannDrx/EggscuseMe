@@ -8,15 +8,18 @@ import { getRecipeSuggestions, RecipeCard, RECIPES } from "@/features/recipes";
 import { RecipeFiltersWithModal } from "@/features/recipes/components/recipe-filters-mobile";
 import { RecipeGrid } from "@/features/recipes/components/recipe-grid";
 import { ChefHat, Egg, Sparkles } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
-export default function RecipesPage() {
+export default async function RecipesPage() {
+  const t = await getTranslations("recipes.dashboard");
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
       <MobileHeader
-        title="Recettes"
-        subtitle={`${RECIPES.length} recettes`}
+        title={t("title")}
+        subtitle={t("count", { count: RECIPES.length })}
         mascot
         mascotMood="chef"
       />
@@ -26,10 +29,8 @@ export default function RecipesPage() {
         <div className="flex items-center gap-4">
           <Eggy mood="chef" size="lg" />
           <div>
-            <h1 className="font-heading text-2xl font-bold">Recettes</h1>
-            <p className="text-muted-foreground">
-              Des idees pour cuisiner vos oeufs selon leur fraicheur
-            </p>
+            <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
       </div>
@@ -45,13 +46,13 @@ export default function RecipesPage() {
           {/* All recipes */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <ChefHat className="text-primary size-5" />
-                <h2 className="font-heading text-lg font-semibold md:text-xl">
-                  Toutes les recettes
-                </h2>
-                <Badge variant="secondary" className="hidden sm:flex">
-                  {RECIPES.length}
+            <div className="flex items-center gap-2">
+              <ChefHat className="text-primary size-5" />
+              <h2 className="font-heading text-lg font-semibold md:text-xl">
+                {t("allRecipes")}
+              </h2>
+              <Badge variant="secondary" className="hidden sm:flex">
+                {RECIPES.length}
                 </Badge>
               </div>
             </div>
@@ -69,6 +70,7 @@ export default function RecipesPage() {
 }
 
 async function PersonalizedSuggestions() {
+  const t = await getTranslations("recipes.dashboard");
   const result = await getMyFridgeAction();
   const eggBoxes = result.data?.fridge.eggBoxes ?? [];
 
@@ -78,10 +80,9 @@ async function PersonalizedSuggestions() {
         <CardContent className="flex items-center gap-3 p-4 md:gap-4 md:py-6">
           <Eggy mood="sad" size="md" className="shrink-0" />
           <div className="min-w-0">
-            <p className="font-medium">Pas d&apos;oeufs dans votre frigo</p>
+            <p className="font-medium">{t("personalized.emptyTitle")}</p>
             <p className="text-muted-foreground text-sm">
-              Ajoutez des boites d&apos;oeufs pour recevoir des suggestions
-              personnalisees !
+              {t("personalized.emptyDescription")}
             </p>
           </div>
         </CardContent>
@@ -113,18 +114,19 @@ async function PersonalizedSuggestions() {
       <div className="flex items-center gap-2">
         <Sparkles className="text-primary size-5" />
         <h2 className="font-heading text-lg font-semibold md:text-xl">
-          {hasUrgent ? "Suggestions anti-gaspi" : "Pour vous"}
+          {hasUrgent ? t("personalized.urgentTitle") : t("personalized.title")}
         </h2>
         <Badge
           variant={hasUrgent ? "destructive" : "secondary"}
           className="gap-1"
         >
           <Egg className="size-3" />
-          {eggBoxesWithFreshness.reduce(
-            (sum, box) => sum + box.remaining,
-            0,
-          )}{" "}
-          oeufs
+          {t("personalized.totalEggs", {
+            count: eggBoxesWithFreshness.reduce(
+              (sum, box) => sum + box.remaining,
+              0,
+            ),
+          })}
         </Badge>
       </div>
 
@@ -132,11 +134,7 @@ async function PersonalizedSuggestions() {
         <Card variant="sunny" className="border-fresh-cook bg-fresh-cook/5">
           <CardContent className="flex items-start gap-3 p-3 md:py-4">
             <Eggy mood="worried" size="sm" className="shrink-0" />
-            <p className="text-sm">
-              <strong>Attention !</strong> Certains de vos oeufs arrivent
-              bientot a expiration. Voici des recettes pour les utiliser avant
-              qu&apos;il ne soit trop tard !
-            </p>
+            <p className="text-sm">{t("personalized.urgentNotice")}</p>
           </CardContent>
         </Card>
       )}

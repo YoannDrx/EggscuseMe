@@ -1,5 +1,19 @@
 "use client";
 
+import {
+  ChartCarousel,
+  ChartItem,
+} from "@/components/eggscuseme/charts/chart-carousel";
+import {
+  StatsCard,
+  StatsCardCarousel,
+} from "@/components/eggscuseme/cards/stats-card";
+import {
+  IconChartSticker,
+  IconEggSticker,
+  SavingsSummary,
+} from "@/components/eggscuseme/illustrations";
+import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,15 +25,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  ChartCarousel,
-  ChartItem,
-} from "@/components/eggscuseme/charts/chart-carousel";
-import {
-  StatsCard,
-  StatsCardCarousel,
-} from "@/components/eggscuseme/cards/stats-card";
-import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import { Eggy } from "@/features/mascot";
 import {
   exportConsumptionCSVAction,
@@ -27,7 +32,6 @@ import {
 } from "@/features/statistics/statistics.action";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
-  ChartLine,
   Download,
   Egg,
   Euro,
@@ -37,6 +41,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import {
   Area,
@@ -58,28 +63,36 @@ const FRESHNESS_COLORS: Record<string, string> = {
   expired: "hsl(var(--muted))",
 };
 
-const FRESHNESS_LABELS: Record<string, string> = {
-  "extra-fresh": "Extra-frais",
-  fresh: "Frais",
-  "cook-thoroughly": "A cuire",
-  expired: "Perime",
-};
-
-const cookingChartConfig: ChartConfig = {
-  count: {
-    label: "Quantite",
-    color: "hsl(var(--primary))",
-  },
-};
-
-const consumptionChartConfig: ChartConfig = {
-  count: {
-    label: "Oeufs consommes",
-    color: "hsl(var(--primary))",
-  },
-};
+const COOKING_TYPE_OPTIONS = {
+  SOFT_BOILED: "softBoiled",
+  POACHED: "poached",
+  RAW: "raw",
+  FRIED: "fried",
+  SCRAMBLED: "scrambled",
+  OMELETTE: "omelette",
+  HARD_BOILED: "hardBoiled",
+  BAKING: "baking",
+  OTHER: "other",
+} as const;
 
 export default function StatisticsPage() {
+  const locale = useLocale();
+  const t = useTranslations("fridge.statistics");
+  const tCooking = useTranslations("cooking");
+  const tFreshness = useTranslations("freshness");
+  const cookingChartConfig: ChartConfig = {
+    count: {
+      label: t("chart.count"),
+      color: "hsl(var(--primary))",
+    },
+  };
+
+  const consumptionChartConfig: ChartConfig = {
+    count: {
+      label: t("chart.consumption"),
+      color: "hsl(var(--primary))",
+    },
+  };
   const isMobile = useIsMobile();
   const {
     execute: loadStats,
@@ -113,13 +126,11 @@ export default function StatisticsPage() {
   if (isPending) {
     return (
       <div className="flex min-h-screen flex-col">
-        <MobileHeader title="Statistiques" />
+        <MobileHeader title={t("title")} />
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="text-primary size-8 animate-spin" />
-            <p className="text-muted-foreground">
-              Chargement des statistiques...
-            </p>
+            <p className="text-muted-foreground">{t("loading")}</p>
           </div>
         </div>
       </div>
@@ -130,12 +141,15 @@ export default function StatisticsPage() {
   if (!stats) {
     return (
       <div className="flex min-h-screen flex-col">
-        <MobileHeader title="Statistiques" mascot mascotMood="sad" />
+        <MobileHeader
+          title={t("title")}
+          subtitle={t("noData")}
+          mascot
+          mascotMood="sad"
+        />
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-[var(--space-page-x)] py-12">
           <Eggy mood="sad" size="lg" className="md:hidden" />
-          <p className="text-muted-foreground text-center">
-            Aucune donnee disponible pour le moment
-          </p>
+          <p className="text-muted-foreground text-center">{t("noData")}</p>
         </div>
 
         {/* Desktop empty state */}
@@ -143,16 +157,33 @@ export default function StatisticsPage() {
           <div className="flex items-center gap-4">
             <Eggy mood="sad" size="lg" />
             <div>
-              <h1 className="font-heading text-2xl font-bold">Statistiques</h1>
-              <p className="text-muted-foreground">
-                Aucune donnee disponible pour le moment
-              </p>
+              <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+              <p className="text-muted-foreground">{t("noData")}</p>
             </div>
           </div>
         </div>
       </div>
     );
   }
+
+  const freshnessLabels: Record<string, string> = {
+    "extra-fresh": tFreshness("extraFresh"),
+    fresh: tFreshness("fresh"),
+    "cook-thoroughly": tFreshness("cookThoroughly"),
+    expired: tFreshness("expired"),
+  };
+
+  const cookingTypes = stats.cookingTypes.map((item) => {
+    const typeKey = item.type as keyof typeof COOKING_TYPE_OPTIONS;
+    const cookingOption =
+      typeKey in COOKING_TYPE_OPTIONS
+        ? COOKING_TYPE_OPTIONS[typeKey]
+        : COOKING_TYPE_OPTIONS.OTHER;
+    return {
+      ...item,
+      type: tCooking(cookingOption),
+    };
+  });
 
   // Export button for header
   const exportButton = (
@@ -185,7 +216,10 @@ export default function StatisticsPage() {
               dataKey="date"
               tickFormatter={(value: string) => {
                 const date = new Date(value);
-                return `${date.getDate()}/${date.getMonth() + 1}`;
+                return new Intl.DateTimeFormat(locale, {
+                  day: "numeric",
+                  month: "short",
+                }).format(date);
               }}
               tick={{ fontSize: 12 }}
             />
@@ -196,7 +230,7 @@ export default function StatisticsPage() {
                   {...props}
                   labelFormatter={(value) => {
                     const date = new Date(value as string);
-                    return date.toLocaleDateString("fr-FR", {
+                    return date.toLocaleDateString(locale, {
                       day: "numeric",
                       month: "long",
                     });
@@ -215,7 +249,7 @@ export default function StatisticsPage() {
         </ChartContainer>
       ) : (
         <div className="flex h-[250px] items-center justify-center md:h-[300px]">
-          <p className="text-muted-foreground">Aucune donnee</p>
+          <p className="text-muted-foreground">{t("chart.noData")}</p>
         </div>
       )}
     </>
@@ -223,7 +257,7 @@ export default function StatisticsPage() {
 
   const CookingTypesChart = () => (
     <>
-      {stats.cookingTypes.length > 0 ? (
+      {cookingTypes.length > 0 ? (
         <ChartContainer
           config={cookingChartConfig}
           className="h-[250px] w-full md:h-[300px]"
@@ -233,7 +267,7 @@ export default function StatisticsPage() {
               content={(props) => <ChartTooltipContent {...props} />}
             />
             <Pie
-              data={stats.cookingTypes}
+              data={cookingTypes}
               dataKey="count"
               nameKey="type"
               cx="50%"
@@ -247,7 +281,7 @@ export default function StatisticsPage() {
               }
               labelLine={false}
             >
-              {stats.cookingTypes.map((_, index) => (
+              {cookingTypes.map((_, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={`hsl(var(--primary) / ${1 - index * 0.15})`}
@@ -259,7 +293,7 @@ export default function StatisticsPage() {
         </ChartContainer>
       ) : (
         <div className="flex h-[250px] items-center justify-center md:h-[300px]">
-          <p className="text-muted-foreground">Aucune donnee</p>
+          <p className="text-muted-foreground">{t("chart.noData")}</p>
         </div>
       )}
     </>
@@ -278,21 +312,11 @@ export default function StatisticsPage() {
               dataKey="month"
               tickFormatter={(value: string) => {
                 const [year, month] = value.split("-");
-                const monthNames = [
-                  "Jan",
-                  "Fev",
-                  "Mar",
-                  "Avr",
-                  "Mai",
-                  "Jun",
-                  "Jul",
-                  "Aou",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                ];
-                return `${monthNames[parseInt(month) - 1]} ${year.slice(2)}`;
+                const date = new Date(parseInt(year), parseInt(month) - 1);
+                return new Intl.DateTimeFormat(locale, {
+                  month: "short",
+                  year: "2-digit",
+                }).format(date);
               }}
               tick={{ fontSize: 12 }}
             />
@@ -309,7 +333,7 @@ export default function StatisticsPage() {
         </ChartContainer>
       ) : (
         <div className="flex h-[250px] items-center justify-center md:h-[300px]">
-          <p className="text-muted-foreground">Aucune donnee</p>
+          <p className="text-muted-foreground">{t("chart.noData")}</p>
         </div>
       )}
     </>
@@ -330,10 +354,12 @@ export default function StatisticsPage() {
                     }}
                   />
                   <span className="text-sm font-medium">
-                    {FRESHNESS_LABELS[item.status]}
+                    {freshnessLabels[item.status]}
                   </span>
                 </div>
-                <Badge variant="secondary">{item.count} oeufs</Badge>
+                <Badge variant="secondary">
+                  {item.count} {t("eggs")}
+                </Badge>
               </div>
               <div className="bg-muted h-2 overflow-hidden rounded-full">
                 <div
@@ -349,7 +375,7 @@ export default function StatisticsPage() {
         </div>
       ) : (
         <div className="flex h-[200px] items-center justify-center">
-          <p className="text-muted-foreground">Aucun oeuf en stock</p>
+          <p className="text-muted-foreground">{t("noEggsInStock")}</p>
         </div>
       )}
     </>
@@ -359,8 +385,8 @@ export default function StatisticsPage() {
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
       <MobileHeader
-        title="Statistiques"
-        subtitle="90 derniers jours"
+        title={t("title")}
+        subtitle={t("last90days")}
         rightAction={exportButton}
       />
 
@@ -370,10 +396,8 @@ export default function StatisticsPage() {
           <div className="flex items-center gap-4">
             <Eggy mood="happy" size="lg" />
             <div>
-              <h1 className="font-heading text-2xl font-bold">Statistiques</h1>
-              <p className="text-muted-foreground">
-                Vos donnees de consommation sur 90 jours
-              </p>
+              <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+              <p className="text-muted-foreground">{t("subtitle")}</p>
             </div>
           </div>
           <Button
@@ -386,7 +410,7 @@ export default function StatisticsPage() {
             ) : (
               <Download className="mr-2 size-4" />
             )}
-            Exporter CSV
+            {t("exportCSV")}
           </Button>
         </div>
       </div>
@@ -401,29 +425,29 @@ export default function StatisticsPage() {
                 icon={<Egg className="text-primary size-5" />}
                 iconBg="bg-primary/10"
                 value={stats.totalEggs}
-                label="Stock actuel"
-                trendLabel={`${stats.activeBoxes} boite${stats.activeBoxes > 1 ? "s" : ""}`}
+                label={t("currentStock")}
+                trendLabel={t("activeBoxes", { count: stats.activeBoxes })}
               />
               <StatsCard
                 icon={<TrendingUp className="text-fresh-extra size-5" />}
                 iconBg="bg-fresh-extra/20"
                 value={stats.totalConsumed}
-                label="Consommes"
-                trendLabel="90 derniers jours"
+                label={t("consumed")}
+                trendLabel={t("last90days")}
               />
               <StatsCard
                 icon={<Euro className="text-fresh size-5" />}
                 iconBg="bg-fresh/20"
                 value={`${stats.moneySaved.toFixed(0)}EUR`}
-                label="Economies"
-                trendLabel="Anti-gaspi"
+                label={t("savings")}
+                trendLabel={t("antiWasteEstimate")}
               />
               <StatsCard
                 icon={<Leaf className="text-fresh-extra size-5" />}
                 iconBg="bg-fresh-extra/20"
-                value={`${stats.avgFreshnessScore}j`}
-                label="Fraicheur moy."
-                trendLabel="Avant expiration"
+                value={`${stats.avgFreshnessScore}${locale === "fr" ? "j" : "d"}`}
+                label={t("avgFreshness")}
+                trendLabel={t("beforeExpiry")}
               />
             </StatsCardCarousel>
           ) : (
@@ -431,16 +455,14 @@ export default function StatisticsPage() {
               <Card variant="sunny">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Stock actuel
+                    {t("currentStock")}
                   </CardTitle>
                   <Egg className="text-primary size-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{stats.totalEggs}</div>
                   <p className="text-muted-foreground text-xs">
-                    {stats.activeBoxes} boite{stats.activeBoxes > 1 ? "s" : ""}{" "}
-                    active
-                    {stats.activeBoxes > 1 ? "s" : ""}
+                    {t("activeBoxes", { count: stats.activeBoxes })}
                   </p>
                 </CardContent>
               </Card>
@@ -448,7 +470,7 @@ export default function StatisticsPage() {
               <Card variant="sunny">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Consommes
+                    {t("consumed")}
                   </CardTitle>
                   <TrendingUp className="text-fresh-extra size-4" />
                 </CardHeader>
@@ -457,7 +479,7 @@ export default function StatisticsPage() {
                     {stats.totalConsumed}
                   </div>
                   <p className="text-muted-foreground text-xs">
-                    Sur les 90 derniers jours
+                    {t("last90days")}
                   </p>
                 </CardContent>
               </Card>
@@ -465,7 +487,7 @@ export default function StatisticsPage() {
               <Card variant="sunny">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Economies
+                    {t("savings")}
                   </CardTitle>
                   <Euro className="text-fresh size-4" />
                 </CardHeader>
@@ -474,7 +496,7 @@ export default function StatisticsPage() {
                     {stats.moneySaved.toFixed(2)} EUR
                   </div>
                   <p className="text-muted-foreground text-xs">
-                    Estimation anti-gaspi
+                    {t("antiWasteEstimate")}
                   </p>
                 </CardContent>
               </Card>
@@ -482,16 +504,17 @@ export default function StatisticsPage() {
               <Card variant="sunny">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Fraicheur moyenne
+                    {t("avgFreshness")}
                   </CardTitle>
                   <Leaf className="text-fresh-extra size-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {stats.avgFreshnessScore} jours
+                    {stats.avgFreshnessScore}{" "}
+                    {locale === "fr" ? "jours" : "days"}
                   </div>
                   <p className="text-muted-foreground text-xs">
-                    Avant expiration en moyenne
+                    {t("beforeExpiry")}
                   </p>
                 </CardContent>
               </Card>
@@ -501,16 +524,16 @@ export default function StatisticsPage() {
           {/* Charts */}
           {isMobile ? (
             <ChartCarousel showDots>
-              <ChartItem title="Consommation quotidienne">
+              <ChartItem title={t("dailyConsumption")}>
                 <DailyConsumptionChart />
               </ChartItem>
-              <ChartItem title="Types de cuisson">
+              <ChartItem title={t("cookingTypes")}>
                 <CookingTypesChart />
               </ChartItem>
-              <ChartItem title="Consommation mensuelle">
+              <ChartItem title={t("monthlyConsumption")}>
                 <MonthlyConsumptionChart />
               </ChartItem>
-              <ChartItem title="Fraicheur du stock">
+              <ChartItem title={t("currentFreshness")}>
                 <FreshnessDistribution />
               </ChartItem>
             </ChartCarousel>
@@ -521,8 +544,8 @@ export default function StatisticsPage() {
                 <Card variant="sunny">
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <ChartLine className="text-primary size-5" />
-                      <CardTitle>Consommation quotidienne</CardTitle>
+                      <IconChartSticker className="size-6" />
+                      <CardTitle>{t("dailyConsumption")}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -534,7 +557,7 @@ export default function StatisticsPage() {
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Package className="text-primary size-5" />
-                      <CardTitle>Types de cuisson</CardTitle>
+                      <CardTitle>{t("cookingTypes")}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -549,7 +572,7 @@ export default function StatisticsPage() {
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <TrendingUp className="text-primary size-5" />
-                      <CardTitle>Consommation mensuelle</CardTitle>
+                      <CardTitle>{t("monthlyConsumption")}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -561,7 +584,7 @@ export default function StatisticsPage() {
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Leaf className="text-primary size-5" />
-                      <CardTitle>Fraicheur du stock actuel</CardTitle>
+                      <CardTitle>{t("currentFreshness")}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -572,21 +595,32 @@ export default function StatisticsPage() {
             </>
           )}
 
+          {/* Savings Summary */}
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-emerald-500/30 bg-emerald-500/5 p-6">
+            <p className="text-muted-foreground text-sm font-medium">
+              {t("antiWasteEstimate")}
+            </p>
+            <SavingsSummary
+              money={stats.moneySaved}
+              eggs={stats.totalConsumed}
+              size="lg"
+            />
+          </div>
+
           {/* Freshness at consumption - Full width on both */}
           <Card variant="sunny">
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2">
-                <Egg className="text-primary size-5" />
+                <IconEggSticker className="size-6" />
                 <CardTitle className="text-base md:text-lg">
-                  Fraicheur a la consommation
+                  {t("freshnessAtConsumption")}
                 </CardTitle>
                 <Badge variant="outline" className="text-xs">
-                  90 jours
+                  {t("badge90days")}
                 </Badge>
               </div>
               <p className="text-muted-foreground text-xs md:text-sm">
-                Repartition de la fraicheur des oeufs au moment de leur
-                consommation
+                {t("freshnessAtConsumptionDescription")}
               </p>
             </CardHeader>
             <CardContent>
@@ -609,7 +643,7 @@ export default function StatisticsPage() {
                         {item.count}
                       </p>
                       <p className="text-muted-foreground truncate text-xs md:text-sm">
-                        {FRESHNESS_LABELS[item.status]}
+                        {freshnessLabels[item.status]}
                       </p>
                     </div>
                   </div>

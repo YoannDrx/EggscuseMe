@@ -25,6 +25,7 @@ import { BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import type { ProfileFormType } from "./edit-profile.schema";
 import { ProfileFormSchema } from "./edit-profile.schema";
 
@@ -35,6 +36,7 @@ type EditProfileFormProps = {
 export const EditProfileCardForm = ({
   defaultValues,
 }: EditProfileFormProps) => {
+  const t = useTranslations("fridge.settings.profileForm");
   const router = useRouter();
 
   const updateProfileMutation = useMutation({
@@ -47,7 +49,7 @@ export const EditProfileCardForm = ({
       );
     },
     onSuccess: () => {
-      toast.success("Profil mis à jour");
+      toast.success(t("updated"));
       router.refresh();
     },
     onError: (error) => {
@@ -90,7 +92,7 @@ export const EditProfileCardForm = ({
       );
     },
     onSuccess: () => {
-      toast.success("Email de vérification envoyé");
+      toast.success(t("verifySent"));
     },
     onError: (error) => {
       toast.error(error.message);
@@ -120,31 +122,31 @@ export const EditProfileCardForm = ({
                       name: name,
                     })}
                   </CardTitle>
-                  <Typography variant="muted" className="text-sm">
-                    {defaultValues.email}
-                  </Typography>
-                </div>
-              )}
+              <Typography variant="muted" className="text-sm">
+                {defaultValues.email}
+              </Typography>
+            </div>
+          )}
             </form.Subscribe>
           </div>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <form.AppField name="name">
             {(field) => (
-              <field.Field>
-                <field.Label>Nom</field.Label>
-                <field.Content>
-                  <field.Input placeholder="Votre nom" />
-                  <field.Message />
-                </field.Content>
-              </field.Field>
+                <field.Field>
+                  <field.Label>{t("name")}</field.Label>
+                  <field.Content>
+                    <field.Input placeholder={t("namePlaceholder") ?? undefined} />
+                    <field.Message />
+                  </field.Content>
+                </field.Field>
             )}
           </form.AppField>
           <div className="flex flex-col gap-2">
             <Label className="flex items-center gap-4">
-              <span>Email</span>
+              <span>{t("email")}</span>
               {defaultValues.emailVerified ? (
-                <InlineTooltip title="Email vérifié">
+                <InlineTooltip title={t("verifySent")}>
                   <BadgeCheck size={16} className="text-fresh-extra" />
                 </InlineTooltip>
               ) : (
@@ -156,7 +158,7 @@ export const EditProfileCardForm = ({
                   onClick={() => verifyEmailMutation.mutate()}
                   loading={verifyEmailMutation.isPending}
                 >
-                  Vérifier l&apos;email
+                  {t("verify")}
                 </LoadingButton>
               )}
             </Label>
@@ -168,16 +170,16 @@ export const EditProfileCardForm = ({
             className={buttonVariants({ size: "sm", variant: "link" })}
             href="/fridge/settings/security"
           >
-            Changer l&apos;email
+            {t("changeEmail")}
           </Link>
           <Link
             className={buttonVariants({ size: "sm", variant: "link" })}
             href="/fridge/settings/security"
           >
-            Changer le mot de passe
+            {t("changePassword")}
           </Link>
           <div className="flex-1" />
-          <form.SubmitButton>Enregistrer</form.SubmitButton>
+          <form.SubmitButton>{t("save")}</form.SubmitButton>
         </CardFooter>
       </Card>
     </Form>

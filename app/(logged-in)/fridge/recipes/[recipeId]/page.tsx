@@ -2,6 +2,7 @@ import { getRecipeById, RECIPES } from "@/features/recipes";
 import { RecipeDetailContent } from "@/features/recipes/recipe-detail-content";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
   params: Promise<{ recipeId: string }>;
@@ -16,10 +17,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { recipeId } = await params;
   const recipe = getRecipeById(recipeId);
+  const t = await getTranslations("recipes.detail");
 
   if (!recipe) {
     return {
-      title: "Recette non trouvée",
+      title: t("notFoundTitle", { default: "Recipe not found" }),
     };
   }
 

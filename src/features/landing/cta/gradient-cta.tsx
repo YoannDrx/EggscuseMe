@@ -5,12 +5,15 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { Egg, ArrowRight } from "lucide-react";
 import { Eggy } from "@/features/mascot";
+import { useTranslations } from "next-intl";
 
 type GradientCTAProps = {
   className?: string;
 };
 
 export function GradientCTA({ className }: GradientCTAProps) {
+  const t = useTranslations("landing.gradientCta");
+
   return (
     <section className={cn("bg-background py-24", className)}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -43,10 +46,10 @@ export function GradientCTA({ className }: GradientCTAProps) {
               transition={{ delay: 0.3 }}
               className="font-heading text-primary-foreground mt-8 text-3xl font-bold sm:text-4xl"
             >
-              Pret a casser des oeufs
+              {t("title")}
               <br />
               <span className="text-primary-foreground/80">
-                (sans les gacher) ?
+                {t("titleHighlight")}
               </span>
             </motion.h2>
 
@@ -58,8 +61,7 @@ export function GradientCTA({ className }: GradientCTAProps) {
               transition={{ delay: 0.4 }}
               className="text-primary-foreground/90 mt-4 max-w-md text-lg"
             >
-              Rejoignez des milliers d&apos;utilisateurs qui reduisent leur
-              gaspillage alimentaire. C&apos;est gratuit pour commencer.
+              {t("description")}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -75,13 +77,13 @@ export function GradientCTA({ className }: GradientCTAProps) {
                 className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold transition-all"
               >
                 <Egg className="size-5" />
-                Creer mon frigo gratuit
+                {t("button")}
               </Link>
               <Link
                 href="/preview"
                 className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 inline-flex items-center gap-2 rounded-full border-2 bg-transparent px-6 py-3 font-semibold transition-all"
               >
-                Voir la demo
+                {t("demo")}
                 <ArrowRight className="size-4" />
               </Link>
             </motion.div>

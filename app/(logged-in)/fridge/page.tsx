@@ -41,7 +41,7 @@ async function FridgePageContent() {
           >
             <Link href="/fridge/settings/profile">
               <User className="text-primary size-4" />
-              <span className="sr-only">{t("profile")}</span>
+              <span className="sr-only">{t("nav.profile")}</span>
             </Link>
           </Button>
         }

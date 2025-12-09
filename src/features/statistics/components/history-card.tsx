@@ -1,10 +1,12 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { ErrorIllustration } from "@/components/eggscuseme/illustrations";
 import { SwipeableRow } from "@/components/eggscuseme/lists/swipeable-row";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Calendar, Egg, Star, UtensilsCrossed } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 export type HistoryItem = {
   id: string;
@@ -16,17 +18,17 @@ export type HistoryItem = {
   notes?: string | null;
 };
 
-const COOKING_TYPE_LABELS: Record<string, string> = {
-  SOFT_BOILED: "A la coque",
-  POACHED: "Poché",
-  RAW: "Cru",
-  FRIED: "Au plat",
-  SCRAMBLED: "Brouillés",
-  OMELETTE: "Omelette",
-  HARD_BOILED: "Dur",
-  BAKING: "Pâtisserie",
-  OTHER: "Autre",
-};
+const COOKING_TYPE_OPTIONS = {
+  SOFT_BOILED: "softBoiled",
+  POACHED: "poached",
+  RAW: "raw",
+  FRIED: "fried",
+  SCRAMBLED: "scrambled",
+  OMELETTE: "omelette",
+  HARD_BOILED: "hardBoiled",
+  BAKING: "baking",
+  OTHER: "other",
+} as const;
 
 const COOKING_TYPE_COLORS: Record<string, string> = {
   SOFT_BOILED: "bg-fresh-extra/20 text-fresh-extra-foreground",
@@ -62,16 +64,26 @@ export function HistoryCard({
   delay = 0,
   className,
 }: HistoryCardProps) {
-  const formattedDate = new Date(item.date).toLocaleDateString("fr-FR", {
+  const locale = useLocale();
+  const tHistory = useTranslations("fridge.history");
+  const tCooking = useTranslations("cooking");
+
+  const formattedDate = new Date(item.date).toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
     year: "numeric",
   });
 
-  const cookingLabel =
-    COOKING_TYPE_LABELS[item.cookingType] ?? item.cookingType;
+  const cookingKey =
+    item.cookingType in COOKING_TYPE_OPTIONS
+      ? COOKING_TYPE_OPTIONS[
+          item.cookingType as keyof typeof COOKING_TYPE_OPTIONS
+        ]
+      : COOKING_TYPE_OPTIONS.OTHER;
+  const cookingLabel = tCooking(cookingKey);
   const cookingColor =
     COOKING_TYPE_COLORS[item.cookingType] ?? COOKING_TYPE_COLORS.OTHER;
+  const quantityLabel = tHistory("eggCount", { count: item.quantity });
 
   return (
     <SwipeableRow onDelete={onDelete} className={className}>
@@ -92,7 +104,7 @@ export function HistoryCard({
           </div>
           <Badge variant="outline" className="gap-1">
             <Egg className="size-3" />
-            {item.quantity} oeuf{item.quantity > 1 ? "s" : ""}
+            {quantityLabel}
           </Badge>
         </div>
 
@@ -162,17 +174,13 @@ export function HistoryDateGroup({
 /**
  * Empty state for history
  */
-export function HistoryEmpty({
-  message = "Aucune consommation trouvée",
-}: {
-  message?: string;
-}) {
+export function HistoryEmpty({ message }: { message?: string }) {
+  const t = useTranslations("fridge.history");
+
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-      <div className="bg-muted rounded-full p-4">
-        <Egg className="text-muted-foreground size-8" />
-      </div>
-      <p className="text-muted-foreground">{message}</p>
+      <ErrorIllustration type="empty" size="md" />
+      <p className="text-muted-foreground">{message ?? t("noConsumption")}</p>
     </div>
   );
 }

@@ -2,16 +2,26 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { AUTH_PLANS } from "@/lib/auth/stripe/auth-plans";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
-import { PricingCard } from "./pricing-card";
 import { useTranslations } from "next-intl";
+import { PlanCard } from "./plan-card";
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
   const t = useTranslations("landing.pricing");
+
+  // Sur la landing page, on redirige vers signup avec le plan en paramètre
+  // Le checkout Stripe sera fait après l'inscription
+  const handleSelectPremium = () => {
+    const plan = isYearly ? "premium-yearly" : "premium";
+    window.location.href = `/auth/signup?plan=${plan}`;
+  };
+
+  const handleSelectFree = () => {
+    window.location.href = "/auth/signup";
+  };
 
   return (
     <section
@@ -70,9 +80,16 @@ export function Pricing() {
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           }}
         >
-          {AUTH_PLANS.filter((p) => !p.isHidden).map((plan) => (
-            <PricingCard key={plan.name} plan={plan} isYearly={isYearly} />
-          ))}
+          <PlanCard
+            plan="free"
+            onSelect={handleSelectFree}
+            showYearly={false}
+          />
+          <PlanCard
+            plan="premium"
+            onSelect={handleSelectPremium}
+            showYearly={isYearly}
+          />
         </div>
 
         <div className="mt-16 text-center">

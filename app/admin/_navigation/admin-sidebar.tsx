@@ -54,7 +54,10 @@ export function AdminSidebar() {
               </SidebarGroupLabel>
               <CollapsibleContent>
                 <SidebarGroupContent>
-                  <SidebarNavigationMenu link={link} />
+                  <SidebarNavigationMenu
+                    link={link}
+                    translationKey="admin.nav"
+                  />
                 </SidebarGroupContent>
               </CollapsibleContent>
             </SidebarGroup>

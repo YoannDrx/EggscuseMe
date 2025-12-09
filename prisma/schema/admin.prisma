@@ -1,0 +1,28 @@
+// Admin Schema - Logging and admin-specific features
+
+model AdminLog {
+  id           String         @id @default(nanoid(11))
+  adminId      String
+  admin        User           @relation("AdminLogs", fields: [adminId], references: [id], onDelete: Cascade)
+  action       AdminLogAction
+  targetUserId String?
+  targetUser   User?          @relation("AdminLogTargets", fields: [targetUserId], references: [id], onDelete: SetNull)
+  metadata     Json?
+  createdAt    DateTime       @default(now())
+
+  @@index([adminId])
+  @@index([targetUserId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("admin_log")
+}
+
+enum AdminLogAction {
+  IMPERSONATE
+  BAN_USER
+  UNBAN_USER
+  SET_ROLE
+  SEND_TEST_EMAIL
+  CANCEL_INVITATION
+  EXPORT_DATA
+}

@@ -1,35 +1,64 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  IconChefHatSticker,
+  IconTipSticker,
+  IlluKitchenScene,
+} from "@/components/eggscuseme/illustrations";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EggTimer } from "@/features/timer";
-import { getCookingTipsFr } from "@/features/timer/cooking-times";
-import { Eggy } from "@/features/mascot";
-import { ChefHat, Lightbulb } from "lucide-react";
+import {
+  getCookingTips,
+  getCookingTipsFr,
+} from "@/features/timer/cooking-times";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function TimerPage() {
-  const tips = getCookingTipsFr();
+  const locale = useLocale();
+  const t = useTranslations("timer");
+  const tips = locale === "fr" ? getCookingTipsFr() : getCookingTips();
+
+  const guideItems = [
+    {
+      key: "runny" as const,
+      time: t("minutes", { count: "3" }),
+      description: t("yolkDescriptions.runny"),
+    },
+    {
+      key: "soft" as const,
+      time: t("minutes", { count: "5-6" }),
+      description: t("yolkDescriptions.soft"),
+    },
+    {
+      key: "medium" as const,
+      time: t("minutes", { count: "7-8" }),
+      description: t("yolkDescriptions.medium"),
+    },
+    {
+      key: "hard" as const,
+      time: t("minutes", { count: "10+" }),
+      description: t("yolkDescriptions.hard"),
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
       <MobileHeader
-        title="Minuteur"
-        subtitle="Cuisson parfaite"
+        title={t("title")}
+        subtitle={t("subtitle")}
         mascot
         mascotMood="chef"
       />
 
       {/* Desktop Header */}
       <div className="hidden md:block">
-        <div className="flex items-center gap-3">
-          <Eggy mood="chef" size="md" />
+        <div className="flex items-center gap-4">
+          <IlluKitchenScene size="sm" cooking />
           <div>
             <h1 className="font-heading text-2xl font-bold">
-              Minuteur de cuisson
+              {t("cookingTitle")}
             </h1>
-            <p className="text-muted-foreground">
-              Des oeufs parfaits a chaque fois grace a notre minuteur
-              intelligent
-            </p>
+            <p className="text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
       </div>
@@ -48,10 +77,8 @@ export default function TimerPage() {
             <Card variant="sunny">
               <CardHeader className="pb-3 md:pb-4">
                 <CardTitle className="font-heading flex items-center gap-2 text-base md:text-lg">
-                  <div className="bg-primary/10 flex size-7 items-center justify-center rounded-full md:size-8">
-                    <Lightbulb className="text-primary size-3.5 md:size-4" />
-                  </div>
-                  Conseils de cuisson
+                  <IconTipSticker className="size-7 md:size-8" />
+                  {t("tipsTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
@@ -75,46 +102,39 @@ export default function TimerPage() {
             <Card variant="sunny">
               <CardHeader className="pb-3 md:pb-4">
                 <CardTitle className="font-heading flex items-center gap-2 text-base md:text-lg">
-                  <div className="bg-primary/10 flex size-7 items-center justify-center rounded-full md:size-8">
-                    <ChefHat className="text-primary size-3.5 md:size-4" />
-                  </div>
-                  Guide de cuisson
+                  <IconChefHatSticker className="size-7 md:size-8" />
+                  {t("guideTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 pt-0 md:space-y-4">
                 <div className="grid grid-cols-2 gap-2 md:gap-4">
-                  <div className="bg-fresh-extra/10 rounded-xl p-3 md:p-4">
-                    <h4 className="font-heading text-fresh-extra text-sm font-semibold md:text-base">
-                      Coulant (3 min)
-                    </h4>
-                    <p className="text-muted-foreground mt-0.5 text-xs md:mt-1 md:text-sm">
-                      Jaune liquide, parfait pour les mouillettes
-                    </p>
-                  </div>
-                  <div className="bg-fresh/10 rounded-xl p-3 md:p-4">
-                    <h4 className="font-heading text-fresh text-sm font-semibold md:text-base">
-                      Mollet (5-6 min)
-                    </h4>
-                    <p className="text-muted-foreground mt-0.5 text-xs md:mt-1 md:text-sm">
-                      Jaune onctueux, ideal pour les ramen ou salades
-                    </p>
-                  </div>
-                  <div className="bg-fresh-cook/10 rounded-xl p-3 md:p-4">
-                    <h4 className="font-heading text-fresh-cook text-sm font-semibold md:text-base">
-                      Mi-cuit (7-8 min)
-                    </h4>
-                    <p className="text-muted-foreground mt-0.5 text-xs md:mt-1 md:text-sm">
-                      Centre cremeux, legerement ferme
-                    </p>
-                  </div>
-                  <div className="bg-muted rounded-xl p-3 md:p-4">
-                    <h4 className="font-heading text-sm font-semibold md:text-base">
-                      Dur (10+ min)
-                    </h4>
-                    <p className="text-muted-foreground mt-0.5 text-xs md:mt-1 md:text-sm">
-                      Jaune bien cuit, parfait pour les sandwichs
-                    </p>
-                  </div>
+                  {guideItems.map((item, index) => {
+                    const guideStyles = [
+                      { bg: "bg-fresh-extra/10", text: "text-fresh-extra" },
+                      { bg: "bg-fresh/10", text: "text-fresh" },
+                      { bg: "bg-fresh-cook/10", text: "text-fresh-cook" },
+                      { bg: "bg-muted", text: "text-foreground" },
+                    ];
+
+                    const style =
+                      guideStyles[index] ?? guideStyles[guideStyles.length - 1];
+
+                    return (
+                      <div
+                        key={item.key}
+                        className={`${style.bg} rounded-xl p-3 md:p-4`}
+                      >
+                        <h4
+                          className={`font-heading ${style.text} text-sm font-semibold md:text-base`}
+                        >
+                          {t(`yolkPreferences.${item.key}`)} ({item.time})
+                        </h4>
+                        <p className="text-muted-foreground mt-0.5 text-xs md:mt-1 md:text-sm">
+                          {item.description}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

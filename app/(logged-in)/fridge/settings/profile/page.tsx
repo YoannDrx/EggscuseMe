@@ -4,6 +4,7 @@ import { combineWithParentMetadata } from "@/lib/metadata";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 import { EditProfileCardForm } from "./edit-profile-form";
 
 export const generateMetadata = combineWithParentMetadata({
@@ -11,7 +12,8 @@ export const generateMetadata = combineWithParentMetadata({
   description: "Gérez vos informations personnelles.",
 });
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const t = await getTranslations("fridge.settings.profilePage");
   return (
     <div className="space-y-6">
       {/* Back button */}
@@ -20,17 +22,15 @@ export default function ProfilePage() {
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
       >
         <ChevronLeft className="size-4" />
-        Retour aux paramètres
+        {t("back")}
       </Link>
 
       {/* Header */}
       <div className="flex items-center gap-4">
         <Eggy mood="happy" size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Mon profil</h1>
-          <p className="text-muted-foreground">
-            Gérez vos informations personnelles
-          </p>
+          <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 

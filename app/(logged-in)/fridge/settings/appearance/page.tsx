@@ -15,29 +15,49 @@ import { ChevronLeft, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 
 const themes = [
   {
     value: "light",
-    label: "Clair",
-    description: "Interface lumineuse",
+    label: {
+      fr: "Clair",
+      en: "Light",
+    },
+    description: {
+      fr: "Interface lumineuse",
+      en: "Light interface",
+    },
     icon: Sun,
   },
   {
     value: "dark",
-    label: "Sombre",
-    description: "Interface sombre",
+    label: {
+      fr: "Sombre",
+      en: "Dark",
+    },
+    description: {
+      fr: "Interface sombre",
+      en: "Dark interface",
+    },
     icon: Moon,
   },
   {
     value: "system",
-    label: "Système",
-    description: "Suit les préférences système",
+    label: {
+      fr: "Système",
+      en: "System",
+    },
+    description: {
+      fr: "Suit les préférences système",
+      en: "Follows system preference",
+    },
     icon: Monitor,
   },
 ] as const;
 
 export default function AppearancePage() {
+  const locale = useLocale();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -70,9 +90,13 @@ export default function AppearancePage() {
       <div className="flex items-center gap-4">
         <Eggy mood="happy" size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Apparence</h1>
+          <h1 className="font-heading text-2xl font-bold">
+            {locale === "fr" ? "Apparence" : "Appearance"}
+          </h1>
           <p className="text-muted-foreground">
-            Personnalisez l&apos;apparence de l&apos;application
+            {locale === "fr"
+              ? "Personnalisez l'apparence de l'application"
+              : "Customize the app appearance"}
           </p>
         </div>
       </div>
@@ -80,9 +104,13 @@ export default function AppearancePage() {
       {/* Theme Selection */}
       <Card variant="sunny">
         <CardHeader>
-          <CardTitle className="font-heading">Thème</CardTitle>
+          <CardTitle className="font-heading">
+            {locale === "fr" ? "Thème" : "Theme"}
+          </CardTitle>
           <CardDescription>
-            Choisissez le thème qui vous convient le mieux
+            {locale === "fr"
+              ? "Choisissez le thème qui vous convient le mieux"
+              : "Choose the theme that suits you"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -94,6 +122,9 @@ export default function AppearancePage() {
             {themes.map((themeOption) => {
               const Icon = themeOption.icon;
               const isSelected = theme === themeOption.value;
+              const label = themeOption.label[locale === "fr" ? "fr" : "en"];
+              const description =
+                themeOption.description[locale === "fr" ? "fr" : "en"];
 
               return (
                 <Label
@@ -128,10 +159,10 @@ export default function AppearancePage() {
                         isSelected ? "text-primary" : "text-foreground",
                       )}
                     >
-                      {themeOption.label}
+                      {label}
                     </p>
                     <p className="text-muted-foreground text-xs">
-                      {themeOption.description}
+                      {description}
                     </p>
                   </div>
                 </Label>
@@ -144,18 +175,26 @@ export default function AppearancePage() {
       {/* Preview */}
       <Card variant="sunny">
         <CardHeader>
-          <CardTitle className="font-heading">Aperçu</CardTitle>
+          <CardTitle className="font-heading">
+            {locale === "fr" ? "Aperçu" : "Preview"}
+          </CardTitle>
           <CardDescription>
-            Voici à quoi ressemble votre interface
+            {locale === "fr"
+              ? "Voici à quoi ressemble votre interface"
+              : "Here is how your interface looks"}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4 rounded-xl border border-stone-800 bg-stone-900/50 p-4">
             <Eggy mood="happy" size="md" />
             <div className="flex-1">
-              <p className="font-medium">Mon Frigo</p>
+              <p className="font-medium">
+                {locale === "fr" ? "Mon Frigo" : "My Fridge"}
+              </p>
               <p className="text-muted-foreground text-sm">
-                3 boîtes d&apos;œufs en cours
+                {locale === "fr"
+                  ? "3 boîtes d'œufs en cours"
+                  : "3 egg boxes in progress"}
               </p>
             </div>
             <div className="flex gap-2">

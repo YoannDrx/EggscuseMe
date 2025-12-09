@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type BarcodeFormat = "ean_13" | "ean_8" | "code_128" | "code_39" | "qr_code";
 
@@ -44,6 +45,7 @@ declare global {
 export function useBarcodeDetector(
   options: UseBarcodeDetectorOptions = {},
 ): UseBarcodeDetectorReturn {
+  const t = useTranslations("scanner");
   const {
     formats = ["ean_13", "ean_8", "code_128"],
     onDetect,
@@ -113,9 +115,7 @@ export function useBarcodeDetector(
   // Start scanning
   const startScanning = useCallback(async () => {
     if (!isSupported || !enabled) {
-      setError(
-        "Le scanner de code-barres n'est pas supporté par ce navigateur",
-      );
+      setError(t("unsupportedBrowser"));
       return;
     }
 
@@ -150,15 +150,15 @@ export function useBarcodeDetector(
     } catch (err) {
       if (err instanceof Error) {
         if (err.name === "NotAllowedError") {
-          setError("Accès à la caméra refusé. Veuillez autoriser l'accès.");
+          setError(t("cameraDenied"));
         } else if (err.name === "NotFoundError") {
-          setError("Aucune caméra trouvée sur cet appareil.");
+          setError(t("noCamera"));
         } else {
-          setError(`Erreur: ${err.message}`);
+          setError(t("error", { message: err.message }));
         }
       }
     }
-  }, [isSupported, enabled, formats, detectBarcodes]);
+  }, [isSupported, enabled, formats, detectBarcodes, t]);
 
   // Stop scanning
   const stopScanning = useCallback(() => {

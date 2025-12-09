@@ -17,13 +17,170 @@
     "error": "Erreur",
     "success": "Succès"
   },
+  "sidebar": {
+    "userMenu": {
+      "profile": "Mon profil",
+      "settings": "Parametres",
+      "admin": "Administration",
+      "logout": "Deconnexion"
+    }
+  },
   "admin": {
     "nav": {
       "admin": "Admin",
       "dashboard": "Tableau de bord",
       "users": "Utilisateurs",
-      "organizations": "Organisations",
+      "invitations": "Invitations",
+      "emails": "Test Emails",
+      "export": "Export",
+      "logs": "Logs",
       "feedback": "Retours"
+    },
+    "invitations": {
+      "title": "Gestion des Invitations",
+      "tabs": {
+        "shareLinks": "Liens de partage",
+        "emailInvitations": "Invitations email"
+      },
+      "stats": {
+        "totalShareLinks": "Total liens",
+        "activeShareLinks": "Liens actifs",
+        "totalEmailInvitations": "Total invitations",
+        "pending": "En attente",
+        "accepted": "Acceptees",
+        "expired": "Expirees",
+        "cancelled": "Annulees"
+      },
+      "filters": {
+        "all": "Tous",
+        "active": "Actifs",
+        "expired": "Expires",
+        "maxed": "Max atteint"
+      },
+      "table": {
+        "code": "Code",
+        "fridge": "Frigo",
+        "owner": "Proprietaire",
+        "email": "Email",
+        "status": "Statut",
+        "uses": "Utilisations",
+        "expiresAt": "Expire le",
+        "createdAt": "Cree le",
+        "actions": "Actions"
+      },
+      "actions": {
+        "deactivate": "Desactiver",
+        "cancel": "Annuler",
+        "viewFridge": "Voir le frigo"
+      }
+    },
+    "emails": {
+      "title": "Test des Emails",
+      "description": "Envoyez des emails de test pour verifier les templates",
+      "templates": {
+        "fridgeInvitation": {
+          "name": "Invitation au frigo",
+          "description": "Email envoye quand quelqu'un est invite a rejoindre un frigo",
+          "inviterName": "Nom de l'inviteur",
+          "fridgeName": "Nom du frigo",
+          "success": "Email d'invitation envoye !"
+        },
+        "expirationWarning": {
+          "name": "Alerte expiration",
+          "description": "Email envoye quand des oeufs arrivent a expiration",
+          "userName": "Nom de l'utilisateur",
+          "fridgeName": "Nom du frigo",
+          "success": "Email d'alerte envoye !"
+        },
+        "markdown": {
+          "name": "Email Markdown",
+          "description": "Email generique avec contenu en Markdown",
+          "subject": "Sujet",
+          "content": "Contenu (Markdown)",
+          "preview": "Preview (optionnel)",
+          "success": "Email envoye !"
+        }
+      },
+      "form": {
+        "to": "Destinataire",
+        "send": "Envoyer le test",
+        "cancel": "Annuler",
+        "configure": "Configurer"
+      }
+    },
+    "export": {
+      "title": "Export des Donnees",
+      "description": "Exportez les donnees de l'application au format CSV",
+      "exports": {
+        "users": {
+          "name": "Utilisateurs",
+          "description": "Export de tous les utilisateurs avec leurs stats",
+          "success": "Export utilisateurs telecharge !",
+          "error": "Erreur lors de l'export utilisateurs"
+        },
+        "shareLinks": {
+          "name": "Liens de partage",
+          "description": "Export de tous les liens de partage",
+          "success": "Export liens telecharge !",
+          "error": "Erreur lors de l'export liens"
+        },
+        "emailInvitations": {
+          "name": "Invitations email",
+          "description": "Export de toutes les invitations par email",
+          "success": "Export invitations telecharge !",
+          "error": "Erreur lors de l'export invitations"
+        }
+      },
+      "download": "Telecharger CSV"
+    },
+    "logs": {
+      "title": "Logs d'Administration",
+      "description": "Historique de toutes les actions administratives",
+      "table": {
+        "admin": "Administrateur",
+        "action": "Action",
+        "target": "Cible",
+        "metadata": "Details",
+        "date": "Date"
+      },
+      "actions": {
+        "IMPERSONATE": "Impersonation",
+        "BAN_USER": "Ban utilisateur",
+        "UNBAN_USER": "Unban utilisateur",
+        "SET_ROLE": "Changement de role",
+        "SEND_TEST_EMAIL": "Email de test",
+        "CANCEL_INVITATION": "Annulation invitation",
+        "EXPORT_DATA": "Export de donnees"
+      },
+      "filters": {
+        "all": "Toutes les actions"
+      }
+    },
+    "userDetails": {
+      "stats": {
+        "title": "Statistiques",
+        "eggBoxes": "Boites d'oeufs",
+        "activeBoxes": "Boites actives",
+        "eggsAdded": "Oeufs ajoutes",
+        "eggsConsumed": "Oeufs consommes",
+        "eggsRemaining": "Oeufs restants",
+        "eggsWasted": "Oeufs gaspilles",
+        "moneySaved": "Economies"
+      },
+      "members": {
+        "title": "Membres du frigo",
+        "empty": "Aucun membre",
+        "owner": "Proprietaire",
+        "guest": "Invite"
+      },
+      "invitations": {
+        "title": "Invitations envoyees",
+        "empty": "Aucune invitation"
+      },
+      "consumptions": {
+        "title": "Consommations recentes",
+        "empty": "Aucune consommation"
+      }
     }
   },
   "freshness": {
@@ -129,6 +286,7 @@
     "resume": "Reprendre",
     "reset": "Réinitialiser",
     "done": "C'est prêt !",
+    "cooking": "En cuisson...",
     "cookingTime": "Temps de cuisson",
     "minutes": "{count} min",
     "seconds": "{count} sec",
@@ -155,7 +313,9 @@
       "soft": "Jaune mollet, onctueux",
       "medium": "Jaune crémeux, légèrement ferme",
       "hard": "Jaune bien cuit, idéal pour les salades"
-    }
+    },
+    "tipsTitle": "Conseils de cuisson",
+    "guideTitle": "Guide de cuisson"
   },
   "landing": {
     "hero": {
@@ -227,7 +387,7 @@
       "subtitle": "Commencez gratuitement, passez au Premium quand vous le souhaitez.",
       "monthly": "Mensuel",
       "yearly": "Annuel",
-      "discount": "-17%",
+      "discount": "-50%",
       "footer": "Tous les plans incluent le suivi de fraîcheur et les recommandations de recettes.",
       "question": "Une question ?",
       "contactUs": "Contactez-nous",
@@ -289,6 +449,102 @@
       "title": "Prêt à sauver vos œufs ?",
       "description": "Rejoignez des milliers d'utilisateurs qui réduisent leur gaspillage alimentaire",
       "button": "Créer mon frigo gratuit"
+    },
+    "featureCards": {
+      "badge": "Tout en un",
+      "title": "Votre assistant culinaire de poche",
+      "description": "Des outils simples pour suivre la fraîcheur et réduire le gaspillage",
+      "virtualFridge": {
+        "title": "Frigo Virtuel",
+        "description": "Suivez toutes vos boîtes d'œufs avec des indicateurs de fraîcheur colorés. Ne perdez plus le fil."
+      },
+      "smartTimer": {
+        "title": "Timer Intelligent",
+        "description": "Temps de cuisson ajustés à la taille et température. Résultats parfaits garantis à chaque fois."
+      },
+      "cookingGuide": {
+        "title": "Guide Cuisson",
+        "description": "Suggestions de cuisson selon l'âge. Coque, frits ou durs ? On vous dit exactement quoi faire."
+      },
+      "quickScan": {
+        "title": "Scan Rapide",
+        "description": "Scannez le code-barres pour ajouter une boîte en un instant. Date de ponte automatique."
+      },
+      "familySharing": {
+        "title": "Partage Famille",
+        "description": "Partagez votre frigo avec famille ou colocs. Tout le monde synchronisé en temps réel."
+      },
+      "smartAlerts": {
+        "title": "Alertes Smart",
+        "description": "Notifications quand vos œufs approchent de l'expiration. Ne jetez plus jamais un œuf."
+      }
+    },
+    "bentoGrid": {
+      "badge": "Comment ça marche",
+      "title": "Si simple que vous n'aurez",
+      "titleHighlight": "aucune excuse",
+      "step1": {
+        "title": "Scannez ou Saisissez",
+        "description": "Ajoutez vos boîtes d'œufs en scannant le code ou en entrant la date de ponte."
+      },
+      "step2": {
+        "title": "Laissez faire la magie",
+        "description": "L'app calcule automatiquement la fraîcheur et vous suggère les meilleures recettes."
+      },
+      "step3": {
+        "title": "Cuisinez & Savourez",
+        "description": "Suivez le timer intelligent pour des œufs parfaitement cuits à chaque fois."
+      },
+      "stats": {
+        "rating": "App Store",
+        "users": "Utilisateurs actifs",
+        "eggsSaved": "Œufs sauvés",
+        "familySharing": "Partage Familial",
+        "familySharingDesc": "Synchronisez avec votre famille"
+      },
+      "testimonial": {
+        "quote": "Depuis que j'utilise EggscuseMe, je n'ai plus jamais jeté un seul œuf. L'app est géniale !",
+        "author": "Marie D. - Paris"
+      }
+    },
+    "gradientCta": {
+      "title": "Prêt à casser des œufs",
+      "titleHighlight": "(sans les gâcher) ?",
+      "description": "Rejoignez des milliers d'utilisateurs qui réduisent leur gaspillage alimentaire. C'est gratuit pour commencer.",
+      "button": "Créer mon frigo gratuit",
+      "demo": "Voir la démo"
+    },
+    "phonePreview": {
+      "title": "Mon Frigo",
+      "boxesCount": "{count} boîtes en cours",
+      "extraFresh": "Extra Frais",
+      "fresh": "Frais",
+      "cookThoroughly": "À cuire",
+      "for": "Pour:",
+      "eggs": "œufs",
+      "nav": {
+        "fridge": "Frigo",
+        "timer": "Timer",
+        "guide": "Guide",
+        "stats": "Stats"
+      },
+      "recipes": {
+        "chocoMousse": "Mousse choco",
+        "omelette": "Omelette",
+        "hardBoiled": "Œuf dur"
+      }
+    },
+    "floatingBadge": {
+      "safe": "100% Sûr",
+      "eco": "Anti-Gaspi",
+      "premium": "Premium",
+      "rating": "4.9/5",
+      "ratingSubtext": "App Store"
+    },
+    "socialProof": {
+      "joinedBy": "Rejoint par",
+      "count": "+10,000",
+      "satisfiedUsers": "utilisateurs satisfaits"
     }
   },
   "auth": {
@@ -321,7 +577,35 @@
     "unauthorized": "Accès non autorisé",
     "limitReached": "Limite atteinte",
     "limitReachedDescription": "Vous avez atteint la limite de {limit} boîtes. Passez à Premium pour des boîtes illimitées.",
-    "upgradeToPremium": "Passer à Premium"
+    "upgradeToPremium": "Passer à Premium",
+    "fridge": {
+      "ownerOnly": "Seul le propriétaire du frigo peut modifier les boîtes d'oeufs.",
+      "freePlanLimit": "Le plan gratuit est limité à {count} boîtes d'oeufs. Passez Premium pour des boîtes illimitées !",
+      "notFound": "Boîte d'oeufs introuvable.",
+      "notEnough": "Pas assez d'oeufs. Il reste seulement {count} oeuf(s).",
+      "ownerOnlyRename": "Seul le propriétaire peut renommer le frigo.",
+      "ownerOnlyHistory": "Seul le propriétaire peut effacer l'historique.",
+      "ownerOnlyClear": "Seul le propriétaire peut vider le frigo.",
+      "ownerOnlyExport": "Seul le propriétaire peut exporter les données.",
+      "ownerCannotLeave": "Les propriétaires ne peuvent pas quitter leur frigo. Supprimez votre compte pour supprimer le frigo.",
+      "renameRequired": "Le nom du frigo est requis.",
+      "renameTooLong": "Le nom est trop long (50 caractères max)."
+    },
+    "sharing": {
+      "noFridgeToShare": "Vous n'avez pas de frigo à partager.",
+      "invalidOrExpired": "Ce lien d'invitation est invalide ou expiré.",
+      "maxUsesReached": "Ce lien d'invitation a atteint son nombre maximum d'utilisations.",
+      "alreadyMember": "Vous êtes déjà membre de ce frigo.",
+      "alreadyOwner": "Vous êtes déjà propriétaire de ce frigo.",
+      "ownerOnlyCreate": "Seul le propriétaire du frigo peut créer des liens de partage.",
+      "ownerOnlyDeactivate": "Seul le propriétaire du frigo peut désactiver les liens de partage.",
+      "linkNotFound": "Lien de partage introuvable.",
+      "linkDisabled": "Ce lien a été désactivé.",
+      "linkExpired": "Ce lien a expiré.",
+      "ownerOnlyRemove": "Seul le propriétaire du frigo peut retirer des membres.",
+      "memberNotFound": "Membre introuvable.",
+      "notMember": "Vous n'êtes membre d'aucun frigo partagé."
+    }
   },
   "mobileMenu": {
     "navigation": "Navigation",
@@ -429,12 +713,22 @@
       "egg": "œuf",
       "eggs": "œufs",
       "chefTip": "Conseil du Chef",
-      "safetyNote": "Note de sécurité"
+      "safetyNote": "Note de sécurité",
+      "notFoundTitle": "Recette non trouvée"
     },
     "difficulty": {
       "easy": "Facile",
       "medium": "Moyen",
       "hard": "Difficile"
+    },
+    "card": {
+      "urgent": "Urgent",
+      "eggs": "{count, plural, =1 {# œuf} other {# œufs}}",
+      "difficulty": {
+        "easy": "Facile",
+        "medium": "Moyen",
+        "hard": "Difficile"
+      }
     },
     "filters": {
       "searchPlaceholder": "Rechercher une recette...",
@@ -467,6 +761,20 @@
       },
       "tags": {
         "label": "Catégories"
+      }
+    },
+    "dashboard": {
+      "title": "Recettes",
+      "subtitle": "Des idées pour cuisiner vos œufs selon leur fraîcheur",
+      "count": "{count, plural, =0 {Aucune recette} =1 {1 recette} other {# recettes}}",
+      "allRecipes": "Toutes les recettes",
+      "personalized": {
+        "title": "Pour vous",
+        "urgentTitle": "Suggestions anti-gaspi",
+        "emptyTitle": "Pas d'œufs dans votre frigo",
+        "emptyDescription": "Ajoutez des boîtes d'œufs pour recevoir des suggestions personnalisées !",
+        "urgentNotice": "Certains de vos œufs arrivent bientôt à expiration. Voici des recettes pour les utiliser avant qu'il ne soit trop tard !",
+        "totalEggs": "{count, plural, =1 {# œuf} other {# œufs}}"
       }
     }
   },
@@ -589,7 +897,40 @@
         "saving": "Enregistrement...",
         "nameUpdated": "Nom du frigo mis à jour"
       },
-      "guestBanner": "Vous êtes invité sur ce frigo"
+      "guestBanner": "Vous êtes invité sur ce frigo",
+      "notificationsPage": {
+        "title": "Notifications",
+        "subtitle": "Configurez vos alertes de fraîcheur",
+        "enable": "Activer les notifications",
+        "enableDescription": "Recevez un email avant que vos œufs n'expirent",
+        "daysLabel": "Délai de notification",
+        "daysDescription": "Choisissez combien de jours avant l'expiration vous souhaitez être notifié",
+        "previewOn": "Les notifications sont activées",
+        "previewOff": "Les notifications sont désactivées",
+        "previewOnDetail": "Vous recevrez un email {days} avant que vos œufs n'expirent.",
+        "previewOffDetail": "Vous ne recevrez aucune alerte de fraîcheur.",
+        "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "toastSuccess": "Préférences enregistrées",
+        "toastError": "Erreur lors de la sauvegarde",
+        "daysOption": "{count, plural, =1 {# jour avant} other {# jours avant}}"
+      },
+      "profilePage": {
+        "title": "Mon profil",
+        "subtitle": "Gérez vos informations personnelles",
+        "back": "Retour aux paramètres"
+      },
+      "profileForm": {
+        "updated": "Profil mis à jour",
+        "verifySent": "Email de vérification envoyé",
+        "verify": "Vérifier l'email",
+        "name": "Nom",
+        "namePlaceholder": "Votre nom",
+        "email": "Email",
+        "save": "Enregistrer",
+        "changeEmail": "Changer l'email",
+        "changePassword": "Changer le mot de passe"
+      }
     },
     "statistics": {
       "title": "Statistiques",
@@ -611,7 +952,22 @@
       "freshnessAtConsumption": "Fraîcheur à la consommation",
       "noEggsInStock": "Aucun œuf en stock",
       "eggs": "œufs",
-      "activeBoxes": "{count, plural, =1 {1 boîte active} other {# boîtes actives}}"
+      "activeBoxes": "{count, plural, =1 {1 boîte active} other {# boîtes actives}}",
+      "noDataShort": "Aucune donnée",
+      "freshnessAtConsumptionDescription": "Répartition de la fraîcheur au moment de la consommation",
+      "badge90days": "90 jours",
+      "chart": {
+        "count": "Quantité",
+        "consumption": "Œufs consommés",
+        "noData": "Aucune donnée"
+      },
+      "exportHeaders": {
+        "date": "Date",
+        "quantity": "Quantité",
+        "cookingType": "Type de cuisson",
+        "box": "Boîte",
+        "notes": "Notes"
+      }
     },
     "history": {
       "title": "Historique",
@@ -629,7 +985,11 @@
       "comment": "Commentaire",
       "page": "Page {current} sur {total}",
       "previous": "Précédent",
-      "next": "Suivant"
+      "next": "Suivant",
+      "filterDescription": "Filtrer l'historique par type de cuisson",
+      "consumptionCount": "{count, plural, =0 {Aucune consommation} =1 {1 consommation} other {# consommations}}",
+      "eggCount": "{count, plural, =1 {# œuf} other {# œufs}}",
+      "filterModalTitle": "Filtres"
     },
     "emptyState": {
       "title": "Votre frigo est vide !",
@@ -646,6 +1006,68 @@
       "title": "Vos boîtes d'œufs",
       "activeBoxes": "{count, plural, =1 {1 boîte active} other {# boîtes actives}}",
       "add": "Ajouter"
+    },
+    "meta": {
+      "title": "Mon Frigo | EggscuseMe",
+      "description": "Gérez vos œufs et réduisez le gaspillage alimentaire"
+    },
+    "addBoxForm": {
+      "scannerTitle": "Scanner",
+      "openScanner": "Scanner un code-barres",
+      "closeScanner": "Fermer",
+      "nameLabel": "Nom (optionnel)",
+      "namePlaceholder": "ex: Boîte du marché",
+      "layingDate": "Date de ponte",
+      "quantity": "Quantité",
+      "size": "Taille",
+      "sizeOptions": {
+        "S": "Petit (S)",
+        "M": "Moyen (M)",
+        "L": "Gros (L)",
+        "XL": "Très gros (XL)"
+      },
+      "source": "Origine (optionnel)",
+      "sourcePlaceholder": "ex: Ferme locale, Supermarché",
+      "cancel": "Annuler",
+      "save": "Ajouter",
+      "saving": "Ajout...",
+      "scanSuccess": "Code scanné avec succès !",
+      "addSuccess": "Boîte ajoutée avec succès",
+      "addError": "Échec de l'ajout de la boîte"
+    },
+    "invite": {
+      "invalidTitle": "Invitation invalide",
+      "invalidDescription": "Cette invitation n'existe pas ou a expiré. Demandez au proprietaire du frigo de vous envoyer une nouvelle invitation.",
+      "backToFridge": "Retour à mon frigo",
+      "joinTitle": "Rejoindre un frigo",
+      "inviteText": "vous invite à rejoindre son frigo",
+      "guestIntro": "En tant qu'invité, vous pourrez :",
+      "bulletView": "Voir les boîtes d'œufs et leur fraîcheur",
+      "bulletConsume": "Consommer des œufs et enregistrer vos repas",
+      "bulletRecipes": "Accéder aux recettes et suggestions",
+      "bulletTimer": "Utiliser le minuteur intelligent",
+      "expires": "Expire le {date}",
+      "joinCta": "Rejoindre le frigo",
+      "leaveNote": "Vous pourrez quitter ce frigo à tout moment depuis les paramètres."
+    }
+  },
+  "scanner": {
+    "unsupported": "Utilisez Chrome ou Safari sur mobile pour cette fonctionnalité.",
+    "tapToEnable": "Appuyez pour activer la caméra",
+    "enableCamera": "Activer la caméra",
+    "codeDetected": "Code détecté !",
+    "stopScan": "Arrêter le scan",
+    "align": "Alignez le code-barres dans le cadre",
+    "unsupportedBrowser": "Le scanner de code-barres n'est pas supporté par ce navigateur",
+    "cameraDenied": "Accès à la caméra refusé. Veuillez autoriser l'accès.",
+    "noCamera": "Aucune caméra trouvée sur cet appareil.",
+    "error": "Erreur: {message}"
+  },
+  "notifications": {
+    "email": {
+      "boxNameFallback": "Boîte d'oeufs",
+      "subject": "Alerte fraîcheur - {count} boîte(s) bientôt périmée(s)",
+      "bodyTitle": "Alerte fraîcheur"
     }
   }
 }

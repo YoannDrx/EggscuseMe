@@ -31,26 +31,26 @@ export function PhoneMockup({
       style={enableParallax ? { y, rotateY: rotate } : undefined}
       className={cn("perspective-1000 relative", className)}
     >
-      {/* iPhone Frame */}
-      <div className="phone-shadow relative h-[600px] w-[290px] rounded-[3rem] border-[12px] border-stone-800 bg-stone-800">
+      {/* iPhone Frame - Black */}
+      <div className="phone-shadow relative h-[600px] w-[290px] rounded-[3rem] border-[12px] border-black bg-black">
         {/* Dynamic Island / Notch */}
-        <div className="absolute top-2 left-1/2 z-20 h-[28px] w-[100px] -translate-x-1/2 rounded-full bg-stone-900" />
+        <div className="absolute top-2 left-1/2 z-20 h-[28px] w-[100px] -translate-x-1/2 rounded-full bg-black" />
 
         {/* Side Buttons - Left */}
-        <div className="absolute top-[80px] -left-[15px] h-[28px] w-[3px] rounded-l-sm bg-stone-700" />
-        <div className="absolute top-[130px] -left-[15px] h-[50px] w-[3px] rounded-l-sm bg-stone-700" />
-        <div className="absolute top-[190px] -left-[15px] h-[50px] w-[3px] rounded-l-sm bg-stone-700" />
+        <div className="absolute top-[80px] -left-[15px] h-[28px] w-[3px] rounded-l-sm bg-neutral-800" />
+        <div className="absolute top-[130px] -left-[15px] h-[50px] w-[3px] rounded-l-sm bg-neutral-800" />
+        <div className="absolute top-[190px] -left-[15px] h-[50px] w-[3px] rounded-l-sm bg-neutral-800" />
 
         {/* Side Button - Right */}
-        <div className="absolute top-[140px] -right-[15px] h-[70px] w-[3px] rounded-r-sm bg-stone-700" />
+        <div className="absolute top-[140px] -right-[15px] h-[70px] w-[3px] rounded-r-sm bg-neutral-800" />
 
         {/* Screen Content */}
-        <div className="relative h-full w-full overflow-hidden rounded-[2.25rem] bg-stone-950">
+        <div className="relative h-full w-full overflow-hidden rounded-[2.25rem] bg-[#0C0A09]">
           {children}
         </div>
 
         {/* Home Indicator */}
-        <div className="absolute bottom-2 left-1/2 h-[5px] w-[120px] -translate-x-1/2 rounded-full bg-stone-600" />
+        <div className="absolute bottom-2 left-1/2 h-[5px] w-[120px] -translate-x-1/2 rounded-full bg-neutral-700" />
 
         {/* Screen Reflection */}
         <div className="pointer-events-none absolute inset-0 rounded-[2.25rem] bg-gradient-to-br from-white/5 to-transparent" />

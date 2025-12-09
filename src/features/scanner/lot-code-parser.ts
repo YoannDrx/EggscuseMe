@@ -226,29 +226,40 @@ export function parseAnyCode(code: string): ParsedEggInfo {
 /**
  * Format parsed info for display
  */
-export function formatParsedInfo(info: ParsedEggInfo): string[] {
+export function formatParsedInfo(
+  info: ParsedEggInfo,
+  locale = "en",
+): string[] {
   const lines: string[] = [];
+  const isFr = locale.startsWith("fr");
 
   if (info.layingDate) {
-    lines.push(`Date de ponte: ${info.layingDate.toLocaleDateString("fr-FR")}`);
+    lines.push(
+      `${isFr ? "Date de ponte" : "Laying date"}: ${info.layingDate.toLocaleDateString(locale)}`,
+    );
   }
   if (info.expirationDate) {
-    lines.push(`DCR: ${info.expirationDate.toLocaleDateString("fr-FR")}`);
+    lines.push(`DCR: ${info.expirationDate.toLocaleDateString(locale)}`);
   }
   if (info.countryCode) {
-    lines.push(`Origine: ${info.countryCode}`);
+    lines.push(`${isFr ? "Origine" : "Origin"}: ${info.countryCode}`);
   }
   if (info.size) {
     const sizeLabels: Record<EggSize, string> = {
-      S: "Petit",
-      M: "Moyen",
-      L: "Gros",
-      XL: "Très gros",
+      S: isFr ? "Petit (S)" : "Small (S)",
+      M: isFr ? "Moyen (M)" : "Medium (M)",
+      L: isFr ? "Gros (L)" : "Large (L)",
+      XL: isFr ? "Très gros (XL)" : "Extra large (XL)",
     };
-    lines.push(`Taille: ${sizeLabels[info.size]}`);
+    lines.push(`${isFr ? "Taille" : "Size"}: ${sizeLabels[info.size]}`);
   }
   if (info.quantity) {
-    lines.push(`Quantité: ${info.quantity} œufs`);
+    const label = isFr ? "Quantité" : "Quantity";
+    const eggsLabel =
+      info.quantity > 1
+        ? isFr ? "œufs" : "eggs"
+        : isFr ? "œuf" : "egg";
+    lines.push(`${label}: ${info.quantity} ${eggsLabel}`);
   }
 
   return lines;

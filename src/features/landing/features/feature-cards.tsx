@@ -11,50 +11,28 @@ import {
   Bell,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+type FeatureKey =
+  | "virtualFridge"
+  | "smartTimer"
+  | "cookingGuide"
+  | "quickScan"
+  | "familySharing"
+  | "smartAlerts";
 
 type Feature = {
   icon: LucideIcon;
-  title: string;
-  description: string;
+  key: FeatureKey;
 };
 
 const features: Feature[] = [
-  {
-    icon: Refrigerator,
-    title: "Frigo Virtuel",
-    description:
-      "Suivez toutes vos boites d'oeufs avec des indicateurs de fraicheur colores. Ne perdez plus le fil.",
-  },
-  {
-    icon: Timer,
-    title: "Timer Intelligent",
-    description:
-      "Temps de cuisson ajustes a la taille et temperature. Resultats parfaits garantis a chaque fois.",
-  },
-  {
-    icon: ChefHat,
-    title: "Guide Cuisson",
-    description:
-      "Suggestions de cuisson selon l'age. Coque, frits ou durs ? On vous dit exactement quoi faire.",
-  },
-  {
-    icon: ScanLine,
-    title: "Scan Rapide",
-    description:
-      "Scannez le code-barres pour ajouter une boite en un instant. Date de ponte automatique.",
-  },
-  {
-    icon: Users,
-    title: "Partage Famille",
-    description:
-      "Partagez votre frigo avec famille ou colocs. Tout le monde synchronise en temps reel.",
-  },
-  {
-    icon: Bell,
-    title: "Alertes Smart",
-    description:
-      "Notifications quand vos oeufs approchent de l'expiration. Ne jetez plus jamais un oeuf.",
-  },
+  { icon: Refrigerator, key: "virtualFridge" },
+  { icon: Timer, key: "smartTimer" },
+  { icon: ChefHat, key: "cookingGuide" },
+  { icon: ScanLine, key: "quickScan" },
+  { icon: Users, key: "familySharing" },
+  { icon: Bell, key: "smartAlerts" },
 ];
 
 type FeatureCardsProps = {
@@ -62,6 +40,8 @@ type FeatureCardsProps = {
 };
 
 export function FeatureCards({ className }: FeatureCardsProps) {
+  const t = useTranslations("landing.featureCards");
+
   return (
     <section id="features" className={cn("bg-background py-24", className)}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -73,7 +53,7 @@ export function FeatureCards({ className }: FeatureCardsProps) {
             viewport={{ once: true }}
             className="text-primary text-sm font-semibold tracking-wider uppercase"
           >
-            Tout en un
+            {t("badge")}
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -82,7 +62,7 @@ export function FeatureCards({ className }: FeatureCardsProps) {
             transition={{ delay: 0.1 }}
             className="font-heading text-foreground mt-3 text-3xl font-bold sm:text-4xl"
           >
-            Votre assistant culinaire de poche
+            {t("title")}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -91,7 +71,7 @@ export function FeatureCards({ className }: FeatureCardsProps) {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground mt-4 text-lg"
           >
-            Des outils simples pour suivre la fraicheur et reduire le gaspillage
+            {t("description")}
           </motion.p>
         </div>
 
@@ -99,7 +79,7 @@ export function FeatureCards({ className }: FeatureCardsProps) {
         <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <motion.div
-              key={feature.title}
+              key={feature.key}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -114,10 +94,10 @@ export function FeatureCards({ className }: FeatureCardsProps) {
 
               {/* Content */}
               <h3 className="font-heading text-foreground mt-5 text-lg font-semibold">
-                {feature.title}
+                {t(`${feature.key}.title`)}
               </h3>
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                {feature.description}
+                {t(`${feature.key}.description`)}
               </p>
             </motion.div>
           ))}

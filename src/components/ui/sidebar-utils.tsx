@@ -53,9 +53,12 @@ export const SidebarSubButtonLink = ({
   );
 };
 
-export const SidebarNavigationMenu = (props: { link: NavigationGroup }) => {
-  const { link } = props;
-  const t = useTranslations("fridge.nav");
+export const SidebarNavigationMenu = (props: {
+  link: NavigationGroup;
+  translationKey?: string;
+}) => {
+  const { link, translationKey = "fridge.nav" } = props;
+  const t = useTranslations(translationKey);
 
   return (
     <SidebarMenu>

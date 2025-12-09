@@ -21,6 +21,7 @@ import { SidebarNavigationMenu } from "@/components/ui/sidebar-utils";
 import { ContactFeedbackPopover } from "@/features/contact/feedback/contact-feedback-popover";
 import { Eggy } from "@/features/mascot";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
+import { SidebarLogoutButton } from "@/features/sidebar/sidebar-logout-button";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -71,7 +72,7 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
           </ItemCollapsing>
         ))}
       </SidebarContent>
-      <SidebarFooter className="flex flex-col gap-2">
+      <SidebarFooter className="flex flex-col gap-3">
         {role === "GUEST" && (
           <div className="bg-muted/50 rounded-lg p-3 text-sm">
             <p className="text-muted-foreground">{t("guestNotice")}</p>
@@ -84,6 +85,7 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
         </div>
         <ContactFeedbackPopover />
         <SidebarUserButton />
+        <SidebarLogoutButton />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

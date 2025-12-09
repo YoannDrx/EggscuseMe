@@ -25,6 +25,7 @@ import { UserDetailsCard } from "../../_components/user-details-card";
 import { UserActions } from "./_components/user-actions";
 import { UserProviders } from "./_components/user-providers";
 import { UserSessions } from "./_components/user-sessions";
+import { UserStatsSection } from "./_components/user-stats-section";
 
 export default async function Page(props: PageProps<"/admin/users/[userId]">) {
   return (
@@ -127,6 +128,7 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
           </CardContent>
         </Card>
 
+        <UserStatsSection userId={userData.id} />
         <UserSessions userId={userData.id} />
         <UserProviders accounts={userData.accounts} />
       </LayoutContent>

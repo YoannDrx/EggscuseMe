@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 
 const avatars = [
   { color: "bg-amber-400", initials: "JD" },
@@ -16,6 +17,8 @@ type SocialProofProps = {
 };
 
 export function SocialProof({ className }: SocialProofProps) {
+  const t = useTranslations("landing.socialProof");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -44,10 +47,10 @@ export function SocialProof({ className }: SocialProofProps) {
       {/* Text */}
       <div className="flex flex-col">
         <span className="text-foreground text-sm font-semibold">
-          Rejoint par <span className="text-primary">+10,000</span>
+          {t("joinedBy")} <span className="text-primary">{t("count")}</span>
         </span>
         <span className="text-muted-foreground text-xs">
-          utilisateurs satisfaits
+          {t("satisfiedUsers")}
         </span>
       </div>
     </motion.div>

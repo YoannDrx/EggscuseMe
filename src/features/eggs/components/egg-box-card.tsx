@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshnessTag } from "@/components/eggscuseme/illustrations";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,28 +37,20 @@ const sizeLabels: Record<string, string> = {
 // Freshness color mappings using design system tokens
 const freshnessConfig = {
   "extra-fresh": {
-    dotColor: "bg-fresh-extra",
-    textColor: "text-fresh-extra",
     barColor: "bg-fresh-extra",
-    label: "Extra Frais",
+    tagStatus: "extra-fresh" as const,
   },
   fresh: {
-    dotColor: "bg-fresh",
-    textColor: "text-fresh",
     barColor: "bg-fresh",
-    label: "Frais",
+    tagStatus: "fresh" as const,
   },
   "cook-thoroughly": {
-    dotColor: "bg-fresh-cook",
-    textColor: "text-fresh-cook",
     barColor: "bg-fresh-cook",
-    label: "A cuire",
+    tagStatus: "cook" as const,
   },
   expired: {
-    dotColor: "bg-expired",
-    textColor: "text-expired",
     barColor: "bg-expired",
-    label: "Expire",
+    tagStatus: "expired" as const,
   },
 };
 
@@ -101,12 +94,7 @@ export function EggBoxCard({
     >
       {/* Header Row */}
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className={cn("size-2.5 rounded-full", config.dotColor)} />
-          <span className={cn("text-sm font-bold", config.textColor)}>
-            {config.label}
-          </span>
-        </div>
+        <FreshnessTag status={config.tagStatus} size="sm" />
         <div className="flex items-center gap-2">
           <span className="text-muted-foreground text-xs">
             {formatDaysRemainingFr(freshness.daysRemaining)}

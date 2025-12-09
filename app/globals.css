@@ -158,6 +158,50 @@
   --radius-chip: 12px;
   --radius-pill: 9999px;
 
+  /* ============================================
+   * STICKER ILLUSTRATION TOKENS
+   * Consistent style for all mascot/illustrations
+   * ============================================ */
+
+  /* Sticker stroke & fill */
+  --sticker-stroke: #1C1917;
+  --sticker-stroke-width: 2px;
+  --sticker-fill-egg: #FDFBF7;
+  --sticker-fill-white: #FFFFFF;
+  --sticker-shadow: drop-shadow(0 2px 4px rgb(0 0 0 / 0.1));
+  --sticker-shadow-lg: drop-shadow(0 4px 8px rgb(0 0 0 / 0.15));
+
+  /* Illustration brand colors */
+  --illu-brand: #FBBF24;
+  --illu-brand-dark: #D97706;
+  --illu-fresh-extra: var(--fresh-extra);
+  --illu-fresh: var(--fresh);
+  --illu-fresh-cook: var(--fresh-cook);
+  --illu-expired: #EF4444;
+
+  /* Accessory & scene colors */
+  --illu-wood: #92400E;
+  --illu-wood-light: #B45309;
+  --illu-metal: #6B7280;
+  --illu-metal-light: #9CA3AF;
+  --illu-plastic: #3B82F6;
+  --illu-glass: #E0F2FE;
+  --illu-fridge: #F1F5F9;
+  --illu-fridge-dark: #CBD5E1;
+
+  /* Blush & expression colors */
+  --illu-blush: #FFB6C1;
+  --illu-tear: #87CEEB;
+  --illu-sweat: #87CEEB;
+  --illu-sparkle: #FCD34D;
+
+  /* Party/confetti colors */
+  --illu-confetti-1: #FBBF24;
+  --illu-confetti-2: #34D399;
+  --illu-confetti-3: #F472B6;
+  --illu-confetti-4: #60A5FA;
+  --illu-confetti-5: #A78BFA;
+
   /* Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;

@@ -9,6 +9,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { SiteConfig } from "@/site-config";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import {
   ConsumeEggsSchema,
   CreateEggBoxSchema,
@@ -40,13 +41,12 @@ export const getMyFridgeAction = authAction.action(
 export const createEggBoxAction = authAction
   .inputSchema(CreateEggBoxSchema)
   .action(async ({ parsedInput: data, ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, subscription, role } = await getOrCreateFridge(user);
 
     // Check if user can modify fridge (only owners can add boxes)
     if (!canModifyFridge(role)) {
-      throw new ActionError(
-        "Seul le propriétaire du frigo peut ajouter des boîtes d'oeufs.",
-      );
+      throw new ActionError(t("ownerOnly"));
     }
 
     // Check plan limits
@@ -59,7 +59,7 @@ export const createEggBoxAction = authAction
 
     if (existingBoxes >= limit) {
       throw new ActionError(
-        `Le plan gratuit est limité à ${SiteConfig.freePlan.maxEggBoxes} boîtes d'oeufs. Passez Premium pour des boîtes illimitées !`,
+        t("freePlanLimit", { count: SiteConfig.freePlan.maxEggBoxes }),
       );
     }
 
@@ -87,13 +87,12 @@ export const createEggBoxAction = authAction
 export const updateEggBoxAction = authAction
   .inputSchema(UpdateEggBoxSchema)
   .action(async ({ parsedInput: data, ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     // Check if user can modify fridge
     if (!canModifyFridge(role)) {
-      throw new ActionError(
-        "Seul le propriétaire du frigo peut modifier les boîtes d'oeufs.",
-      );
+      throw new ActionError(t("ownerOnly"));
     }
 
     // Verify box belongs to this fridge
@@ -105,7 +104,7 @@ export const updateEggBoxAction = authAction
     });
 
     if (!existingBox) {
-      throw new ActionError("Boîte d'oeufs introuvable.");
+      throw new ActionError(t("notFound"));
     }
 
     const eggBox = await prisma.eggBox.update({
@@ -129,13 +128,12 @@ export const updateEggBoxAction = authAction
 export const deleteEggBoxAction = authAction
   .inputSchema(DeleteEggBoxSchema)
   .action(async ({ parsedInput: { id }, ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge, role } = await getOrCreateFridge(user);
 
     // Check if user can modify fridge
     if (!canModifyFridge(role)) {
-      throw new ActionError(
-        "Seul le propriétaire du frigo peut supprimer les boîtes d'oeufs.",
-      );
+      throw new ActionError(t("ownerOnly"));
     }
 
     // Verify box belongs to this fridge
@@ -147,7 +145,7 @@ export const deleteEggBoxAction = authAction
     });
 
     if (!existingBox) {
-      throw new ActionError("Boîte d'oeufs introuvable.");
+      throw new ActionError(t("notFound"));
     }
 
     await prisma.eggBox.delete({
@@ -176,12 +174,13 @@ export const consumeEggsAction = authAction
     });
 
     if (!eggBox) {
-      throw new ActionError("Boîte d'oeufs introuvable.");
+      throw new ActionError((await getTranslations("errors.fridge"))("notFound"));
     }
 
     if (eggBox.remaining < data.quantity) {
+      const t = await getTranslations("errors.fridge");
       throw new ActionError(
-        `Pas assez d'oeufs. Il reste seulement ${eggBox.remaining} oeuf(s).`,
+        t("notEnough", { count: eggBox.remaining }),
       );
     }
 

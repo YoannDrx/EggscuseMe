@@ -77,7 +77,8 @@ export function Eggy({
         cy="65"
         rx="40"
         ry="50"
-        className="stroke-foreground fill-[#FDFBF7]"
+        className="fill-[#FDFBF7]"
+        stroke="#1C1917"
         strokeWidth="2"
       />
 
@@ -107,8 +108,8 @@ function EggyHappyFace() {
   return (
     <g>
       {/* Eyes */}
-      <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       {/* Eye shine */}
       <circle cx="37" cy="53" r="2" className="fill-white" />
       <circle cx="67" cy="53" r="2" className="fill-white" />
@@ -118,7 +119,7 @@ function EggyHappyFace() {
       {/* Smile */}
       <path
         d="M35 75 Q50 90, 65 75"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -131,33 +132,34 @@ function EggyWorriedFace() {
   return (
     <g>
       {/* Worried eyes */}
-      <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       <circle cx="37" cy="53" r="2" className="fill-white" />
       <circle cx="67" cy="53" r="2" className="fill-white" />
       {/* Worried eyebrows */}
       <path
         d="M28 45 L42 50"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M72 45 L58 50"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2"
         strokeLinecap="round"
       />
       {/* Sweat drop */}
       <path
         d="M80 40 Q82 48, 80 52 Q78 48, 80 40"
-        className="stroke-foreground fill-[#87CEEB]"
+        stroke="#1C1917"
+        fill="#87CEEB"
         strokeWidth="1"
       />
       {/* Worried mouth */}
       <path
         d="M40 80 Q50 75, 60 80"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -170,20 +172,20 @@ function EggySadFace() {
   return (
     <g>
       {/* Sad eyes */}
-      <ellipse cx="35" cy="58" rx="5" ry="6" className="fill-foreground" />
-      <ellipse cx="65" cy="58" rx="5" ry="6" className="fill-foreground" />
+      <ellipse cx="35" cy="58" rx="5" ry="6" fill="#1C1917" />
+      <ellipse cx="65" cy="58" rx="5" ry="6" fill="#1C1917" />
       <circle cx="37" cy="56" r="1.5" className="fill-white" />
       <circle cx="67" cy="56" r="1.5" className="fill-white" />
       {/* Sad eyebrows */}
       <path
         d="M28 48 L40 52"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M72 48 L60 52"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2"
         strokeLinecap="round"
       />
@@ -192,7 +194,7 @@ function EggySadFace() {
       {/* Sad mouth */}
       <path
         d="M38 82 Q50 72, 62 82"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -210,7 +212,8 @@ function EggyChefFace() {
         cy="12"
         rx="30"
         ry="12"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="2"
       />
       <rect
@@ -218,7 +221,8 @@ function EggyChefFace() {
         y="10"
         width="50"
         height="15"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="2"
       />
       <ellipse cx="50" cy="10" rx="25" ry="10" className="fill-white" />
@@ -227,32 +231,35 @@ function EggyChefFace() {
         cx="35"
         cy="8"
         r="10"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1.5"
       />
       <circle
         cx="50"
         cy="5"
         r="12"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1.5"
       />
       <circle
         cx="65"
         cy="8"
         r="10"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1.5"
       />
       {/* Happy chef eyes */}
-      <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       <circle cx="37" cy="53" r="2" className="fill-white" />
       <circle cx="67" cy="53" r="2" className="fill-white" />
       {/* Confident smile */}
       <path
         d="M35 75 Q50 88, 65 75"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -270,14 +277,14 @@ function EggySleepingFace() {
       {/* Closed eyes - lines */}
       <path
         d="M28 55 Q35 60, 42 55"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
       />
       <path
         d="M58 55 Q65 60, 72 55"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -286,15 +293,15 @@ function EggySleepingFace() {
       <ellipse cx="25" cy="68" rx="6" ry="4" className="fill-[#FFB6C1]/40" />
       <ellipse cx="75" cy="68" rx="6" ry="4" className="fill-[#FFB6C1]/40" />
       {/* Sleeping mouth */}
-      <ellipse cx="50" cy="80" rx="4" ry="3" className="fill-foreground/20" />
+      <ellipse cx="50" cy="80" rx="4" ry="3" fill="#1C191733" />
       {/* Zzz */}
-      <text x="78" y="35" className="fill-foreground text-[12px] font-bold">
+      <text x="78" y="35" fill="#1C1917" className="text-[12px] font-bold">
         Z
       </text>
-      <text x="85" y="25" className="fill-foreground text-[10px] font-bold">
+      <text x="85" y="25" fill="#1C1917" className="text-[10px] font-bold">
         z
       </text>
-      <text x="90" y="18" className="fill-foreground text-[8px] font-bold">
+      <text x="90" y="18" fill="#1C1917" className="text-[8px] font-bold">
         z
       </text>
     </g>
@@ -307,39 +314,39 @@ function EggyCrackedFace() {
       {/* Crack lines on shell */}
       <path
         d="M30 40 L35 55 L28 65"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="1.5"
         strokeLinecap="round"
         fill="none"
       />
       <path
         d="M70 35 L65 50 L72 60"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="1.5"
         strokeLinecap="round"
         fill="none"
       />
       <path
         d="M50 20 L48 30 L52 38"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="1.5"
         strokeLinecap="round"
         fill="none"
       />
       {/* Happy but dizzy eyes */}
       <g>
-        <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-        <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+        <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+        <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
         {/* Spiral eyes */}
         <circle cx="35" cy="55" r="3" className="fill-white" />
         <circle cx="65" cy="55" r="3" className="fill-white" />
-        <circle cx="35" cy="55" r="1" className="fill-foreground" />
-        <circle cx="65" cy="55" r="1" className="fill-foreground" />
+        <circle cx="35" cy="55" r="1" fill="#1C1917" />
+        <circle cx="65" cy="55" r="1" fill="#1C1917" />
       </g>
       {/* Smile */}
       <path
         d="M38 78 Q50 85, 62 78"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -356,8 +363,8 @@ function EggyExcitedFace() {
   return (
     <g>
       {/* Big sparkling eyes */}
-      <ellipse cx="35" cy="52" rx="8" ry="9" className="fill-foreground" />
-      <ellipse cx="65" cy="52" rx="8" ry="9" className="fill-foreground" />
+      <ellipse cx="35" cy="52" rx="8" ry="9" fill="#1C1917" />
+      <ellipse cx="65" cy="52" rx="8" ry="9" fill="#1C1917" />
       {/* Big shine spots */}
       <circle cx="38" cy="49" r="3" className="fill-white" />
       <circle cx="68" cy="49" r="3" className="fill-white" />
@@ -369,7 +376,8 @@ function EggyExcitedFace() {
       {/* Big open smile */}
       <path
         d="M32 72 Q50 95, 68 72"
-        className="stroke-foreground fill-[#FDFBF7]"
+        stroke="#1C1917"
+        fill="#FDFBF7"
         strokeWidth="2.5"
         strokeLinecap="round"
       />
@@ -396,25 +404,25 @@ function EggyThinkingFace() {
   return (
     <g>
       {/* Eyes looking up */}
-      <ellipse cx="35" cy="52" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="52" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="52" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="52" rx="6" ry="7" fill="#1C1917" />
       {/* Pupils looking up-right */}
       <circle cx="38" cy="49" r="2" className="fill-white" />
       <circle cx="68" cy="49" r="2" className="fill-white" />
       {/* Raised eyebrow */}
       <path
         d="M28 42 Q35 38, 42 42"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2"
         strokeLinecap="round"
         fill="none"
       />
       {/* Small thoughtful mouth */}
-      <ellipse cx="50" cy="80" rx="5" ry="3" className="fill-foreground/30" />
+      <ellipse cx="50" cy="80" rx="5" ry="3" fill="#1C19174D" />
       {/* Thinking dots */}
-      <circle cx="78" cy="35" r="3" className="fill-foreground/60" />
-      <circle cx="85" cy="25" r="4" className="fill-foreground/40" />
-      <circle cx="90" cy="12" r="5" className="fill-foreground/20" />
+      <circle cx="78" cy="35" r="3" fill="#1C191799" />
+      <circle cx="85" cy="25" r="4" fill="#1C191766" />
+      <circle cx="90" cy="12" r="5" fill="#1C191733" />
     </g>
   );
 }
@@ -427,25 +435,19 @@ function EggyTimerFace() {
         cx="50"
         cy="8"
         r="12"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="2"
       />
       <circle
         cx="50"
         cy="8"
         r="8"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="1"
         fill="none"
       />
-      <line
-        x1="50"
-        y1="8"
-        x2="50"
-        y2="2"
-        className="stroke-foreground"
-        strokeWidth="2"
-      />
+      <line x1="50" y1="8" x2="50" y2="2" stroke="#1C1917" strokeWidth="2" />
       <line
         x1="50"
         y1="8"
@@ -455,23 +457,16 @@ function EggyTimerFace() {
         strokeWidth="2"
       />
       {/* Button on top */}
-      <rect
-        x="47"
-        y="-5"
-        width="6"
-        height="4"
-        rx="1"
-        className="fill-foreground"
-      />
+      <rect x="47" y="-5" width="6" height="4" rx="1" fill="#1C1917" />
       {/* Concentrated eyes */}
-      <ellipse cx="35" cy="55" rx="5" ry="6" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="5" ry="6" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="5" ry="6" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="5" ry="6" fill="#1C1917" />
       <circle cx="36" cy="53" r="1.5" className="fill-white" />
       <circle cx="66" cy="53" r="1.5" className="fill-white" />
       {/* Concentrated mouth - small line */}
       <path
         d="M42 78 L58 78"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -479,7 +474,8 @@ function EggyTimerFace() {
       {/* Sweat drop */}
       <path
         d="M82 45 Q84 52, 82 56 Q80 52, 82 45"
-        className="stroke-foreground fill-[#87CEEB]"
+        stroke="#1C1917"
+        fill="#87CEEB"
         strokeWidth="1"
       />
     </g>
@@ -495,7 +491,8 @@ function EggyCookingFace() {
         cy="15"
         rx="22"
         ry="8"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1.5"
       />
       <rect x="32" y="12" width="36" height="10" className="fill-white" />
@@ -503,21 +500,24 @@ function EggyCookingFace() {
         cx="40"
         cy="10"
         r="7"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1"
       />
       <circle
         cx="50"
         cy="8"
         r="8"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1"
       />
       <circle
         cx="60"
         cy="10"
         r="7"
-        className="stroke-foreground fill-white"
+        stroke="#1C1917"
+        fill="white"
         strokeWidth="1"
       />
       {/* Spatula */}
@@ -534,18 +534,19 @@ function EggyCookingFace() {
         cy="48"
         rx="8"
         ry="5"
-        className="stroke-foreground fill-stone-400"
+        stroke="#1C1917"
+        fill="#A8A29E"
         strokeWidth="1"
       />
       {/* Happy eyes */}
-      <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       <circle cx="37" cy="53" r="2" className="fill-white" />
       <circle cx="67" cy="53" r="2" className="fill-white" />
       {/* Confident smile */}
       <path
         d="M35 75 Q50 88, 65 75"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -553,13 +554,13 @@ function EggyCookingFace() {
       {/* Steam wisps */}
       <path
         d="M8 55 Q5 50, 8 45"
-        className="stroke-foreground/40"
+        stroke="#1C191766"
         strokeWidth="1.5"
         fill="none"
       />
       <path
         d="M12 60 Q9 55, 12 50"
-        className="stroke-foreground/30"
+        stroke="#1C19174D"
         strokeWidth="1.5"
         fill="none"
       />
@@ -585,29 +586,21 @@ function EggyHeroFace() {
       {/* Heroic eyes through mask */}
       <ellipse cx="35" cy="55" rx="5" ry="6" className="fill-white" />
       <ellipse cx="65" cy="55" rx="5" ry="6" className="fill-white" />
-      <circle cx="36" cy="54" r="3" className="fill-foreground" />
-      <circle cx="66" cy="54" r="3" className="fill-foreground" />
+      <circle cx="36" cy="54" r="3" fill="#1C1917" />
+      <circle cx="66" cy="54" r="3" fill="#1C1917" />
       <circle cx="37" cy="53" r="1" className="fill-white" />
       <circle cx="67" cy="53" r="1" className="fill-white" />
       {/* Determined smile */}
       <path
         d="M38 78 Q50 88, 62 78"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
       />
       {/* Wind effect lines */}
-      <path
-        d="M-5 60 L8 60"
-        className="stroke-foreground/30"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M-8 70 L5 70"
-        className="stroke-foreground/20"
-        strokeWidth="1.5"
-      />
+      <path d="M-5 60 L8 60" stroke="#1C19174D" strokeWidth="1.5" />
+      <path d="M-8 70 L5 70" stroke="#1C191733" strokeWidth="1.5" />
     </g>
   );
 }
@@ -621,7 +614,8 @@ function EggyWavingFace() {
         cy="45"
         rx="8"
         ry="10"
-        className="stroke-foreground fill-[#FDFBF7]"
+        stroke="#1C1917"
+        fill="#FDFBF7"
         strokeWidth="1.5"
       />
       {/* Fingers */}
@@ -630,7 +624,8 @@ function EggyWavingFace() {
         cy="35"
         rx="3"
         ry="5"
-        className="stroke-foreground fill-[#FDFBF7]"
+        stroke="#1C1917"
+        fill="#FDFBF7"
         strokeWidth="1"
       />
       <ellipse
@@ -638,7 +633,8 @@ function EggyWavingFace() {
         cy="34"
         rx="3"
         ry="5"
-        className="stroke-foreground fill-[#FDFBF7]"
+        stroke="#1C1917"
+        fill="#FDFBF7"
         strokeWidth="1"
       />
       <ellipse
@@ -646,12 +642,13 @@ function EggyWavingFace() {
         cy="36"
         rx="3"
         ry="4"
-        className="stroke-foreground fill-[#FDFBF7]"
+        stroke="#1C1917"
+        fill="#FDFBF7"
         strokeWidth="1"
       />
       {/* Happy welcoming eyes */}
-      <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       <circle cx="37" cy="53" r="2" className="fill-white" />
       <circle cx="67" cy="53" r="2" className="fill-white" />
       {/* Blush */}
@@ -660,7 +657,7 @@ function EggyWavingFace() {
       {/* Big welcoming smile */}
       <path
         d="M32 75 Q50 92, 68 75"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -721,14 +718,14 @@ function EggyCelebratingFace() {
       {/* Ecstatic eyes - closed happy */}
       <path
         d="M28 52 Q35 58, 42 52"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
       />
       <path
         d="M58 52 Q65 58, 72 52"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -739,7 +736,8 @@ function EggyCelebratingFace() {
       {/* Huge smile */}
       <path
         d="M30 72 Q50 98, 70 72"
-        className="stroke-foreground fill-[#FDFBF7]"
+        stroke="#1C1917"
+        fill="#FDFBF7"
         strokeWidth="2.5"
         strokeLinecap="round"
       />
@@ -755,33 +753,27 @@ function EggySearchingFace() {
         cx="25"
         cy="50"
         r="15"
-        className="stroke-foreground fill-cyan-100/30"
+        stroke="#1C1917"
+        className="fill-cyan-100/30"
         strokeWidth="2"
       />
-      <line
-        x1="36"
-        y1="61"
-        x2="48"
-        y2="73"
-        className="stroke-foreground"
-        strokeWidth="4"
-      />
+      <line x1="36" y1="61" x2="48" y2="73" stroke="#1C1917" strokeWidth="4" />
       {/* One eye visible, one behind magnifier */}
-      <ellipse cx="25" cy="50" rx="8" ry="10" className="fill-foreground" />
+      <ellipse cx="25" cy="50" rx="8" ry="10" fill="#1C1917" />
       <circle cx="27" cy="47" r="3" className="fill-white" />
       {/* Normal eye */}
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       <circle cx="67" cy="53" r="2" className="fill-white" />
       {/* Curious raised eyebrow */}
       <path
         d="M58 45 Q65 40, 72 45"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2"
         strokeLinecap="round"
         fill="none"
       />
       {/* Small curious mouth */}
-      <ellipse cx="55" cy="80" rx="6" ry="4" className="fill-foreground/20" />
+      <ellipse cx="55" cy="80" rx="6" ry="4" fill="#1C191733" />
     </g>
   );
 }
@@ -804,8 +796,8 @@ function EggyFreshExtraFace() {
         strokeWidth="1"
       />
       {/* Sparkling fresh eyes */}
-      <ellipse cx="35" cy="55" rx="6" ry="7" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="6" ry="7" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
       <circle cx="37" cy="52" r="2.5" className="fill-white" />
       <circle cx="67" cy="52" r="2.5" className="fill-white" />
       <circle cx="33" cy="56" r="1" className="fill-emerald-400" />
@@ -816,7 +808,7 @@ function EggyFreshExtraFace() {
       {/* Proud smile */}
       <path
         d="M35 75 Q50 88, 65 75"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -841,22 +833,22 @@ function EggyExpiredWarningFace() {
         !
       </text>
       {/* Worried/panicked eyes */}
-      <ellipse cx="35" cy="55" rx="7" ry="9" className="fill-foreground" />
-      <ellipse cx="65" cy="55" rx="7" ry="9" className="fill-foreground" />
+      <ellipse cx="35" cy="55" rx="7" ry="9" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="7" ry="9" fill="#1C1917" />
       {/* Small pupils - scared */}
       <circle cx="36" cy="54" r="2" className="fill-white" />
       <circle cx="66" cy="54" r="2" className="fill-white" />
       {/* Panicked eyebrows */}
       <path
         d="M25 42 L42 48"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
       />
       <path
         d="M75 42 L58 48"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"
@@ -867,7 +859,7 @@ function EggyExpiredWarningFace() {
       {/* Worried wavy mouth */}
       <path
         d="M35 82 Q42 78, 50 82 Q58 78, 65 82"
-        className="stroke-foreground"
+        stroke="#1C1917"
         strokeWidth="2.5"
         strokeLinecap="round"
         fill="none"

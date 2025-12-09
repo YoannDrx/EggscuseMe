@@ -13,6 +13,7 @@ import {
 import { Eggy } from "@/features/mascot";
 import { AlertTriangle, Check, RefrigeratorIcon, Users } from "lucide-react";
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 type InvitePageProps = {
@@ -21,6 +22,8 @@ type InvitePageProps = {
 
 export default async function InvitePage({ params }: InvitePageProps) {
   const { token } = await params;
+  const locale = await getLocale();
+  const t = await getTranslations("fridge.invite");
 
   // Get invitation info
   const result = await getEmailInvitationByTokenAction({ token });
@@ -35,16 +38,15 @@ export default async function InvitePage({ params }: InvitePageProps) {
               <Eggy mood="sad" size="lg" />
             </div>
             <CardTitle className="font-heading text-xl">
-              Invitation invalide
+              {t("invalidTitle")}
             </CardTitle>
             <CardDescription>
-              {result.data?.error ??
-                "Cette invitation n'existe pas ou a expire. Demandez au proprietaire du frigo de vous envoyer une nouvelle invitation."}
+              {result.data?.error ?? t("invalidDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <Link href="/fridge">
-              <Button variant="neubrutalism">Retour a mon frigo</Button>
+              <Button variant="neubrutalism">{t("backToFridge")}</Button>
             </Link>
           </CardContent>
         </Card>
@@ -63,10 +65,10 @@ export default async function InvitePage({ params }: InvitePageProps) {
             <Eggy mood="happy" size="lg" />
           </div>
           <CardTitle className="font-heading text-xl">
-            Rejoindre un frigo
+            {t("joinTitle")}
           </CardTitle>
           <CardDescription>
-            {invitation.inviterName} vous invite a rejoindre son frigo
+            {invitation.inviterName} {t("inviteText")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -87,25 +89,23 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
           {/* What you'll get */}
           <div className="space-y-3">
-            <p className="text-sm font-medium">
-              En tant qu&apos;invite, vous pourrez :
-            </p>
+            <p className="text-sm font-medium">{t("guestIntro")}</p>
             <ul className="space-y-2">
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Voir les boites d&apos;oeufs et leur fraicheur
+                {t("bulletView")}
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Consommer des oeufs et enregistrer vos repas
+                {t("bulletConsume")}
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Acceder aux recettes et suggestions
+                {t("bulletRecipes")}
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Utiliser le minuteur intelligent
+                {t("bulletTimer")}
               </li>
             </ul>
           </div>
@@ -114,8 +114,11 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <div className="bg-muted/30 flex items-center justify-center gap-2 rounded-lg p-3">
             <AlertTriangle className="text-muted-foreground size-4" />
             <p className="text-muted-foreground text-xs">
-              Expire le{" "}
-              {new Date(invitation.expiresAt).toLocaleDateString("fr-FR")}
+              {t("expires", {
+                date: new Date(invitation.expiresAt).toLocaleDateString(
+                  locale === "fr" ? "fr-FR" : "en-US",
+                ),
+              })}
             </p>
           </div>
 
@@ -131,12 +134,12 @@ export default async function InvitePage({ params }: InvitePageProps) {
           >
             <Button type="submit" variant="neubrutalism" className="w-full">
               <Users className="mr-2 size-4" />
-              Rejoindre le frigo
+              {t("joinCta")}
             </Button>
           </form>
 
           <p className="text-muted-foreground text-center text-xs">
-            Vous pourrez quitter ce frigo a tout moment depuis les parametres.
+            {t("leaveNote")}
           </p>
         </CardContent>
       </Card>

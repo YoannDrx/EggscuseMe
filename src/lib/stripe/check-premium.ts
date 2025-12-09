@@ -1,4 +1,5 @@
 import type { UserSubscription } from "@/generated/prisma";
+import { defaultLocale, type Locale } from "@/i18n/config";
 import { SiteConfig } from "@/site-config";
 import { getActiveUserSubscription } from "../fridge/get-user-subscription";
 import { prisma } from "../prisma";
@@ -80,16 +81,44 @@ export async function checkIsPremium(userId: string): Promise<boolean> {
   return isPremiumSubscription(subscription);
 }
 
+const premiumMessages: Record<
+  Locale,
+  {
+    premiumRequired: (feature: string) => string;
+    eggLimit: (limit: number) => string;
+  }
+> = {
+  fr: {
+    premiumRequired: (feature) =>
+      `Cette fonctionnalité (${feature}) nécessite un abonnement Premium. Passez à Premium pour en profiter !`,
+    eggLimit: (limit) =>
+      `Le plan gratuit est limité à ${limit} boîtes d'oeufs. Passez Premium pour des boîtes illimitées !`,
+  },
+  en: {
+    premiumRequired: (feature) =>
+      `This feature (${feature}) requires a Premium subscription. Upgrade to Premium to use it!`,
+    eggLimit: (limit) =>
+      `The free plan is limited to ${limit} egg boxes. Upgrade to Premium for unlimited boxes!`,
+  },
+};
+
 /**
  * Get error message for premium feature access
  */
-export function getPremiumRequiredMessage(feature: string): string {
-  return `Cette fonctionnalité (${feature}) nécessite un abonnement Premium. Passez à Premium pour en profiter !`;
+export function getPremiumRequiredMessage(
+  feature: string,
+  locale: Locale = defaultLocale,
+): string {
+  const copy = premiumMessages[locale] ?? premiumMessages.en;
+  return copy.premiumRequired(feature);
 }
 
 /**
  * Get error message for egg box limit reached
  */
-export function getEggBoxLimitMessage(): string {
-  return `Le plan gratuit est limité à ${SiteConfig.freePlan.maxEggBoxes} boîtes d'oeufs. Passez Premium pour des boîtes illimitées !`;
+export function getEggBoxLimitMessage(
+  locale: Locale = defaultLocale,
+): string {
+  const copy = premiumMessages[locale] ?? premiumMessages.en;
+  return copy.eggLimit(SiteConfig.freePlan.maxEggBoxes);
 }

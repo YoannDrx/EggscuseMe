@@ -1,19 +1,12 @@
 import { getServerUrl } from "@/lib/server-url";
 import { SiteConfig } from "@/site-config";
+import { Heading, Preview, Section, Text } from "@react-email/components";
 import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Hr,
-  Html,
-  Img,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
-import { Tailwind } from "@react-email/tailwind";
+  EMAIL_COLORS,
+  EggscuseMeEmailLayout,
+  EmailButton,
+  EmailInfoBox,
+} from "./utils/eggscuseme-email-layout";
 
 type ExpiringEgg = {
   name: string;
@@ -27,11 +20,23 @@ type ExpirationWarningEmailProps = {
   fridgeName: string;
 };
 
+function getFreshnessColor(daysLeft: number): string {
+  if (daysLeft <= 1) return EMAIL_COLORS.expired;
+  if (daysLeft <= 3) return EMAIL_COLORS.cookThoroughly;
+  return EMAIL_COLORS.fresh;
+}
+
+function getDaysLeftText(daysLeft: number): string {
+  if (daysLeft === 0) return "Expire aujourd'hui";
+  if (daysLeft === 1) return "1 jour restant";
+  return `${daysLeft} jours restants`;
+}
+
 export default function ExpirationWarningEmail({
   userName = "Chef",
   eggs = [
     { name: "Ferme du Coin", daysLeft: 2, quantity: 4 },
-    { name: "Marché bio", daysLeft: 3, quantity: 6 },
+    { name: "Marche bio", daysLeft: 3, quantity: 6 },
   ],
   fridgeName = "Mon Frigo",
 }: ExpirationWarningEmailProps) {
@@ -45,109 +50,104 @@ export default function ExpirationWarningEmail({
   const totalEggs = eggs.reduce((sum, egg) => sum + egg.quantity, 0);
 
   return (
-    <Html>
-      <Head />
+    <EggscuseMeEmailLayout
+      eggyMood="chef"
+      footerText="Vous recevez cet email car les notifications sont activees dans vos preferences."
+    >
       <Preview>
-        {`${totalEggs} oeufs vont bientôt expirer dans ${fridgeName}`}
+        {`${totalEggs} oeufs vont bientot expirer dans ${fridgeName}`}
       </Preview>
-      <Tailwind>
-        <Body className="mx-auto my-auto bg-[#FDFBF7] font-sans">
-          <Container className="mx-auto my-10 max-w-[500px] rounded-xl border border-solid border-[#FFC800] bg-white p-8">
-            {/* Header with logo */}
-            <Section className="text-center">
-              <Img
-                src={`${baseUrl}${SiteConfig.appIcon}`}
-                width={48}
-                height={48}
-                alt={`${SiteConfig.title}'s logo`}
-                className="mx-auto"
-              />
-              <Heading className="mx-0 my-4 text-2xl font-bold text-[#2D2D2D]">
-                Alerte Fraîcheur
-              </Heading>
-            </Section>
 
-            <Hr className="my-4 border-[#FFC800]/30" />
+      {/* Title */}
+      <Heading
+        style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+          color: EMAIL_COLORS.text,
+          textAlign: "center",
+          margin: "0 0 24px 0",
+        }}
+      >
+        Alerte Fraicheur
+      </Heading>
 
-            {/* Greeting */}
-            <Text className="text-base text-[#2D2D2D]">
-              Bonjour {userName},
+      {/* Greeting */}
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        Bonjour {userName},
+      </Text>
+
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        Certains oeufs de votre frigo <strong>{fridgeName}</strong> arrivent
+        bientot a expiration. Il est temps de les cuisiner !
+      </Text>
+
+      {/* Eggs list */}
+      <EmailInfoBox>
+        <Heading
+          as="h3"
+          style={{
+            fontSize: "16px",
+            fontWeight: "600",
+            color: EMAIL_COLORS.text,
+            margin: "0 0 12px 0",
+          }}
+        >
+          Oeufs a consommer rapidement :
+        </Heading>
+
+        {eggs.map((egg, index) => (
+          <Section
+            key={index}
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: "6px",
+              padding: "12px",
+              marginBottom: index < eggs.length - 1 ? "8px" : "0",
+              borderLeft: `4px solid ${getFreshnessColor(egg.daysLeft)}`,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: "14px",
+                fontWeight: "500",
+                color: EMAIL_COLORS.text,
+                margin: "0 0 4px 0",
+              }}
+            >
+              {egg.name || "Boite d'oeufs"}
             </Text>
-
-            <Text className="text-base text-[#2D2D2D]">
-              Certains oeufs de votre frigo <strong>{fridgeName}</strong>{" "}
-              arrivent bientôt à expiration. Il est temps de les cuisiner !
+            <Text
+              style={{
+                fontSize: "14px",
+                color: EMAIL_COLORS.textMuted,
+                margin: 0,
+              }}
+            >
+              {egg.quantity} oeufs restants •{" "}
+              <strong style={{ color: getFreshnessColor(egg.daysLeft) }}>
+                {getDaysLeftText(egg.daysLeft)}
+              </strong>
             </Text>
+          </Section>
+        ))}
+      </EmailInfoBox>
 
-            {/* Eggs list */}
-            <Section className="my-6 rounded-lg bg-[#FFC800]/10 p-4">
-              <Heading className="m-0 mb-3 text-lg font-semibold text-[#2D2D2D]">
-                Oeufs à consommer rapidement :
-              </Heading>
-              {eggs.map((egg) => (
-                <Section
-                  key={egg.name}
-                  className="mb-2 rounded-md bg-white p-3"
-                  style={{
-                    borderLeft: `4px solid ${egg.daysLeft <= 1 ? "#EF4444" : egg.daysLeft <= 3 ? "#F97316" : "#FFC800"}`,
-                  }}
-                >
-                  <Text className="m-0 text-sm font-medium text-[#2D2D2D]">
-                    {egg.name || "Boîte d'oeufs"}
-                  </Text>
-                  <Text className="m-0 text-sm text-[#666666]">
-                    {egg.quantity} oeufs restants •{" "}
-                    <strong
-                      style={{
-                        color:
-                          egg.daysLeft <= 1
-                            ? "#EF4444"
-                            : egg.daysLeft <= 3
-                              ? "#F97316"
-                              : "#2D2D2D",
-                      }}
-                    >
-                      {egg.daysLeft === 0
-                        ? "Expire aujourd'hui"
-                        : egg.daysLeft === 1
-                          ? "1 jour restant"
-                          : `${egg.daysLeft} jours restants`}
-                    </strong>
-                  </Text>
-                </Section>
-              ))}
-            </Section>
+      {/* Cooking tips */}
+      <Text
+        style={{
+          fontSize: "14px",
+          color: EMAIL_COLORS.textMuted,
+          fontStyle: "italic",
+        }}
+      >
+        Idees de recettes : oeufs durs, quiche, omelette, ou patisserie sont
+        parfaits pour utiliser des oeufs proches de l&apos;expiration !
+      </Text>
 
-            {/* Cooking tips */}
-            <Text className="text-sm text-[#666666]">
-              Idées de recettes : oeufs durs, quiche, omelette, ou pâtisserie
-              sont parfaits pour utiliser des oeufs proches de l&apos;expiration
-              !
-            </Text>
-
-            {/* CTA Button */}
-            <Section className="my-6 text-center">
-              <Button
-                href={fridgeUrl}
-                className="rounded-lg bg-[#FFC800] px-6 py-3 text-center text-base font-semibold text-[#2D2D2D]"
-              >
-                Voir mon frigo
-              </Button>
-            </Section>
-
-            <Hr className="my-4 border-[#FFC800]/30" />
-
-            {/* Footer */}
-            <Text className="text-center text-xs text-[#999999]">
-              Vous recevez cet email car les notifications sont activées dans
-              vos préférences.
-            </Text>
-            <Text className="text-center text-xs text-[#999999]">
-              {SiteConfig.company.name} • {SiteConfig.company.address}
-            </Text>
-          </Container>
-        </Body>
-      </Tailwind>
-    </Html>
+      {/* CTA Button */}
+      <Section style={{ textAlign: "center", margin: "24px 0" }}>
+        <EmailButton href={fridgeUrl}>Voir mon frigo</EmailButton>
+      </Section>
+    </EggscuseMeEmailLayout>
   );
 }

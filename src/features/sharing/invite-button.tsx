@@ -44,7 +44,8 @@ export function InviteButton({ className }: InviteButtonProps) {
 
       if (result.data?.invite) {
         const code = result.data.invite.code;
-        const link = `${window.location.origin}/invite/${code}`;
+        // Use /join/ route (unified sharing route)
+        const link = `${window.location.origin}/join/${code}`;
         setInviteLink(link);
       } else {
         toast.error(t("createError"));

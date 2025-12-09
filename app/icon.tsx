@@ -1,0 +1,130 @@
+import { ImageResponse } from "next/og";
+
+// Route segment config
+export const runtime = "edge";
+
+// Image metadata
+export const size = {
+  width: 32,
+  height: 32,
+};
+export const contentType = "image/png";
+
+// Image generation
+export default function Icon() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          background: "transparent",
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 100 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Chef hat */}
+          <ellipse
+            cx="50"
+            cy="12"
+            rx="30"
+            ry="12"
+            stroke="#1C1917"
+            fill="white"
+            strokeWidth="2"
+          />
+          <rect
+            x="25"
+            y="10"
+            width="50"
+            height="15"
+            stroke="#1C1917"
+            fill="white"
+            strokeWidth="2"
+          />
+          <ellipse cx="50" cy="10" rx="25" ry="10" fill="white" />
+          {/* Hat poof */}
+          <circle
+            cx="35"
+            cy="8"
+            r="10"
+            stroke="#1C1917"
+            fill="white"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="50"
+            cy="5"
+            r="12"
+            stroke="#1C1917"
+            fill="white"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="65"
+            cy="8"
+            r="10"
+            stroke="#1C1917"
+            fill="white"
+            strokeWidth="1.5"
+          />
+
+          {/* Egg body - white shell */}
+          <ellipse
+            cx="50"
+            cy="65"
+            rx="40"
+            ry="50"
+            fill="#FDFBF7"
+            stroke="#1C1917"
+            strokeWidth="2"
+          />
+
+          {/* Happy chef eyes */}
+          <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+          <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
+          <circle cx="37" cy="53" r="2" fill="white" />
+          <circle cx="67" cy="53" r="2" fill="white" />
+
+          {/* Confident smile */}
+          <path
+            d="M35 75 Q50 88, 65 75"
+            stroke="#1C1917"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+          />
+
+          {/* Blush */}
+          <ellipse
+            cx="25"
+            cy="70"
+            rx="5"
+            ry="3"
+            fill="#FFB6C1"
+            fillOpacity="0.4"
+          />
+          <ellipse
+            cx="75"
+            cy="70"
+            rx="5"
+            ry="3"
+            fill="#FFB6C1"
+            fillOpacity="0.4"
+          />
+        </svg>
+      </div>
+    ),
+    {
+      ...size,
+    },
+  );
+}

@@ -14,30 +14,19 @@ import {
   createPortalSessionAction,
 } from "@/features/fridge/billing.action";
 import { Eggy } from "@/features/mascot";
+import { PlanCard } from "@/features/plans/plan-card";
 import { resolveActionResult } from "@/lib/actions/actions-utils";
+import { getPricingCopy, type Locale } from "@/lib/auth/stripe/plan-features";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Check, Crown, Loader2, Sparkles, Zap } from "lucide-react";
+import { ArrowLeft, Crown, Loader2, Sparkles, Zap } from "lucide-react";
+import { useLocale } from "next-intl";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useCurrentFridge } from "../../use-current-fridge";
 
-const PREMIUM_FEATURES = [
-  "Boîtes d'œufs illimitées",
-  "Historique complet de consommation",
-  "Notifications de fraîcheur",
-  "Statistiques avancées",
-  "Recettes personnalisées",
-  "Support prioritaire",
-];
-
-const FREE_FEATURES = [
-  "2 boîtes d'œufs maximum",
-  "Minuteur intelligent",
-  "Suggestions de cuisson basiques",
-  "Partage avec invités",
-];
-
 export default function BillingPage() {
+  const locale = useLocale() as Locale;
+  const copy = getPricingCopy(locale);
   const fridgeState = useCurrentFridge();
 
   const upgradeMutation = useMutation({
@@ -52,7 +41,7 @@ export default function BillingPage() {
       );
     },
     onSuccess: (data) => {
-      toast.info("Redirection vers le paiement...");
+      toast.info(copy.upgrading);
       window.location.href = data.url;
     },
     onError: (error) => {
@@ -65,7 +54,7 @@ export default function BillingPage() {
       return resolveActionResult(createPortalSessionAction());
     },
     onSuccess: (data) => {
-      toast.info("Ouverture du portail de gestion...");
+      toast.info(copy.portalOpening);
       window.location.href = data.url;
     },
     onError: (error) => {
@@ -91,11 +80,11 @@ export default function BillingPage() {
         </Link>
         <Eggy mood={isPremium ? "happy" : "chef"} size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Abonnement</h1>
+          <h1 className="font-heading text-2xl font-bold">
+            {copy.headerTitle}
+          </h1>
           <p className="text-muted-foreground">
-            {isPremium
-              ? "Vous êtes un membre Premium !"
-              : "Passez Premium pour débloquer toutes les fonctionnalités"}
+            {isPremium ? copy.headerSubtitlePremium : copy.headerSubtitleFree}
           </p>
         </div>
       </div>
@@ -109,23 +98,21 @@ export default function BillingPage() {
                 {isPremium ? (
                   <>
                     <Crown className="text-primary size-5" />
-                    Plan Premium
+                    {copy.premiumTitle}
                   </>
                 ) : (
                   <>
                     <Zap className="size-5" />
-                    Plan Gratuit
+                    {copy.freeTitle}
                   </>
                 )}
               </CardTitle>
               <CardDescription>
-                {isPremium
-                  ? "Profitez de toutes les fonctionnalités"
-                  : "Fonctionnalités de base"}
+                {isPremium ? copy.premiumDescription : copy.freeDescription}
               </CardDescription>
             </div>
             <Badge variant={isPremium ? "default" : "secondary"}>
-              {isPremium ? "Actif" : "Gratuit"}
+              {isPremium ? copy.badgeActive : copy.badgeFree}
             </Badge>
           </div>
         </CardHeader>
@@ -139,7 +126,7 @@ export default function BillingPage() {
               {portalMutation.isPending && (
                 <Loader2 className="mr-2 size-4 animate-spin" />
               )}
-              Gérer mon abonnement
+              {copy.manage}
             </Button>
           ) : (
             <Button
@@ -152,7 +139,8 @@ export default function BillingPage() {
               ) : (
                 <Sparkles className="mr-2 size-4" />
               )}
-              Passer Premium - 2,99€/mois
+              {copy.upgradeCta} - {copy.premiumPrice}
+              {copy.premiumPriceSuffix}
             </Button>
           )}
         </CardContent>
@@ -160,69 +148,14 @@ export default function BillingPage() {
 
       {/* Plan Comparison */}
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Free Plan */}
-        <Card
-          variant="sunny"
-          className={!isPremium ? "ring-primary/20 ring-2" : ""}
-        >
-          <CardHeader>
-            <CardTitle className="font-heading">Gratuit</CardTitle>
-            <CardDescription>Pour découvrir l'application</CardDescription>
-            <div className="font-heading text-3xl font-bold">0€</div>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {FREE_FEATURES.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm">
-                  <Check className="text-muted-foreground size-4" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Premium Plan */}
-        <Card
-          variant="sunny"
-          className={isPremium ? "ring-primary ring-2" : "border-primary/30"}
-        >
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <CardTitle className="font-heading">Premium</CardTitle>
-              <Badge className="bg-primary">Recommandé</Badge>
-            </div>
-            <CardDescription>Pour les familles organisées</CardDescription>
-            <div className="font-heading text-3xl font-bold">
-              2,99€<span className="text-base font-normal">/mois</span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {PREMIUM_FEATURES.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm">
-                  <Check className="text-primary size-4" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            {!isPremium && (
-              <Button
-                variant="neubrutalism"
-                className="mt-6 w-full"
-                onClick={() => upgradeMutation.mutate()}
-                disabled={isLoading}
-              >
-                {upgradeMutation.isPending ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-2 size-4" />
-                )}
-                Choisir Premium
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <PlanCard plan="free" isCurrentPlan={!isPremium} showButton={false} />
+        <PlanCard
+          plan="premium"
+          isCurrentPlan={isPremium}
+          onSelect={() => upgradeMutation.mutate()}
+          isLoading={upgradeMutation.isPending}
+          showButton={!isPremium}
+        />
       </div>
     </div>
   );

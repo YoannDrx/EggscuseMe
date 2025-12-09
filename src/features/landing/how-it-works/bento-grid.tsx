@@ -4,12 +4,21 @@ import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { Star, Users, Egg, Award } from "lucide-react";
 import { Eggy } from "@/features/mascot";
+import { useTranslations } from "next-intl";
 
 type BentoGridProps = {
   className?: string;
 };
 
 export function BentoGrid({ className }: BentoGridProps) {
+  const t = useTranslations("landing.bentoGrid");
+
+  const steps = [
+    { num: "01", key: "step1" as const },
+    { num: "02", key: "step2" as const },
+    { num: "03", key: "step3" as const },
+  ];
+
   return (
     <section className={cn("bg-background py-24", className)}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -22,7 +31,7 @@ export function BentoGrid({ className }: BentoGridProps) {
               viewport={{ once: true }}
               className="text-primary text-sm font-semibold tracking-wider uppercase"
             >
-              Comment ca marche
+              {t("badge")}
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -31,29 +40,13 @@ export function BentoGrid({ className }: BentoGridProps) {
               transition={{ delay: 0.1 }}
               className="font-heading text-foreground mt-3 text-3xl font-bold sm:text-4xl"
             >
-              Si simple que vous n&apos;aurez{" "}
-              <span className="text-primary">aucune excuse</span>.
+              {t("title")}{" "}
+              <span className="text-primary">{t("titleHighlight")}</span>.
             </motion.h2>
 
             {/* Steps List */}
             <div className="mt-10 space-y-8">
-              {[
-                {
-                  num: "01",
-                  title: "Scannez ou Saisissez",
-                  desc: "Ajoutez vos boites d'oeufs en scannant le code ou en entrant la date de ponte.",
-                },
-                {
-                  num: "02",
-                  title: "Laissez faire la magie",
-                  desc: "L'app calcule automatiquement la fraicheur et vous suggere les meilleures recettes.",
-                },
-                {
-                  num: "03",
-                  title: "Cuisinez & Savourez",
-                  desc: "Suivez le timer intelligent pour des oeufs parfaitement cuits a chaque fois.",
-                },
-              ].map((step, index) => (
+              {steps.map((step, index) => (
                 <motion.div
                   key={step.num}
                   initial={{ opacity: 0, x: -20 }}
@@ -67,10 +60,10 @@ export function BentoGrid({ className }: BentoGridProps) {
                   </span>
                   <div>
                     <h3 className="font-heading text-foreground text-lg font-semibold">
-                      {step.title}
+                      {t(`${step.key}.title`)}
                     </h3>
                     <p className="text-muted-foreground mt-1 text-sm">
-                      {step.desc}
+                      {t(`${step.key}.description`)}
                     </p>
                   </div>
                 </motion.div>
@@ -96,7 +89,9 @@ export function BentoGrid({ className }: BentoGridProps) {
               <div className="text-foreground mt-4 text-4xl font-bold">
                 4.9/5
               </div>
-              <p className="text-muted-foreground mt-1 text-sm">App Store</p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                {t("stats.rating")}
+              </p>
             </motion.div>
 
             {/* Users Card */}
@@ -112,7 +107,7 @@ export function BentoGrid({ className }: BentoGridProps) {
                 10K+
               </div>
               <p className="text-muted-foreground mt-1 text-sm">
-                Utilisateurs actifs
+                {t("stats.users")}
               </p>
             </motion.div>
 
@@ -128,7 +123,9 @@ export function BentoGrid({ className }: BentoGridProps) {
               <div className="text-foreground mt-4 text-4xl font-bold">
                 2.4M
               </div>
-              <p className="text-muted-foreground mt-1 text-sm">Oeufs sauves</p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                {t("stats.eggsSaved")}
+              </p>
             </motion.div>
 
             {/* Family Sharing Card */}
@@ -141,10 +138,10 @@ export function BentoGrid({ className }: BentoGridProps) {
             >
               <Award className="text-primary size-8" />
               <div className="text-foreground mt-4 text-lg font-semibold">
-                Partage Familial
+                {t("stats.familySharing")}
               </div>
               <p className="text-muted-foreground mt-1 text-sm">
-                Synchronisez avec votre famille
+                {t("stats.familySharingDesc")}
               </p>
             </motion.div>
 
@@ -161,11 +158,10 @@ export function BentoGrid({ className }: BentoGridProps) {
               </div>
               <div>
                 <p className="text-muted-foreground text-sm italic">
-                  &quot;Depuis que j&apos;utilise EggscuseMe, je n&apos;ai plus
-                  jamais jete un seul oeuf. L&apos;app est geniale !&quot;
+                  &quot;{t("testimonial.quote")}&quot;
                 </p>
                 <p className="text-primary mt-2 text-xs font-semibold">
-                  Marie D. - Paris
+                  {t("testimonial.author")}
                 </p>
               </div>
             </motion.div>

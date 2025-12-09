@@ -36,8 +36,114 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useCurrentFridge } from "../../use-current-fridge";
+import { useLocale } from "next-intl";
 
 export default function DangerZonePage() {
+  const locale = useLocale();
+  const copy =
+    locale === "fr"
+      ? {
+          back: "Retour aux paramètres",
+          title: "Zone de danger",
+          subtitle: "Actions irréversibles sur votre frigo et votre compte",
+          fridgeData: "Données du frigo",
+          exportTitle: "Exporter vos données",
+          exportDesc: "Téléchargez une copie de toutes vos données au format CSV",
+          exportContent:
+            "L'export inclut toutes vos boîtes d'œufs, votre historique de consommation et vos préférences.",
+          exportCta: "Exporter mes données",
+          exportToast: "Export réussi",
+          errorGeneric: "Une erreur est survenue",
+          clearHistoryTitle: "Effacer l'historique",
+          clearHistoryDesc: "Supprime tout votre historique de consommation",
+          clearHistoryWarning:
+            "Cette action supprimera définitivement tout votre historique de consommation. Vos boîtes d'œufs actuelles seront conservées.",
+          clearHistoryCta: "Effacer l'historique",
+          clearHistoryDialogTitle: "Effacer l'historique ?",
+          clearHistoryDialogDesc:
+            "Cette action supprimera définitivement tout votre historique de consommation. Vos boîtes d'œufs actuelles seront conservées.",
+          clearHistoryDialogConfirm: "Effacer",
+          clearHistoryToast: (count: number) =>
+            `Historique effacé avec succès (${count} entrées supprimées)`,
+          clearAllTitle: "Vider le frigo",
+          clearAllDesc: "Supprime toutes les données de votre frigo",
+          clearAllWarning:
+            "Cette action supprimera toutes vos boîtes d'œufs, votre historique de consommation et réinitialisera complètement votre frigo.",
+          clearAllCta: "Tout supprimer",
+          clearAllDialogTitle: "Vider le frigo ?",
+          clearAllDialogDesc:
+            "Cette action supprimera toutes vos boîtes d'œufs et votre historique de consommation. Cette action est irréversible.",
+          clearAllDialogConfirm: "Supprimer toutes les données",
+          clearAllToast: (count: number) =>
+            `Données supprimées avec succès (${count} boîtes supprimées)`,
+          accountSection: "Compte utilisateur",
+          deleteAccountTitle: "Supprimer mon compte",
+          deleteAccountDesc:
+            "Cette action supprimera définitivement votre compte et toutes les données associées",
+          personalData: "Données personnelles",
+          personalDataDesc:
+            "Toutes vos informations personnelles et paramètres seront définitivement effacés",
+          fridgeDataDesc: "Votre frigo et toutes ses données seront supprimés, ainsi que vos abonnements",
+          deleteAccountCta: "Supprimer mon compte",
+          deleteAccountDialogTitle: "Supprimer votre compte ?",
+          deleteAccountDialogDesc:
+            "Cette action est irréversible. Toutes vos données personnelles, vos frigos et votre historique seront définitivement supprimés.",
+          deleteAccountDialogConfirm: "Supprimer",
+          deleteAccountToast: "Demande de suppression envoyée",
+          deleteAccountToastDesc:
+            "Vérifiez votre email pour confirmer la suppression.",
+        }
+      : {
+          back: "Back to settings",
+          title: "Danger zone",
+          subtitle: "Irreversible actions on your fridge and account",
+          fridgeData: "Fridge data",
+          exportTitle: "Export your data",
+          exportDesc: "Download a copy of all your data in CSV format",
+          exportContent:
+            "Export includes your egg boxes, consumption history, and preferences.",
+          exportCta: "Export my data",
+          exportToast: "Export successful",
+          errorGeneric: "An error occurred",
+          clearHistoryTitle: "Clear history",
+          clearHistoryDesc: "Delete your consumption history",
+          clearHistoryWarning:
+            "This will permanently delete your consumption history. Current egg boxes are kept.",
+          clearHistoryCta: "Clear history",
+          clearHistoryDialogTitle: "Clear history?",
+          clearHistoryDialogDesc:
+            "This will permanently delete all your consumption history. Current boxes remain.",
+          clearHistoryDialogConfirm: "Clear",
+          clearHistoryToast: (count: number) =>
+            `History cleared (${count} entries removed)`,
+          clearAllTitle: "Empty the fridge",
+          clearAllDesc: "Delete all data from your fridge",
+          clearAllWarning:
+            "This will delete all your egg boxes and history and reset your fridge.",
+          clearAllCta: "Delete all",
+          clearAllDialogTitle: "Empty the fridge?",
+          clearAllDialogDesc:
+            "This action will delete all egg boxes and your consumption history. This cannot be undone.",
+          clearAllDialogConfirm: "Delete all data",
+          clearAllToast: (count: number) =>
+            `Data deleted successfully (${count} boxes removed)`,
+          accountSection: "User account",
+          deleteAccountTitle: "Delete my account",
+          deleteAccountDesc:
+            "This will permanently delete your account and all associated data",
+          personalData: "Personal data",
+          personalDataDesc:
+            "All your personal information and settings will be permanently erased",
+          fridgeDataDesc:
+            "Your fridge and all its data will be deleted, along with subscriptions",
+          deleteAccountCta: "Delete my account",
+          deleteAccountDialogTitle: "Delete your account?",
+          deleteAccountDialogDesc:
+            "This action is irreversible. All personal data, fridges, and history will be permanently deleted.",
+          deleteAccountDialogConfirm: "Delete",
+          deleteAccountToast: "Deletion request sent",
+          deleteAccountToastDesc: "Check your email to confirm deletion.",
+        };
   const [isClearing, setIsClearing] = useState(false);
   const fridgeState = useCurrentFridge();
   const isOwner = fridgeState?.role === "OWNER";
@@ -55,26 +161,21 @@ export default function DangerZonePage() {
 
   const handleClearHistory = () => {
     dialogManager.confirm({
-      title: "Effacer l'historique ?",
-      description:
-        "Cette action supprimera définitivement tout votre historique de consommation. Vos boîtes d'œufs actuelles seront conservées.",
-      confirmText: "Effacer",
+      title: copy.clearHistoryDialogTitle,
+      description: copy.clearHistoryDialogDesc,
+      confirmText: copy.clearHistoryDialogConfirm,
       action: {
-        label: "Effacer l'historique",
+        label: copy.clearHistoryCta,
         onClick: async () => {
           setIsClearing(true);
           try {
             const result = await resolveActionResult(
               clearFridgeHistoryAction(),
             );
-            toast.success("Historique effacé avec succès", {
-              description: `${result.deletedCount} entrée(s) supprimée(s)`,
-            });
+            toast.success(copy.clearHistoryToast(result.deletedCount));
           } catch (error) {
             toast.error(
-              error instanceof Error
-                ? error.message
-                : "Une erreur est survenue",
+              error instanceof Error ? error.message : copy.errorGeneric,
             );
           } finally {
             setIsClearing(false);
@@ -86,24 +187,19 @@ export default function DangerZonePage() {
 
   const handleClearAllData = () => {
     dialogManager.confirm({
-      title: "Vider le frigo ?",
-      description:
-        "Cette action supprimera toutes vos boîtes d'œufs et votre historique de consommation. Cette action est irréversible.",
-      confirmText: "Tout supprimer",
+      title: copy.clearAllDialogTitle,
+      description: copy.clearAllDialogDesc,
+      confirmText: copy.clearAllDialogConfirm,
       action: {
-        label: "Supprimer toutes les données",
+        label: copy.clearAllCta,
         onClick: async () => {
           setIsClearing(true);
           try {
             const result = await resolveActionResult(clearFridgeDataAction());
-            toast.success("Données supprimées avec succès", {
-              description: `${result.deletedCount} boîte(s) supprimée(s)`,
-            });
+            toast.success(copy.clearAllToast(result.deletedCount));
           } catch (error) {
             toast.error(
-              error instanceof Error
-                ? error.message
-                : "Une erreur est survenue",
+              error instanceof Error ? error.message : copy.errorGeneric,
             );
           } finally {
             setIsClearing(false);
@@ -128,27 +224,26 @@ export default function DangerZonePage() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      toast.success("Export réussi");
+      toast.success(copy.exportToast);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Une erreur est survenue",
+        error instanceof Error ? error.message : copy.errorGeneric,
       );
     }
   };
 
   const handleDeleteAccount = () => {
     dialogManager.confirm({
-      title: "Supprimer votre compte ?",
-      description:
-        "Cette action est irréversible. Toutes vos données personnelles, vos frigos et votre historique seront définitivement supprimés.",
-      confirmText: "Supprimer",
+      title: copy.deleteAccountDialogTitle,
+      description: copy.deleteAccountDialogDesc,
+      confirmText: copy.deleteAccountDialogConfirm,
       action: {
-        label: "Supprimer mon compte",
+        label: copy.deleteAccountCta,
         variant: "destructive",
         onClick: async () => {
           await deleteAccountMutation.mutateAsync();
-          toast.success("Demande de suppression envoyée", {
-            description: "Vérifiez votre email pour confirmer la suppression.",
+          toast.success(copy.deleteAccountToast, {
+            description: copy.deleteAccountToastDesc,
           });
         },
       },
@@ -163,17 +258,15 @@ export default function DangerZonePage() {
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
       >
         <ChevronLeft className="size-4" />
-        Retour aux paramètres
+        {copy.back}
       </Link>
 
       {/* Header */}
       <div className="flex items-center gap-4">
         <Eggy mood="worried" size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Zone de danger</h1>
-          <p className="text-muted-foreground">
-            Actions irréversibles sur votre frigo et votre compte
-          </p>
+          <h1 className="font-heading text-2xl font-bold">{copy.title}</h1>
+          <p className="text-muted-foreground">{copy.subtitle}</p>
         </div>
       </div>
 
@@ -181,9 +274,7 @@ export default function DangerZonePage() {
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <Egg className="text-muted-foreground size-5" />
-          <h2 className="font-heading text-lg font-semibold">
-            Données du frigo
-          </h2>
+          <h2 className="font-heading text-lg font-semibold">{copy.fridgeData}</h2>
         </div>
 
         {/* Export data */}
@@ -191,22 +282,19 @@ export default function DangerZonePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Download className="size-5" />
-              Exporter vos données
+              {copy.exportTitle}
             </CardTitle>
-            <CardDescription>
-              Téléchargez une copie de toutes vos données au format CSV
-            </CardDescription>
+            <CardDescription>{copy.exportDesc}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground text-sm">
-              L&apos;export inclut toutes vos boîtes d&apos;œufs, votre
-              historique de consommation et vos préférences.
+              {copy.exportContent}
             </p>
           </CardContent>
           <CardFooter>
             <Button variant="outline" onClick={handleExportData}>
               <Download className="mr-2 size-4" />
-              Exporter mes données
+              {copy.exportCta}
             </Button>
           </CardFooter>
         </Card>
@@ -216,20 +304,14 @@ export default function DangerZonePage() {
           <CardHeader>
             <CardTitle className="text-fresh-cook flex items-center gap-2 text-lg">
               <History className="size-5" />
-              Effacer l&apos;historique
+              {copy.clearHistoryTitle}
             </CardTitle>
-            <CardDescription>
-              Supprime tout votre historique de consommation
-            </CardDescription>
+            <CardDescription>{copy.clearHistoryDesc}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="bg-fresh-cook/10 flex items-start gap-3 rounded-lg border border-dashed p-4">
               <AlertTriangle className="text-fresh-cook mt-0.5 size-5 shrink-0" />
-              <p className="text-sm">
-                <strong>Attention :</strong> Cette action supprimera
-                définitivement tout votre historique de consommation. Vos boîtes
-                d&apos;œufs actuelles seront conservées.
-              </p>
+              <p className="text-sm">{copy.clearHistoryWarning}</p>
             </div>
           </CardContent>
           <CardFooter>
@@ -240,7 +322,7 @@ export default function DangerZonePage() {
               loading={isClearing}
             >
               <Trash2 className="mr-2 size-4" />
-              Effacer l&apos;historique
+              {copy.clearHistoryCta}
             </LoadingButton>
           </CardFooter>
         </Card>
@@ -251,20 +333,14 @@ export default function DangerZonePage() {
             <CardHeader>
               <CardTitle className="text-destructive flex items-center gap-2 text-lg">
                 <Egg className="size-5" />
-                Vider le frigo
+                {copy.clearAllTitle}
               </CardTitle>
-              <CardDescription>
-                Supprime toutes les données de votre frigo
-              </CardDescription>
+              <CardDescription>{copy.clearAllDesc}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="bg-destructive/10 flex items-start gap-3 rounded-lg border border-dashed p-4">
                 <AlertTriangle className="text-destructive mt-0.5 size-5 shrink-0" />
-                <p className="text-sm">
-                  <strong>Action irréversible :</strong> Cette action supprimera
-                  toutes vos boîtes d&apos;œufs, votre historique de
-                  consommation et réinitialisera complètement votre frigo.
-                </p>
+                <p className="text-sm">{copy.clearAllWarning}</p>
               </div>
             </CardContent>
             <CardFooter>
@@ -274,7 +350,7 @@ export default function DangerZonePage() {
                 loading={isClearing}
               >
                 <Trash2 className="mr-2 size-4" />
-                Tout supprimer
+                {copy.clearAllCta}
               </LoadingButton>
             </CardFooter>
           </Card>
@@ -288,7 +364,7 @@ export default function DangerZonePage() {
         <div className="flex items-center gap-2">
           <UserX2 className="text-muted-foreground size-5" />
           <h2 className="font-heading text-lg font-semibold">
-            Compte utilisateur
+            {copy.accountSection}
           </h2>
         </div>
 
@@ -297,12 +373,11 @@ export default function DangerZonePage() {
             <div className="flex items-center gap-2">
               <AlertTriangle className="text-destructive size-5" />
               <CardTitle className="text-xl font-semibold">
-                Supprimer mon compte
+                {copy.deleteAccountTitle}
               </CardTitle>
             </div>
             <CardDescription className="text-muted-foreground text-base">
-              Cette action supprimera définitivement votre compte et toutes les
-              données associées
+              {copy.deleteAccountDesc}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -311,11 +386,10 @@ export default function DangerZonePage() {
                 <UserX2 className="text-muted-foreground mt-0.5 size-5" />
                 <div className="space-y-1">
                   <p className="leading-none font-medium">
-                    Données personnelles
+                    {copy.personalData}
                   </p>
                   <p className="text-muted-foreground text-sm">
-                    Toutes vos informations personnelles et paramètres seront
-                    définitivement effacés
+                    {copy.personalDataDesc}
                   </p>
                 </div>
               </div>
@@ -324,10 +398,11 @@ export default function DangerZonePage() {
               <div className="flex items-start gap-4">
                 <Building2 className="text-muted-foreground mt-0.5 size-5" />
                 <div className="space-y-1">
-                  <p className="leading-none font-medium">Données du frigo</p>
+                  <p className="leading-none font-medium">
+                    {copy.fridgeData}
+                  </p>
                   <p className="text-muted-foreground text-sm">
-                    Votre frigo et toutes ses données seront supprimés, ainsi
-                    que vos abonnements
+                    {copy.fridgeDataDesc}
                   </p>
                 </div>
               </div>
@@ -340,7 +415,7 @@ export default function DangerZonePage() {
               loading={deleteAccountMutation.isPending}
               onClick={handleDeleteAccount}
             >
-              Supprimer mon compte
+              {copy.deleteAccountCta}
             </LoadingButton>
           </CardFooter>
         </Card>

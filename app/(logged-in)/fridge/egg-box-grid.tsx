@@ -1,13 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  IlluFridgeEmpty,
+  IconPlusSticker,
+  IconWarningSticker,
+} from "@/components/eggscuseme/illustrations";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { EggBoxCard } from "@/features/eggs/components/egg-box-card";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { deleteEggBoxAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
 import type { EggBox } from "@/generated/prisma";
-import { AlertTriangle, Plus, Scan } from "lucide-react";
+import { Plus, Scan } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -94,7 +99,7 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
         animate={{ opacity: 1, y: 0 }}
         className="border-border bg-card/50 flex flex-col items-center rounded-2xl border-2 border-dashed p-8 text-center"
       >
-        <Eggy mood="sad" size="lg" />
+        <IlluFridgeEmpty className="size-48" />
         <h3 className="text-foreground mt-4 text-xl font-bold">
           {t("empty.title")}
         </h3>
@@ -109,7 +114,7 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
               onClick={handleAddBox}
               className="glow-button bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6"
             >
-              <Plus className="mr-2 size-4" />
+              <IconPlusSticker className="mr-2 size-5" />
               {t("empty.addFirstBox")}
             </Button>
             <p className="text-muted-foreground text-xs">
@@ -139,9 +144,7 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-3 rounded-2xl border border-orange-500/30 bg-orange-500/10 p-4"
         >
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-orange-500/20">
-            <AlertTriangle className="size-5 text-orange-400" />
-          </div>
+          <IconWarningSticker className="size-10 shrink-0" />
           <div className="flex-1">
             <p className="text-fresh-cook font-medium">
               {t("urgent.title", { count: urgentBoxes.length })}
