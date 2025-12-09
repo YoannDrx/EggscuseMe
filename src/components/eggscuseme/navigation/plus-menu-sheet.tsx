@@ -9,6 +9,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import {
   Bell,
   CreditCard,
@@ -64,6 +65,23 @@ const accountItems = [
   { icon: LogOut, labelKey: "signOut", href: "/auth/signout" },
 ];
 
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0 },
+};
+
 export function PlusMenuSheet({
   open,
   onOpenChange,
@@ -80,79 +98,102 @@ export function PlusMenuSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="rounded-t-3xl border-stone-800 bg-stone-900 px-0 pb-8"
+        className={cn(
+          "rounded-t-[var(--radius-sheet)] px-0 pb-8",
+          "border-nav-border bg-card",
+          "max-h-[85vh] overflow-y-auto",
+        )}
       >
         <SheetHeader className="px-6 pb-2">
           {/* Handle bar */}
-          <div className="mx-auto mb-2 h-1.5 w-12 rounded-full bg-stone-700" />
+          <div className="bg-muted-foreground/30 mx-auto mb-2 h-1.5 w-12 rounded-full" />
           <SheetTitle className="sr-only">Menu</SheetTitle>
         </SheetHeader>
 
         {/* Menu Items */}
-        <nav className="space-y-1 px-4">
+        <motion.nav
+          className="space-y-1 px-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate={open ? "visible" : "hidden"}
+        >
           {filteredMenuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => onOpenChange(false)}
-                className={cn(
-                  "flex items-center gap-4 rounded-xl px-4 py-3 transition-colors",
-                  isActive
-                    ? "bg-amber-400/10 text-amber-400"
-                    : "text-stone-300 hover:bg-stone-800",
-                )}
-              >
-                <item.icon
+              <motion.div key={item.href} variants={itemVariants}>
+                <Link
+                  href={item.href}
+                  onClick={() => onOpenChange(false)}
                   className={cn(
-                    "size-5",
-                    isActive ? "text-amber-400" : "text-stone-400",
+                    "flex items-center gap-4 rounded-xl px-4 py-3 transition-colors",
+                    "min-h-[var(--touch-target-comfortable)]",
+                    isActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground hover:bg-muted",
                   )}
-                />
-                <span className="font-medium">{t(item.labelKey)}</span>
-              </Link>
+                >
+                  <item.icon
+                    className={cn(
+                      "size-5",
+                      isActive ? "text-primary" : "text-muted-foreground",
+                    )}
+                  />
+                  <span className="font-medium">{t(item.labelKey)}</span>
+                </Link>
+              </motion.div>
             );
           })}
 
           {/* Divider */}
-          <div className="my-3 border-t border-stone-800" />
+          <div className="border-border my-3 border-t" />
 
           {/* Account Items */}
           {accountItems.map((item) => {
             const isActive = pathname === item.href;
+            const isSignOut = item.labelKey === "signOut";
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => onOpenChange(false)}
-                className={cn(
-                  "flex items-center gap-4 rounded-xl px-4 py-3 transition-colors",
-                  isActive
-                    ? "bg-amber-400/10 text-amber-400"
-                    : "text-stone-300 hover:bg-stone-800",
-                )}
-              >
-                <item.icon
+              <motion.div key={item.href} variants={itemVariants}>
+                <Link
+                  href={item.href}
+                  onClick={() => onOpenChange(false)}
                   className={cn(
-                    "size-5",
-                    isActive ? "text-amber-400" : "text-stone-400",
+                    "flex items-center gap-4 rounded-xl px-4 py-3 transition-colors",
+                    "min-h-[var(--touch-target-comfortable)]",
+                    isSignOut
+                      ? "text-destructive hover:bg-destructive/10"
+                      : isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-muted",
                   )}
-                />
-                <span className="font-medium">{t(item.labelKey)}</span>
-              </Link>
+                >
+                  <item.icon
+                    className={cn(
+                      "size-5",
+                      isSignOut
+                        ? "text-destructive"
+                        : isActive
+                          ? "text-primary"
+                          : "text-muted-foreground",
+                    )}
+                  />
+                  <span className="font-medium">{t(item.labelKey)}</span>
+                </Link>
+              </motion.div>
             );
           })}
 
           {/* Divider */}
-          <div className="my-3 border-t border-stone-800" />
+          <div className="border-border my-3 border-t" />
 
           {/* Theme and Language Toggles */}
-          <div className="flex items-center justify-center gap-3 py-2">
+          <motion.div
+            variants={itemVariants}
+            className="flex items-center justify-center gap-3 py-2"
+          >
             <LanguageToggle />
             <ThemeSwitcher />
-          </div>
-        </nav>
+          </motion.div>
+        </motion.nav>
       </SheetContent>
     </Sheet>
   );

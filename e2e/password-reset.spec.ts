@@ -27,7 +27,8 @@ test("password reset flow", async ({ page }) => {
       .getByRole("link", { name: /sign out|déconnexion|se déconnecter/i })
       .click();
   }
-  await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
+  // After sign out, user is redirected to homepage
+  await page.waitForURL(/^\/$|^\/\?/, { timeout: 10000 });
 
   // 3. Go to forget password page
   await page.goto(`${getServerUrl()}/auth/forget-password`);

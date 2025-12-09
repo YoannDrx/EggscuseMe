@@ -196,5 +196,6 @@ export async function signOutAccount(options: { page: Page }) {
       .click();
   }
 
-  await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
+  // After sign out, user is redirected to homepage
+  await page.waitForURL(/^\/$|^\/\?/, { timeout: 10000 });
 }
