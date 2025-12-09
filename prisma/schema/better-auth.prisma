@@ -36,7 +36,7 @@ model User {
   banExpires DateTime?
 
   // Admin logs
-  adminLogs       AdminLog[] @relation("AdminLogs")       // Logs created by this admin
+  adminLogs       AdminLog[] @relation("AdminLogs") // Logs created by this admin
   adminLogTargets AdminLog[] @relation("AdminLogTargets") // Logs targeting this user
 
   @@unique([email])
