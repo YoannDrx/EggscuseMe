@@ -170,13 +170,44 @@ export async function signInAccount(options: {
  * @param page - Playwright page object
  */
 export async function signOutAccount(options: { page: Page }) {
-  const { page } = options;
+ const { page } = options;
+  const logoutMatcher = /log out|sign out|d[eé]connexion|se déconnecter/i;
 
-  // Navigate to account page
-  await page.goto(`/account`);
+  // Navigate to fridge settings page
+  await page.goto(`/fridge/settings/profile`);
 
-  // Click the sign out button
-  await page.getByRole("button", { name: /sign out/i }).click();
+  // Wait for page to load
+  await page.waitForLoadState("networkidle");
 
-  await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
+  // First try the dedicated logout button in the sidebar footer (desktop)
+  const logoutButton = page.getByRole("button", { name: logoutMatcher }).first();
+  if (await logoutButton.isVisible().catch(() => false)) {
+    await logoutButton.click();
+  } else {
+    // Otherwise open the user dropdown and click the logout item
+    const userButton = page.getByTestId("user-profile-button");
+
+    if (await userButton.isVisible().catch(() => false)) {
+      await userButton.click();
+      const logoutMenuItem = page
+        .getByRole("menuitem", { name: logoutMatcher })
+        .first();
+      await expect(logoutMenuItem).toBeVisible({ timeout: 5000 });
+      await logoutMenuItem.click();
+    } else {
+      // Fallback: look for a direct sign-out link (mobile sheet)
+      const logoutLink = page.getByRole("link", { name: logoutMatcher }).first();
+      await expect(logoutLink).toBeVisible({ timeout: 5000 });
+      await logoutLink.click();
+    }
+  }
+
+  // After sign out, user is redirected to homepage
+  await page.waitForURL(
+    (url) => {
+      const path = url.pathname;
+      return path === "/" || path === "/home";
+    },
+    { timeout: 15000 },
+  );
 }

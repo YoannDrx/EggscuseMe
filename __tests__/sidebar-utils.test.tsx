@@ -19,6 +19,11 @@ vi.mock("next/navigation", async () => {
   };
 });
 
+// Mock next-intl
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+}));
+
 // Mock matchMedia
 beforeEach(() => {
   Object.defineProperty(window, "matchMedia", {
@@ -117,17 +122,17 @@ describe("SidebarNavigationMenu", () => {
     vi.mocked(usePathname).mockReturnValue("/dashboard");
 
     const navigationGroup: NavigationGroup = {
-      title: "Main",
+      titleKey: "main",
       links: [
         {
           href: "/dashboard",
           Icon: Home,
-          label: "Dashboard",
+          labelKey: "dashboard",
         },
         {
           href: "/profile",
           Icon: User,
-          label: "Profile",
+          labelKey: "profile",
         },
       ],
     };
@@ -136,9 +141,9 @@ describe("SidebarNavigationMenu", () => {
       withSidebarProvider(<SidebarNavigationMenu link={navigationGroup} />),
     );
 
-    // Check that main links are rendered
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
-    expect(screen.getByText("Profile")).toBeInTheDocument();
+    // Check that main links are rendered (using labelKey as mock returns the key)
+    expect(screen.getByText("dashboard")).toBeInTheDocument();
+    expect(screen.getByText("profile")).toBeInTheDocument();
   });
 
   it("renders nested navigation structure correctly", async () => {
@@ -146,17 +151,17 @@ describe("SidebarNavigationMenu", () => {
     vi.mocked(usePathname).mockReturnValue("/settings/account");
 
     const navigationGroup: NavigationGroup = {
-      title: "Settings",
+      titleKey: "settings",
       links: [
         {
           href: "/settings",
           Icon: Settings,
-          label: "Settings",
+          labelKey: "settings",
           links: [
             {
               href: "/settings/account",
               Icon: User,
-              label: "Account Settings",
+              labelKey: "accountSettings",
             },
           ],
         },
@@ -167,10 +172,10 @@ describe("SidebarNavigationMenu", () => {
       withSidebarProvider(<SidebarNavigationMenu link={navigationGroup} />),
     );
 
-    // Check that parent link is rendered
-    expect(screen.getByText("Settings")).toBeInTheDocument();
+    // Check that parent link is rendered (using labelKey as mock returns the key)
+    expect(screen.getByText("settings")).toBeInTheDocument();
 
     // Check that child link is rendered
-    expect(screen.getByText("Account Settings")).toBeInTheDocument();
+    expect(screen.getByText("accountSettings")).toBeInTheDocument();
   });
 });

@@ -12,26 +12,40 @@ test.describe("account", () => {
   test("delete account flow", async ({ page }) => {
     const userData = await createTestAccount({
       page,
-      callbackURL: "/account",
+      callbackURL: "/fridge/settings/profile",
     });
 
-    await page.getByRole("link", { name: "Danger" }).click();
-    await page.waitForURL(/\/account\/danger/, { timeout: 10000 });
-    await page.getByRole("button", { name: "Delete" }).click();
-
-    const deleteDialog = page.getByRole("alertdialog", {
-      name: "Delete your account ?",
+    await page.goto("/fridge/settings/danger");
+    await page.waitForURL(/\/fridge\/settings\/danger/, { timeout: 15000 });
+    // Button text is "Supprimer mon compte" in French UI
+    const deleteAccountButton = page.getByRole("button", {
+      name: /supprimer mon compte|delete my account/i,
     });
+    await expect(deleteAccountButton).toBeVisible();
+    await deleteAccountButton.click();
+
+    // Dialog opens with dialogManager.confirm
+    const deleteDialog = page.getByRole("alertdialog");
     await expect(deleteDialog).toBeVisible();
 
+    // Confirm text is required ("Supprimer" FR / "Delete" EN)
     const confirmInput = deleteDialog.getByRole("textbox");
-    await confirmInput.fill("Delete");
+    const deleteButton = deleteDialog.getByRole("button", {
+      name: /supprimer|delete/i,
+    });
 
-    const deleteButton = deleteDialog.getByRole("button", { name: /delete/i });
+    await confirmInput.fill("Supprimer");
+    if (!(await deleteButton.isEnabled().catch(() => false))) {
+      await confirmInput.fill("Delete");
+    }
+
     await expect(deleteButton).toBeEnabled();
     await deleteButton.click();
 
-    await expect(page.getByText("Your deletion has been asked.")).toBeVisible();
+    // Toast message in French: "Demande de suppression envoyée"
+    await expect(
+      page.getByText(/demande de suppression|deletion has been asked/i),
+    ).toBeVisible();
 
     const verification = await prisma.verification.findFirst({
       where: {
@@ -71,22 +85,31 @@ test.describe("account", () => {
   });
 
   test("update name flow", async ({ page }) => {
-    await createTestAccount({ page, callbackURL: "/account" });
+    await createTestAccount({ page, callbackURL: "/fridge/settings/profile" });
 
     const newName = faker.person.fullName();
-    const input = page.getByRole("textbox", { name: "Name" });
+    // Label is "Nom" in French UI
+    const input = page.getByRole("textbox", { name: /nom|name/i });
     await input.fill(newName);
-    await page.getByRole("button", { name: /save/i }).click();
+    // Button is "Enregistrer" in French UI
+    await page.getByRole("button", { name: /enregistrer|save/i }).click();
 
-    await expect(page.getByText("Profile updated")).toBeVisible();
+    // Toast message is "Profil mis à jour" in French
+    await expect(
+      page.getByText(/profil mis à jour|profile updated/i),
+    ).toBeVisible();
     await page.reload();
     await expect(input).toHaveValue(newName);
   });
 
   test("change password flow", async ({ page }) => {
-    const userData = await createTestAccount({ page, callbackURL: "/account" });
+    const userData = await createTestAccount({
+      page,
+      callbackURL: "/fridge/settings/profile",
+    });
 
-    await page.getByRole("link", { name: /change password/i }).click();
+    await page.getByRole("link", { name: /security|sécurité/i }).click();
+    await page.waitForURL(/\/fridge\/settings\/security/, { timeout: 10000 });
 
     const newPassword = faker.internet.password({
       length: 12,
@@ -95,7 +118,10 @@ test.describe("account", () => {
     await page.locator('input[name="currentPassword"]').fill(userData.password);
     await page.locator('input[name="newPassword"]').fill(newPassword);
     await page.locator('input[name="confirmPassword"]').fill(newPassword);
-    await page.getByRole("button", { name: /Change Password/i }).click();
+    // Button is "Changer le mot de passe" in French UI
+    await page
+      .getByRole("button", { name: /changer le mot de passe|change password/i })
+      .click();
 
     await signOutAccount({ page });
 

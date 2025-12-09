@@ -10,21 +10,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { EggSize } from "@/generated/prisma";
 import { Eggy } from "@/features/mascot";
+import type { EggSize } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
-import { Pause, Play, RotateCcw, Volume2 } from "lucide-react";
+import { motion } from "motion/react";
+import { Check, Pause, Play, RotateCcw, Volume2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   calculateCookingTime,
   formatTime,
-  getCookingDescriptionFr,
-  timerLabelsFr,
   type EggTemperature,
   type YolkPreference,
 } from "./cooking-times";
+import { CircularProgress } from "./circular-progress";
+
+const SIZES: EggSize[] = ["S", "M", "L", "XL"];
+const TEMPERATURES: EggTemperature[] = ["fridge", "room"];
+const YOLK_PREFERENCES: YolkPreference[] = ["runny", "soft", "medium", "hard"];
+
+// Color configuration based on yolk preference
+// Using oklch colors that match the CSS variables for SVG compatibility
+const yolkColors: Record<
+  YolkPreference,
+  { accent: string; bg: string; text: string; label: string; yolkBg: string }
+> = {
+  runny: {
+    accent: "oklch(0.72 0.18 155)", // --fresh-extra
+    bg: "bg-fresh-extra/10",
+    text: "text-fresh-extra",
+    label: "Coulant",
+    yolkBg: "oklch(0.72 0.18 155)",
+  },
+  soft: {
+    accent: "oklch(0.65 0.15 140)", // Slightly different green
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-500",
+    label: "Mollet",
+    yolkBg: "oklch(0.65 0.15 140)",
+  },
+  medium: {
+    accent: "oklch(0.88 0.14 95)", // --fresh
+    bg: "bg-fresh/10",
+    text: "text-fresh",
+    label: "Mi-cuit",
+    yolkBg: "oklch(0.88 0.14 95)",
+  },
+  hard: {
+    accent: "oklch(0.72 0.16 50)", // --fresh-cook
+    bg: "bg-fresh-cook/10",
+    text: "text-fresh-cook",
+    label: "Dur",
+    yolkBg: "oklch(0.72 0.16 50)",
+  },
+};
 
 export function EggTimer() {
+  const t = useTranslations("timer");
   const [size, setSize] = useState<EggSize>("M");
   const [temperature, setTemperature] = useState<EggTemperature>("fridge");
   const [yolkPreference, setYolkPreference] = useState<YolkPreference>("soft");
@@ -33,19 +75,22 @@ export function EggTimer() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [isDone, setIsDone] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Calculate time when settings change
+  const currentColor = yolkColors[yolkPreference];
+
+  // Calculate time when settings change (only if timer hasn't started)
   useEffect(() => {
-    if (!isRunning) {
+    if (!hasStarted) {
       const time = calculateCookingTime(size, temperature, yolkPreference);
       setTimeRemaining(time);
       setTotalTime(time);
       setIsDone(false);
     }
-  }, [size, temperature, yolkPreference, isRunning]);
+  }, [size, temperature, yolkPreference, hasStarted]);
 
   // Timer logic
   useEffect(() => {
@@ -76,9 +121,12 @@ export function EggTimer() {
   }, [isRunning, timeRemaining]);
 
   const handleStart = useCallback(() => {
-    setIsRunning(true);
-    setIsDone(false);
-  }, []);
+    if (timeRemaining > 0) {
+      setIsRunning(true);
+      setHasStarted(true);
+      setIsDone(false);
+    }
+  }, [timeRemaining]);
 
   const handlePause = useCallback(() => {
     setIsRunning(false);
@@ -86,211 +134,299 @@ export function EggTimer() {
 
   const handleReset = useCallback(() => {
     setIsRunning(false);
+    setHasStarted(false);
     const time = calculateCookingTime(size, temperature, yolkPreference);
     setTimeRemaining(time);
     setTotalTime(time);
     setIsDone(false);
   }, [size, temperature, yolkPreference]);
 
-  const progress =
-    totalTime > 0 ? ((totalTime - timeRemaining) / totalTime) * 100 : 0;
+  const progress = totalTime > 0 ? (totalTime - timeRemaining) / totalTime : 0;
+
+  // Get Eggy mood based on state
+  const getEggyMood = () => {
+    if (isDone) return "happy";
+    if (isRunning) return "chef";
+    return "happy";
+  };
 
   return (
     <Card variant="sunny" className="w-full max-w-md">
       <CardHeader className="pb-4">
         <CardTitle className="font-heading flex items-center gap-3 text-xl">
-          <Eggy
-            mood={isDone ? "happy" : isRunning ? "chef" : "chef"}
-            size="sm"
-            animate={isRunning}
-          />
-          Minuteur de cuisson
+          <Eggy mood={getEggyMood()} size="sm" animate={isRunning} />
+          {t("cookingTitle")}
           {isDone && (
-            <Volume2 className="text-fresh-extra size-5 animate-pulse" />
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500 }}
+            >
+              <Volume2 className="text-fresh-extra size-5 animate-pulse" />
+            </motion.div>
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Timer Display */}
-        <div className="relative flex flex-col items-center justify-center">
-          {/* Bubbles animation container */}
-          <div
-            className={cn(
-              "absolute inset-0 overflow-hidden rounded-full",
-              isRunning && "animate-bubbles",
-            )}
+      <CardContent className="space-y-6 px-4">
+        {/* Timer Display with Circular Progress */}
+        <div className="flex flex-col items-center justify-center gap-4">
+          <CircularProgress
+            progress={progress}
+            size={200}
+            strokeWidth={12}
+            progressColor={currentColor.accent}
+            isRunning={isRunning}
+            isComplete={isDone}
           >
-            {isRunning &&
-              [...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-primary/20 absolute bottom-0 animate-[bubble_2s_ease-in-out_infinite] rounded-full"
-                  style={{
-                    width: `${8 + Math.random() * 12}px`,
-                    height: `${8 + Math.random() * 12}px`,
-                    left: `${10 + Math.random() * 80}%`,
-                    animationDelay: `${Math.random() * 2}s`,
-                    animationDuration: `${1.5 + Math.random() * 1}s`,
-                  }}
-                />
-              ))}
-          </div>
+            <div className="flex flex-col items-center">
+              {/* Time display */}
+              <motion.span
+                className={cn(
+                  "font-heading text-5xl font-bold tabular-nums",
+                  isDone && "text-fresh-extra",
+                )}
+                animate={{
+                  scale: isDone ? [1, 1.1, 1] : 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                  repeat: isDone ? Infinity : 0,
+                  repeatDelay: 1,
+                }}
+              >
+                {formatTime(timeRemaining)}
+              </motion.span>
 
-          {/* Timer circle */}
-          <div
-            className={cn(
-              "relative flex size-52 flex-col items-center justify-center rounded-full border-[6px] transition-all duration-500",
-              isDone
-                ? "border-fresh-extra bg-fresh-extra/10"
-                : isRunning
-                  ? "border-primary/30 bg-primary/5 dark:bg-primary/10"
-                  : "border-muted bg-muted/30",
-            )}
-          >
-            <span
+              {/* Status label */}
+              <span
+                className={cn(
+                  "mt-1 text-sm font-medium",
+                  isDone ? "text-fresh-extra" : "text-muted-foreground",
+                )}
+              >
+                {isDone
+                  ? t("done")
+                  : isRunning
+                    ? t("cooking")
+                    : currentColor.label}
+              </span>
+            </div>
+          </CircularProgress>
+
+          {/* Cooking preference tag - Below the dial */}
+          {!isDone && (
+            <div
               className={cn(
-                "font-heading text-5xl font-bold tabular-nums",
-                isDone && "text-fresh-extra",
+                "rounded-full px-4 py-1.5 text-sm font-semibold",
+                currentColor.bg,
+                currentColor.text,
               )}
             >
-              {formatTime(timeRemaining)}
-            </span>
-            <span className="text-muted-foreground text-sm">
-              {isDone
-                ? "C'est prêt !"
-                : getCookingDescriptionFr(yolkPreference)}
-            </span>
-          </div>
-
-          {/* Progress ring */}
-          <svg className="absolute inset-0 -rotate-90" viewBox="0 0 220 220">
-            <circle
-              cx="110"
-              cy="110"
-              r="100"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="6"
-              className="text-transparent"
-            />
-            {(isRunning || progress > 0) && (
-              <circle
-                cx="110"
-                cy="110"
-                r="100"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeDasharray={628.32}
-                strokeDashoffset={628.32 * (1 - progress / 100)}
-                className={cn(
-                  "transition-all duration-1000",
-                  isDone ? "text-fresh-extra" : "text-primary",
-                )}
-              />
-            )}
-          </svg>
+              {t(`yolkDescriptions.${yolkPreference}`)}
+            </div>
+          )}
         </div>
 
         {/* Controls */}
         <div className="flex justify-center gap-3">
           {!isRunning ? (
-            <Button
-              variant="neubrutalism"
-              onClick={handleStart}
-              size="lg"
-              disabled={isDone}
-              className="min-w-32"
-            >
-              <Play className="mr-2 size-5" />
-              {timeRemaining < totalTime ? "Reprendre" : "Démarrer"}
-            </Button>
+            <div className="relative">
+              {/* White offset behind button */}
+              <div className="absolute top-1 left-1 h-full w-full rounded-2xl bg-white/90 dark:bg-white/30" />
+              <motion.div
+                className="relative"
+                whileHover={{ x: 1, y: 1 }}
+                whileTap={{ x: 2, y: 2 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Button
+                  onClick={handleStart}
+                  size="xl"
+                  disabled={isDone || timeRemaining === 0}
+                  className={cn(
+                    "border-foreground/20 relative min-w-36 rounded-2xl border-2 font-bold",
+                    "bg-primary text-primary-foreground",
+                    "disabled:opacity-50",
+                  )}
+                >
+                  <Play className="mr-2 size-5" />
+                  {timeRemaining < totalTime && timeRemaining > 0
+                    ? t("resume")
+                    : t("start")}
+                </Button>
+              </motion.div>
+            </div>
           ) : (
-            <Button
-              variant="neubrutalism-outline"
-              onClick={handlePause}
-              size="lg"
-              className="min-w-32"
-            >
-              <Pause className="mr-2 size-5" />
-              Pause
-            </Button>
+            <div className="relative">
+              {/* White offset behind button */}
+              <div className="absolute top-1 left-1 h-full w-full rounded-2xl bg-white/90 dark:bg-white/30" />
+              <motion.div
+                className="relative"
+                whileHover={{ x: 1, y: 1 }}
+                whileTap={{ x: 2, y: 2 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Button
+                  onClick={handlePause}
+                  size="xl"
+                  variant="outline"
+                  className="border-foreground/20 relative min-w-36 rounded-2xl border-2 font-bold"
+                >
+                  <Pause className="mr-2 size-5" />
+                  {t("pause")}
+                </Button>
+              </motion.div>
+            </div>
           )}
-          <Button variant="ghost" onClick={handleReset} size="lg">
-            <RotateCcw className="mr-2 size-5" />
-            Reset
-          </Button>
+
+          <div className="relative">
+            {/* White offset behind button */}
+            <div className="bg-foreground/20 absolute top-1 left-1 h-full w-full rounded-2xl" />
+            <motion.div
+              className="relative"
+              whileHover={{ x: 1, y: 1 }}
+              whileTap={{ x: 2, y: 2 }}
+              transition={{ duration: 0.1 }}
+            >
+              <Button
+                onClick={handleReset}
+                size="xl"
+                variant="outline"
+                className="border-foreground/20 relative rounded-2xl border-2 disabled:opacity-50"
+                disabled={timeRemaining === totalTime && !isRunning && !isDone}
+              >
+                <RotateCcw className="size-5" />
+              </Button>
+            </motion.div>
+          </div>
         </div>
 
-        {/* Settings */}
-        {!isRunning && (
-          <div className="bg-muted/30 space-y-4 rounded-xl p-4">
+        {/* Done message */}
+        {isDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-fresh-extra/10 border-fresh-extra/30 rounded-2xl border-2 p-4 text-center"
+          >
+            <p className="text-fresh-extra text-lg font-bold">
+              {t("eggReady")}
+            </p>
+            <p className="text-fresh-extra/80 text-sm">
+              {t("removeFromWater")}
+            </p>
+          </motion.div>
+        )}
+
+        {/* Settings - Only show when not running */}
+        {!isRunning && !isDone && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="border-border/50 bg-muted/20 space-y-4 rounded-2xl border p-4"
+          >
+            {/* Yolk preference - Main setting with visual cards */}
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold">
+                {t("yolkCooking")}
+              </Label>
+              <div className="grid grid-cols-4 gap-2">
+                {YOLK_PREFERENCES.map((pref) => {
+                  const colors = yolkColors[pref];
+                  const isSelected = yolkPreference === pref;
+                  return (
+                    <motion.button
+                      key={pref}
+                      type="button"
+                      onClick={() => setYolkPreference(pref)}
+                      className={cn(
+                        "relative flex flex-col items-center gap-1 rounded-xl p-3 transition-all",
+                        "border-2",
+                        isSelected
+                          ? "border-fresh-extra bg-muted/50"
+                          : "bg-muted/50 hover:bg-muted border-transparent",
+                      )}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {/* Egg yolk indicator with check inside when selected */}
+                      <div
+                        className="border-foreground/10 relative flex size-8 items-center justify-center rounded-full border-2"
+                        style={{
+                          background: `radial-gradient(circle at 40% 40%, ${colors.yolkBg}, ${colors.yolkBg}80)`,
+                        }}
+                      >
+                        {isSelected && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 500 }}
+                          >
+                            <Check
+                              className="size-5 text-white drop-shadow-md"
+                              strokeWidth={3}
+                            />
+                          </motion.div>
+                        )}
+                      </div>
+                      <span
+                        className={cn(
+                          "text-xs font-medium",
+                          isSelected
+                            ? "text-foreground"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {t(`yolkPreferences.${pref}`)}
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Size and Temperature row */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Taille</Label>
+                <Label className="text-sm font-medium">{t("size")}</Label>
                 <Select
                   value={size}
                   onValueChange={(v) => setSize(v as EggSize)}
                 >
-                  <SelectTrigger className="border-foreground/20">
+                  <SelectTrigger className="border-border/50 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(timerLabelsFr.sizes).map(
-                      ([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ),
-                    )}
+                    {SIZES.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {t(`sizes.${value}`)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Température</Label>
+                <Label className="text-sm font-medium">
+                  {t("temperature")}
+                </Label>
                 <Select
                   value={temperature}
                   onValueChange={(v) => setTemperature(v as EggTemperature)}
                 >
-                  <SelectTrigger className="border-foreground/20">
+                  <SelectTrigger className="border-border/50 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(timerLabelsFr.temperatures).map(
-                      ([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ),
-                    )}
+                    {TEMPERATURES.map((value) => (
+                      <SelectItem key={value} value={value}>
+                        {t(`temperatures.${value}`)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Cuisson du jaune</Label>
-              <Select
-                value={yolkPreference}
-                onValueChange={(v) => setYolkPreference(v as YolkPreference)}
-              >
-                <SelectTrigger className="border-foreground/20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(timerLabelsFr.yolkPreferences).map(
-                    ([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ),
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Audio element for notification */}

@@ -7,8 +7,11 @@ import {
   CreditCard,
   History,
   Home,
+  KeyRound,
+  Palette,
   Settings,
   Timer,
+  User,
   Users,
 } from "lucide-react";
 
@@ -16,72 +19,120 @@ export const getFridgeNavigation = (
   role: "OWNER" | "GUEST",
 ): NavigationGroup[] => {
   if (role === "GUEST") {
-    // Guests only see main menu
-    return [FRIDGE_LINKS[0]];
+    // Guests see main menu + limited settings (profile, security, appearance, danger)
+    return [FRIDGE_LINKS[0], GUEST_SETTINGS];
   }
   // Owners see everything
   return FRIDGE_LINKS;
 };
 
+// Settings section for guests (limited options)
+const GUEST_SETTINGS: NavigationGroup = {
+  titleKey: "settings",
+  defaultOpenStartPath: "/fridge/settings",
+  links: [
+    {
+      href: "/fridge/settings",
+      Icon: Settings,
+      labelKey: "settings",
+    },
+    {
+      href: "/fridge/settings/profile",
+      Icon: User,
+      labelKey: "profile",
+    },
+    {
+      href: "/fridge/settings/security",
+      Icon: KeyRound,
+      labelKey: "security",
+    },
+    {
+      href: "/fridge/settings/appearance",
+      Icon: Palette,
+      labelKey: "appearance",
+    },
+    {
+      href: "/fridge/settings/danger",
+      Icon: AlertTriangle,
+      labelKey: "dangerZone",
+    },
+  ],
+};
+
 const FRIDGE_LINKS: NavigationGroup[] = [
   {
-    title: "Menu",
+    titleKey: "menu",
     links: [
       {
         href: "/fridge",
         Icon: Home,
-        label: "Mon Frigo",
+        labelKey: "myFridge",
       },
       {
         href: "/fridge/timer",
         Icon: Timer,
-        label: "Minuteur",
+        labelKey: "timer",
       },
       {
         href: "/fridge/recipes",
         Icon: BookOpen,
-        label: "Recettes",
+        labelKey: "recipes",
       },
       {
         href: "/fridge/statistics",
         Icon: ChartLine,
-        label: "Statistiques",
+        labelKey: "statistics",
       },
       {
         href: "/fridge/history",
         Icon: History,
-        label: "Historique",
+        labelKey: "history",
       },
     ],
   },
   {
-    title: "Parametres",
+    titleKey: "settings",
     defaultOpenStartPath: "/fridge/settings",
     links: [
       {
         href: "/fridge/settings",
         Icon: Settings,
-        label: "Preferences",
+        labelKey: "settings",
+      },
+      {
+        href: "/fridge/settings/profile",
+        Icon: User,
+        labelKey: "profile",
+      },
+      {
+        href: "/fridge/settings/security",
+        Icon: KeyRound,
+        labelKey: "security",
+      },
+      {
+        href: "/fridge/settings/appearance",
+        Icon: Palette,
+        labelKey: "appearance",
       },
       {
         href: "/fridge/settings/sharing",
         Icon: Users,
-        label: "Partage",
+        labelKey: "sharing",
       },
       {
         href: "/fridge/settings/notifications",
         Icon: Bell,
-        label: "Notifications",
+        labelKey: "notifications",
       },
       {
         href: "/fridge/settings/billing",
         Icon: CreditCard,
-        label: "Abonnement",
+        labelKey: "billing",
       },
       {
         href: "/fridge/settings/danger",
         Icon: AlertTriangle,
-        label: "Zone danger",
+        labelKey: "dangerZone",
       },
     ],
   },

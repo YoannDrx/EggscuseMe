@@ -7,29 +7,86 @@ export const LogoSvg = ({ size = 32, ...props }: LogoSvgProps) => {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 120 120"
+      viewBox="0 0 100 120"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M112.448 91.7993L80.0827 80.3244L66.4131 11.9822L112.448 91.7993ZM39.9175 80.3244L7.55176 91.7993L53.5872 11.9822L39.9175 80.3244ZM73.7228 78.6076H46.2774L60.0001 9.99994L73.7228 78.6076Z"
-        fill="currentColor"
+      {/* Chef hat */}
+      <ellipse
+        cx="50"
+        cy="12"
+        rx="30"
+        ry="12"
+        stroke="#1C1917"
+        fill="white"
+        strokeWidth="2"
       />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M73.7225 78.6076H46.2771L59.9998 9.99994L73.7225 78.6076Z"
-        fill="currentColor"
+      <rect
+        x="25"
+        y="10"
+        width="50"
+        height="15"
+        stroke="#1C1917"
+        fill="white"
+        strokeWidth="2"
       />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M45.7581 84.5074H74.2419L111.032 97.5576L82.9734 110H37.0265L8.96753 97.5576L45.7581 84.5074Z"
-        fill="currentColor"
+      <ellipse cx="50" cy="10" rx="25" ry="10" fill="white" />
+      {/* Hat poof */}
+      <circle
+        cx="35"
+        cy="8"
+        r="10"
+        stroke="#1C1917"
+        fill="white"
+        strokeWidth="1.5"
       />
+      <circle
+        cx="50"
+        cy="5"
+        r="12"
+        stroke="#1C1917"
+        fill="white"
+        strokeWidth="1.5"
+      />
+      <circle
+        cx="65"
+        cy="8"
+        r="10"
+        stroke="#1C1917"
+        fill="white"
+        strokeWidth="1.5"
+      />
+
+      {/* Egg body - white shell */}
+      <ellipse
+        cx="50"
+        cy="65"
+        rx="40"
+        ry="50"
+        fill="#FDFBF7"
+        stroke="#1C1917"
+        strokeWidth="2"
+      />
+
+      {/* Happy chef eyes */}
+      <ellipse cx="35" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <ellipse cx="65" cy="55" rx="6" ry="7" fill="#1C1917" />
+      <circle cx="37" cy="53" r="2" fill="white" />
+      <circle cx="67" cy="53" r="2" fill="white" />
+
+      {/* Confident smile */}
+      <path
+        d="M35 75 Q50 88, 65 75"
+        stroke="#1C1917"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Blush */}
+      <ellipse cx="25" cy="70" rx="5" ry="3" fill="#FFB6C1" fillOpacity="0.4" />
+      <ellipse cx="75" cy="70" rx="5" ry="3" fill="#FFB6C1" fillOpacity="0.4" />
     </svg>
   );
 };

@@ -10,40 +10,168 @@ import { serverToast } from "@/lib/server-toast";
 import { SiteConfig } from "@/site-config";
 import { Building2, Clock, Mail, MessageSquare } from "lucide-react";
 import type { Metadata } from "next";
+import { getLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: `Contact - ${SiteConfig.title}`,
-  description:
-    "Contactez l'équipe EggscuseMe. Nous sommes là pour répondre à vos questions sur le suivi de vos oeufs et la gestion de votre frigo.",
-  keywords: ["contact", "support", "aide", "oeufs", "questions"],
-  openGraph: {
-    title: `Contact - ${SiteConfig.title}`,
-    description:
+type ContactCopy = {
+  metaTitle: string;
+  metaDescription: string;
+  metaOgDescription: string;
+  metaKeywords: string[];
+  heroTitle: string;
+  heroDescription: string;
+  srAddress: string;
+  srEmail: string;
+  srHours: string;
+  srResponse: string;
+  hours: string;
+  timezone: string;
+  responseDelay: string;
+  faqTitle: string;
+  faqs: { question: string; answer: string }[];
+  form: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    subject: string;
+    message: string;
+    subjectPlaceholder: string;
+    messagePlaceholder: string;
+    submit: string;
+    validationError: string;
+    success: string;
+  };
+};
+
+const COPY: Record<"fr" | "en", ContactCopy> = {
+  fr: {
+    metaTitle: `Contact - ${SiteConfig.title}`,
+    metaDescription:
+      "Contactez l'équipe EggscuseMe. Nous sommes là pour répondre à vos questions sur le suivi de vos oeufs et la gestion de votre frigo.",
+    metaOgDescription:
       "Contactez l'équipe EggscuseMe pour toute question sur notre application de suivi d'oeufs.",
-    url: `${SiteConfig.prodUrl}/contact`,
-    type: "website",
+    metaKeywords: ["contact", "support", "aide", "oeufs", "questions"],
+    heroTitle: "Nous contacter",
+    heroDescription:
+      "Une question sur EggscuseMe ? Besoin d'aide pour gérer votre frigo ou simplement envie de partager vos idées ? Nous sommes à votre écoute.",
+    srAddress: "Adresse",
+    srEmail: "Email",
+    srHours: "Horaires",
+    srResponse: "Délai de réponse",
+    hours: "Lundi - Vendredi, 9h - 18h",
+    timezone: "Fuseau horaire : Paris (CET)",
+    responseDelay: "Réponse sous 24-48h ouvrées",
+    faqTitle: "Questions fréquentes",
+    faqs: [
+      {
+        question: "L'application est-elle gratuite ?",
+        answer:
+          "Oui ! Le plan gratuit permet de gérer jusqu'à 2 boîtes d'oeufs. Pour des fonctionnalités illimitées, passez au plan Premium à 2.99€/mois.",
+      },
+      {
+        question: "Comment fonctionne le partage de frigo ?",
+        answer:
+          "Créez un lien d'invitation et partagez-le avec vos proches. Ils pourront voir et gérer les oeufs du frigo partagé.",
+      },
+      {
+        question: "Comment calculez-vous la fraîcheur ?",
+        answer:
+          "Nous utilisons la date de ponte que vous indiquez. Les oeufs sont extra-frais jusqu'à 9 jours, frais jusqu'à 21 jours, puis à cuire jusqu'à 28 jours.",
+      },
+    ],
+    form: {
+      firstName: "Prénom",
+      lastName: "Nom",
+      email: "Email",
+      subject: "Sujet",
+      message: "Message",
+      subjectPlaceholder: "Question sur le suivi des oeufs...",
+      messagePlaceholder: "Décrivez votre question ou suggestion...",
+      submit: "Envoyer le message",
+      validationError: "Veuillez remplir tous les champs",
+      success: "Votre message a bien été envoyé",
+    },
+  },
+  en: {
+    metaTitle: `Contact - ${SiteConfig.title}`,
+    metaDescription:
+      "Contact the EggscuseMe team. We're here to answer questions about egg tracking and fridge management.",
+    metaOgDescription:
+      "Get in touch with the EggscuseMe team for any question about our egg tracking app.",
+    metaKeywords: [
+      "contact",
+      "support",
+      "help",
+      "eggs",
+      "questions",
+      "freshness",
+    ],
+    heroTitle: "Contact us",
+    heroDescription:
+      "Have a question about EggscuseMe? Need help managing your fridge or want to share ideas? We're listening.",
+    srAddress: "Address",
+    srEmail: "Email",
+    srHours: "Hours",
+    srResponse: "Response time",
+    hours: "Monday - Friday, 9am - 6pm",
+    timezone: "Time zone: Paris (CET)",
+    responseDelay: "Reply within 24-48h on business days",
+    faqTitle: "Frequently asked questions",
+    faqs: [
+      {
+        question: "Is the app free?",
+        answer:
+          "Yes! The free plan lets you manage up to 2 egg boxes. For unlimited features, switch to Premium at €2.99/month.",
+      },
+      {
+        question: "How does fridge sharing work?",
+        answer:
+          "Create an invite link and share it with your family. They can view and manage eggs in the shared fridge.",
+      },
+      {
+        question: "How do you calculate freshness?",
+        answer:
+          "We use the laying date you provide. Eggs are extra-fresh up to 9 days, fresh up to 21 days, then cook thoroughly up to 28 days.",
+      },
+    ],
+    form: {
+      firstName: "First name",
+      lastName: "Last name",
+      email: "Email",
+      subject: "Subject",
+      message: "Message",
+      subjectPlaceholder: "Question about egg tracking...",
+      messagePlaceholder: "Describe your question or suggestion...",
+      submit: "Send message",
+      validationError: "Please fill out all fields",
+      success: "Your message has been sent",
+    },
   },
 };
 
-const faqs = [
-  {
-    question: "L'application est-elle gratuite ?",
-    answer:
-      "Oui ! Le plan gratuit permet de gérer jusqu'à 2 boîtes d'oeufs. Pour des fonctionnalités illimitées, passez au plan Premium à 2.99€/mois.",
-  },
-  {
-    question: "Comment fonctionne le partage de frigo ?",
-    answer:
-      "Créez un lien d'invitation et partagez-le avec vos proches. Ils pourront voir et gérer les oeufs du frigo partagé.",
-  },
-  {
-    question: "Comment calculez-vous la fraîcheur ?",
-    answer:
-      "Nous utilisons la date de ponte que vous indiquez. Les oeufs sont extra-frais jusqu'à 9 jours, frais jusqu'à 21 jours, puis à cuire jusqu'à 28 jours.",
-  },
-];
+async function getCopy(): Promise<ContactCopy> {
+  const locale = await getLocale();
+  return locale in COPY ? COPY[locale as "fr" | "en"] : COPY.en;
+}
 
-export default function ContactPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await getCopy();
+
+  return {
+    title: copy.metaTitle,
+    description: copy.metaDescription,
+    keywords: copy.metaKeywords,
+    openGraph: {
+      title: copy.metaTitle,
+      description: copy.metaOgDescription,
+      url: `${SiteConfig.prodUrl}/contact`,
+      type: "website",
+    },
+  };
+}
+
+export default async function ContactPage() {
+  const copy = await getCopy();
+
   return (
     <div className="bg-background relative isolate min-h-screen">
       <GridBackground
@@ -58,21 +186,19 @@ export default function ContactPage() {
               variant="h1"
               className="text-foreground text-4xl font-semibold tracking-tight text-pretty sm:text-5xl"
             >
-              Nous contacter
+              {copy.heroTitle}
             </Typography>
             <Typography
               variant="p"
               className="text-muted-foreground mt-6 text-lg/8"
             >
-              Une question sur EggscuseMe ? Besoin d'aide pour gérer votre frigo
-              ou simplement envie de partager vos idées ? Nous sommes à votre
-              écoute.
+              {copy.heroDescription}
             </Typography>
 
             <dl className="text-muted-foreground mt-10 flex flex-col gap-4 text-base/7">
               <div className="flex gap-x-4">
                 <dt className="flex-none">
-                  <span className="sr-only">Adresse</span>
+                  <span className="sr-only">{copy.srAddress}</span>
                   <Building2
                     aria-hidden="true"
                     className="text-muted-foreground size-6"
@@ -82,7 +208,7 @@ export default function ContactPage() {
               </div>
               <div className="flex gap-x-4">
                 <dt className="flex-none">
-                  <span className="sr-only">Email</span>
+                  <span className="sr-only">{copy.srEmail}</span>
                   <Mail
                     aria-hidden="true"
                     className="text-muted-foreground size-6"
@@ -99,29 +225,29 @@ export default function ContactPage() {
               </div>
               <div className="flex gap-x-4">
                 <dt className="flex-none">
-                  <span className="sr-only">Horaires</span>
+                  <span className="sr-only">{copy.srHours}</span>
                   <Clock
                     aria-hidden="true"
                     className="text-muted-foreground size-6"
                   />
                 </dt>
                 <dd>
-                  Lundi - Vendredi, 9h - 18h
+                  {copy.hours}
                   <br />
                   <span className="text-muted-foreground/70">
-                    Fuseau horaire : Paris (CET)
+                    {copy.timezone}
                   </span>
                 </dd>
               </div>
               <div className="flex gap-x-4">
                 <dt className="flex-none">
-                  <span className="sr-only">Délai de réponse</span>
+                  <span className="sr-only">{copy.srResponse}</span>
                   <MessageSquare
                     aria-hidden="true"
                     className="text-muted-foreground size-6"
                   />
                 </dt>
-                <dd>Réponse sous 24-48h ouvrées</dd>
+                <dd>{copy.responseDelay}</dd>
               </div>
             </dl>
 
@@ -131,10 +257,10 @@ export default function ContactPage() {
                 variant="h2"
                 className="text-foreground mb-4 text-xl font-semibold"
               >
-                Questions fréquentes
+                {copy.faqTitle}
               </Typography>
               <div className="space-y-4">
-                {faqs.map((faq) => (
+                {copy.faqs.map((faq) => (
                   <div key={faq.question}>
                     <Typography
                       variant="p"
@@ -160,6 +286,8 @@ export default function ContactPage() {
           action={async (formData) => {
             "use server";
 
+            const copy = await getCopy();
+
             const firstname = formData.get("first-name");
             const lastname = formData.get("last-name");
             const email = formData.get("email");
@@ -175,13 +303,13 @@ export default function ContactPage() {
             });
 
             if (!result.success) {
-              await serverToast("Veuillez remplir tous les champs", "error");
+              await serverToast(copy.form.validationError, "error");
               return;
             }
 
             await contactSupportAction(result.data);
 
-            await serverToast("Votre message a bien été envoyé", "success");
+            await serverToast(copy.form.success, "success");
           }}
           className="flex w-full items-center justify-start px-6 pt-24 pb-24 sm:pt-32 lg:px-12 lg:pt-24"
         >
@@ -192,7 +320,7 @@ export default function ContactPage() {
                   htmlFor="first-name"
                   className="text-foreground block text-sm font-semibold"
                 >
-                  Prénom
+                  {copy.form.firstName}
                 </Label>
                 <div className="mt-2.5">
                   <Input
@@ -210,7 +338,7 @@ export default function ContactPage() {
                   htmlFor="last-name"
                   className="text-foreground block text-sm font-semibold"
                 >
-                  Nom
+                  {copy.form.lastName}
                 </Label>
                 <div className="mt-2.5">
                   <Input
@@ -228,7 +356,7 @@ export default function ContactPage() {
                   htmlFor="email"
                   className="text-foreground block text-sm font-semibold"
                 >
-                  Email
+                  {copy.form.email}
                 </Label>
                 <div className="mt-2.5">
                   <Input
@@ -246,7 +374,7 @@ export default function ContactPage() {
                   htmlFor="subject"
                   className="text-foreground block text-sm font-semibold"
                 >
-                  Sujet
+                  {copy.form.subject}
                 </Label>
                 <div className="mt-2.5">
                   <Input
@@ -254,7 +382,7 @@ export default function ContactPage() {
                     name="subject"
                     type="text"
                     className="block w-full"
-                    placeholder="Question sur le suivi des oeufs..."
+                    placeholder={copy.form.subjectPlaceholder}
                     required
                   />
                 </div>
@@ -264,7 +392,7 @@ export default function ContactPage() {
                   htmlFor="message"
                   className="text-foreground block text-sm font-semibold"
                 >
-                  Message
+                  {copy.form.message}
                 </Label>
                 <div className="mt-2.5">
                   <Textarea
@@ -272,7 +400,7 @@ export default function ContactPage() {
                     name="message"
                     rows={4}
                     className="block w-full"
-                    placeholder="Décrivez votre question ou suggestion..."
+                    placeholder={copy.form.messagePlaceholder}
                     required
                   />
                 </div>
@@ -283,7 +411,7 @@ export default function ContactPage() {
                 type="submit"
                 className="rounded-md px-3.5 py-2.5 text-center text-sm font-semibold"
               >
-                Envoyer le message
+                {copy.form.submit}
               </Button>
             </div>
           </div>

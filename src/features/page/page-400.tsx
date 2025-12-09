@@ -1,3 +1,4 @@
+import { ErrorIllustration } from "@/components/eggscuseme/illustrations";
 import { ContactSupportDialog } from "@/features/contact/support/contact-support-dialog";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
@@ -11,9 +12,9 @@ type Page400Props = PropsWithChildren<{
 export function Page400(props: Page400Props) {
   return (
     <main className="flex flex-col items-center gap-8">
+      <ErrorIllustration type="500" size="lg" />
       <div className="max-w-lg space-y-3 text-center">
-        <Typography variant="code">400</Typography>
-        <Typography variant="h1">{props.title ?? "Bad Request"}</Typography>
+        <Typography variant="h1">{props.title ?? "Erreur"}</Typography>
         {props.children ?? (
           <Typography>
             It seems we're experiencing some technical difficulties. Not to

@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerUrl } from "@/lib/server-url";
 import { nanoid } from "nanoid";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import {
   AcceptShareLinkSchema,
@@ -33,13 +34,12 @@ function addDays(date: Date, days: number): Date {
 export const createShareLinkAction = authAction
   .inputSchema(CreateShareLinkSchema)
   .action(async ({ parsedInput: data, ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     const { fridge, role } = await getOrCreateFridge(user);
 
     // Only owner can create share links
     if (!canModifyFridge(role)) {
-      throw new ActionError(
-        "Seul le propriétaire du frigo peut créer des liens de partage.",
-      );
+      throw new ActionError(t("ownerOnlyCreate"));
     }
 
     const shareLink = await prisma.fridgeShareLink.create({
@@ -86,12 +86,11 @@ export const getShareLinksAction = authAction.action(
 export const deactivateShareLinkAction = authAction
   .inputSchema(DeactivateShareLinkSchema)
   .action(async ({ parsedInput: { linkId }, ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     const { fridge, role } = await getOrCreateFridge(user);
 
     if (!canModifyFridge(role)) {
-      throw new ActionError(
-        "Seul le propriétaire du frigo peut désactiver les liens de partage.",
-      );
+      throw new ActionError(t("ownerOnlyDeactivate"));
     }
 
     const link = await prisma.fridgeShareLink.findFirst({
@@ -102,7 +101,7 @@ export const deactivateShareLinkAction = authAction
     });
 
     if (!link) {
-      throw new ActionError("Lien de partage introuvable.");
+      throw new ActionError(t("linkNotFound"));
     }
 
     await prisma.fridgeShareLink.update({
@@ -120,6 +119,7 @@ export const deactivateShareLinkAction = authAction
 export const getShareLinkByCodeAction = action
   .inputSchema(z.object({ code: z.string() }))
   .action(async ({ parsedInput: { code } }) => {
+    const t = await getTranslations("errors.sharing");
     const shareLink = await prisma.fridgeShareLink.findUnique({
       where: { code },
       include: {
@@ -134,20 +134,20 @@ export const getShareLinkByCodeAction = action
     });
 
     if (!shareLink) {
-      return { error: "Lien invalide ou expiré.", shareLink: null };
+      return { error: t("invalidOrExpired"), shareLink: null };
     }
 
     if (!shareLink.isActive) {
-      return { error: "Ce lien a été désactivé.", shareLink: null };
+      return { error: t("linkDisabled"), shareLink: null };
     }
 
     if (shareLink.expiresAt < new Date()) {
-      return { error: "Ce lien a expiré.", shareLink: null };
+      return { error: t("linkExpired"), shareLink: null };
     }
 
     if (shareLink.usedCount >= shareLink.maxUses) {
       return {
-        error: "Ce lien a atteint le nombre maximum d'utilisations.",
+        error: t("maxUsesReached"),
         shareLink: null,
       };
     }
@@ -171,32 +171,31 @@ export const getShareLinkByCodeAction = action
 export const acceptShareLinkAction = authAction
   .inputSchema(AcceptShareLinkSchema)
   .action(async ({ parsedInput: { code }, ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     const shareLink = await prisma.fridgeShareLink.findUnique({
       where: { code },
       include: { fridge: true },
     });
 
     if (!shareLink) {
-      throw new ActionError("Lien invalide ou expiré.");
+      throw new ActionError(t("invalidOrExpired"));
     }
 
     if (!shareLink.isActive) {
-      throw new ActionError("Ce lien a été désactivé.");
+      throw new ActionError(t("linkDisabled"));
     }
 
     if (shareLink.expiresAt < new Date()) {
-      throw new ActionError("Ce lien a expiré.");
+      throw new ActionError(t("linkExpired"));
     }
 
     if (shareLink.usedCount >= shareLink.maxUses) {
-      throw new ActionError(
-        "Ce lien a atteint le nombre maximum d'utilisations.",
-      );
+      throw new ActionError(t("maxUsesReached"));
     }
 
     // Check if user is already the owner
     if (shareLink.fridge.ownerId === user.id) {
-      throw new ActionError("Vous êtes déjà le propriétaire de ce frigo.");
+      throw new ActionError(t("alreadyOwner"));
     }
 
     // Check if user is already a member
@@ -210,7 +209,7 @@ export const acceptShareLinkAction = authAction
     });
 
     if (existingMembership) {
-      throw new ActionError("Vous êtes déjà membre de ce frigo.");
+      throw new ActionError(t("alreadyMember"));
     }
 
     // Add user as guest and increment usage count in transaction
@@ -267,12 +266,11 @@ export const getFridgeMembersAction = authAction.action(
 export const removeMemberAction = authAction
   .inputSchema(RemoveMemberSchema)
   .action(async ({ parsedInput: { memberId }, ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     const { fridge, role } = await getOrCreateFridge(user);
 
     if (!canModifyFridge(role)) {
-      throw new ActionError(
-        "Seul le propriétaire du frigo peut retirer des membres.",
-      );
+      throw new ActionError(t("ownerOnlyRemove"));
     }
 
     const member = await prisma.fridgeMember.findFirst({
@@ -283,7 +281,7 @@ export const removeMemberAction = authAction
     });
 
     if (!member) {
-      throw new ActionError("Membre introuvable.");
+      throw new ActionError(t("memberNotFound"));
     }
 
     await prisma.fridgeMember.delete({
@@ -299,6 +297,7 @@ export const removeMemberAction = authAction
  */
 export const leaveFridgeAction = authAction.action(
   async ({ ctx: { user } }) => {
+    const t = await getTranslations("errors.sharing");
     // Find the membership where user is a guest
     const membership = await prisma.fridgeMember.findFirst({
       where: { userId: user.id },
@@ -306,7 +305,7 @@ export const leaveFridgeAction = authAction.action(
     });
 
     if (!membership) {
-      throw new ActionError("Vous n'êtes membre d'aucun frigo partagé.");
+      throw new ActionError(t("notMember"));
     }
 
     await prisma.fridgeMember.delete({

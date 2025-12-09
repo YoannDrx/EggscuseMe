@@ -1,0 +1,192 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { Egg, Sparkles } from "lucide-react";
+import { PhoneMockup } from "./phone-mockup";
+import { PhoneAppPreview } from "./phone-app-preview";
+import { FloatingBadge } from "./floating-badge";
+import { SocialProof } from "./social-proof";
+import { useTranslations } from "next-intl";
+
+type HeroSectionProps = {
+  className?: string;
+};
+
+export function HeroSection({ className }: HeroSectionProps) {
+  const t = useTranslations("landing");
+
+  return (
+    <section
+      className={cn(
+        "bg-background relative min-h-screen overflow-hidden pt-24",
+        className,
+      )}
+    >
+      {/* Background Gradient Blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 -left-1/4 h-[600px] w-[600px] rounded-full bg-amber-500/10 blur-[120px]" />
+        <div className="absolute top-1/3 -right-1/4 h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-[100px]" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
+          {/* Left Column - Content */}
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5"
+            >
+              <Sparkles className="size-4 text-amber-400" />
+              <span className="text-sm font-medium text-amber-400">
+                {t("hero.badge")}
+              </span>
+            </motion.div>
+
+            {/* Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="font-heading text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
+            >
+              {t("hero.title")}{" "}
+              <span className="relative">
+                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                  {t("hero.titleHighlight")}
+                </span>
+                <svg
+                  className="absolute -bottom-2 left-0 w-full"
+                  viewBox="0 0 200 8"
+                  fill="none"
+                >
+                  <path
+                    d="M2 6 Q50 2, 100 6 T198 6"
+                    stroke="url(#underline-gradient)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="underline-gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop offset="0%" stopColor="#fbbf24" />
+                      <stop offset="100%" stopColor="#f97316" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+              .
+            </motion.h1>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-muted-foreground mt-6 max-w-xl text-lg"
+            >
+              {t("hero.description")}
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="mt-8 flex flex-wrap gap-4"
+            >
+              <Link
+                href="/auth/signin"
+                className="glow-button inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 font-semibold text-stone-900 transition-all hover:bg-amber-300"
+              >
+                <Egg className="size-5" />
+                {t("hero.cta")}
+              </Link>
+              <Link
+                href="#features"
+                className="border-border bg-card/50 text-foreground hover:border-muted-foreground hover:bg-muted/50 inline-flex items-center gap-2 rounded-full border px-6 py-3 font-semibold transition-all"
+              >
+                {t("hero.ctaSecondary")}
+              </Link>
+            </motion.div>
+
+            {/* Social Proof */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="mt-10"
+            >
+              <SocialProof />
+            </motion.div>
+          </div>
+
+          {/* Right Column - Phone Mockup */}
+          <div className="relative flex justify-center lg:justify-end">
+            {/* Floating Badges - Hidden on mobile */}
+            <div className="pointer-events-none absolute inset-0 hidden lg:block">
+              <FloatingBadge
+                variant="safe"
+                className="absolute top-1/4 -left-8"
+                delay={0.6}
+              />
+              <FloatingBadge
+                variant="rating"
+                className="absolute top-16 -right-4"
+                delay={0.8}
+              />
+              <FloatingBadge
+                variant="eco"
+                className="absolute bottom-1/3 -left-4"
+                delay={1.0}
+              />
+            </div>
+
+            {/* Phone */}
+            <PhoneMockup className="relative z-10">
+              <PhoneAppPreview />
+            </PhoneMockup>
+          </div>
+        </div>
+
+        {/* Bottom Stats - Optional */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="border-border mt-20 grid grid-cols-2 gap-8 border-t pt-12 sm:grid-cols-4"
+        >
+          {[
+            { value: "10K+", label: t("stats.users") },
+            { value: "2.4M", label: t("stats.eggsSaved") },
+            { value: "4.9/5", label: t("stats.appStoreRating") },
+            { value: "0€", label: t("stats.freeToStart") },
+          ].map((stat, index) => (
+            <div key={stat.label} className="text-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.7 + index * 0.1, type: "spring" }}
+                className="text-3xl font-bold text-amber-400"
+              >
+                {stat.value}
+              </motion.div>
+              <div className="text-muted-foreground mt-1 text-sm">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}

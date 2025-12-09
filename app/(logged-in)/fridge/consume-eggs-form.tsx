@@ -13,11 +13,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { CookingType, EggBox } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
-import { getCookingTypeLabel } from "@/features/eggs/lib/freshness-calculator";
 import { consumeEggsAction } from "@/features/fridge/fridge.action";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { useLocale, useTranslations } from "next-intl";
 
 type ConsumeEggsFormProps = {
   eggBox: EggBox;
@@ -36,6 +36,8 @@ const cookingTypes: CookingType[] = [
 ];
 
 export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
+  const locale = useLocale();
+  const tCooking = useTranslations("cooking");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState({
@@ -43,6 +45,49 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
     cookingType: "FRIED" as CookingType,
     notes: "",
   });
+
+  const copy =
+    locale === "fr"
+      ? {
+          success: (quantity: number) =>
+            `${quantity} œuf${quantity > 1 ? "s" : ""} consommé${quantity > 1 ? "s" : ""}`,
+          error: "Échec de l'enregistrement de la consommation",
+          quantityLabel: "Combien d'œufs ?",
+          remaining: (count: number) =>
+            `${count} œuf${count > 1 ? "s" : ""} restant${count > 1 ? "s" : ""} dans cette boîte`,
+          cookingLabel: "Type de cuisson",
+          notesLabel: "Notes (optionnel)",
+          notesPlaceholder: "Comment c'était ?",
+          cancel: "Annuler",
+          save: "Enregistrer",
+          saving: "Enregistrement...",
+        }
+      : {
+          success: (quantity: number) =>
+            `${quantity} egg${quantity > 1 ? "s" : ""} logged`,
+          error: "Failed to save consumption",
+          quantityLabel: "How many eggs?",
+          remaining: (count: number) =>
+            `${count} egg${count > 1 ? "s" : ""} left in this box`,
+          cookingLabel: "Cooking type",
+          notesLabel: "Notes (optional)",
+          notesPlaceholder: "How was it?",
+          cancel: "Cancel",
+          save: "Save",
+          saving: "Saving...",
+        };
+
+  const cookingTypeLabels: Record<CookingType, string> = {
+    SOFT_BOILED: tCooking("softBoiled"),
+    POACHED: tCooking("poached"),
+    RAW: tCooking("raw"),
+    FRIED: tCooking("fried"),
+    SCRAMBLED: tCooking("scrambled"),
+    OMELETTE: tCooking("omelette"),
+    HARD_BOILED: tCooking("hardBoiled"),
+    BAKING: tCooking("baking"),
+    OTHER: tCooking("other"),
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,15 +101,11 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
       });
 
       if (result.data?.consumption) {
-        toast.success(
-          `${formData.quantity} œuf${formData.quantity > 1 ? "s" : ""} consommé${formData.quantity > 1 ? "s" : ""}`,
-        );
+        toast.success(copy.success(formData.quantity));
         dialogManager.closeAll();
         router.refresh();
       } else {
-        toast.error(
-          result.serverError ?? "Échec de l'enregistrement de la consommation",
-        );
+        toast.error(result.serverError ?? copy.error);
       }
     });
   };
@@ -72,7 +113,7 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="quantity">Combien d'œufs ?</Label>
+        <Label htmlFor="quantity">{copy.quantityLabel}</Label>
         <Input
           id="quantity"
           type="number"
@@ -85,13 +126,12 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
           }
         />
         <p className="text-muted-foreground text-sm">
-          {eggBox.remaining} œuf{eggBox.remaining > 1 ? "s" : ""} restant
-          {eggBox.remaining > 1 ? "s" : ""} dans cette boîte
+          {copy.remaining(eggBox.remaining)}
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="cookingType">Type de cuisson</Label>
+        <Label htmlFor="cookingType">{copy.cookingLabel}</Label>
         <Select
           value={formData.cookingType}
           onValueChange={(value: CookingType) =>
@@ -104,7 +144,7 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
           <SelectContent>
             {cookingTypes.map((type) => (
               <SelectItem key={type} value={type}>
-                {getCookingTypeLabel(type)}
+                {cookingTypeLabels[type]}
               </SelectItem>
             ))}
           </SelectContent>
@@ -112,10 +152,10 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="notes">Notes (optionnel)</Label>
+        <Label htmlFor="notes">{copy.notesLabel}</Label>
         <Textarea
           id="notes"
-          placeholder="Comment c'était ?"
+          placeholder={copy.notesPlaceholder}
           value={formData.notes}
           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
         />
@@ -127,10 +167,10 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
           variant="outline"
           onClick={() => dialogManager.closeAll()}
         >
-          Annuler
+          {copy.cancel}
         </Button>
         <Button type="submit" variant="neubrutalism" disabled={isPending}>
-          {isPending ? "Enregistrement..." : "Enregistrer"}
+          {isPending ? copy.saving : copy.save}
         </Button>
       </div>
     </form>

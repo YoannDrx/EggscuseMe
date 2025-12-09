@@ -106,3 +106,46 @@ export type UpdateEggBoxInput = z.infer<typeof UpdateEggBoxSchema>;
 export type ConsumeEggsInput = z.infer<typeof ConsumeEggsSchema>;
 export type CreateShareLinkInput = z.infer<typeof CreateShareLinkSchema>;
 export type AcceptShareLinkInput = z.infer<typeof AcceptShareLinkSchema>;
+
+// ==================== Email Invitation Schemas ====================
+
+/**
+ * Schema for creating an email invitation
+ */
+export const CreateEmailInvitationSchema = z.object({
+  email: z.string().email("Email invalide"),
+});
+
+/**
+ * Schema for accepting an email invitation
+ */
+export const AcceptEmailInvitationSchema = z.object({
+  token: z.string().min(1, "Token requis"),
+});
+
+/**
+ * Schema for cancelling an email invitation
+ */
+export const CancelEmailInvitationSchema = z.object({
+  invitationId: z.string(),
+});
+
+/**
+ * Schema for resending an email invitation
+ */
+export const ResendEmailInvitationSchema = z.object({
+  invitationId: z.string(),
+});
+
+export type CreateEmailInvitationInput = z.infer<
+  typeof CreateEmailInvitationSchema
+>;
+export type AcceptEmailInvitationInput = z.infer<
+  typeof AcceptEmailInvitationSchema
+>;
+export type CancelEmailInvitationInput = z.infer<
+  typeof CancelEmailInvitationSchema
+>;
+export type ResendEmailInvitationInput = z.infer<
+  typeof ResendEmailInvitationSchema
+>;

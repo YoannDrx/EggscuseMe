@@ -17,6 +17,172 @@
     "error": "Error",
     "success": "Success"
   },
+  "sidebar": {
+    "userMenu": {
+      "profile": "My profile",
+      "settings": "Settings",
+      "admin": "Administration",
+      "logout": "Log out"
+    }
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "invitations": "Invitations",
+      "emails": "Test Emails",
+      "export": "Export",
+      "logs": "Logs",
+      "feedback": "Feedback"
+    },
+    "invitations": {
+      "title": "Invitation Management",
+      "tabs": {
+        "shareLinks": "Share links",
+        "emailInvitations": "Email invitations"
+      },
+      "stats": {
+        "totalShareLinks": "Total links",
+        "activeShareLinks": "Active links",
+        "totalEmailInvitations": "Total invitations",
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "expired": "Expired",
+        "cancelled": "Cancelled"
+      },
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "expired": "Expired",
+        "maxed": "Max reached"
+      },
+      "table": {
+        "code": "Code",
+        "fridge": "Fridge",
+        "owner": "Owner",
+        "email": "Email",
+        "status": "Status",
+        "uses": "Uses",
+        "expiresAt": "Expires",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "actions": {
+        "deactivate": "Deactivate",
+        "cancel": "Cancel",
+        "viewFridge": "View fridge"
+      }
+    },
+    "emails": {
+      "title": "Test Emails",
+      "description": "Send test emails to verify templates",
+      "templates": {
+        "fridgeInvitation": {
+          "name": "Fridge Invitation",
+          "description": "Email sent when someone is invited to join a fridge",
+          "inviterName": "Inviter name",
+          "fridgeName": "Fridge name",
+          "success": "Invitation email sent!"
+        },
+        "expirationWarning": {
+          "name": "Expiration Warning",
+          "description": "Email sent when eggs are about to expire",
+          "userName": "User name",
+          "fridgeName": "Fridge name",
+          "success": "Warning email sent!"
+        },
+        "markdown": {
+          "name": "Markdown Email",
+          "description": "Generic email with Markdown content",
+          "subject": "Subject",
+          "content": "Content (Markdown)",
+          "preview": "Preview (optional)",
+          "success": "Email sent!"
+        }
+      },
+      "form": {
+        "to": "Recipient",
+        "send": "Send test",
+        "cancel": "Cancel",
+        "configure": "Configure"
+      }
+    },
+    "export": {
+      "title": "Data Export",
+      "description": "Export application data in CSV format",
+      "exports": {
+        "users": {
+          "name": "Users",
+          "description": "Export all users with their stats",
+          "success": "Users export downloaded!",
+          "error": "Error exporting users"
+        },
+        "shareLinks": {
+          "name": "Share links",
+          "description": "Export all share links",
+          "success": "Links export downloaded!",
+          "error": "Error exporting links"
+        },
+        "emailInvitations": {
+          "name": "Email invitations",
+          "description": "Export all email invitations",
+          "success": "Invitations export downloaded!",
+          "error": "Error exporting invitations"
+        }
+      },
+      "download": "Download CSV"
+    },
+    "logs": {
+      "title": "Admin Logs",
+      "description": "History of all administrative actions",
+      "table": {
+        "admin": "Administrator",
+        "action": "Action",
+        "target": "Target",
+        "metadata": "Details",
+        "date": "Date"
+      },
+      "actions": {
+        "IMPERSONATE": "Impersonation",
+        "BAN_USER": "Ban user",
+        "UNBAN_USER": "Unban user",
+        "SET_ROLE": "Role change",
+        "SEND_TEST_EMAIL": "Test email",
+        "CANCEL_INVITATION": "Cancel invitation",
+        "EXPORT_DATA": "Data export"
+      },
+      "filters": {
+        "all": "All actions"
+      }
+    },
+    "userDetails": {
+      "stats": {
+        "title": "Statistics",
+        "eggBoxes": "Egg boxes",
+        "activeBoxes": "Active boxes",
+        "eggsAdded": "Eggs added",
+        "eggsConsumed": "Eggs consumed",
+        "eggsRemaining": "Eggs remaining",
+        "eggsWasted": "Eggs wasted",
+        "moneySaved": "Money saved"
+      },
+      "members": {
+        "title": "Fridge members",
+        "empty": "No members",
+        "owner": "Owner",
+        "guest": "Guest"
+      },
+      "invitations": {
+        "title": "Sent invitations",
+        "empty": "No invitations"
+      },
+      "consumptions": {
+        "title": "Recent consumptions",
+        "empty": "No consumption"
+      }
+    }
+  },
   "freshness": {
     "extraFresh": "Extra-fresh",
     "extraFreshDescription": "Perfect for soft-boiled, poached, or raw eggs",
@@ -102,6 +268,7 @@
   },
   "timer": {
     "title": "Timer",
+    "cookingTitle": "Cooking Timer",
     "subtitle": "Perfect cooking every time",
     "selectCookingType": "Cooking type",
     "selectEggSize": "Egg size",
@@ -109,6 +276,7 @@
     "fromFridge": "From fridge",
     "roomTemperature": "Room temperature",
     "yolkPreference": "Yolk preference",
+    "yolkCooking": "Yolk doneness",
     "runny": "Runny",
     "soft": "Soft",
     "medium": "Medium",
@@ -118,17 +286,58 @@
     "resume": "Resume",
     "reset": "Reset",
     "done": "Done!",
+    "cooking": "Cooking...",
     "cookingTime": "Cooking time",
     "minutes": "{count} min",
-    "seconds": "{count} sec"
+    "seconds": "{count} sec",
+    "size": "Size",
+    "temperature": "Temperature",
+    "sizes": {
+      "S": "Small (S)",
+      "M": "Medium (M)",
+      "L": "Large (L)",
+      "XL": "Extra Large (XL)"
+    },
+    "temperatures": {
+      "fridge": "From fridge",
+      "room": "Room temperature"
+    },
+    "yolkPreferences": {
+      "runny": "Runny (very soft)",
+      "soft": "Soft (jammy)",
+      "medium": "Medium (creamy)",
+      "hard": "Hard (fully cooked)"
+    },
+    "yolkDescriptions": {
+      "runny": "Very runny yolk, perfect for dipping",
+      "soft": "Soft, jammy yolk",
+      "medium": "Creamy yolk, slightly firm center",
+      "hard": "Fully cooked yolk, great for salads"
+    },
+    "tipsTitle": "Cooking tips",
+    "guideTitle": "Cooking guide"
   },
   "landing": {
     "hero": {
-      "title": "Stop throwing away your eggs",
-      "subtitle": "Cook them perfectly",
-      "description": "EggscuseMe helps you manage egg freshness, avoid food waste, and cook perfectly based on their age.",
+      "badge": "#1 Anti-Waste App",
+      "title": "Never throw away",
+      "titleHighlight": "a single egg",
+      "description": "Track your eggs' freshness, get personalized cooking recommendations, and reduce food waste. Simple as that.",
       "cta": "Create my free fridge",
       "ctaSecondary": "Learn more"
+    },
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "blog": "Blog",
+      "getStarted": "Get Started",
+      "openMenu": "Open menu"
+    },
+    "stats": {
+      "users": "Users",
+      "eggsSaved": "Eggs saved",
+      "appStoreRating": "App Store Rating",
+      "freeToStart": "To get started"
     },
     "problem": {
       "title": "The problem",
@@ -174,7 +383,14 @@
       }
     },
     "pricing": {
-      "title": "Pricing",
+      "title": "Choose your plan",
+      "subtitle": "Start for free, upgrade to Premium when you're ready.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "discount": "-50%",
+      "footer": "All plans include freshness tracking and recipe recommendations.",
+      "question": "Have a question?",
+      "contactUs": "Contact us",
       "free": {
         "title": "Free",
         "price": "$0",
@@ -203,24 +419,132 @@
       }
     },
     "faq": {
-      "title": "FAQ",
+      "title": "Frequently Asked Questions",
       "q1": {
         "question": "How do I know if an egg is still good?",
-        "answer": "An egg can be consumed up to 28 days after laying. EggscuseMe tells you exactly what to cook based on your eggs' age."
+        "answer": "An egg can be safely consumed up to 28 days after laying. EggscuseMe tracks this for you and tells you exactly which cooking method is best at each freshness stage."
       },
       "q2": {
         "question": "What's the difference between 'use by' and 'best before'?",
-        "answer": "The 'use by' date is typically 28 days after laying. The 'best before' date on boxes is often shorter as a precaution."
+        "answer": "The recommended consumption date is typically 28 days after laying. The date on boxes is often shorter as a precaution from distributors. EggscuseMe uses the actual laying date for accurate tracking."
       },
       "q3": {
         "question": "Can I eat raw eggs?",
-        "answer": "Yes, but only within the first 9 days after laying (extra-fresh). After that, prefer cooking methods that heat the yolk well."
+        "answer": "Yes, but only within the first 9 days after laying (extra-fresh). After that, prefer cooking methods that heat the yolk well, like fried or hard-boiled."
+      },
+      "q4": {
+        "question": "How does the freshness color code work?",
+        "answer": "Green (0-9 days): Extra-fresh, perfect for soft-boiled or raw. Yellow (10-21 days): Fresh, ideal for omelette or fried. Orange (22-28 days): Cook thoroughly, best hard-boiled. Gray (29+ days): Expired, discard."
+      },
+      "q5": {
+        "question": "Can I share my fridge with my family?",
+        "answer": "Yes! EggscuseMe supports organizations. Share your virtual fridge with family or roommates. Everyone can add, consume, and track eggs together."
+      },
+      "q6": {
+        "question": "Is there a free plan?",
+        "answer": "Yes! The free plan lets you track up to 2 egg boxes with basic features. Premium unlocks unlimited boxes, detailed statistics, and notifications."
       }
     },
     "cta": {
       "title": "Ready to save your eggs?",
       "description": "Join thousands of users reducing their food waste",
       "button": "Create my free fridge"
+    },
+    "featureCards": {
+      "badge": "All in one",
+      "title": "Your pocket culinary assistant",
+      "description": "Simple tools to track freshness and reduce waste",
+      "virtualFridge": {
+        "title": "Virtual Fridge",
+        "description": "Track all your egg boxes with color-coded freshness indicators. Never lose track."
+      },
+      "smartTimer": {
+        "title": "Smart Timer",
+        "description": "Cooking times adjusted for size and temperature. Perfect results guaranteed every time."
+      },
+      "cookingGuide": {
+        "title": "Cooking Guide",
+        "description": "Cooking suggestions based on age. Soft-boiled, fried, or hard? We tell you exactly what to do."
+      },
+      "quickScan": {
+        "title": "Quick Scan",
+        "description": "Scan the barcode to add a box in an instant. Automatic laying date."
+      },
+      "familySharing": {
+        "title": "Family Sharing",
+        "description": "Share your fridge with family or roommates. Everyone synced in real-time."
+      },
+      "smartAlerts": {
+        "title": "Smart Alerts",
+        "description": "Notifications when your eggs are approaching expiration. Never throw away an egg again."
+      }
+    },
+    "bentoGrid": {
+      "badge": "How it works",
+      "title": "So simple you'll have",
+      "titleHighlight": "no excuse",
+      "step1": {
+        "title": "Scan or Enter",
+        "description": "Add your egg boxes by scanning the code or entering the laying date."
+      },
+      "step2": {
+        "title": "Let the magic happen",
+        "description": "The app automatically calculates freshness and suggests the best recipes."
+      },
+      "step3": {
+        "title": "Cook & Enjoy",
+        "description": "Follow the smart timer for perfectly cooked eggs every time."
+      },
+      "stats": {
+        "rating": "App Store",
+        "users": "Active users",
+        "eggsSaved": "Eggs saved",
+        "familySharing": "Family Sharing",
+        "familySharingDesc": "Sync with your family"
+      },
+      "testimonial": {
+        "quote": "Since I started using EggscuseMe, I've never thrown away a single egg. The app is amazing!",
+        "author": "Marie D. - Paris"
+      }
+    },
+    "gradientCta": {
+      "title": "Ready to crack some eggs",
+      "titleHighlight": "(without wasting them)?",
+      "description": "Join thousands of users reducing their food waste. It's free to start.",
+      "button": "Create my free fridge",
+      "demo": "See the demo"
+    },
+    "phonePreview": {
+      "title": "My Fridge",
+      "boxesCount": "{count} boxes tracked",
+      "extraFresh": "Extra Fresh",
+      "fresh": "Fresh",
+      "cookThoroughly": "Cook Now",
+      "for": "For:",
+      "eggs": "eggs",
+      "nav": {
+        "fridge": "Fridge",
+        "timer": "Timer",
+        "guide": "Guide",
+        "stats": "Stats"
+      },
+      "recipes": {
+        "chocoMousse": "Choco mousse",
+        "omelette": "Omelette",
+        "hardBoiled": "Hard-boiled"
+      }
+    },
+    "floatingBadge": {
+      "safe": "100% Safe",
+      "eco": "Anti-Waste",
+      "premium": "Premium",
+      "rating": "4.9/5",
+      "ratingSubtext": "App Store"
+    },
+    "socialProof": {
+      "joinedBy": "Joined by",
+      "count": "+10,000",
+      "satisfiedUsers": "satisfied users"
     }
   },
   "auth": {
@@ -253,6 +577,497 @@
     "unauthorized": "Unauthorized access",
     "limitReached": "Limit reached",
     "limitReachedDescription": "You've reached the limit of {limit} boxes. Upgrade to Premium for unlimited boxes.",
-    "upgradeToPremium": "Upgrade to Premium"
+    "upgradeToPremium": "Upgrade to Premium",
+    "fridge": {
+      "ownerOnly": "Only the fridge owner can modify egg boxes.",
+      "freePlanLimit": "The free plan is limited to {count} egg boxes. Upgrade to Premium for unlimited boxes!",
+      "notFound": "Egg box not found.",
+      "notEnough": "Not enough eggs. Only {count} egg(s) left.",
+      "ownerOnlyRename": "Only the fridge owner can rename the fridge.",
+      "ownerOnlyHistory": "Only the fridge owner can clear history.",
+      "ownerOnlyClear": "Only the fridge owner can empty the fridge.",
+      "ownerOnlyExport": "Only the fridge owner can export data.",
+      "ownerCannotLeave": "Owners cannot leave their fridge. Delete your account to remove it.",
+      "renameRequired": "A fridge name is required.",
+      "renameTooLong": "The name is too long (50 characters max)."
+    },
+    "sharing": {
+      "noFridgeToShare": "You don't have a fridge to share.",
+      "invalidOrExpired": "This invitation link is invalid or expired.",
+      "maxUsesReached": "This invitation link has reached its maximum uses.",
+      "alreadyMember": "You are already a member of this fridge.",
+      "alreadyOwner": "You are already the owner of this fridge.",
+      "ownerOnlyCreate": "Only the fridge owner can create sharing links.",
+      "ownerOnlyDeactivate": "Only the fridge owner can deactivate sharing links.",
+      "linkNotFound": "Sharing link not found.",
+      "linkDisabled": "This link has been disabled.",
+      "linkExpired": "This link has expired.",
+      "ownerOnlyRemove": "Only the fridge owner can remove members.",
+      "memberNotFound": "Member not found.",
+      "notMember": "You are not a member of any shared fridge."
+    }
+  },
+  "mobileMenu": {
+    "navigation": "Navigation",
+    "account": "Account",
+    "signIn": "Sign in",
+    "accessYourFridge": "Access your fridge",
+    "startFree": "Start for free",
+    "discoverTools": "Discover our tools",
+    "plansAndSubscriptions": "Plans and subscriptions",
+    "tipsAndTricks": "Tips and tricks"
+  },
+  "footer": {
+    "description": "The #1 app for tracking your eggs' freshness and reducing food waste. Simple, effective, free.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "features": "Features",
+    "pricing": "Pricing",
+    "myFridge": "My Fridge",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "careers": "Careers",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "allRightsReserved": "All rights reserved.",
+    "madeWithLove": "Made with love in"
+  },
+  "sharing": {
+    "invite": "Invite",
+    "inviteTitle": "Invite to fridge",
+    "inviteDescription": "Share access with your family or roommates",
+    "createLink": "Create invite link",
+    "creating": "Creating...",
+    "linkCopied": "Link copied!",
+    "copyError": "Unable to copy link",
+    "createError": "Unable to create invitation",
+    "shareTitle": "Join my fridge on EggscuseMe!",
+    "shareText": "I invite you to share my egg tracking",
+    "scanQr": "Scan this QR code to join",
+    "showLink": "Show link",
+    "inviteLink": "Invite link",
+    "share": "Share",
+    "validity": "Valid 7 days · 5 uses max",
+    "emailInvite": {
+      "title": "Invite by email",
+      "description": "Send an invitation directly by email",
+      "placeholder": "email@example.com",
+      "send": "Invite",
+      "sending": "Sending...",
+      "success": "Invitation sent!",
+      "resent": "Email resent!",
+      "cancelled": "Invitation cancelled",
+      "errors": {
+        "alreadyMember": "This person is already a member of your fridge",
+        "alreadyInvited": "An invitation is already pending for this email",
+        "selfInvite": "You cannot invite yourself",
+        "cooldown": "Please wait 5 minutes before resending the email"
+      }
+    },
+    "invitations": {
+      "title": "Email invitations",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "expiresOn": "Expires on {date}",
+      "acceptedBy": "Accepted by {name}",
+      "noInvitations": "No invitations sent",
+      "resend": "Resend email",
+      "cancel": "Cancel invitation",
+      "cancelConfirm": {
+        "title": "Cancel this invitation?",
+        "description": "The invitation for {email} will be cancelled"
+      }
+    },
+    "joinPage": {
+      "title": "Join a fridge",
+      "invalidTitle": "Invalid invitation",
+      "invalidDescription": "This invitation does not exist or has expired",
+      "invitedBy": "{name} invites you to join their fridge",
+      "benefits": "As a guest, you will be able to:",
+      "benefit1": "View egg boxes and their freshness",
+      "benefit2": "Consume eggs and record your meals",
+      "benefit3": "Access recipes and suggestions",
+      "benefit4": "Use the smart timer",
+      "join": "Join the fridge",
+      "expiresOn": "Expires on {date}",
+      "canLeave": "You can leave this fridge at any time"
+    }
+  },
+  "recipes": {
+    "urgentTitle": "Urgent anti-waste recipes",
+    "ideasTitle": "Recipe ideas",
+    "urgentDescription": "Some eggs are expiring soon! Here are some ideas to use them:",
+    "normalDescription": "Here are some recipes suited to your eggs' freshness:",
+    "viewAll": "View all recipes",
+    "detail": {
+      "instructions": "Instructions",
+      "backToList": "Back to recipes",
+      "servings": "servings",
+      "freshnessTip": "Freshness tip",
+      "idealFor": "Ideal recipe for",
+      "egg": "egg",
+      "eggs": "eggs",
+      "chefTip": "Chef's Tip",
+      "safetyNote": "Safety Note",
+      "notFoundTitle": "Recipe not found"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "card": {
+      "urgent": "Urgent",
+      "eggs": "{count, plural, =1 {# egg} other {# eggs}}",
+      "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      }
+    },
+    "filters": {
+      "searchPlaceholder": "Search for a recipe...",
+      "clearAll": "Clear filters",
+      "noResults": "No recipes found",
+      "noResultsHint": "Try adjusting your search criteria",
+      "result": "recipe",
+      "results": "recipes",
+      "time": {
+        "label": "Time",
+        "all": "All",
+        "quick": "< 15 min",
+        "medium": "15-30 min",
+        "long": "> 30 min"
+      },
+      "eggs": {
+        "label": "Eggs",
+        "all": "All"
+      },
+      "difficulty": {
+        "label": "Difficulty",
+        "all": "All"
+      },
+      "freshness": {
+        "label": "Freshness",
+        "all": "All",
+        "extraFresh": "Extra-fresh",
+        "fresh": "Fresh",
+        "cookThoroughly": "Cook thoroughly"
+      },
+      "tags": {
+        "label": "Categories"
+      }
+    },
+    "dashboard": {
+      "title": "Recipes",
+      "subtitle": "Ideas to cook your eggs based on freshness",
+      "count": "{count, plural, =0 {No recipes} =1 {1 recipe} other {# recipes}}",
+      "allRecipes": "All recipes",
+      "personalized": {
+        "title": "For you",
+        "urgentTitle": "Anti-waste suggestions",
+        "emptyTitle": "No eggs in your fridge",
+        "emptyDescription": "Add egg boxes to get personalized suggestions!",
+        "urgentNotice": "Some of your eggs are close to expiring. Here are recipes to use them in time!",
+        "totalEggs": "{count, plural, =1 {# egg} other {# eggs}}"
+      }
+    }
+  },
+  "fridge": {
+    "defaultName": "My Fridge",
+    "boxCount": "{count, plural, =0 {No boxes} =1 {1 box in progress} other {# boxes in progress}}",
+    "stats": {
+      "tracked": {
+        "title": "Tracked eggs",
+        "inBoxes": "{count, plural, =0 {in no boxes} =1 {in 1 box} other {in # boxes}}"
+      },
+      "extraFresh": {
+        "title": "Extra-fresh",
+        "description": "Perfect for soft-boiled eggs"
+      },
+      "antiWaste": {
+        "title": "Anti-waste",
+        "description": "eggs consumed, not wasted"
+      },
+      "savings": {
+        "title": "Savings",
+        "description": "saved approximately"
+      }
+    },
+    "grid": {
+      "thisBox": "this box",
+      "addBox": {
+        "title": "Add a box",
+        "description": "Add a new egg box to track"
+      },
+      "consume": {
+        "title": "Consume eggs",
+        "description": "Record eggs consumed from \"{name}\""
+      },
+      "delete": {
+        "title": "Delete this box?",
+        "description": "Are you sure you want to delete \"{name}\"? This action is irreversible.",
+        "confirm": "Delete",
+        "success": "Box deleted",
+        "error": "Failed to delete",
+        "ownerOnly": "Only the owner can delete boxes"
+      },
+      "empty": {
+        "title": "Your fridge is empty!",
+        "ownerDescription": "Add your first egg box to start tracking their freshness.",
+        "guestDescription": "The owner hasn't added any egg boxes yet.",
+        "addFirstBox": "Add my first box",
+        "orUse": "or use the",
+        "scanner": "scanner",
+        "forQuickAdd": "for quick add"
+      },
+      "urgent": {
+        "title": "{count, plural, =1 {1 box to consume quickly} other {# boxes to consume quickly}}",
+        "description": "These eggs are expiring soon. Perfect for hard-boiled eggs!"
+      },
+      "header": {
+        "title": "Your egg boxes",
+        "activeBoxes": "{count, plural, =0 {No active boxes} =1 {1 active box} other {# active boxes}}",
+        "add": "Add"
+      }
+    },
+    "nav": {
+      "menu": "Menu",
+      "myFridge": "My Fridge",
+      "timer": "Timer",
+      "recipes": "Recipes",
+      "statistics": "Statistics",
+      "history": "History",
+      "settings": "Settings",
+      "profile": "My Profile",
+      "security": "Security",
+      "appearance": "Appearance",
+      "sharing": "Sharing",
+      "notifications": "Notifications",
+      "billing": "Subscription",
+      "dangerZone": "Danger Zone",
+      "plus": "More",
+      "signOut": "Sign out",
+      "guestNotice": "You are a guest on this fridge"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your fridge and account",
+      "account": "Account",
+      "fridgeSection": "Fridge",
+      "dangerZone": "Danger Zone",
+      "profile": {
+        "title": "My Profile",
+        "description": "Name, email and avatar"
+      },
+      "security": {
+        "title": "Security",
+        "description": "Password and email"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "description": "App theme"
+      },
+      "sharing": {
+        "title": "Sharing",
+        "description": "Invite family and friends"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Expiration alerts"
+      },
+      "billing": {
+        "title": "Subscription",
+        "description": "Plan and payments"
+      },
+      "danger": {
+        "title": "Danger Zone",
+        "description": "Delete data, fridge or account"
+      },
+      "fridgeSettings": {
+        "title": "Fridge Settings",
+        "description": "Customize your fridge information",
+        "fridgeName": "Fridge name",
+        "save": "Save",
+        "saving": "Saving...",
+        "nameUpdated": "Fridge name updated"
+      },
+      "guestBanner": "You are a guest on this fridge",
+      "notificationsPage": {
+        "title": "Notifications",
+        "subtitle": "Set up freshness alerts",
+        "enable": "Enable notifications",
+        "enableDescription": "Receive an email before your eggs expire",
+        "daysLabel": "Notification timing",
+        "daysDescription": "Choose how many days before expiration you want a reminder",
+        "previewOn": "Notifications are enabled",
+        "previewOff": "Notifications are disabled",
+        "previewOnDetail": "You'll receive an email {days} before your eggs expire.",
+        "previewOffDetail": "You won't receive freshness alerts.",
+        "save": "Save",
+        "saving": "Saving...",
+        "toastSuccess": "Preferences saved",
+        "toastError": "Error while saving",
+        "daysOption": "{count, plural, =1 {# day before} other {# days before}}"
+      },
+      "profilePage": {
+        "title": "My profile",
+        "subtitle": "Manage your personal info",
+        "back": "Back to settings"
+      },
+      "profileForm": {
+        "updated": "Profile updated",
+        "verifySent": "Verification email sent",
+        "verify": "Verify email",
+        "name": "Name",
+        "namePlaceholder": "Your name",
+        "email": "Email",
+        "save": "Save",
+        "changeEmail": "Change email",
+        "changePassword": "Change password"
+      }
+    },
+    "statistics": {
+      "title": "Statistics",
+      "subtitle": "Your consumption data over 90 days",
+      "loading": "Loading statistics...",
+      "noData": "No data available yet",
+      "exportCSV": "Export CSV",
+      "currentStock": "Current stock",
+      "consumed": "Consumed",
+      "last90days": "Over the last 90 days",
+      "savings": "Savings",
+      "antiWasteEstimate": "Anti-waste estimate",
+      "avgFreshness": "Average freshness",
+      "beforeExpiry": "Before expiry on average",
+      "dailyConsumption": "Daily consumption",
+      "cookingTypes": "Cooking types",
+      "monthlyConsumption": "Monthly consumption",
+      "currentFreshness": "Current stock freshness",
+      "freshnessAtConsumption": "Freshness at consumption",
+      "noEggsInStock": "No eggs in stock",
+      "eggs": "eggs",
+      "activeBoxes": "{count, plural, =1 {1 active box} other {# active boxes}}",
+      "noDataShort": "No data",
+      "freshnessAtConsumptionDescription": "Freshness breakdown at consumption time",
+      "badge90days": "90 days",
+      "chart": {
+        "count": "Quantity",
+        "consumption": "Eggs consumed",
+        "noData": "No data"
+      },
+      "exportHeaders": {
+        "date": "Date",
+        "quantity": "Quantity",
+        "cookingType": "Cooking type",
+        "box": "Box",
+        "notes": "Notes"
+      }
+    },
+    "history": {
+      "title": "History",
+      "subtitle": "Find all your past consumptions",
+      "filters": "Filters",
+      "cookingType": "Cooking type",
+      "allTypes": "All types",
+      "results": "{count, plural, =1 {1 result} other {# results}}",
+      "noConsumption": "No consumption found",
+      "date": "Date",
+      "box": "Box",
+      "quantity": "Quantity",
+      "type": "Type",
+      "rating": "Rating",
+      "comment": "Comment",
+      "page": "Page {current} of {total}",
+      "previous": "Previous",
+      "next": "Next",
+      "filterDescription": "Filter history by cooking type",
+      "consumptionCount": "{count, plural, =0 {No consumption} =1 {1 consumption} other {# consumptions}}",
+      "eggCount": "{count, plural, =1 {# egg} other {# eggs}}",
+      "filterModalTitle": "Filters"
+    },
+    "emptyState": {
+      "title": "Your fridge is empty!",
+      "ownerDescription": "Add your first egg box to start tracking their freshness.",
+      "guestDescription": "The owner hasn't added any egg boxes yet.",
+      "addFirstBox": "Add my first box",
+      "useScanner": "or use the"
+    },
+    "urgentAlert": {
+      "title": "{count, plural, =1 {1 box to consume quickly} other {# boxes to consume quickly}}",
+      "description": "These eggs are expiring soon. Perfect for hard-boiled!"
+    },
+    "boxList": {
+      "title": "Your egg boxes",
+      "activeBoxes": "{count, plural, =1 {1 active box} other {# active boxes}}",
+      "add": "Add"
+    },
+    "meta": {
+      "title": "My Fridge | EggscuseMe",
+      "description": "Manage your eggs and reduce food waste"
+    },
+    "addBoxForm": {
+      "scannerTitle": "Scanner",
+      "openScanner": "Scan a barcode",
+      "closeScanner": "Close",
+      "nameLabel": "Name (optional)",
+      "namePlaceholder": "e.g. Market eggs",
+      "layingDate": "Laying date",
+      "quantity": "Quantity",
+      "size": "Size",
+      "sizeOptions": {
+        "S": "Small (S)",
+        "M": "Medium (M)",
+        "L": "Large (L)",
+        "XL": "Extra large (XL)"
+      },
+      "source": "Source (optional)",
+      "sourcePlaceholder": "e.g. Local farm, Supermarket",
+      "cancel": "Cancel",
+      "save": "Add",
+      "saving": "Adding...",
+      "scanSuccess": "Code scanned successfully!",
+      "addSuccess": "Egg box added",
+      "addError": "Failed to add egg box"
+    },
+    "invite": {
+      "invalidTitle": "Invalid invitation",
+      "invalidDescription": "This invitation doesn't exist or has expired. Ask the fridge owner to send a new invite.",
+      "backToFridge": "Back to my fridge",
+      "joinTitle": "Join a fridge",
+      "inviteText": "invites you to join their fridge",
+      "guestIntro": "As a guest, you can:",
+      "bulletView": "View egg boxes and freshness",
+      "bulletConsume": "Consume eggs and log your meals",
+      "bulletRecipes": "Access recipes and suggestions",
+      "bulletTimer": "Use the smart timer",
+      "expires": "Expires on {date}",
+      "joinCta": "Join the fridge",
+      "leaveNote": "You can leave this fridge anytime from settings."
+    }
+  },
+  "scanner": {
+    "unsupported": "Use Chrome or Safari on mobile for this feature.",
+    "tapToEnable": "Tap to enable camera",
+    "enableCamera": "Enable camera",
+    "codeDetected": "Code detected!",
+    "stopScan": "Stop scanning",
+    "align": "Align the barcode inside the frame",
+    "unsupportedBrowser": "Barcode scanner is not supported by this browser",
+    "cameraDenied": "Camera access denied. Please allow access.",
+    "noCamera": "No camera found on this device.",
+    "error": "Error: {message}"
+  },
+  "notifications": {
+    "email": {
+      "boxNameFallback": "Egg box",
+      "subject": "Freshness alert - {count} box(es) expiring soon",
+      "bodyTitle": "Freshness alert"
+    }
   }
 }

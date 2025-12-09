@@ -13,6 +13,7 @@ import {
 import { Eggy } from "@/features/mascot";
 import { AlertTriangle, Check, RefrigeratorIcon, Users } from "lucide-react";
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 type JoinPageProps = {
@@ -21,6 +22,8 @@ type JoinPageProps = {
 
 export default async function JoinPage({ params }: JoinPageProps) {
   const { code } = await params;
+  const locale = await getLocale();
+  const t = await getTranslations("fridge.invite");
 
   // Get share link info
   const result = await getShareLinkByCodeAction({ code });
@@ -35,16 +38,15 @@ export default async function JoinPage({ params }: JoinPageProps) {
               <Eggy mood="sad" size="lg" />
             </div>
             <CardTitle className="font-heading text-xl">
-              Lien invalide ou expiré
+              {t("invalidTitle")}
             </CardTitle>
             <CardDescription>
-              {result.data?.error ??
-                "Ce lien d'invitation n'existe pas ou a expiré. Demandez au propriétaire du frigo de vous envoyer un nouveau lien."}
+              {result.data?.error ?? t("invalidDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <Link href="/fridge">
-              <Button variant="neubrutalism">Retour à mon frigo</Button>
+              <Button variant="neubrutalism">{t("backToFridge")}</Button>
             </Link>
           </CardContent>
         </Card>
@@ -63,10 +65,10 @@ export default async function JoinPage({ params }: JoinPageProps) {
             <Eggy mood="happy" size="lg" />
           </div>
           <CardTitle className="font-heading text-xl">
-            Rejoindre un frigo
+            {t("joinTitle")}
           </CardTitle>
           <CardDescription>
-            {shareLink.ownerName} vous invite à rejoindre son frigo
+            {shareLink.ownerName} {t("inviteText")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -87,25 +89,23 @@ export default async function JoinPage({ params }: JoinPageProps) {
 
           {/* What you'll get */}
           <div className="space-y-3">
-            <p className="text-sm font-medium">
-              En tant qu'invité, vous pourrez :
-            </p>
+            <p className="text-sm font-medium">{t("guestIntro")}</p>
             <ul className="space-y-2">
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Voir les boîtes d'œufs et leur fraîcheur
+                {t("bulletView")}
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Consommer des œufs et enregistrer vos repas
+                {t("bulletConsume")}
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Accéder aux recettes et suggestions
+                {t("bulletRecipes")}
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Check className="text-fresh-extra size-4" />
-                Utiliser le minuteur intelligent
+                {t("bulletTimer")}
               </li>
             </ul>
           </div>
@@ -116,8 +116,12 @@ export default async function JoinPage({ params }: JoinPageProps) {
             <p className="text-muted-foreground text-xs">
               {shareLink.remainingUses} utilisation
               {shareLink.remainingUses > 1 ? "s" : ""} restante
-              {shareLink.remainingUses > 1 ? "s" : ""} • Expire le{" "}
-              {new Date(shareLink.expiresAt).toLocaleDateString("fr-FR")}
+              {shareLink.remainingUses > 1 ? "s" : ""} • {" "}
+              {t("expires", {
+                date: new Date(shareLink.expiresAt).toLocaleDateString(
+                  locale === "fr" ? "fr-FR" : "en-US",
+                ),
+              })}
             </p>
           </div>
 
@@ -133,12 +137,12 @@ export default async function JoinPage({ params }: JoinPageProps) {
           >
             <Button type="submit" variant="neubrutalism" className="w-full">
               <Users className="mr-2 size-4" />
-              Rejoindre le frigo
+              {t("joinCta")}
             </Button>
           </form>
 
           <p className="text-muted-foreground text-center text-xs">
-            Vous pourrez quitter ce frigo à tout moment depuis les paramètres.
+            {t("leaveNote")}
           </p>
         </CardContent>
       </Card>

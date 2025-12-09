@@ -18,6 +18,9 @@ model Fridge {
   // Share links for inviting guests
   shareLinks FridgeShareLink[]
 
+  // Email invitations
+  emailInvitations FridgeEmailInvitation[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -66,6 +69,45 @@ model FridgeShareLink {
   @@index([code])
   @@index([fridgeId])
   @@map("fridge_share_link")
+}
+
+// Invitation status for email invitations
+enum InvitationStatus {
+  PENDING // Invitation sent, waiting for response
+  ACCEPTED // Invitation accepted
+  EXPIRED // Invitation expired (after 7 days)
+  CANCELLED // Invitation cancelled by owner
+}
+
+// Email-based invitations for fridge sharing
+model FridgeEmailInvitation {
+  id    String @id @default(nanoid(11))
+  token String @unique @default(nanoid(32)) // Secure token for invitation link
+
+  fridgeId String
+  fridge   Fridge @relation(fields: [fridgeId], references: [id], onDelete: Cascade)
+
+  invitedById String
+  invitedBy   User   @relation("SentInvitations", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  email  String // Email of the invited person
+  status InvitationStatus @default(PENDING)
+
+  acceptedById String? // User ID if accepted (can be different from original email)
+  acceptedBy   User?     @relation("ReceivedInvitations", fields: [acceptedById], references: [id], onDelete: SetNull)
+  acceptedAt   DateTime?
+
+  expiresAt  DateTime // Expiration date (7 days by default)
+  lastSentAt DateTime @default(now()) // Last time the email was sent (for resend cooldown)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([fridgeId, email]) // One invitation per email per fridge
+  @@index([email])
+  @@index([token])
+  @@index([fridgeId])
+  @@map("fridge_email_invitation")
 }
 
 // User subscription - directly linked to User (not Organization)

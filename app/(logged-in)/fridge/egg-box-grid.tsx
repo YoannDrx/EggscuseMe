@@ -2,19 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import type { EggBox } from "@/generated/prisma";
+  IlluFridgeEmpty,
+  IconPlusSticker,
+  IconWarningSticker,
+} from "@/components/eggscuseme/illustrations";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { EggBoxCard } from "@/features/eggs/components/egg-box-card";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { deleteEggBoxAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
-import { AlertTriangle, Plus, Scan } from "lucide-react";
+import type { EggBox } from "@/generated/prisma";
+import { Plus, Scan } from "lucide-react";
+import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AddEggBoxForm } from "./add-egg-box-form";
@@ -26,6 +26,7 @@ type EggBoxGridProps = {
 };
 
 export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
+  const t = useTranslations("fridge.grid");
   const router = useRouter();
 
   // Sort by freshness priority (most urgent first)
@@ -47,39 +48,43 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
 
   const handleAddBox = () => {
     dialogManager.custom({
-      title: "Ajouter une boîte",
-      description: "Ajoutez une nouvelle boîte d'œufs à suivre",
+      title: t("addBox.title"),
+      description: t("addBox.description"),
       children: <AddEggBoxForm />,
     });
   };
 
   const handleConsume = (eggBox: EggBox) => {
     dialogManager.custom({
-      title: "Consommer des œufs",
-      description: `Enregistrer les œufs consommés de "${eggBox.name ?? "cette boîte"}"`,
+      title: t("consume.title"),
+      description: t("consume.description", {
+        name: eggBox.name ?? t("thisBox"),
+      }),
       children: <ConsumeEggsForm eggBox={eggBox} />,
     });
   };
 
   const handleDelete = (eggBox: EggBox) => {
     if (!canModify) {
-      toast.error("Seul le propriétaire peut supprimer les boîtes");
+      toast.error(t("delete.ownerOnly"));
       return;
     }
 
     dialogManager.confirm({
-      title: "Supprimer cette boîte ?",
-      description: `Êtes-vous sûr de vouloir supprimer "${eggBox.name ?? "cette boîte"}" ? Cette action est irréversible.`,
+      title: t("delete.title"),
+      description: t("delete.description", {
+        name: eggBox.name ?? t("thisBox"),
+      }),
       action: {
-        label: "Supprimer",
+        label: t("delete.confirm"),
         variant: "destructive",
         onClick: async () => {
           const result = await deleteEggBoxAction({ id: eggBox.id });
           if (result.data?.success) {
-            toast.success("Boîte supprimée");
+            toast.success(t("delete.success"));
             router.refresh();
           } else {
-            toast.error("Échec de la suppression");
+            toast.error(t("delete.error"));
           }
         },
       },
@@ -89,41 +94,44 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
   // Empty state with Eggy mascot
   if (eggBoxes.length === 0) {
     return (
-      <Card variant="sunny" className="border-2 border-dashed">
-        <CardHeader className="pb-2 text-center">
-          <div className="mx-auto mb-2">
-            <Eggy mood="sad" size="lg" />
-          </div>
-          <CardTitle className="font-heading text-xl">
-            Votre frigo est vide !
-          </CardTitle>
-          <CardDescription className="text-base">
-            {canModify
-              ? "Ajoutez votre première boîte d'œufs pour commencer à suivre leur fraîcheur et réduire le gaspillage."
-              : "Le propriétaire n'a pas encore ajouté de boîtes d'œufs."}
-          </CardDescription>
-        </CardHeader>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="border-border bg-card/50 flex flex-col items-center rounded-2xl border-2 border-dashed p-8 text-center"
+      >
+        <IlluFridgeEmpty className="size-48" />
+        <h3 className="text-foreground mt-4 text-xl font-bold">
+          {t("empty.title")}
+        </h3>
+        <p className="text-muted-foreground mt-2 max-w-sm text-sm">
+          {canModify
+            ? t("empty.ownerDescription")
+            : t("empty.guestDescription")}
+        </p>
         {canModify && (
-          <CardContent className="space-y-3 text-center">
-            <Button variant="neubrutalism" size="lg" onClick={handleAddBox}>
-              <Plus className="mr-2 size-5" />
-              Ajouter ma première boîte
+          <div className="mt-6 space-y-3">
+            <Button
+              onClick={handleAddBox}
+              className="glow-button bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6"
+            >
+              <IconPlusSticker className="mr-2 size-5" />
+              {t("empty.addFirstBox")}
             </Button>
-            <p className="text-muted-foreground text-sm">
-              ou utilisez le{" "}
+            <p className="text-muted-foreground text-xs">
+              {t("empty.orUse")}{" "}
               <button
                 type="button"
-                className="hover:text-foreground inline-flex items-center gap-1 underline transition-colors"
-                onClick={() => toast.info("Scanner à venir bientôt !")}
+                className="text-primary hover:text-primary/80 inline-flex items-center gap-1 underline transition-colors"
+                onClick={handleAddBox}
               >
                 <Scan className="size-3" />
-                scanner
+                {t("empty.scanner")}
               </button>{" "}
-              pour un ajout rapide
+              {t("empty.forQuickAdd")}
             </p>
-          </CardContent>
+          </div>
         )}
-      </Card>
+      </motion.div>
     );
   }
 
@@ -131,54 +139,73 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
     <div className="space-y-6">
       {/* Urgent alert banner */}
       {urgentBoxes.length > 0 && (
-        <div className="bg-fresh-cook/10 border-fresh-cook/30 flex items-center gap-3 rounded-xl border p-4">
-          <div className="bg-fresh-cook/20 flex size-10 shrink-0 items-center justify-center rounded-full">
-            <AlertTriangle className="text-fresh-cook size-5" />
-          </div>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3 rounded-2xl border border-orange-500/30 bg-orange-500/10 p-4"
+        >
+          <IconWarningSticker className="size-10 shrink-0" />
           <div className="flex-1">
             <p className="text-fresh-cook font-medium">
-              {urgentBoxes.length} boîte{urgentBoxes.length > 1 ? "s" : ""} à
-              consommer rapidement
+              {t("urgent.title", { count: urgentBoxes.length })}
             </p>
             <p className="text-muted-foreground text-sm">
-              Ces œufs arrivent bientôt à expiration. Parfait pour des œufs durs
-              !
+              {t("urgent.description")}
             </p>
           </div>
-          <Eggy mood="worried" size="md" className="hidden sm:block" />
-        </div>
+          <div className="hidden sm:block">
+            <Eggy mood="worried" size="sm" />
+          </div>
+        </motion.div>
       )}
 
       {/* Header with add button */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-heading text-xl font-semibold">
-            Vos boîtes d'œufs
+          <h3 className="text-foreground text-lg font-bold">
+            {t("header.title")}
           </h3>
           <p className="text-muted-foreground text-sm">
-            {sortedBoxes.length} boîte{sortedBoxes.length > 1 ? "s" : ""} active
-            {sortedBoxes.length > 1 ? "s" : ""}
+            {t("header.activeBoxes", { count: sortedBoxes.length })}
           </p>
         </div>
         {canModify && (
-          <Button variant="neubrutalism-outline" onClick={handleAddBox}>
+          <Button
+            onClick={handleAddBox}
+            variant="outline"
+            className="border-border bg-card text-foreground hover:border-muted-foreground hover:bg-muted rounded-full"
+          >
             <Plus className="mr-2 size-4" />
-            Ajouter
+            {t("header.add")}
           </Button>
         )}
       </div>
 
       {/* Grid of egg boxes */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {sortedBoxes.map((eggBox) => (
+        {sortedBoxes.map((eggBox, index) => (
           <EggBoxCard
             key={eggBox.id}
             eggBox={eggBox}
+            index={index}
             onConsume={handleConsume}
             onDelete={canModify ? handleDelete : undefined}
           />
         ))}
       </div>
+
+      {/* FAB - Add button mobile */}
+      {canModify && (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.5, type: "spring" }}
+          onClick={handleAddBox}
+          className="bg-primary shadow-primary/30 fixed right-4 bottom-24 z-40 flex size-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 sm:hidden"
+        >
+          <Plus className="text-primary-foreground size-6" />
+        </motion.button>
+      )}
     </div>
   );
 }

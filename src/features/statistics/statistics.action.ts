@@ -5,6 +5,7 @@ import { authAction } from "@/lib/actions/safe-actions";
 import { getFridgeAccess } from "@/lib/fridge/get-fridge-access";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { z } from "zod";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Get statistics data for the current user's fridge
@@ -163,6 +164,7 @@ export const getStatisticsAction = authAction.action(
  */
 export const exportConsumptionCSVAction = authAction.action(
   async ({ ctx: { user } }) => {
+    const t = await getTranslations("fridge.statistics.exportHeaders");
     const access = await getFridgeAccess(user);
 
     if (!access) {
@@ -182,12 +184,18 @@ export const exportConsumptionCSVAction = authAction.action(
     });
 
     // Generate CSV
-    const headers = ["Date", "Quantité", "Type de cuisson", "Boîte", "Notes"];
+    const headers = [
+      t("date"),
+      t("quantity"),
+      t("cookingType"),
+      t("box"),
+      t("notes"),
+    ];
     const rows = consumptions.map((c) => [
       c.createdAt.toISOString().split("T")[0],
       c.quantity.toString(),
       c.cookingType,
-      c.eggBox.name ?? "Sans nom",
+      c.eggBox.name ?? t("box"),
       c.notes ?? "",
     ]);
 

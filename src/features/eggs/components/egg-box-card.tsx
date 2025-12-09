@@ -1,45 +1,57 @@
 "use client";
 
+import { FreshnessTag } from "@/components/eggscuseme/illustrations";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import type { EggBox } from "@/generated/prisma";
-import { cn } from "@/lib/utils";
-import { MoreHorizontal, Trash2, Utensils } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { EggBox } from "@/generated/prisma";
+import { cn } from "@/lib/utils";
+import { MoreHorizontal, Trash2, Utensils } from "lucide-react";
+import { motion } from "motion/react";
 import {
   calculateExpirationProgress,
   calculateFreshness,
   formatDaysRemainingFr,
-  getFreshnessBgClass,
   getFreshnessDescriptionFr,
 } from "../lib/freshness-calculator";
-import { FreshnessBadge } from "./freshness-badge";
-import { EggBoxVisual } from "./egg-box-visual";
 
 type EggBoxCardProps = {
   eggBox: EggBox;
   onConsume?: (eggBox: EggBox) => void;
   onDelete?: (eggBox: EggBox) => void;
   className?: string;
+  index?: number;
 };
 
 const sizeLabels: Record<string, string> = {
   S: "Petits",
   M: "Moyens",
   L: "Gros",
-  XL: "Très gros",
+  XL: "Tres gros",
+};
+
+// Freshness color mappings using design system tokens
+const freshnessConfig = {
+  "extra-fresh": {
+    barColor: "bg-fresh-extra",
+    tagStatus: "extra-fresh" as const,
+  },
+  fresh: {
+    barColor: "bg-fresh",
+    tagStatus: "fresh" as const,
+  },
+  "cook-thoroughly": {
+    barColor: "bg-fresh-cook",
+    tagStatus: "cook" as const,
+  },
+  expired: {
+    barColor: "bg-expired",
+    tagStatus: "expired" as const,
+  },
 };
 
 export function EggBoxCard({
@@ -47,118 +59,128 @@ export function EggBoxCard({
   onConsume,
   onDelete,
   className,
+  index = 0,
 }: EggBoxCardProps) {
   const freshness = calculateFreshness(eggBox.layingDate);
   const progress = calculateExpirationProgress(eggBox.layingDate);
-  const isUrgent =
-    freshness.status === "cook-thoroughly" || freshness.status === "expired";
+  const config = freshnessConfig[freshness.status];
+
+  // Get suggested cooking method based on freshness
+  const getSuggestedUse = () => {
+    switch (freshness.status) {
+      case "extra-fresh":
+        return "Mousse, mayonnaise, coque";
+      case "fresh":
+        return "Omelette, au plat";
+      case "cook-thoroughly":
+        return "Oeuf dur uniquement";
+      case "expired":
+        return "A jeter";
+      default:
+        return "Cuisson recommandee";
+    }
+  };
 
   return (
-    <Card
-      variant="sunny-interactive"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.3 }}
       className={cn(
-        "relative overflow-hidden transition-all",
-        isUrgent && "ring-fresh-cook/50 ring-2",
+        "border-border bg-card relative overflow-hidden rounded-2xl border p-4",
+        "hover:border-muted-foreground/30 transition-all duration-200",
         className,
       )}
     >
-      {/* Freshness indicator bar */}
-      <div
-        className={cn(
-          "absolute top-0 left-0 h-1.5 w-full",
-          getFreshnessBgClass(freshness.status),
-        )}
-      />
-
-      <CardHeader className="pt-4 pb-2">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 flex-1 space-y-1">
-            <CardTitle className="font-heading truncate text-lg">
-              {eggBox.name ??
-                `Boîte du ${eggBox.layingDate.toLocaleDateString("fr-FR")}`}
-            </CardTitle>
-            <CardDescription className="flex items-center gap-1.5 text-sm">
-              {eggBox.source && <span>{eggBox.source}</span>}
-              {eggBox.source && (
-                <span className="text-muted-foreground">·</span>
+      {/* Header Row */}
+      <div className="mb-3 flex items-center justify-between">
+        <FreshnessTag status={config.tagStatus} size="sm" />
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-xs">
+            {formatDaysRemainingFr(freshness.daysRemaining)}
+          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:bg-muted hover:text-foreground size-7"
+              >
+                <MoreHorizontal className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {onConsume && (
+                <DropdownMenuItem onClick={() => onConsume(eggBox)}>
+                  <Utensils className="mr-2 size-4" />
+                  Consommer
+                </DropdownMenuItem>
               )}
-              <span>{sizeLabels[eggBox.size] ?? eggBox.size}</span>
-            </CardDescription>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <FreshnessBadge
-              status={freshness.status}
-              size="sm"
-              variant="sunny"
-              showIcon={false}
-            />
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8 shrink-0">
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {onConsume && (
-                  <DropdownMenuItem onClick={() => onConsume(eggBox)}>
-                    <Utensils className="mr-2 size-4" />
-                    Consommer
-                  </DropdownMenuItem>
-                )}
-                {onDelete && (
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={() => onDelete(eggBox)}
-                  >
-                    <Trash2 className="mr-2 size-4" />
-                    Supprimer
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+              {onDelete && (
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => onDelete(eggBox)}
+                >
+                  <Trash2 className="mr-2 size-4" />
+                  Supprimer
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="space-y-4">
-        {/* Visual egg box */}
-        <EggBoxVisual
-          quantity={eggBox.quantity}
-          remaining={eggBox.remaining}
-          status={freshness.status}
-          onEggClick={onConsume ? () => onConsume(eggBox) : undefined}
+      {/* Name Row */}
+      <div className="mb-2">
+        <h3 className="text-foreground truncate font-semibold">
+          {eggBox.name ??
+            `Boite du ${eggBox.layingDate.toLocaleDateString("fr-FR")}`}
+        </h3>
+        {eggBox.source && (
+          <p className="text-muted-foreground text-xs">{eggBox.source}</p>
+        )}
+      </div>
+
+      {/* Content Row */}
+      <div className="mb-4 flex items-end justify-between">
+        <div className="flex-1">
+          <span className="text-muted-foreground text-xs">
+            Pour: {getSuggestedUse()}
+          </span>
+          <p className="text-muted-foreground text-xs">
+            {getFreshnessDescriptionFr(freshness.status)}
+          </p>
+        </div>
+        <div className="text-right">
+          <span className="text-foreground text-2xl font-bold">
+            {eggBox.remaining}
+          </span>
+          <span className="text-muted-foreground ml-1 text-xs">
+            / {eggBox.quantity} oeufs
+          </span>
+        </div>
+      </div>
+
+      {/* Size Badge */}
+      <div className="mb-4 flex items-center gap-2">
+        <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
+          {sizeLabels[eggBox.size] ?? eggBox.size}
+        </span>
+        <span className="text-muted-foreground text-xs">
+          {freshness.daysOld} jour{freshness.daysOld > 1 ? "s" : ""} depuis
+          ponte
+        </span>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="bg-muted absolute bottom-0 left-0 h-1 w-full">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${100 - progress}%` }}
+          transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
+          className={cn("h-full", config.barColor)}
         />
-
-        {/* Stats row */}
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold">
-            {eggBox.remaining}{" "}
-            <span className="text-muted-foreground font-normal">
-              / {eggBox.quantity} œufs
-            </span>
-          </span>
-          <span className="text-muted-foreground">
-            {freshness.daysOld} jour{freshness.daysOld > 1 ? "s" : ""}
-          </span>
-        </div>
-
-        {/* Progress bar */}
-        <div className="space-y-1.5">
-          <Progress
-            value={progress}
-            className="h-2"
-            indicatorClassName={getFreshnessBgClass(freshness.status)}
-          />
-          <div className="text-muted-foreground flex justify-between text-xs">
-            <span>{getFreshnessDescriptionFr(freshness.status)}</span>
-            <span className="shrink-0 font-medium">
-              {formatDaysRemainingFr(freshness.daysRemaining)}
-            </span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }

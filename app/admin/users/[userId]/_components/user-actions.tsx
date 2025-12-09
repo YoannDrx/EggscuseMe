@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Ban, Crown, Eye, MoreHorizontal, UserCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { createAdminLogAction } from "../../../_actions/admin-logs.action";
 
 type User = {
   id: string;
@@ -33,11 +34,16 @@ export function UserActions({ user }: UserActionsProps) {
 
   const impersonateMutation = useMutation({
     mutationFn: async (userId: string) => {
-      return unwrapSafePromise(
+      const result = await unwrapSafePromise(
         authClient.admin.impersonateUser({
           userId,
         }),
       );
+      await createAdminLogAction({
+        action: "IMPERSONATE",
+        targetUserId: userId,
+      });
+      return result;
     },
     onSuccess: () => {
       toast.success("Impersonation started");
@@ -57,12 +63,18 @@ export function UserActions({ user }: UserActionsProps) {
       userId: string;
       reason?: string;
     }) => {
-      return unwrapSafePromise(
+      const result = await unwrapSafePromise(
         authClient.admin.banUser({
           userId,
           banReason: reason ?? "Banned by admin",
         }),
       );
+      await createAdminLogAction({
+        action: "BAN_USER",
+        targetUserId: userId,
+        metadata: { reason: reason ?? "Banned by admin" },
+      });
+      return result;
     },
     onSuccess: () => {
       toast.success("User banned successfully");
@@ -75,11 +87,16 @@ export function UserActions({ user }: UserActionsProps) {
 
   const unbanUserMutation = useMutation({
     mutationFn: async (userId: string) => {
-      return unwrapSafePromise(
+      const result = await unwrapSafePromise(
         authClient.admin.unbanUser({
           userId,
         }),
       );
+      await createAdminLogAction({
+        action: "UNBAN_USER",
+        targetUserId: userId,
+      });
+      return result;
     },
     onSuccess: () => {
       toast.success("User unbanned successfully");
@@ -98,12 +115,18 @@ export function UserActions({ user }: UserActionsProps) {
       userId: string;
       role: "admin" | "user";
     }) => {
-      return unwrapSafePromise(
+      const result = await unwrapSafePromise(
         authClient.admin.setRole({
           userId,
           role,
         }),
       );
+      await createAdminLogAction({
+        action: "SET_ROLE",
+        targetUserId: userId,
+        metadata: { role },
+      });
+      return result;
     },
     onSuccess: () => {
       toast.success("User role updated successfully");

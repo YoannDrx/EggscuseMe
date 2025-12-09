@@ -18,8 +18,10 @@ import { Scan, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export function AddEggBoxForm() {
+  const t = useTranslations("fridge.addBoxForm");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [showScanner, setShowScanner] = useState(false);
@@ -46,7 +48,7 @@ export function AddEggBoxForm() {
     // Close scanner after successful scan
     setTimeout(() => {
       setShowScanner(false);
-      toast.success("Code scanné avec succès !");
+      toast.success(t("scanSuccess"));
     }, 1000);
   };
 
@@ -63,11 +65,11 @@ export function AddEggBoxForm() {
       });
 
       if (result.data?.eggBox) {
-        toast.success("Boîte ajoutée avec succès");
+        toast.success(t("addSuccess"));
         dialogManager.closeAll();
         router.refresh();
       } else {
-        toast.error(result.serverError ?? "Échec de l'ajout de la boîte");
+        toast.error(result.serverError ?? t("addError"));
       }
     });
   };
@@ -78,7 +80,7 @@ export function AddEggBoxForm() {
       {showScanner ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-base font-medium">Scanner</Label>
+            <Label className="text-base font-medium">{t("scannerTitle")}</Label>
             <Button
               type="button"
               variant="ghost"
@@ -86,7 +88,7 @@ export function AddEggBoxForm() {
               onClick={() => setShowScanner(false)}
             >
               <X className="mr-1 size-4" />
-              Fermer
+              {t("closeScanner")}
             </Button>
           </div>
           <BarcodeScanner onScan={handleScan} />
@@ -99,22 +101,22 @@ export function AddEggBoxForm() {
           onClick={() => setShowScanner(true)}
         >
           <Scan className="mr-2 size-4" />
-          Scanner un code-barres
+          {t("openScanner")}
         </Button>
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="name">Nom (optionnel)</Label>
+        <Label htmlFor="name">{t("nameLabel")}</Label>
         <Input
           id="name"
-          placeholder="ex: Boîte du marché"
+          placeholder={t("namePlaceholder")}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="layingDate">Date de ponte</Label>
+        <Label htmlFor="layingDate">{t("layingDate")}</Label>
         <Input
           id="layingDate"
           type="date"
@@ -128,7 +130,7 @@ export function AddEggBoxForm() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="quantity">Quantité</Label>
+          <Label htmlFor="quantity">{t("quantity")}</Label>
           <Input
             id="quantity"
             type="number"
@@ -143,7 +145,7 @@ export function AddEggBoxForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="size">Taille</Label>
+          <Label htmlFor="size">{t("size")}</Label>
           <Select
             value={formData.size}
             onValueChange={(value: string) =>
@@ -154,20 +156,20 @@ export function AddEggBoxForm() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="S">Petit (S)</SelectItem>
-              <SelectItem value="M">Moyen (M)</SelectItem>
-              <SelectItem value="L">Gros (L)</SelectItem>
-              <SelectItem value="XL">Très gros (XL)</SelectItem>
+              <SelectItem value="S">{t("sizeOptions.S")}</SelectItem>
+              <SelectItem value="M">{t("sizeOptions.M")}</SelectItem>
+              <SelectItem value="L">{t("sizeOptions.L")}</SelectItem>
+              <SelectItem value="XL">{t("sizeOptions.XL")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="source">Origine (optionnel)</Label>
+        <Label htmlFor="source">{t("source")}</Label>
         <Input
           id="source"
-          placeholder="ex: Ferme locale, Supermarché"
+          placeholder={t("sourcePlaceholder")}
           value={formData.source}
           onChange={(e) => setFormData({ ...formData, source: e.target.value })}
         />
@@ -179,10 +181,10 @@ export function AddEggBoxForm() {
           variant="outline"
           onClick={() => dialogManager.closeAll()}
         >
-          Annuler
+          {t("cancel")}
         </Button>
         <Button type="submit" variant="neubrutalism" disabled={isPending}>
-          {isPending ? "Ajout..." : "Ajouter"}
+          {isPending ? t("saving") : t("save")}
         </Button>
       </div>
     </form>

@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import {
   calculateFreshness,
   type FreshnessStatus,
 } from "@/features/eggs/lib/freshness-calculator";
+import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { Coins, Egg, Leaf, TrendingUp } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 export async function FridgeStatsCards() {
+  const t = await getTranslations("fridge.stats");
   const result = await getMyFridgeAction();
   const eggBoxes = result.data?.fridge.eggBoxes ?? [];
 
@@ -39,7 +41,9 @@ export async function FridgeStatsCards() {
       {/* Total Eggs */}
       <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Œufs suivis</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            {t("tracked.title")}
+          </CardTitle>
           <div className="bg-primary/10 flex size-9 items-center justify-center rounded-full">
             <Egg className="text-primary size-5" />
           </div>
@@ -47,7 +51,7 @@ export async function FridgeStatsCards() {
         <CardContent>
           <div className="font-heading text-3xl font-bold">{totalEggs}</div>
           <p className="text-muted-foreground text-sm">
-            dans {totalBoxes} boîte{totalBoxes !== 1 ? "s" : ""}
+            {t("tracked.inBoxes", { count: totalBoxes })}
           </p>
         </CardContent>
       </Card>
@@ -55,7 +59,9 @@ export async function FridgeStatsCards() {
       {/* Extra-Fresh */}
       <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Extra-frais</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            {t("extraFresh.title")}
+          </CardTitle>
           <div className="bg-fresh-extra/20 flex size-9 items-center justify-center rounded-full">
             <Leaf className="text-fresh-extra size-5" />
           </div>
@@ -65,7 +71,7 @@ export async function FridgeStatsCards() {
             {freshnessCounts["extra-fresh"]}
           </div>
           <p className="text-muted-foreground text-sm">
-            Parfaits pour œufs à la coque
+            {t("extraFresh.description")}
           </p>
         </CardContent>
       </Card>
@@ -73,7 +79,9 @@ export async function FridgeStatsCards() {
       {/* Eggs Saved */}
       <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Anti-gaspi</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            {t("antiWaste.title")}
+          </CardTitle>
           <div className="flex size-9 items-center justify-center rounded-full bg-emerald-500/10">
             <TrendingUp className="size-5 text-emerald-600" />
           </div>
@@ -81,7 +89,7 @@ export async function FridgeStatsCards() {
         <CardContent>
           <div className="font-heading text-3xl font-bold">{totalConsumed}</div>
           <p className="text-muted-foreground text-sm">
-            œufs consommés, pas gaspillés
+            {t("antiWaste.description")}
           </p>
         </CardContent>
       </Card>
@@ -89,14 +97,18 @@ export async function FridgeStatsCards() {
       {/* Money Saved */}
       <Card variant="sunny">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Économies</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            {t("savings.title")}
+          </CardTitle>
           <div className="bg-primary/10 flex size-9 items-center justify-center rounded-full">
             <Coins className="text-primary size-5" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="font-heading text-3xl font-bold">{moneySaved}€</div>
-          <p className="text-muted-foreground text-sm">économisés environ</p>
+          <p className="text-muted-foreground text-sm">
+            {t("savings.description")}
+          </p>
         </CardContent>
       </Card>
     </div>

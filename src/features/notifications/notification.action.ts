@@ -9,6 +9,7 @@ import {
   groupEggsByFridge,
 } from "./check-expiring-eggs";
 import { UpdateNotificationPreferencesSchema } from "./notification.schema";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Get the current user's notification preferences
@@ -79,6 +80,7 @@ export async function sendExpirationEmails(): Promise<{
   sent: number;
   errors: number;
 }> {
+  const t = await getTranslations("notifications.email");
   const usersWithExpiringEggs = await getUsersWithExpiringEggs();
 
   let sent = 0;
@@ -95,7 +97,7 @@ export async function sendExpirationEmails(): Promise<{
       const emailData = {
         userName: userData.userName,
         eggs: fridgeData.eggs.map((egg: ExpiringEgg) => ({
-          name: egg.name ?? "Boîte d'oeufs",
+          name: egg.name ?? t("boxNameFallback"),
           daysLeft: egg.daysRemaining,
           quantity: egg.remaining,
         })),
@@ -105,7 +107,7 @@ export async function sendExpirationEmails(): Promise<{
       emailPromises.push(
         sendEmail({
           to: userData.userEmail,
-          subject: `Alerte fraîcheur - ${fridgeData.eggs.length} boîte${fridgeData.eggs.length > 1 ? "s" : ""} bientôt périmée${fridgeData.eggs.length > 1 ? "s" : ""}`,
+          subject: t("subject", { count: fridgeData.eggs.length }),
           html: ExpirationWarningEmail(emailData),
         }),
       );

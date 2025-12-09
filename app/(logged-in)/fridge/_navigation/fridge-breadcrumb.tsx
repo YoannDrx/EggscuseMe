@@ -11,17 +11,19 @@ import {
 import { Home } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
+import { useTranslations } from "next-intl";
 
-const ROUTE_LABELS: Record<string, string> = {
-  fridge: "Mon Frigo",
-  timer: "Minuteur",
-  recipes: "Recettes",
-  settings: "Paramètres",
-  sharing: "Partage",
-  billing: "Abonnement",
-};
+const ROUTE_LABEL_KEYS = {
+  fridge: "myFridge",
+  timer: "timer",
+  recipes: "recipes",
+  settings: "settings",
+  sharing: "sharing",
+  billing: "billing",
+} as const;
 
 export function FridgeBreadcrumb() {
+  const t = useTranslations("fridge.nav");
   const pathname = usePathname();
 
   const paths = pathname.split("/").filter(Boolean);
@@ -33,14 +35,18 @@ export function FridgeBreadcrumb() {
         <BreadcrumbItem>
           <BreadcrumbLink href={basePath}>
             <Home size={16} strokeWidth={2} aria-hidden="true" />
-            <span className="sr-only">Mon Frigo</span>
+            <span className="sr-only">{t("myFridge")}</span>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {paths.length > 1 && <BreadcrumbSeparator />}
         {paths.slice(1).map((path, index) => {
           const isLast = index === paths.slice(1).length - 1;
           const currentPath = `/${paths.slice(0, index + 2).join("/")}`;
-          const displayName = ROUTE_LABELS[path] ?? path;
+          const labelKey =
+            path in ROUTE_LABEL_KEYS
+              ? ROUTE_LABEL_KEYS[path as keyof typeof ROUTE_LABEL_KEYS]
+              : null;
+          const displayName = labelKey ? t(labelKey) : path;
 
           return (
             <Fragment key={path + index}>

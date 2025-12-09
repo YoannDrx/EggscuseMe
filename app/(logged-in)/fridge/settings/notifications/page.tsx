@@ -20,8 +20,10 @@ import { Bell, BellOff, Loader2, Save } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function NotificationsSettingsPage() {
+  const t = useTranslations("fridge.settings.notificationsPage");
   const [notifyEnabled, setNotifyEnabled] = useState(true);
   const [notifyDaysBefore, setNotifyDaysBefore] = useState(2);
   const [hasChanges, setHasChanges] = useState(false);
@@ -41,11 +43,11 @@ export default function NotificationsSettingsPage() {
     updateNotificationPreferencesAction,
     {
       onSuccess: () => {
-        toast.success("Preferences enregistrees");
+        toast.success(t("toastSuccess"));
         setHasChanges(false);
       },
       onError: () => {
-        toast.error("Erreur lors de la sauvegarde");
+        toast.error(t("toastError"));
       },
     },
   );
@@ -75,10 +77,8 @@ export default function NotificationsSettingsPage() {
       <div className="flex items-center gap-4">
         <Eggy mood={notifyEnabled ? "happy" : "sleeping"} size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Notifications</h1>
-          <p className="text-muted-foreground">
-            Configurez vos alertes de fraicheur
-          </p>
+          <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export default function NotificationsSettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bell className="size-5" />
-            Alertes d&apos;expiration
+            {t("title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
@@ -95,10 +95,10 @@ export default function NotificationsSettingsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="notify-enabled" className="text-base font-medium">
-                Activer les notifications
+                {t("enable")}
               </Label>
               <p className="text-muted-foreground text-sm">
-                Recevez un email avant que vos oeufs n&apos;expirent
+                {t("enableDescription")}
               </p>
             </div>
             <Switch
@@ -116,13 +116,8 @@ export default function NotificationsSettingsPage() {
             className={`space-y-4 ${!notifyEnabled ? "pointer-events-none opacity-50" : ""}`}
           >
             <div className="space-y-0.5">
-              <Label className="text-base font-medium">
-                Delai de notification
-              </Label>
-              <p className="text-muted-foreground text-sm">
-                Choisissez combien de jours avant l&apos;expiration vous
-                souhaitez etre notifie
-              </p>
+              <Label className="text-base font-medium">{t("daysLabel")}</Label>
+              <p className="text-muted-foreground text-sm">{t("daysDescription")}</p>
             </div>
             <Select
               value={notifyDaysBefore.toString()}
@@ -138,7 +133,7 @@ export default function NotificationsSettingsPage() {
               <SelectContent>
                 {[1, 2, 3, 4, 5, 6, 7].map((days) => (
                   <SelectItem key={days} value={days.toString()}>
-                    {days} jour{days > 1 ? "s" : ""} avant
+                    {t("daysOption", { count: days })}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -156,18 +151,16 @@ export default function NotificationsSettingsPage() {
                 <BellOff className="text-muted-foreground mt-0.5 size-5" />
               )}
               <div>
-                <p className="font-medium">
-                  {notifyEnabled
-                    ? "Les notifications sont activees"
-                    : "Les notifications sont desactivees"}
-                </p>
-                <p className="text-muted-foreground text-sm">
-                  {notifyEnabled
-                    ? `Vous recevrez un email ${notifyDaysBefore} jour${notifyDaysBefore > 1 ? "s" : ""} avant que vos oeufs n'expirent.`
-                    : "Vous ne recevrez aucune alerte de fraicheur."}
-                </p>
+                  <p className="font-medium">
+                    {notifyEnabled ? t("previewOn") : t("previewOff")}
+                  </p>
+                  <p className="text-muted-foreground text-sm">
+                    {notifyEnabled
+                      ? t("previewOnDetail", { days: notifyDaysBefore })
+                      : t("previewOffDetail")}
+                  </p>
+                </div>
               </div>
-            </div>
           </div>
         </CardContent>
       </Card>
@@ -180,7 +173,7 @@ export default function NotificationsSettingsPage() {
           ) : (
             <Save className="mr-2 size-4" />
           )}
-          Enregistrer
+          {isSaving ? t("saving") : t("save")}
         </Button>
       </div>
     </div>

@@ -2,24 +2,24 @@ import { prisma } from "@/lib/prisma";
 import { getServerUrl } from "@/lib/server-url";
 import { faker } from "@faker-js/faker";
 import { expect, test } from "@playwright/test";
-import { createTestAccount, signInAccount } from "./utils/auth-test";
+import {
+  createTestAccount,
+  signInAccount,
+  signOutAccount,
+} from "./utils/auth-test";
 
 test("password reset flow", async ({ page }) => {
   // 1. Create a test account
   const userData = await createTestAccount({
     page,
-    callbackURL: "/account",
+    callbackURL: "/fridge/settings/profile",
   });
 
-  // Wait to be on the account page
-  // Wait 2 seconds to ensure everything is loaded
+  // Wait to be on the profile settings page
+  await page.waitForURL(/\/fridge\/settings\/profile/, { timeout: 10000 });
 
-  await page.waitForURL(/\/account/, { timeout: 10000 });
-
-  // 2. Sign out
-
-  await page.getByRole("button", { name: /sign out/i }).click();
-  await page.waitForURL(/\/auth\/signin/, { timeout: 10000 });
+  // 2. Sign out - open user dropdown then click logout
+  await signOutAccount({ page });
 
   // 3. Go to forget password page
   await page.goto(`${getServerUrl()}/auth/forget-password`);

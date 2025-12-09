@@ -25,11 +25,18 @@ import {
   removeMemberAction,
 } from "@/features/fridge/sharing.action";
 import { Eggy } from "@/features/mascot";
+import { EmailInvitationsList } from "@/features/fridge/components/email-invitations-list";
+import { EmailInviteForm } from "@/features/fridge/components/email-invite-form";
+import { QRCodeDisplay } from "@/features/sharing/qr-code-display";
+import { SiteConfig } from "@/site-config";
 import {
   ArrowLeft,
   Copy,
   Link2,
+  Mail,
   MoreVertical,
+  QrCode,
+  Share,
   Share2,
   Trash2,
   UserMinus,
@@ -39,6 +46,7 @@ import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useCurrentFridge } from "../../use-current-fridge";
+import { useLocale } from "next-intl";
 
 type ShareLink = {
   id: string;
@@ -61,11 +69,93 @@ type Member = {
 };
 
 export default function SharingPage() {
+  const locale = useLocale();
+  const copy =
+    locale === "fr"
+      ? {
+          headerTitle: "Partage",
+          headerSubtitleOwner: "Invitez des personnes à consulter votre frigo",
+          headerSubtitleGuest: "Personnes ayant accès à ce frigo",
+          shareLinksTitle: "Liens de partage",
+          shareLinksDesc: "Créez des liens pour inviter des personnes",
+          createLink: "Créer un lien",
+          creatingLink: "Création...",
+          noActiveLinks:
+            "Aucun lien actif. Créez-en un pour inviter des personnes !",
+          toastCreate: "Lien créé et copié dans le presse-papier !",
+          toastCreateError: "Échec de la création du lien",
+          toastCopy: "Lien copié !",
+          toastShareError: "Le partage n'est pas disponible sur cet appareil",
+          shareTitle: "Rejoignez mon frigo sur EggscuseMe",
+          shareText: "Je vous invite à partager mon suivi d'œufs !",
+          shareCta: "Partager",
+          deactivateTitle: "Désactiver ce lien ?",
+          deactivateDesc:
+            "Ce lien ne pourra plus être utilisé pour rejoindre le frigo.",
+          deactivateAction: "Désactiver",
+          toastDeactivate: "Lien désactivé",
+          toastDeactivateError: "Échec de la désactivation",
+          removeTitle: "Retirer ce membre ?",
+          removeDesc: (name: string) =>
+            `${name} n'aura plus accès à votre frigo.`,
+          removeAction: "Retirer",
+          toastRemove: "Membre retiré",
+          toastRemoveError: "Échec du retrait",
+          emailTitle: "Inviter par email",
+          emailDesc: "Envoyez une invitation directement par email",
+          membersTitle: (count: number) => `Membres (${count})`,
+          membersDesc: "Personnes ayant accès à ce frigo",
+          ownerBadge: "Propriétaire",
+          guestBadge: "Invité",
+          noGuests: "Aucun invité pour le moment",
+          usesLabel: "utilisations",
+          expiresLabel: "Expire le",
+        }
+      : {
+          headerTitle: "Sharing",
+          headerSubtitleOwner: "Invite people to view your fridge",
+          headerSubtitleGuest: "People with access to this fridge",
+          shareLinksTitle: "Share links",
+          shareLinksDesc: "Create links to invite people",
+          createLink: "Create link",
+          creatingLink: "Creating...",
+          noActiveLinks: "No active links. Create one to invite people!",
+          toastCreate: "Link created and copied!",
+          toastCreateError: "Failed to create link",
+          toastCopy: "Link copied!",
+          toastShareError: "Sharing is not available on this device",
+          shareTitle: "Join my fridge on EggscuseMe",
+          shareText: "I invite you to share my egg tracking!",
+          shareCta: "Share",
+          deactivateTitle: "Disable this link?",
+          deactivateDesc:
+            "This link will no longer allow access to the fridge.",
+          deactivateAction: "Disable",
+          toastDeactivate: "Link disabled",
+          toastDeactivateError: "Failed to disable link",
+          removeTitle: "Remove this member?",
+          removeDesc: (name: string) =>
+            `${name} will lose access to your fridge.`,
+          removeAction: "Remove",
+          toastRemove: "Member removed",
+          toastRemoveError: "Failed to remove member",
+          emailTitle: "Invite by email",
+          emailDesc: "Send an invitation directly by email",
+          membersTitle: (count: number) => `Members (${count})`,
+          membersDesc: "People with access to this fridge",
+          ownerBadge: "Owner",
+          guestBadge: "Guest",
+          noGuests: "No guests yet",
+          usesLabel: "uses",
+          expiresLabel: "Expires on",
+        };
+
   const fridgeState = useCurrentFridge();
   const [isPending, startTransition] = useTransition();
   const [shareLinks, setShareLinks] = useState<ShareLink[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showQrFor, setShowQrFor] = useState<string | null>(null);
 
   const isOwner = fridgeState?.role === "OWNER";
 
@@ -101,26 +191,51 @@ export default function SharingPage() {
 
         const shareUrl = `${window.location.origin}/join/${newLink.code}`;
         await navigator.clipboard.writeText(shareUrl);
-        toast.success("Lien créé et copié dans le presse-papier !");
+        toast.success(copy.toastCreate);
       } else {
-        toast.error("Échec de la création du lien");
+        toast.error(copy.toastCreateError);
       }
     });
   };
 
+  const getShareUrl = (code: string) =>
+    `${window.location.origin}/join/${code}`;
+
   const handleCopyLink = async (code: string) => {
-    const shareUrl = `${window.location.origin}/join/${code}`;
-    await navigator.clipboard.writeText(shareUrl);
-    toast.success("Lien copié !");
+    await navigator.clipboard.writeText(getShareUrl(code));
+    toast.success(copy.toastCopy);
   };
+
+  const handleNativeShare = async (code: string) => {
+    const shareUrl = getShareUrl(code);
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      try {
+        await navigator.share({
+          title: copy.shareTitle,
+          text: copy.shareText,
+          url: shareUrl,
+        });
+      } catch (err) {
+        // User cancelled or error - fallback to copy
+        if ((err as Error).name !== "AbortError") {
+          await handleCopyLink(code);
+        }
+      }
+    } else {
+      // Fallback for devices without native share
+      await handleCopyLink(code);
+    }
+  };
+
+  const canNativeShare =
+    typeof navigator !== "undefined" && "share" in navigator;
 
   const handleDeactivateLink = (linkId: string) => {
     dialogManager.confirm({
-      title: "Désactiver ce lien ?",
-      description:
-        "Ce lien ne pourra plus être utilisé pour rejoindre le frigo.",
+      title: copy.deactivateTitle,
+      description: copy.deactivateDesc,
       action: {
-        label: "Désactiver",
+        label: copy.deactivateAction,
         onClick: async () => {
           const result = await deactivateShareLinkAction({ linkId });
           if (result.data?.success) {
@@ -129,9 +244,9 @@ export default function SharingPage() {
                 link.id === linkId ? { ...link, isActive: false } : link,
               ),
             );
-            toast.success("Lien désactivé");
+            toast.success(copy.toastDeactivate);
           } else {
-            toast.error("Échec de la désactivation");
+            toast.error(copy.toastDeactivateError);
           }
         },
       },
@@ -140,18 +255,18 @@ export default function SharingPage() {
 
   const handleRemoveMember = (memberId: string, memberName: string) => {
     dialogManager.confirm({
-      title: "Retirer ce membre ?",
-      description: `${memberName} n'aura plus accès à votre frigo.`,
+      title: copy.removeTitle,
+      description: copy.removeDesc(memberName),
       action: {
-        label: "Retirer",
+        label: copy.removeAction,
         variant: "destructive",
         onClick: async () => {
           const result = await removeMemberAction({ memberId });
           if (result.data?.success) {
             setMembers((prev) => prev.filter((m) => m.id !== memberId));
-            toast.success("Membre retiré");
+            toast.success(copy.toastRemove);
           } else {
-            toast.error("Échec du retrait");
+            toast.error(copy.toastRemoveError);
           }
         },
       },
@@ -177,11 +292,11 @@ export default function SharingPage() {
         </Link>
         <Eggy mood="happy" size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">Partage</h1>
+          <h1 className="font-heading text-2xl font-bold">
+            {copy.headerTitle}
+          </h1>
           <p className="text-muted-foreground">
-            {isOwner
-              ? "Invitez des personnes à consulter votre frigo"
-              : "Personnes ayant accès à ce frigo"}
+            {isOwner ? copy.headerSubtitleOwner : copy.headerSubtitleGuest}
           </p>
         </div>
       </div>
@@ -193,11 +308,9 @@ export default function SharingPage() {
             <div>
               <CardTitle className="font-heading flex items-center gap-2">
                 <Link2 className="size-5" />
-                Liens de partage
+                {copy.shareLinksTitle}
               </CardTitle>
-              <CardDescription>
-                Créez des liens pour inviter des personnes
-              </CardDescription>
+              <CardDescription>{copy.shareLinksDesc}</CardDescription>
             </div>
             <Button
               variant="neubrutalism"
@@ -205,7 +318,7 @@ export default function SharingPage() {
               disabled={isPending}
             >
               <Share2 className="mr-2 size-4" />
-              {isPending ? "Création..." : "Créer un lien"}
+              {isPending ? copy.creatingLink : copy.createLink}
             </Button>
           </CardHeader>
           <CardContent>
@@ -220,50 +333,120 @@ export default function SharingPage() {
               </div>
             ) : activeLinks.length === 0 ? (
               <p className="text-muted-foreground py-4 text-center text-sm">
-                Aucun lien actif. Créez-en un pour inviter des personnes !
+                {copy.noActiveLinks}
               </p>
             ) : (
               <div className="space-y-3">
                 {activeLinks.map((link) => (
                   <div
                     key={link.id}
-                    className="bg-muted/50 flex items-center justify-between rounded-lg p-3"
+                    className="bg-muted/50 space-y-3 rounded-lg p-3"
                   >
-                    <div>
-                      <code className="font-mono text-sm">
-                        /join/{link.code}
-                      </code>
-                      <div className="text-muted-foreground mt-1 flex gap-2 text-xs">
-                        <span>
-                          {link.usedCount}/{link.maxUses} utilisations
-                        </span>
-                        <span>•</span>
-                        <span>
-                          Expire le{" "}
-                          {new Date(link.expiresAt).toLocaleDateString("fr-FR")}
-                        </span>
+                    {/* QR Code display (toggle) */}
+                    {showQrFor === link.id ? (
+                      <div className="flex flex-col items-center gap-3 py-2">
+                        <QRCodeDisplay
+                          value={getShareUrl(link.code)}
+                          size={160}
+                        />
+                        <p className="text-muted-foreground text-xs">
+                          {locale === "fr"
+                            ? "Scannez pour rejoindre"
+                            : "Scan to join"}
+                        </p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowQrFor(null)}
+                        >
+                          {locale === "fr" ? "Masquer le QR" : "Hide QR"}
+                        </Button>
                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={async () => handleCopyLink(link.code)}
-                      >
-                        <Copy className="size-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeactivateLink(link.id)}
-                      >
-                        <Trash2 className="text-destructive size-4" />
-                      </Button>
-                    </div>
+                    ) : (
+                      <>
+                        {/* URL display */}
+                        <div className="flex items-center gap-2">
+                          <Link2 className="text-muted-foreground size-4 shrink-0" />
+                          <code className="bg-background flex-1 truncate rounded border px-2 py-1 font-mono text-sm">
+                            {SiteConfig.domain}/join/{link.code}
+                          </code>
+                        </div>
+
+                        {/* Meta info */}
+                        <div className="text-muted-foreground flex flex-wrap gap-x-3 gap-y-1 text-xs">
+                          <span>
+                            {link.usedCount}/{link.maxUses} {copy.usesLabel}
+                          </span>
+                          <span>•</span>
+                          <span>
+                            {copy.expiresLabel}{" "}
+                            {new Date(link.expiresAt).toLocaleDateString(
+                              locale === "fr" ? "fr-FR" : "en-US",
+                            )}
+                          </span>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex flex-wrap gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowQrFor(link.id)}
+                          >
+                            <QrCode className="mr-2 size-4" />
+                            QR Code
+                          </Button>
+                          {canNativeShare && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={async () => handleNativeShare(link.code)}
+                            >
+                              <Share className="mr-2 size-4" />
+                              {copy.shareCta}
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={async () => handleCopyLink(link.code)}
+                          >
+                            <Copy className="mr-2 size-4" />
+                            {copy.toastCopy.replace("!", "")}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeactivateLink(link.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="mr-2 size-4" />
+                            {copy.deactivateAction}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Email Invitations (Owner only) */}
+      {isOwner && (
+        <Card variant="sunny">
+          <CardHeader>
+            <CardTitle className="font-heading flex items-center gap-2">
+              <Mail className="size-5" />
+              {copy.emailTitle}
+            </CardTitle>
+            <CardDescription>{copy.emailDesc}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <EmailInviteForm />
+            <EmailInvitationsList />
           </CardContent>
         </Card>
       )}
@@ -273,9 +456,9 @@ export default function SharingPage() {
         <CardHeader>
           <CardTitle className="font-heading flex items-center gap-2">
             <Users className="size-5" />
-            Membres ({members.length})
+            {copy.membersTitle(members.length)}
           </CardTitle>
-          <CardDescription>Personnes ayant accès à ce frigo</CardDescription>
+          <CardDescription>{copy.membersDesc}</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -304,7 +487,7 @@ export default function SharingPage() {
                       {owner.user.email}
                     </p>
                   </div>
-                  <Badge variant="secondary">Propriétaire</Badge>
+                  <Badge variant="secondary">{copy.ownerBadge}</Badge>
                 </div>
               )}
 
@@ -328,7 +511,7 @@ export default function SharingPage() {
                       {member.user.email}
                     </p>
                   </div>
-                  <Badge variant="outline">Invité</Badge>
+                  <Badge variant="outline">{copy.guestBadge}</Badge>
                   {isOwner && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -344,7 +527,7 @@ export default function SharingPage() {
                           }
                         >
                           <UserMinus className="mr-2 size-4" />
-                          Retirer du frigo
+                          {copy.removeAction}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -354,7 +537,7 @@ export default function SharingPage() {
 
               {guests.length === 0 && (
                 <p className="text-muted-foreground py-4 text-center text-sm">
-                  Aucun invité pour le moment
+                  {copy.noGuests}
                 </p>
               )}
             </div>

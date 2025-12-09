@@ -72,6 +72,23 @@ export const auth = betterAuth({
             logger.error("Failed to create fridge", { err, userId: user.id });
           }
 
+          // Create default user preferences (notifications, etc.)
+          try {
+            await prisma.userPreferences.create({
+              data: {
+                userId: user.id,
+                notifyEnabled: true,
+                notifyDaysBefore: 3, // Notify 3 days before expiration
+              },
+            });
+            logger.debug("User preferences created", { userId: user.id });
+          } catch (err) {
+            logger.error("Failed to create user preferences", {
+              err,
+              userId: user.id,
+            });
+          }
+
           // NEW SYSTEM: Create Stripe customer on User (if Stripe is configured)
           if (env.STRIPE_SECRET_KEY) {
             try {
