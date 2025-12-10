@@ -24,11 +24,8 @@ export function HeroSection({ className }: HeroSectionProps) {
         className,
       )}
     >
-      {/* Background Gradient Blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 -left-1/4 h-[600px] w-[600px] rounded-full bg-amber-500/10 blur-[120px]" />
-        <div className="absolute top-1/3 -right-1/4 h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-[100px]" />
-      </div>
+      {/* Background Gradient Blobs - Removed per user request */}
+
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
@@ -138,11 +135,6 @@ export function HeroSection({ className }: HeroSectionProps) {
                 variant="safe"
                 className="absolute top-1/4 -left-8"
                 delay={0.6}
-              />
-              <FloatingBadge
-                variant="rating"
-                className="absolute top-16 -right-4"
-                delay={0.8}
               />
               <FloatingBadge
                 variant="eco"
