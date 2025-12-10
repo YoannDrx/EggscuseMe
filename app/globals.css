@@ -519,6 +519,87 @@
       transform: scale(1.05) rotate(5deg);
     }
   }
+
+  /* ============================================
+   * NEO-SOFT-BRUTALISME DESIGN SYSTEM
+   * Style: Rounded corners + Thick borders + Hard shadows
+   * ============================================ */
+
+  /* Neo colors mapping */
+  --color-neo-bg: var(--neo-bg);
+  --color-neo-card: var(--neo-card);
+  --color-neo-text: var(--neo-text);
+  --color-neo-text-muted: var(--neo-text-muted);
+  --color-neo-border: var(--neo-border);
+  --color-neo-accent: var(--neo-accent);
+  --color-neo-accent-foreground: var(--neo-accent-foreground);
+  --color-neo-input: var(--neo-input);
+
+  /* Neo radius tokens */
+  --radius-neo-sm: 0.75rem;
+  --radius-neo-md: 1rem;
+  --radius-neo-lg: 1.25rem;
+  --radius-neo-xl: 1.5rem;
+  --radius-neo-2xl: 2rem;
+  --radius-neo-3xl: 2.5rem;
+
+  /* Neo border tokens */
+  --border-neo: 2px;
+  --border-neo-lg: 3px;
+
+  /* Neo shadow tokens */
+  --shadow-neo-sm: 2px 2px 0px var(--neo-shadow-color);
+  --shadow-neo-md: 4px 4px 0px var(--neo-shadow-color);
+  --shadow-neo-lg: 6px 6px 0px var(--neo-shadow-color);
+  --shadow-neo-xl: 8px 8px 0px var(--neo-shadow-color);
+  --shadow-neo-hover: 2px 2px 0px var(--neo-shadow-color);
+  --shadow-neo-active: 0px 0px 0px transparent;
+
+  /* Neo transition tokens */
+  --duration-neo: 200ms;
+  --ease-neo: ease;
+  --transition-neo: var(--duration-neo) var(--ease-neo);
+
+  /* Neo animations */
+  --animate-neo-press: neo-press 100ms ease;
+  --animate-neo-bounce-in: neo-bounce-in 300ms var(--ease-bounce);
+  --animate-neo-slide-up: neo-slide-up 400ms var(--ease-spring);
+  --animate-neo-wiggle: neo-wiggle 400ms var(--ease-bounce);
+  --animate-neo-pop: neo-pop 200ms var(--ease-bounce);
+
+  /* Neo keyframes */
+  @keyframes neo-press {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(4px, 4px); }
+  }
+
+  @keyframes neo-bounce-in {
+    0% { transform: scale(0.9); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes neo-slide-up {
+    from { transform: translateY(100%) rotate(5deg); }
+    to { transform: translateY(0) rotate(0); }
+  }
+
+  @keyframes neo-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+
+  @keyframes neo-pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes neo-check-draw {
+    from { stroke-dashoffset: 24; }
+    to { stroke-dashoffset: 0; }
+  }
 }
 
 :root,
@@ -645,6 +726,20 @@
   --nav-active: oklch(0.85 0.18 85);             /* Primary yolk */
   --nav-active-foreground: oklch(0.20 0.02 60);
   --nav-inactive: oklch(0.50 0.02 60);
+
+  /* ============================================
+   * NEO-SOFT-BRUTALISME Colors (Light Mode)
+   * Palette: Amber/Stone - Warm & Playful
+   * ============================================ */
+  --neo-bg: oklch(0.97 0.015 70);                /* Orange-50 warm cream */
+  --neo-card: oklch(1 0 0);                       /* Pure white */
+  --neo-text: oklch(0.15 0.02 60);               /* Stone-900 dark */
+  --neo-text-muted: oklch(0.45 0.02 60);         /* Stone-500 */
+  --neo-border: oklch(0.15 0.02 60);             /* Stone-900 for borders */
+  --neo-shadow-color: oklch(0.12 0.02 60);       /* Stone-950 for shadows */
+  --neo-accent: oklch(0.82 0.17 85);             /* Amber-400 */
+  --neo-accent-foreground: oklch(0.15 0.02 60); /* Dark text on amber */
+  --neo-input: oklch(1 0 0);                     /* White input */
 }
 
 .dark {
@@ -774,6 +869,20 @@
   --nav-active: oklch(0.88 0.18 85);             /* Bright yolk */
   --nav-active-foreground: oklch(0.15 0.02 60);
   --nav-inactive: oklch(0.55 0.02 85);
+
+  /* ============================================
+   * NEO-SOFT-BRUTALISME Colors (Dark Mode)
+   * Palette: Amber/Stone - Contrast & Depth
+   * ============================================ */
+  --neo-bg: oklch(0.12 0.02 60);                 /* Stone-950 deep dark */
+  --neo-card: oklch(0.18 0.02 60);               /* Stone-900 */
+  --neo-text: oklch(0.95 0.008 85);              /* Stone-100 cream */
+  --neo-text-muted: oklch(0.55 0.02 60);         /* Stone-400 */
+  --neo-border: oklch(0.40 0.02 60);             /* Stone-700 visible */
+  --neo-shadow-color: oklch(0 0 0);              /* Pure black shadows */
+  --neo-accent: oklch(0.82 0.17 85);             /* Amber-400 */
+  --neo-accent-foreground: oklch(0.15 0.02 60); /* Dark text on amber */
+  --neo-input: oklch(0.12 0.02 60);              /* Dark input */
 }
 
 @layer base {
