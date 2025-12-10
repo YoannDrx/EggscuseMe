@@ -9,56 +9,44 @@ import {
   EmailLanguageSeparator,
 } from "./utils/eggscuseme-email-layout";
 
-type FridgeInvitationEmailProps = {
-  inviterName: string;
-  fridgeName: string;
-  inviteToken: string;
-  expiresAt: Date;
+type EmailVerificationEmailProps = {
+  user: {
+    name?: string | null;
+    email: string;
+  };
+  url: string;
 };
 
-export default function FridgeInvitationEmail({
-  inviterName = "Marie",
-  fridgeName = "Mon Frigo",
-  inviteToken = "abc123def456",
-  expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-}: FridgeInvitationEmailProps) {
+export default function EmailVerificationEmail({
+  user = { name: "Chef", email: "utilisateur@example.com" },
+  url = "https://eggscuseme.app/auth/verify-email?token=abc123",
+}: EmailVerificationEmailProps) {
   let baseUrl = getServerUrl();
 
   if (baseUrl.startsWith("http://localhost")) {
     baseUrl = SiteConfig.prodUrl;
   }
 
-  const inviteUrl = `${baseUrl}/fridge/invite/${inviteToken}`;
-  const expiresFormattedFr = new Intl.DateTimeFormat("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(expiresAt);
-  const expiresFormattedEn = new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(expiresAt);
+  const userName = user.name ?? "Chef";
 
   const benefitsFr = [
-    "Voir les boites d'oeufs et leur fraicheur",
-    "Consommer des oeufs et enregistrer vos repas",
-    "Acceder aux recettes et suggestions de cuisson",
-    "Utiliser le minuteur intelligent",
+    "Suivre la fraicheur de vos oeufs avec precision",
+    "Recevoir des recommandations de cuisson personnalisees",
+    "Reduire le gaspillage alimentaire",
+    "Partager votre frigo avec votre famille",
   ];
 
   const benefitsEn = [
-    "View egg boxes and their freshness",
-    "Consume eggs and log your meals",
-    "Access recipes and cooking suggestions",
-    "Use the smart cooking timer",
+    "Track your eggs freshness with precision",
+    "Get personalized cooking recommendations",
+    "Reduce food waste",
+    "Share your fridge with your family",
   ];
 
   return (
     <EggscuseMeEmailLayout eggyMood="waving">
       <Preview>
-        {inviterName} vous invite a rejoindre son frigo / {inviterName} invites
-        you to join their fridge - {SiteConfig.title}
+        Bienvenue sur {SiteConfig.title} ! / Welcome to {SiteConfig.title}!
       </Preview>
 
       {/* ==================== FRENCH VERSION ==================== */}
@@ -71,21 +59,28 @@ export default function FridgeInvitationEmail({
           margin: "0 0 24px 0",
         }}
       >
-        Invitation a rejoindre un frigo
+        Bienvenue sur {SiteConfig.title} !
       </Heading>
 
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
-        Bonjour,
+        Bonjour {userName},
       </Text>
 
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
-        <strong>{inviterName}</strong> vous invite a rejoindre son frigo{" "}
-        <strong>&quot;{fridgeName}&quot;</strong> sur {SiteConfig.title}.
+        Merci de rejoindre {SiteConfig.title} ! Nous sommes ravis de vous
+        accueillir dans notre communaute de gardiens d&apos;oeufs.
       </Text>
 
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        Pour commencer, veuillez verifier votre adresse email :
+      </Text>
+
+      <Section style={{ textAlign: "center", margin: "32px 0" }}>
+        <EmailButton href={url}>Verifier mon email</EmailButton>
+      </Section>
+
       <EmailInfoBox>
-        <Heading
-          as="h3"
+        <Text
           style={{
             fontSize: "16px",
             fontWeight: "600",
@@ -93,8 +88,8 @@ export default function FridgeInvitationEmail({
             margin: "0 0 12px 0",
           }}
         >
-          En tant qu&apos;invite, vous pourrez :
-        </Heading>
+          Avec {SiteConfig.title}, vous pourrez :
+        </Text>
 
         {benefitsFr.map((benefit, index) => (
           <Section
@@ -115,29 +110,14 @@ export default function FridgeInvitationEmail({
         ))}
       </EmailInfoBox>
 
-      <Section style={{ textAlign: "center", margin: "24px 0" }}>
-        <EmailButton href={inviteUrl}>Rejoindre le frigo</EmailButton>
-      </Section>
-
-      <Text
-        style={{
-          fontSize: "14px",
-          color: EMAIL_COLORS.textMuted,
-          textAlign: "center",
-        }}
-      >
-        Cette invitation expire le {expiresFormattedFr}
-      </Text>
-
       <Text
         style={{
           fontSize: "12px",
           color: EMAIL_COLORS.textLight,
           textAlign: "center",
-          marginTop: "16px",
         }}
       >
-        Si vous n&apos;attendiez pas cette invitation, ignorez cet email.
+        Ce lien expire dans 24 heures.
       </Text>
 
       {/* ==================== SEPARATOR ==================== */}
@@ -153,19 +133,28 @@ export default function FridgeInvitationEmail({
           margin: "0 0 24px 0",
         }}
       >
-        Invitation to join a fridge
+        Welcome to {SiteConfig.title}!
       </Heading>
 
-      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>Hello,</Text>
-
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
-        <strong>{inviterName}</strong> invites you to join their fridge{" "}
-        <strong>&quot;{fridgeName}&quot;</strong> on {SiteConfig.title}.
+        Hello {userName},
       </Text>
 
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        Thank you for joining {SiteConfig.title}! We&apos;re excited to welcome
+        you to our community of egg guardians.
+      </Text>
+
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        To get started, please verify your email address:
+      </Text>
+
+      <Section style={{ textAlign: "center", margin: "32px 0" }}>
+        <EmailButton href={url}>Verify my email</EmailButton>
+      </Section>
+
       <EmailInfoBox>
-        <Heading
-          as="h3"
+        <Text
           style={{
             fontSize: "16px",
             fontWeight: "600",
@@ -173,8 +162,8 @@ export default function FridgeInvitationEmail({
             margin: "0 0 12px 0",
           }}
         >
-          As a guest, you will be able to:
-        </Heading>
+          With {SiteConfig.title}, you can:
+        </Text>
 
         {benefitsEn.map((benefit, index) => (
           <Section
@@ -195,29 +184,14 @@ export default function FridgeInvitationEmail({
         ))}
       </EmailInfoBox>
 
-      <Section style={{ textAlign: "center", margin: "24px 0" }}>
-        <EmailButton href={inviteUrl}>Join the fridge</EmailButton>
-      </Section>
-
-      <Text
-        style={{
-          fontSize: "14px",
-          color: EMAIL_COLORS.textMuted,
-          textAlign: "center",
-        }}
-      >
-        This invitation expires on {expiresFormattedEn}
-      </Text>
-
       <Text
         style={{
           fontSize: "12px",
           color: EMAIL_COLORS.textLight,
           textAlign: "center",
-          marginTop: "16px",
         }}
       >
-        If you weren&apos;t expecting this invitation, please ignore this email.
+        This link expires in 24 hours.
       </Text>
     </EggscuseMeEmailLayout>
   );

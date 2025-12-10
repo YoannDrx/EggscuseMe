@@ -30,11 +30,8 @@
       "admin": "Admin",
       "dashboard": "Dashboard",
       "users": "Users",
-      "invitations": "Invitations",
-      "emails": "Test Emails",
-      "export": "Export",
-      "logs": "Logs",
-      "feedback": "Feedback"
+      "tools": "Tools",
+      "monitoring": "Monitoring"
     },
     "invitations": {
       "title": "Invitation Management",
@@ -99,6 +96,36 @@
           "content": "Content (Markdown)",
           "preview": "Preview (optional)",
           "success": "Email sent!"
+        },
+        "otpSignin": {
+          "name": "OTP Sign-in Code",
+          "description": "Email with 6-digit code for passwordless sign-in",
+          "email": "Recipient email",
+          "success": "OTP email sent!"
+        },
+        "resetPassword": {
+          "name": "Reset Password",
+          "description": "Email to reset password",
+          "userName": "User name",
+          "success": "Reset email sent!"
+        },
+        "changeEmail": {
+          "name": "Change Email",
+          "description": "Verification email for new address",
+          "newEmail": "New email address",
+          "success": "Verification email sent!"
+        },
+        "deleteAccount": {
+          "name": "Delete Account",
+          "description": "Confirmation email before deletion",
+          "userName": "User name",
+          "success": "Confirmation email sent!"
+        },
+        "emailVerification": {
+          "name": "Email Verification",
+          "description": "Welcome email with verification",
+          "userName": "User name",
+          "success": "Verification email sent!"
         }
       },
       "form": {

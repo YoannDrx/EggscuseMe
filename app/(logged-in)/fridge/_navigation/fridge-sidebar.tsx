@@ -1,7 +1,5 @@
 "use client";
 
-import { LanguageToggle } from "@/components/nowts/language-toggle";
-import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,7 +19,6 @@ import { SidebarNavigationMenu } from "@/components/ui/sidebar-utils";
 import { ContactFeedbackPopover } from "@/features/contact/feedback/contact-feedback-popover";
 import { Eggy } from "@/features/mascot";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
-import { SidebarLogoutButton } from "@/features/sidebar/sidebar-logout-button";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -78,14 +75,8 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
             <p className="text-muted-foreground">{t("guestNotice")}</p>
           </div>
         )}
-        {/* Theme and Language Toggles */}
-        <div className="flex items-center justify-center gap-2 py-2">
-          <LanguageToggle />
-          <ThemeSwitcher />
-        </div>
         <ContactFeedbackPopover />
         <SidebarUserButton />
-        <SidebarLogoutButton />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

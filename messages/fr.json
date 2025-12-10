@@ -30,11 +30,8 @@
       "admin": "Admin",
       "dashboard": "Tableau de bord",
       "users": "Utilisateurs",
-      "invitations": "Invitations",
-      "emails": "Test Emails",
-      "export": "Export",
-      "logs": "Logs",
-      "feedback": "Retours"
+      "tools": "Outils",
+      "monitoring": "Monitoring"
     },
     "invitations": {
       "title": "Gestion des Invitations",
@@ -99,6 +96,36 @@
           "content": "Contenu (Markdown)",
           "preview": "Preview (optionnel)",
           "success": "Email envoye !"
+        },
+        "otpSignin": {
+          "name": "Code de connexion OTP",
+          "description": "Email avec code 6 chiffres pour connexion sans mot de passe",
+          "email": "Email du destinataire",
+          "success": "Email OTP envoye !"
+        },
+        "resetPassword": {
+          "name": "Reinitialisation mot de passe",
+          "description": "Email pour reinitialiser le mot de passe",
+          "userName": "Nom de l'utilisateur",
+          "success": "Email de reinitialisation envoye !"
+        },
+        "changeEmail": {
+          "name": "Changement d'email",
+          "description": "Email de verification pour nouvelle adresse",
+          "newEmail": "Nouvelle adresse email",
+          "success": "Email de verification envoye !"
+        },
+        "deleteAccount": {
+          "name": "Suppression de compte",
+          "description": "Email de confirmation avant suppression",
+          "userName": "Nom de l'utilisateur",
+          "success": "Email de confirmation envoye !"
+        },
+        "emailVerification": {
+          "name": "Verification d'email",
+          "description": "Email de bienvenue avec verification",
+          "userName": "Nom de l'utilisateur",
+          "success": "Email de verification envoye !"
         }
       },
       "form": {

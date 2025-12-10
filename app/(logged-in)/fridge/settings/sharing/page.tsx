@@ -368,7 +368,7 @@ export default function SharingPage() {
                         <div className="flex items-center gap-2">
                           <Link2 className="text-muted-foreground size-4 shrink-0" />
                           <code className="bg-background flex-1 truncate rounded border px-2 py-1 font-mono text-sm">
-                            {SiteConfig.domain}/join/{link.code}
+                            {SiteConfig.prodUrl}/join/{link.code}
                           </code>
                         </div>
 

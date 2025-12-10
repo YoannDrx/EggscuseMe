@@ -22,15 +22,19 @@ export const SidebarUserButton = () => {
   const data = session.data?.user;
 
   // Afficher un skeleton pendant le chargement pour éviter le mismatch d'hydratation
+  // On utilise un <button> désactivé pour matcher la structure HTML du composant final
   if (session.isPending) {
     return (
-      <div className="border-foreground/20 bg-muted/50 flex items-center gap-3 rounded-xl border-2 p-3">
+      <button
+        disabled
+        className="border-foreground/20 bg-muted/50 flex w-full items-center gap-3 rounded-xl border-2 p-3"
+      >
         <Skeleton className="size-10 rounded-full" />
         <div className="grid flex-1 gap-1">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-3 w-32" />
         </div>
-      </div>
+      </button>
     );
   }
 

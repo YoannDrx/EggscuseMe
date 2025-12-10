@@ -19,7 +19,7 @@ import { getFeedbackById } from "@/query/feedback/get-feedback";
 import { Angry, Frown, Meh, SmilePlus } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { UserDetailsCard } from "../../_components/user-details-card";
+import { UserDetailsCard } from "@app/admin/_components/user-details-card";
 
 const ReviewIcons = [
   {

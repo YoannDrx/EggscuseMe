@@ -238,3 +238,51 @@ export function EmailInfoBox({ children }: { children: React.ReactNode }) {
     </Section>
   );
 }
+
+/**
+ * Language separator component for bilingual emails
+ */
+export function EmailLanguageSeparator() {
+  return (
+    <Section style={{ margin: "32px 0" }}>
+      <table
+        cellPadding={0}
+        cellSpacing={0}
+        style={{ width: "100%", borderCollapse: "collapse" }}
+      >
+        <tr>
+          <td
+            style={{
+              borderBottom: `2px solid ${EMAIL_COLORS.borderLight}`,
+              width: "40%",
+            }}
+          />
+          <td
+            style={{
+              textAlign: "center",
+              padding: "0 16px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: "12px",
+                color: EMAIL_COLORS.textMuted,
+                margin: 0,
+                fontWeight: "600",
+              }}
+            >
+              ENGLISH VERSION BELOW
+            </Text>
+          </td>
+          <td
+            style={{
+              borderBottom: `2px solid ${EMAIL_COLORS.borderLight}`,
+              width: "40%",
+            }}
+          />
+        </tr>
+      </table>
+    </Section>
+  );
+}

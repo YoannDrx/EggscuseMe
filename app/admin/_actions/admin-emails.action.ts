@@ -4,9 +4,15 @@ import { AdminLogAction } from "@/generated/prisma";
 import { adminAction } from "@/lib/actions/safe-actions";
 import { sendEmail } from "@/lib/mail/send-email";
 import { prisma } from "@/lib/prisma";
+import { getServerUrl } from "@/lib/server-url";
+import ChangeEmailEmail from "@email/change-email.email";
+import DeleteAccountEmail from "@email/delete-account.email";
+import EmailVerificationEmail from "@email/email-verification.email";
 import ExpirationWarningEmail from "@email/expiration-warning.email";
 import FridgeInvitationEmail from "@email/fridge-invitation.email";
 import MarkdownEmail from "@email/markdown.email";
+import OtpSigninEmail from "@email/otp-signin.email";
+import ResetPasswordEmail from "@email/reset-password.email";
 import { z } from "zod";
 
 const SendFridgeInvitationTestSchema = z.object({
@@ -121,6 +127,194 @@ export const sendTestMarkdownAction = adminAction
           template: "markdown",
           to: parsedInput.to,
           subject: parsedInput.subject,
+          emailId: result.data.id,
+        },
+      },
+    });
+
+    return { success: true };
+  });
+
+// ============================================
+// Actions pour les templates d'authentification
+// ============================================
+
+const SendOtpSigninTestSchema = z.object({
+  to: z.string().email(),
+  email: z.string().email(),
+});
+
+export const sendTestOtpSigninAction = adminAction
+  .inputSchema(SendOtpSigninTestSchema)
+  .action(async ({ parsedInput, ctx: { user } }) => {
+    const testOtp = "123456";
+    const autoLoginUrl = `${getServerUrl()}/auth/signin/otp?email=${parsedInput.email}&otp=${testOtp}`;
+
+    const result = await sendEmail({
+      to: parsedInput.to,
+      subject: `[TEST] ${testOtp} - Code de connexion EggscuseMe`,
+      html: OtpSigninEmail({
+        email: parsedInput.email,
+        otp: testOtp,
+        autoLoginUrl,
+      }),
+    });
+
+    if (result.error) {
+      return { success: false, error: result.error.message };
+    }
+
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: AdminLogAction.SEND_TEST_EMAIL,
+        metadata: {
+          template: "otp-signin",
+          to: parsedInput.to,
+          emailId: result.data.id,
+        },
+      },
+    });
+
+    return { success: true };
+  });
+
+const SendResetPasswordTestSchema = z.object({
+  to: z.string().email(),
+  userName: z.string().min(1),
+});
+
+export const sendTestResetPasswordAction = adminAction
+  .inputSchema(SendResetPasswordTestSchema)
+  .action(async ({ parsedInput, ctx: { user } }) => {
+    const result = await sendEmail({
+      to: parsedInput.to,
+      subject: `[TEST] Reinitialisation de mot de passe - EggscuseMe`,
+      html: ResetPasswordEmail({
+        user: { name: parsedInput.userName, email: parsedInput.to },
+        url: `${getServerUrl()}/auth/reset-password?token=test-token-12345`,
+      }),
+    });
+
+    if (result.error) {
+      return { success: false, error: result.error.message };
+    }
+
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: AdminLogAction.SEND_TEST_EMAIL,
+        metadata: {
+          template: "reset-password",
+          to: parsedInput.to,
+          emailId: result.data.id,
+        },
+      },
+    });
+
+    return { success: true };
+  });
+
+const SendChangeEmailTestSchema = z.object({
+  to: z.string().email(),
+  newEmail: z.string().email(),
+});
+
+export const sendTestChangeEmailAction = adminAction
+  .inputSchema(SendChangeEmailTestSchema)
+  .action(async ({ parsedInput, ctx: { user } }) => {
+    const result = await sendEmail({
+      to: parsedInput.to,
+      subject: `[TEST] Confirmez votre nouvelle adresse email - EggscuseMe`,
+      html: ChangeEmailEmail({
+        newEmail: parsedInput.newEmail,
+        url: `${getServerUrl()}/auth/verify-email?token=test-token-12345`,
+      }),
+    });
+
+    if (result.error) {
+      return { success: false, error: result.error.message };
+    }
+
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: AdminLogAction.SEND_TEST_EMAIL,
+        metadata: {
+          template: "change-email",
+          to: parsedInput.to,
+          emailId: result.data.id,
+        },
+      },
+    });
+
+    return { success: true };
+  });
+
+const SendDeleteAccountTestSchema = z.object({
+  to: z.string().email(),
+  userName: z.string().min(1),
+});
+
+export const sendTestDeleteAccountAction = adminAction
+  .inputSchema(SendDeleteAccountTestSchema)
+  .action(async ({ parsedInput, ctx: { user } }) => {
+    const result = await sendEmail({
+      to: parsedInput.to,
+      subject: `[TEST] Confirmation de suppression de compte - EggscuseMe`,
+      html: DeleteAccountEmail({
+        user: { name: parsedInput.userName, email: parsedInput.to },
+        url: `${getServerUrl()}/auth/confirm-delete?token=test-token-12345`,
+      }),
+    });
+
+    if (result.error) {
+      return { success: false, error: result.error.message };
+    }
+
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: AdminLogAction.SEND_TEST_EMAIL,
+        metadata: {
+          template: "delete-account",
+          to: parsedInput.to,
+          emailId: result.data.id,
+        },
+      },
+    });
+
+    return { success: true };
+  });
+
+const SendEmailVerificationTestSchema = z.object({
+  to: z.string().email(),
+  userName: z.string().min(1),
+});
+
+export const sendTestEmailVerificationAction = adminAction
+  .inputSchema(SendEmailVerificationTestSchema)
+  .action(async ({ parsedInput, ctx: { user } }) => {
+    const result = await sendEmail({
+      to: parsedInput.to,
+      subject: `[TEST] Bienvenue sur EggscuseMe ! Verifiez votre email`,
+      html: EmailVerificationEmail({
+        user: { name: parsedInput.userName, email: parsedInput.to },
+        url: `${getServerUrl()}/auth/verify-email?token=test-token-12345`,
+      }),
+    });
+
+    if (result.error) {
+      return { success: false, error: result.error.message };
+    }
+
+    await prisma.adminLog.create({
+      data: {
+        adminId: user.id,
+        action: AdminLogAction.SEND_TEST_EMAIL,
+        metadata: {
+          template: "email-verification",
+          to: parsedInput.to,
           emailId: result.data.id,
         },
       },

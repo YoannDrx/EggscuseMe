@@ -6,6 +6,7 @@ import {
   EggscuseMeEmailLayout,
   EmailButton,
   EmailInfoBox,
+  EmailLanguageSeparator,
 } from "./utils/eggscuseme-email-layout";
 
 type ExpiringEgg = {
@@ -26,10 +27,16 @@ function getFreshnessColor(daysLeft: number): string {
   return EMAIL_COLORS.fresh;
 }
 
-function getDaysLeftText(daysLeft: number): string {
+function getDaysLeftTextFr(daysLeft: number): string {
   if (daysLeft === 0) return "Expire aujourd'hui";
   if (daysLeft === 1) return "1 jour restant";
   return `${daysLeft} jours restants`;
+}
+
+function getDaysLeftTextEn(daysLeft: number): string {
+  if (daysLeft === 0) return "Expires today";
+  if (daysLeft === 1) return "1 day left";
+  return `${daysLeft} days left`;
 }
 
 export default function ExpirationWarningEmail({
@@ -50,15 +57,12 @@ export default function ExpirationWarningEmail({
   const totalEggs = eggs.reduce((sum, egg) => sum + egg.quantity, 0);
 
   return (
-    <EggscuseMeEmailLayout
-      eggyMood="chef"
-      footerText="Vous recevez cet email car les notifications sont activees dans vos preferences."
-    >
+    <EggscuseMeEmailLayout eggyMood="chef">
       <Preview>
-        {`${totalEggs} oeufs vont bientot expirer dans ${fridgeName}`}
+        {`${totalEggs} oeufs vont expirer / ${totalEggs} eggs expiring soon - ${fridgeName}`}
       </Preview>
 
-      {/* Title */}
+      {/* ==================== FRENCH VERSION ==================== */}
       <Heading
         style={{
           fontSize: "24px",
@@ -71,7 +75,6 @@ export default function ExpirationWarningEmail({
         Alerte Fraicheur
       </Heading>
 
-      {/* Greeting */}
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
         Bonjour {userName},
       </Text>
@@ -81,7 +84,6 @@ export default function ExpirationWarningEmail({
         bientot a expiration. Il est temps de les cuisiner !
       </Text>
 
-      {/* Eggs list */}
       <EmailInfoBox>
         <Heading
           as="h3"
@@ -97,7 +99,7 @@ export default function ExpirationWarningEmail({
 
         {eggs.map((egg, index) => (
           <Section
-            key={index}
+            key={`fr-${index}`}
             style={{
               backgroundColor: "#FFFFFF",
               borderRadius: "6px",
@@ -125,14 +127,13 @@ export default function ExpirationWarningEmail({
             >
               {egg.quantity} oeufs restants •{" "}
               <strong style={{ color: getFreshnessColor(egg.daysLeft) }}>
-                {getDaysLeftText(egg.daysLeft)}
+                {getDaysLeftTextFr(egg.daysLeft)}
               </strong>
             </Text>
           </Section>
         ))}
       </EmailInfoBox>
 
-      {/* Cooking tips */}
       <Text
         style={{
           fontSize: "14px",
@@ -144,10 +145,119 @@ export default function ExpirationWarningEmail({
         parfaits pour utiliser des oeufs proches de l&apos;expiration !
       </Text>
 
-      {/* CTA Button */}
       <Section style={{ textAlign: "center", margin: "24px 0" }}>
         <EmailButton href={fridgeUrl}>Voir mon frigo</EmailButton>
       </Section>
+
+      <Text
+        style={{
+          fontSize: "12px",
+          color: EMAIL_COLORS.textLight,
+          textAlign: "center",
+        }}
+      >
+        Vous recevez cet email car les notifications sont activees.
+      </Text>
+
+      {/* ==================== SEPARATOR ==================== */}
+      <EmailLanguageSeparator />
+
+      {/* ==================== ENGLISH VERSION ==================== */}
+      <Heading
+        style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+          color: EMAIL_COLORS.text,
+          textAlign: "center",
+          margin: "0 0 24px 0",
+        }}
+      >
+        Freshness Alert
+      </Heading>
+
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        Hello {userName},
+      </Text>
+
+      <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
+        Some eggs in your fridge <strong>{fridgeName}</strong> are about to
+        expire. Time to cook them!
+      </Text>
+
+      <EmailInfoBox>
+        <Heading
+          as="h3"
+          style={{
+            fontSize: "16px",
+            fontWeight: "600",
+            color: EMAIL_COLORS.text,
+            margin: "0 0 12px 0",
+          }}
+        >
+          Eggs to consume quickly:
+        </Heading>
+
+        {eggs.map((egg, index) => (
+          <Section
+            key={`en-${index}`}
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: "6px",
+              padding: "12px",
+              marginBottom: index < eggs.length - 1 ? "8px" : "0",
+              borderLeft: `4px solid ${getFreshnessColor(egg.daysLeft)}`,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: "14px",
+                fontWeight: "500",
+                color: EMAIL_COLORS.text,
+                margin: "0 0 4px 0",
+              }}
+            >
+              {egg.name || "Egg box"}
+            </Text>
+            <Text
+              style={{
+                fontSize: "14px",
+                color: EMAIL_COLORS.textMuted,
+                margin: 0,
+              }}
+            >
+              {egg.quantity} eggs remaining •{" "}
+              <strong style={{ color: getFreshnessColor(egg.daysLeft) }}>
+                {getDaysLeftTextEn(egg.daysLeft)}
+              </strong>
+            </Text>
+          </Section>
+        ))}
+      </EmailInfoBox>
+
+      <Text
+        style={{
+          fontSize: "14px",
+          color: EMAIL_COLORS.textMuted,
+          fontStyle: "italic",
+        }}
+      >
+        Recipe ideas: hard-boiled eggs, quiche, omelette, or pastries are
+        perfect for using eggs close to expiration!
+      </Text>
+
+      <Section style={{ textAlign: "center", margin: "24px 0" }}>
+        <EmailButton href={fridgeUrl}>View my fridge</EmailButton>
+      </Section>
+
+      <Text
+        style={{
+          fontSize: "12px",
+          color: EMAIL_COLORS.textLight,
+          textAlign: "center",
+        }}
+      >
+        You received this email because notifications are enabled.
+      </Text>
     </EggscuseMeEmailLayout>
   );
 }

@@ -10,12 +10,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Eggy } from "@/features/mascot";
+import { setLocale } from "@/i18n/locale.action";
+import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 const themes = [
   {
@@ -56,15 +59,45 @@ const themes = [
   },
 ] as const;
 
+const languages = [
+  {
+    value: "fr" as Locale,
+    label: "Français",
+    description: {
+      fr: "Interface en français",
+      en: "French interface",
+    },
+    flag: "🇫🇷",
+  },
+  {
+    value: "en" as Locale,
+    label: "English",
+    description: {
+      fr: "Interface en anglais",
+      en: "English interface",
+    },
+    flag: "🇬🇧",
+  },
+] as const;
+
 export default function AppearancePage() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Éviter le flash de contenu non hydraté
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleLanguageChange = (newLocale: Locale) => {
+    startTransition(async () => {
+      await setLocale(newLocale);
+      router.refresh();
+    });
+  };
 
   if (!mounted) {
     return (
@@ -160,6 +193,75 @@ export default function AppearancePage() {
                       )}
                     >
                       {label}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {description}
+                    </p>
+                  </div>
+                </Label>
+              );
+            })}
+          </RadioGroup>
+        </CardContent>
+      </Card>
+
+      {/* Language Selection */}
+      <Card variant="sunny">
+        <CardHeader>
+          <CardTitle className="font-heading">
+            {locale === "fr" ? "Langue" : "Language"}
+          </CardTitle>
+          <CardDescription>
+            {locale === "fr"
+              ? "Choisissez la langue de l'interface"
+              : "Choose the interface language"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RadioGroup
+            value={locale}
+            onValueChange={(value) => handleLanguageChange(value as Locale)}
+            className="grid gap-4 sm:grid-cols-2"
+            disabled={isPending}
+          >
+            {languages.map((lang) => {
+              const isSelected = locale === lang.value;
+              const description =
+                lang.description[locale === "fr" ? "fr" : "en"];
+
+              return (
+                <Label
+                  key={lang.value}
+                  htmlFor={`lang-${lang.value}`}
+                  className={cn(
+                    "flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 p-6 transition-all",
+                    isSelected
+                      ? "border-primary bg-primary/5"
+                      : "border-transparent bg-stone-900/50 hover:border-stone-700",
+                    isPending && "pointer-events-none opacity-50",
+                  )}
+                >
+                  <RadioGroupItem
+                    value={lang.value}
+                    id={`lang-${lang.value}`}
+                    className="sr-only"
+                  />
+                  <div
+                    className={cn(
+                      "flex size-12 items-center justify-center rounded-full text-2xl transition-colors",
+                      isSelected ? "bg-primary/20" : "bg-stone-800",
+                    )}
+                  >
+                    {lang.flag}
+                  </div>
+                  <div className="text-center">
+                    <p
+                      className={cn(
+                        "font-medium",
+                        isSelected ? "text-primary" : "text-foreground",
+                      )}
+                    >
+                      {lang.label}
                     </p>
                     <p className="text-muted-foreground text-xs">
                       {description}
