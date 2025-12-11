@@ -1,22 +1,23 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { NeoButton } from "@/components/neo/neo-button";
+import { cn } from "@/lib/utils";
 import { subscribeToPush } from "@/lib/pwa/push-notifications";
+import { motion } from "motion/react";
 import { Bell, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export function NotificationPermission() {
   const [permission, setPermission] =
     useState<NotificationPermission>("default");
   const [showCard, setShowCard] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if ("Notification" in window) {
@@ -45,41 +46,91 @@ export function NotificationPermission() {
     }
   };
 
-  if (permission !== "default" || !showCard) return null;
+  const handleClose = () => setShowCard(false);
 
-  return (
-    <Card className="animate-in slide-in-from-bottom-4 fixed bottom-4 left-1/2 z-[70] w-[calc(100%-2rem)] max-w-80 -translate-x-1/2 shadow-xl">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Bell className="size-5" />
-            Notifications
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            onClick={() => setShowCard(false)}
-          >
-            <X className="size-4" />
-          </Button>
-        </div>
-        <CardDescription>
-          Soyez alerté quand vos œufs arrivent à expiration
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex gap-2">
-        <Button onClick={handleEnable} className="flex-1" disabled={isLoading}>
-          {isLoading ? "Activation..." : "Activer"}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => setShowCard(false)}
-          className="flex-1"
+  if (!mounted || permission !== "default" || !showCard) return null;
+
+  const modalContent = (
+    <>
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        onClick={handleClose}
+        className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm"
+      />
+
+      {/* Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        className={cn(
+          "fixed top-1/2 left-1/2 z-[71] -translate-x-1/2 -translate-y-1/2",
+          "w-[calc(100%-2rem)] max-w-sm",
+          "bg-neo-card",
+          "rounded-[var(--radius-neo-2xl)]",
+          "border-neo-border/30 border-[length:var(--border-neo)]",
+          "shadow-[var(--shadow-neo-xl)]",
+          "overflow-hidden",
+        )}
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={handleClose}
+          className={cn(
+            "absolute top-3 right-3 z-10",
+            "rounded-full p-2",
+            "bg-neo-bg text-neo-text-muted",
+            "border-neo-border/20 border-[length:var(--border-neo)]",
+            "shadow-[var(--shadow-neo-sm)]",
+            "hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)]",
+            "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+            "transition-all duration-200",
+          )}
         >
-          Plus tard
-        </Button>
-      </CardContent>
-    </Card>
+          <X className="size-4" />
+        </button>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Icon */}
+          <div className="bg-neo-accent/10 mx-auto mb-4 flex size-16 items-center justify-center rounded-full">
+            <Bell className="text-neo-accent size-8" />
+          </div>
+
+          {/* Text */}
+          <div className="mb-6 text-center">
+            <h2 className="text-neo-text mb-2 text-xl font-bold">
+              Activer les notifications
+            </h2>
+            <p className="text-neo-text-muted text-sm">
+              Soyez alerté quand vos oeufs arrivent à expiration pour éviter le
+              gaspillage.
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col gap-3">
+            <NeoButton
+              onClick={handleEnable}
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? "Activation..." : "Activer les notifications"}
+            </NeoButton>
+            <NeoButton variant="ghost" onClick={handleClose} className="w-full">
+              Plus tard
+            </NeoButton>
+          </div>
+        </div>
+      </motion.div>
+    </>
   );
+
+  return <>{createPortal(modalContent, document.body)}</>;
 }
