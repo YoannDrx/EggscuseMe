@@ -17,6 +17,11 @@ vi.mock("next/navigation", async () => {
 });
 
 describe("SignInCredentialsAndMagicLinkForm", () => {
+  const getPasswordInput = () =>
+    screen.getByLabelText(/password/i, { selector: "input" });
+  const queryPasswordInput = () =>
+    screen.queryByLabelText(/password/i, { selector: "input" });
+
   beforeEach(() => {
     vi.resetAllMocks();
 
@@ -50,7 +55,7 @@ describe("SignInCredentialsAndMagicLinkForm", () => {
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
 
     // Password field should be visible in credentials mode
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(getPasswordInput()).toBeInTheDocument();
 
     // Submit button should say "Sign in"
     expect(
@@ -67,13 +72,13 @@ describe("SignInCredentialsAndMagicLinkForm", () => {
     const { user } = setup(<SignInCredentialsAndEmailOTP />);
 
     // Initially in credentials mode
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(getPasswordInput()).toBeInTheDocument();
 
     // Click to switch to magic link mode
     await user.click(screen.getByText(/login with OTP/i));
 
     // Password field should not be visible anymore
-    expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
+    expect(queryPasswordInput()).not.toBeInTheDocument();
 
     // Submit button text should change
     expect(
@@ -93,7 +98,7 @@ describe("SignInCredentialsAndMagicLinkForm", () => {
 
     // Fill in the form
     await user.type(screen.getByLabelText(/email/i), "test@example.com");
-    await user.type(screen.getByLabelText(/password/i), "password123");
+    await user.type(getPasswordInput(), "password123");
 
     // Submit the form
     await user.click(screen.getByRole("button", { name: /sign in$/i }));
@@ -145,7 +150,7 @@ describe("SignInCredentialsAndMagicLinkForm", () => {
 
     // Fill in the form
     await user.type(screen.getByLabelText(/email/i), "test@example.com");
-    await user.type(screen.getByLabelText(/password/i), "wrong-password");
+    await user.type(getPasswordInput(), "wrong-password");
 
     // Submit the form
     await user.click(screen.getByRole("button", { name: /sign in$/i }));

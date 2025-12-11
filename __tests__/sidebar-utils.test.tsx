@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { Home, Settings, User } from "lucide-react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { SidebarProvider } from "../src/components/ui/sidebar";
+import { NeoSidebarProvider } from "../src/components/neo/neo-sidebar";
 import {
   SidebarMenuButtonLink,
   SidebarNavigationMenu,
@@ -49,7 +49,7 @@ beforeEach(() => {
 
 // Create a wrapper component with SidebarProvider
 const withSidebarProvider = (children: React.ReactNode) => (
-  <SidebarProvider>{children}</SidebarProvider>
+  <NeoSidebarProvider>{children}</NeoSidebarProvider>
 );
 
 describe("SidebarMenuButtonLink", () => {
@@ -66,8 +66,7 @@ describe("SidebarMenuButtonLink", () => {
     const link = screen.getByRole("link", { name: "Test Link" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/test");
-    // Check that it has active class when pathname matches
-    expect(container.querySelector('[data-active="true"]')).not.toBeNull();
+    expect(link).toHaveClass("bg-accent");
   });
 
   it("applies inactive state when path doesn't match", async () => {
@@ -80,7 +79,7 @@ describe("SidebarMenuButtonLink", () => {
       ),
     );
 
-    expect(container.querySelector('[data-active="true"]')).toBeNull();
+    expect(container.querySelector("a")).not.toHaveClass("bg-accent");
   });
 });
 
@@ -98,8 +97,7 @@ describe("SidebarSubButtonLink", () => {
     const link = screen.getByRole("link", { name: "Test Sub Link" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/test");
-    // Check that it has active class when pathname matches
-    expect(container.querySelector('[data-active="true"]')).not.toBeNull();
+    expect(link).toHaveClass("bg-accent");
   });
 
   it("applies inactive state when path doesn't match", async () => {
@@ -112,7 +110,7 @@ describe("SidebarSubButtonLink", () => {
       ),
     );
 
-    expect(container.querySelector('[data-active="true"]')).toBeNull();
+    expect(container.querySelector("a")).not.toHaveClass("bg-accent");
   });
 });
 
@@ -137,9 +135,7 @@ describe("SidebarNavigationMenu", () => {
       ],
     };
 
-    setup(
-      withSidebarProvider(<SidebarNavigationMenu link={navigationGroup} />),
-    );
+    setup(withSidebarProvider(<SidebarNavigationMenu link={navigationGroup} />));
 
     // Check that main links are rendered (using labelKey as mock returns the key)
     expect(screen.getByText("dashboard")).toBeInTheDocument();
@@ -168,9 +164,7 @@ describe("SidebarNavigationMenu", () => {
       ],
     };
 
-    setup(
-      withSidebarProvider(<SidebarNavigationMenu link={navigationGroup} />),
-    );
+    setup(withSidebarProvider(<SidebarNavigationMenu link={navigationGroup} />));
 
     // Check that parent link is rendered (using labelKey as mock returns the key)
     expect(screen.getByText("settings")).toBeInTheDocument();

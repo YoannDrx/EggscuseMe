@@ -26,10 +26,11 @@ type ProviderButtonProps = {
 export const ProviderButton = (props: ProviderButtonProps) => {
   const { data: lastUsedProvider } = useQuery({
     queryKey: ["lastUsedLoginMethod"],
-    queryFn: () => {
-      return authClient.getLastUsedLoginMethod();
+    queryFn: async () => {
+      const lastUsed = await authClient.getLastUsedLoginMethod();
+      return lastUsed ?? null;
     },
-    initialData: undefined,
+    initialData: null,
     staleTime: Infinity,
   });
 
