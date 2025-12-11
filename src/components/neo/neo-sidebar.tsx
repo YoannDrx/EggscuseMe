@@ -70,7 +70,9 @@ const NeoSidebarProvider = ({
     <SidebarContext.Provider
       value={{ expanded, setExpanded, mobile, mobileOpen, setMobileOpen }}
     >
-      <div className="flex min-h-svh w-full">{children}</div>
+      <div className="flex min-h-svh w-full md:h-svh md:overflow-visible">
+        {children}
+      </div>
     </SidebarContext.Provider>
   );
 };
@@ -177,7 +179,10 @@ const NeoSidebar = React.forwardRef<HTMLElement, NeoSidebarProps>(
         ref={ref}
         data-slot="neo-sidebar"
         style={{ width: expanded ? expandedWidth : collapsedWidth }}
-        className={cn(neoSidebarVariants({ variant, className }))}
+        className={cn(
+          neoSidebarVariants({ variant, className }),
+          "md:sticky md:top-0 md:self-start md:shadow-[var(--shadow-neo-xl)] md:mb-4 md:max-h-[calc(100vh-20px)] md:min-h-[calc(100vh-20px)] md:overflow-hidden md:border-r-transparent",
+        )}
         {...props}
       >
         {children}
@@ -413,7 +418,7 @@ const NeoSidebarInset = React.forwardRef<
   <div
     ref={ref}
     data-slot="neo-sidebar-inset"
-    className={cn("flex-1 overflow-auto", className)}
+    className={cn("flex-1 overflow-auto min-h-0", className)}
     {...props}
   />
 ));

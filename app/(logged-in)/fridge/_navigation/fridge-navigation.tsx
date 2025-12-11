@@ -19,7 +19,7 @@ export function FridgeNavigation({ children, role }: FridgeNavigationProps) {
   return (
     <NeoSidebarProvider>
       <FridgeSidebar role={role} />
-      <NeoSidebarInset className="border-neo-border md:border-l-[length:var(--border-neo)]">
+      <NeoSidebarInset className="border-neo-border">
         {/* Desktop Header - Hidden on mobile */}
         <header className="hidden h-16 shrink-0 items-center gap-2 md:flex">
           <Layout size="lg" className="flex items-center gap-2">
