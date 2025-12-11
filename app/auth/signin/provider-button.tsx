@@ -60,7 +60,7 @@ export const ProviderButton = (props: ProviderButtonProps) => {
       <NeoButton
         loading={githubSignInMutation.isPending}
         className={cn("w-full", {
-          "text-neo-text border-neo-border bg-white hover:bg-white/90":
+          "border-neo-border bg-white text-stone-900 hover:bg-white/90":
             data.name === "Google",
           "bg-neo-text text-neo-bg border-neo-border hover:bg-neo-text/90":
             data.name === "Github",

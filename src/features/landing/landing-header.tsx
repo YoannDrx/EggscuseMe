@@ -117,11 +117,6 @@ export function LandingHeader() {
               <LanguageToggle />
               <ThemeSwitcher />
               <AuthButtonClient />
-              <NeoButton asChild>
-                <Link href="/auth/signin?callbackUrl=/fridge">
-                  {t("getStarted")}
-                </Link>
-              </NeoButton>
             </div>
           </motion.nav>
 
