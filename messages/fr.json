@@ -357,7 +357,7 @@
     "nav": {
       "features": "Expertise",
       "pricing": "Offres",
-      "blog": "Conseils",
+      "blog": "Blog",
       "getStarted": "Cuisiner",
       "openMenu": "Ouvrir le menu"
     },
@@ -1231,6 +1231,7 @@
       "title": "Le Blog EggscuseMe",
       "subtitle": "Conseils, astuces et recettes pour cuisiner vos œufs parfaitement",
       "description": "Découvrez nos articles sur la fraîcheur des œufs, les techniques de cuisson et les recettes anti-gaspi.",
+      "tags": "Tags",
       "categories": "Catégories",
       "allCategories": "Toutes les catégories",
       "noPosts": "Aucun article trouvé",
@@ -1238,6 +1239,7 @@
       "viewAll": "Voir tous les articles",
       "backToList": "Retour au blog",
       "readMore": "Lire la suite",
+      "tagDescription": "Articles avec le tag « {tag} »",
       "meta": {
         "title": "Blog | EggscuseMe",
         "description": "Conseils, recettes et astuces pour gérer vos œufs et réduire le gaspillage alimentaire."
@@ -1247,6 +1249,7 @@
       "title": "Nous contacter",
       "subtitle": "Une question sur EggscuseMe ? Besoin d'aide pour gérer votre frigo ? Nous sommes à votre écoute.",
       "form": {
+        "title": "Envoyez-nous un message",
         "firstName": "Prénom",
         "lastName": "Nom",
         "email": "Email",
@@ -1297,23 +1300,28 @@
       "title": "Zéro œuf gaspillé",
       "eyebrow": "Notre mission",
       "subtitle": "EggscuseMe est né d'un constat simple : trop d'œufs finissent à la poubelle par manque de suivi. Nous avons créé l'application qui change ça.",
+      "problem": "Le problème du gaspillage",
       "stats": {
-        "wasted": "30%",
-        "wastedLabel": "des œufs achetés sont jetés",
-        "daily": "2M",
-        "dailyLabel": "d'œufs gaspillés/jour en France",
-        "shelfLife": "28",
-        "shelfLifeLabel": "jours de durée de vie max",
-        "free": "100%",
-        "freeLabel": "gratuit pour commencer"
+        "wasted": {
+          "value": "30%",
+          "label": "des œufs achetés sont jetés"
+        },
+        "daily": {
+          "value": "2M",
+          "label": "d'œufs gaspillés/jour en France"
+        },
+        "shelfLife": {
+          "value": "28",
+          "label": "jours de durée de vie max"
+        },
+        "free": {
+          "value": "100%",
+          "label": "gratuit pour commencer"
+        }
       },
-      "problem": {
-        "title": "Le problème du gaspillage",
-        "description": "Chaque année en France, des millions d'œufs parfaitement consommables sont jetés. La cause ? Une confusion sur les dates et un manque d'information sur comment les cuisiner selon leur fraîcheur."
-      },
+      "solutionTitle": "Notre solution",
+      "solutionSubtitle": "Un frigo virtuel intelligent qui vous accompagne au quotidien.",
       "solution": {
-        "title": "Notre solution",
-        "subtitle": "Un frigo virtuel intelligent qui vous accompagne au quotidien.",
         "tracking": {
           "title": "Suivi intelligent",
           "description": "Visualisez la fraîcheur de chaque boîte avec des indicateurs couleur. Vert pour extra-frais, jaune pour frais, orange pour à cuire."
@@ -1327,8 +1335,8 @@
           "description": "Recevez une alerte quand vos œufs approchent de leur date limite. Plus jamais d'œufs oubliés au fond du frigo."
         }
       },
+      "valuesTitle": "Nos valeurs",
       "values": {
-        "title": "Nos valeurs",
         "antiWaste": {
           "title": "Anti-gaspi",
           "description": "Chaque œuf sauvé compte. Notre mission est de réduire le gaspillage alimentaire, un œuf à la fois."

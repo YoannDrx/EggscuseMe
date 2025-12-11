@@ -224,7 +224,7 @@ export default async function ContactPage() {
                 <Send className="text-neo-accent size-5" />
               </div>
               <h2 className="text-neo-text text-xl font-bold">
-                {t("form.submit")}
+                {t("form.title")}
               </h2>
             </div>
 

@@ -1,11 +1,8 @@
 import { Loader } from "@/components/nowts/loader";
 
-/**
- * This page should never be seen by the user because everything is pre-rendered.
- */
-export default async function RouteLoading() {
+export default function RouteLoading() {
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex min-h-[60vh] items-center justify-center p-4">
       <Loader size={32} />
     </div>
   );

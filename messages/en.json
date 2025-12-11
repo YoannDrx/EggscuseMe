@@ -1231,6 +1231,7 @@
       "title": "The EggscuseMe Blog",
       "subtitle": "Tips, tricks, and recipes to cook your eggs perfectly",
       "description": "Discover our articles on egg freshness, cooking techniques, and anti-waste recipes.",
+      "tags": "Tags",
       "categories": "Categories",
       "allCategories": "All categories",
       "noPosts": "No posts found",
@@ -1238,6 +1239,7 @@
       "viewAll": "View all articles",
       "backToList": "Back to blog",
       "readMore": "Read more",
+      "tagDescription": "Articles tagged with \"{tag}\"",
       "meta": {
         "title": "Blog | EggscuseMe",
         "description": "Tips, recipes, and tricks to manage your eggs and reduce food waste."
@@ -1247,6 +1249,7 @@
       "title": "Contact us",
       "subtitle": "Have a question about EggscuseMe? Need help managing your fridge? We're here to help.",
       "form": {
+        "title": "Send us a message",
         "firstName": "First name",
         "lastName": "Last name",
         "email": "Email",
@@ -1297,23 +1300,28 @@
       "title": "Zero eggs wasted",
       "eyebrow": "Our mission",
       "subtitle": "EggscuseMe was born from a simple observation: too many eggs end up in the trash due to lack of tracking. We created the app that changes that.",
+      "problem": "The waste problem",
       "stats": {
-        "wasted": "30%",
-        "wastedLabel": "of purchased eggs are thrown away",
-        "daily": "2M",
-        "dailyLabel": "eggs wasted per day in France",
-        "shelfLife": "28",
-        "shelfLifeLabel": "days maximum shelf life",
-        "free": "100%",
-        "freeLabel": "free to get started"
+        "wasted": {
+          "value": "30%",
+          "label": "of purchased eggs are thrown away"
+        },
+        "daily": {
+          "value": "2M",
+          "label": "eggs wasted per day in France"
+        },
+        "shelfLife": {
+          "value": "28",
+          "label": "days maximum shelf life"
+        },
+        "free": {
+          "value": "100%",
+          "label": "free to get started"
+        }
       },
-      "problem": {
-        "title": "The waste problem",
-        "description": "Every year in France, millions of perfectly consumable eggs are thrown away. The cause? Confusion about dates and lack of information on how to cook them based on freshness."
-      },
+      "solutionTitle": "Our solution",
+      "solutionSubtitle": "A smart virtual fridge that helps you every day.",
       "solution": {
-        "title": "Our solution",
-        "subtitle": "A smart virtual fridge that helps you every day.",
         "tracking": {
           "title": "Smart tracking",
           "description": "Visualize each box's freshness with color indicators. Green for extra-fresh, yellow for fresh, orange for cook-thoroughly."
@@ -1327,8 +1335,8 @@
           "description": "Get an alert when your eggs are approaching their expiration. Never forget eggs at the back of the fridge again."
         }
       },
+      "valuesTitle": "Our values",
       "values": {
-        "title": "Our values",
         "antiWaste": {
           "title": "Anti-waste",
           "description": "Every saved egg counts. Our mission is to reduce food waste, one egg at a time."

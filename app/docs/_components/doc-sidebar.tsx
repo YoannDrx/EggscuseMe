@@ -51,14 +51,14 @@ export function DocSidebar({ docs, currentSlug }: DocSidebarProps) {
   }, [groupedDocs]);
 
   return (
-    <nav className="flex flex-col gap-6">
+    <nav className="flex flex-col gap-4">
       {sortedSubcategories.map((subcategory) => {
         const subcategoryDocs = groupedDocs[subcategory];
 
         // For the General category, render without collapsible
         if (subcategory === "General" && subcategoryDocs.length > 0) {
           return (
-            <div key={subcategory} className="flex flex-col gap-2">
+            <div key={subcategory} className="flex flex-col gap-1">
               {subcategoryDocs.map((doc) => (
                 <DocLink
                   key={doc.slug}
@@ -74,11 +74,15 @@ export function DocSidebar({ docs, currentSlug }: DocSidebarProps) {
         if (subcategoryDocs.length === 0) return null;
 
         return (
-          <div key={subcategory} className="flex flex-col gap-2">
-            <div className="mb-2 text-sm font-medium">
-              <span>{subcategory}</span>
+          <div key={subcategory} className="flex flex-col gap-1">
+            <div
+              className={cn(
+                "text-neo-text font-heading mb-2 text-sm font-bold tracking-wide uppercase",
+              )}
+            >
+              {subcategory}
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               {subcategoryDocs.map((doc) => (
                 <DocLink
                   key={doc.slug}
@@ -112,10 +116,13 @@ function DocLink({ doc, isActive }: DocLinkProps) {
     <Link
       href={`/docs/${doc.slug}`}
       className={cn(
-        "text-muted-foreground hover:text-foreground inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm transition",
-        {
-          "text-primary": isActive,
-        },
+        "text-neo-text-muted hover:text-neo-text hover:bg-neo-bg",
+        "inline-flex items-center gap-2 rounded-[var(--radius-neo-md)] px-3 py-2 text-sm",
+        "transition-colors",
+        isActive && [
+          "bg-neo-accent/10 text-neo-accent font-medium",
+          "border-neo-border border-[length:var(--border-neo)]",
+        ],
       )}
     >
       {doc.attributes.method ? (

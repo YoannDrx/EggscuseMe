@@ -1,42 +1,47 @@
 import { NeoBadge, NeoButton } from "@/components/neo";
 import { cn } from "@/lib/utils";
-import { getPosts } from "@/features/posts/post-manager";
+import { getPosts, getPostsTags } from "@/features/posts/post-manager";
 import { formatDate } from "@/lib/format/date";
 import { SiteConfig } from "@/site-config";
-import { BookOpen, Calendar, ArrowRight, Newspaper } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
-export async function generateMetadata(): Promise<Metadata> {
+type TagPageProps = {
+  params: Promise<{ tag: string }>;
+};
+
+export async function generateMetadata(props: TagPageProps): Promise<Metadata> {
+  const params = await props.params;
   const t = await getTranslations("pages.posts.meta");
+
   return {
-    title: t("title"),
+    title: `${params.tag} - ${t("title")}`,
     description: t("description"),
     openGraph: {
-      title: t("title"),
+      title: `${params.tag} - ${t("title")}`,
       description: t("description"),
-      url: `${SiteConfig.prodUrl}/posts`,
+      url: `${SiteConfig.prodUrl}/posts/tags/${params.tag}`,
       type: "website",
     },
   };
 }
 
-export default async function PostsPage() {
+export async function generateStaticParams() {
+  const tags = await getPostsTags();
+
+  if (tags.length === 0) {
+    return [{ tag: "_placeholder" }];
+  }
+
+  return tags.map((tag) => ({ tag }));
+}
+
+export default async function TagPage(props: TagPageProps) {
   const t = await getTranslations("pages.posts");
-  const posts = await getPosts();
-
-  // Filter out drafts in production
-  const publishedPosts = posts.filter(
-    (post) =>
-      post.attributes.status !== "draft" ||
-      process.env.VERCEL_ENV !== "production",
-  );
-
-  // Get unique tags
-  const tags = [
-    ...new Set(publishedPosts.flatMap((post) => post.attributes.tags ?? [])),
-  ];
+  const params = await props.params;
+  const posts = await getPosts([params.tag]);
 
   return (
     <div className="bg-neo-bg min-h-screen">
@@ -57,39 +62,26 @@ export default async function PostsPage() {
               "shadow-[var(--shadow-neo-md)]",
             )}
           >
-            <Newspaper className="text-neo-accent size-8" />
+            <Tag className="text-neo-accent size-8" />
           </div>
           <h1 className="font-heading text-neo-text text-4xl font-bold tracking-tight md:text-5xl">
-            {t("title")}
+            {params.tag}
           </h1>
           <p className="text-neo-text-muted max-w-2xl text-lg">
-            {t("subtitle")}
+            {t("tagDescription", { tag: params.tag })}
           </p>
+          <NeoButton asChild variant="outline" size="sm">
+            <Link href="/posts" className="gap-2">
+              <ArrowLeft className="size-4" />
+              {t("viewAll")}
+            </Link>
+          </NeoButton>
         </div>
       </div>
 
-      {/* Content */}
+      {/* Posts */}
       <div className="mx-auto max-w-5xl px-4 py-12">
-        {/* Tags */}
-        {tags.length > 0 && (
-          <div className="mb-8">
-            <h2 className="font-heading text-neo-text mb-4 text-lg font-bold">
-              {t("tags")}
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <Link key={tag} href={`/posts/tags/${tag}`}>
-                  <NeoBadge variant="outline" className="cursor-pointer">
-                    {tag}
-                  </NeoBadge>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Posts Grid */}
-        {publishedPosts.length === 0 ? (
+        {posts.length === 0 ? (
           <div
             className={cn(
               "border-neo-border bg-neo-card",
@@ -97,12 +89,12 @@ export default async function PostsPage() {
               "p-12 text-center shadow-[var(--shadow-neo-md)]",
             )}
           >
-            <BookOpen className="text-neo-text-muted mx-auto mb-4 size-12" />
+            <Tag className="text-neo-text-muted mx-auto mb-4 size-12" />
             <p className="text-neo-text-muted text-lg">{t("noPosts")}</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2">
-            {publishedPosts.map((post) => (
+            {posts.map((post) => (
               <article
                 key={post.slug}
                 className={cn(
@@ -112,7 +104,6 @@ export default async function PostsPage() {
                   "transition-shadow hover:shadow-[var(--shadow-neo-lg)]",
                 )}
               >
-                {/* Cover Image */}
                 {post.attributes.coverUrl && (
                   <div
                     className={cn(
@@ -126,7 +117,6 @@ export default async function PostsPage() {
                 )}
 
                 <div className="p-6">
-                  {/* Tags */}
                   {post.attributes.tags && post.attributes.tags.length > 0 && (
                     <div className="mb-3 flex flex-wrap gap-2">
                       {post.attributes.tags.map((tag) => (
@@ -137,23 +127,19 @@ export default async function PostsPage() {
                     </div>
                   )}
 
-                  {/* Title */}
                   <h2 className="font-heading text-neo-text mb-2 text-xl font-bold">
                     {post.attributes.title}
                   </h2>
 
-                  {/* Description */}
                   <p className="text-neo-text-muted mb-4 line-clamp-2 text-sm">
                     {post.attributes.description}
                   </p>
 
-                  {/* Date */}
                   <div className="text-neo-text-muted mb-4 flex items-center gap-2 text-sm">
                     <Calendar className="size-4" />
                     <span>{formatDate(new Date(post.attributes.date))}</span>
                   </div>
 
-                  {/* Read More */}
                   <NeoButton asChild variant="outline" size="sm">
                     <Link href={`/posts/${post.slug}`} className="gap-2">
                       {t("readMore")}

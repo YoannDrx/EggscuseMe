@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react";
 
 export default function PublicLayout({ children }: PropsWithChildren) {
   return (
-    <div className="bg-background relative flex min-h-screen flex-col">
+    <div className="bg-neo-bg relative flex min-h-screen flex-col">
       <LandingHeader />
       <main className="flex-1 pt-20">{children}</main>
       <Footer />
