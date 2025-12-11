@@ -48,7 +48,7 @@ export function NotificationPermission() {
   if (permission !== "default" || !showCard) return null;
 
   return (
-    <Card className="animate-in slide-in-from-bottom-4 fixed bottom-4 left-4 z-50 w-80 shadow-xl">
+    <Card className="animate-in slide-in-from-bottom-4 fixed bottom-4 left-1/2 z-[70] w-[calc(100%-2rem)] max-w-80 -translate-x-1/2 shadow-xl">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">

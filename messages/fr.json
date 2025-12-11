@@ -1217,7 +1217,25 @@
     "unsupportedBrowser": "Le scanner de code-barres n'est pas supporté par ce navigateur",
     "cameraDenied": "Accès à la caméra refusé. Veuillez autoriser l'accès.",
     "noCamera": "Aucune caméra trouvée sur cet appareil.",
-    "error": "Erreur: {message}"
+    "error": "Erreur: {message}",
+    "vision": {
+      "scanDate": "Scanner la date avec l'IA",
+      "scanning": "Analyse en cours...",
+      "helpText": "Prenez une photo de la date sur l'emballage",
+      "helpTextDetail": "Cadrez la DDM ou la date de ponte imprimée sur la boîte",
+      "success": "Date extraite !",
+      "done": "Terminé",
+      "retry": "Réessayer",
+      "cancel": "Annuler",
+      "remaining": "{count, plural, =0 {Plus de scans disponibles} =1 {1 scan restant} other {# scans restants}} aujourd'hui",
+      "errorNoDate": "Impossible de trouver une date sur la photo. Essayez avec une meilleure prise de vue.",
+      "errorInvalidFormat": "La date trouvée n'est pas dans un format reconnu.",
+      "errorRateLimit": "Limite quotidienne atteinte (20 scans/jour). Réessayez demain.",
+      "errorFileTooLarge": "L'image est trop volumineuse. Maximum 5 Mo.",
+      "errorInvalidFileType": "Format d'image non supporté. Utilisez JPEG, PNG ou WebP.",
+      "errorNetwork": "Erreur de connexion. Vérifiez votre connexion internet.",
+      "errorUnknown": "Une erreur inattendue s'est produite. Réessayez."
+    }
   },
   "notifications": {
     "email": {

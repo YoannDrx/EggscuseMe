@@ -1217,7 +1217,25 @@
     "unsupportedBrowser": "Barcode scanner is not supported by this browser",
     "cameraDenied": "Camera access denied. Please allow access.",
     "noCamera": "No camera found on this device.",
-    "error": "Error: {message}"
+    "error": "Error: {message}",
+    "vision": {
+      "scanDate": "Scan date with AI",
+      "scanning": "Analyzing...",
+      "helpText": "Take a photo of the date on the packaging",
+      "helpTextDetail": "Frame the best-before date or laying date printed on the box",
+      "success": "Date extracted!",
+      "done": "Done",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "remaining": "{count, plural, =0 {No scans available} =1 {1 scan remaining} other {# scans remaining}} today",
+      "errorNoDate": "Unable to find a date in the photo. Try with a better shot.",
+      "errorInvalidFormat": "The date found is not in a recognized format.",
+      "errorRateLimit": "Daily limit reached (20 scans/day). Try again tomorrow.",
+      "errorFileTooLarge": "The image is too large. Maximum 5 MB.",
+      "errorInvalidFileType": "Unsupported image format. Use JPEG, PNG, or WebP.",
+      "errorNetwork": "Connection error. Check your internet connection.",
+      "errorUnknown": "An unexpected error occurred. Please try again."
+    }
   },
   "notifications": {
     "email": {

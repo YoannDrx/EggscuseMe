@@ -6,19 +6,26 @@ import { NeoSelect, NeoSelectItem } from "@/components/neo/neo-select";
 import type { EggSize } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { createEggBoxAction } from "@/features/fridge/fridge.action";
-import { BarcodeScanner, type ParsedEggInfo } from "@/features/scanner";
-import { ChefHat, Scan, X } from "lucide-react";
+import {
+  BarcodeScanner,
+  DateVisionScanner,
+  type ParsedEggInfo,
+} from "@/features/scanner";
+import { ChefHat, Scan, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useCurrentFridge } from "./use-current-fridge";
 
+type ScanMode = "barcode" | "vision" | null;
+
 export function AddEggBoxForm() {
   const t = useTranslations("fridge.addBoxForm");
+  const tVision = useTranslations("scanner.vision");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [showScanner, setShowScanner] = useState(false);
+  const [scanMode, setScanMode] = useState<ScanMode>(null);
   const fridgeStore = useCurrentFridge();
   const isChef = fridgeStore?.isChef ?? false;
 
@@ -33,7 +40,7 @@ export function AddEggBoxForm() {
     producerCode: "",
   });
 
-  const handleScan = (info: ParsedEggInfo) => {
+  const handleBarcodeScan = (info: ParsedEggInfo) => {
     // Auto-fill form with scanned data
     setFormData((prev) => ({
       ...prev,
@@ -47,9 +54,17 @@ export function AddEggBoxForm() {
 
     // Close scanner after successful scan
     setTimeout(() => {
-      setShowScanner(false);
+      setScanMode(null);
       toast.success(t("scanSuccess"));
     }, 1000);
+  };
+
+  const handleVisionDateExtracted = (layingDate: Date, _ddm: Date | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      layingDate: layingDate.toISOString().split("T")[0],
+    }));
+    toast.success(tVision("success"));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -81,8 +96,8 @@ export function AddEggBoxForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Scanner toggle */}
-      {showScanner ? (
+      {/* Scanner section */}
+      {scanMode === "barcode" && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-neo-text text-base font-bold">
@@ -92,24 +107,61 @@ export function AddEggBoxForm() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setShowScanner(false)}
+              onClick={() => setScanMode(null)}
             >
               <X className="mr-1 size-4" />
               {t("closeScanner")}
             </NeoButton>
           </div>
-          <BarcodeScanner onScan={handleScan} />
+          <BarcodeScanner onScan={handleBarcodeScan} />
         </div>
-      ) : (
-        <NeoButton
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={() => setShowScanner(true)}
-        >
-          <Scan className="mr-2 size-4" />
-          {t("openScanner")}
-        </NeoButton>
+      )}
+
+      {scanMode === "vision" && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-neo-text text-base font-bold">
+              {tVision("scanDate")}
+            </span>
+            <NeoButton
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setScanMode(null)}
+            >
+              <X className="mr-1 size-4" />
+              {t("closeScanner")}
+            </NeoButton>
+          </div>
+          <DateVisionScanner
+            onDateExtracted={handleVisionDateExtracted}
+            onClose={() => setScanMode(null)}
+          />
+        </div>
+      )}
+
+      {/* Scanner buttons - show when no scanner is active */}
+      {scanMode === null && (
+        <div className="flex gap-2">
+          <NeoButton
+            type="button"
+            variant="outline"
+            className="flex-1"
+            onClick={() => setScanMode("barcode")}
+          >
+            <Scan className="mr-2 size-4" />
+            {t("openScanner")}
+          </NeoButton>
+          <NeoButton
+            type="button"
+            variant="outline"
+            className="flex-1"
+            onClick={() => setScanMode("vision")}
+          >
+            <Sparkles className="mr-2 size-4" />
+            {tVision("scanDate")}
+          </NeoButton>
+        </div>
       )}
 
       <NeoInput

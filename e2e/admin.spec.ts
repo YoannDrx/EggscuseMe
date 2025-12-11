@@ -25,17 +25,17 @@ test.describe("admin", () => {
     await page.goto("/admin");
 
     const usersLink = page.getByRole("link", { name: /users|utilisateurs/i });
-    const invitationsLink = page.getByRole("link", {
-      name: /invitations?/i,
+    const toolsLink = page.getByRole("link", {
+      name: /tools|outils/i,
     });
 
     await expect(usersLink).toBeVisible();
-    await expect(invitationsLink).toBeVisible();
+    await expect(toolsLink).toBeVisible();
 
     await usersLink.click();
     await expect(page).toHaveURL("/admin/users");
 
-    await invitationsLink.click();
-    await expect(page).toHaveURL("/admin/invitations");
+    await toolsLink.click();
+    await expect(page).toHaveURL("/admin/tools");
   });
 });

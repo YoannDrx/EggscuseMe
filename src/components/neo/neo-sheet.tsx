@@ -4,18 +4,12 @@ import { cva } from "class-variance-authority";
 import { AnimatePresence, motion, useDragControls } from "motion/react";
 import { X } from "lucide-react";
 import * as React from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
 const neoSheetVariants = cva(
-  [
-    "fixed z-50",
-    "bg-neo-card",
-    "border-[length:var(--border-neo)] border-neo-border/30",
-    "shadow-[var(--shadow-neo-xl)]",
-    "flex flex-col",
-    "overflow-hidden",
-  ].join(" "),
+  ["fixed z-[61]", "bg-neo-card", "flex flex-col", "overflow-hidden"].join(" "),
   {
     variants: {
       side: {
@@ -23,23 +17,31 @@ const neoSheetVariants = cva(
           "inset-x-0 top-0",
           "rounded-b-[var(--radius-neo-3xl)]",
           "max-h-[85vh]",
+          "border-[length:var(--border-neo)] border-neo-border/30",
+          "shadow-[var(--shadow-neo-xl)]",
         ].join(" "),
         bottom: [
           "inset-x-0 bottom-0",
           "rounded-t-[var(--radius-neo-3xl)]",
-          "min-h-[70vh]",
-          "max-h-[90vh]",
+          "max-h-[85dvh]",
+          "border-[length:var(--border-neo)] border-neo-border/30",
+          "shadow-[var(--shadow-neo-xl)]",
         ].join(" "),
         left: [
           "inset-y-0 left-0",
           "rounded-r-[var(--radius-neo-3xl)]",
           "w-3/4 max-w-sm",
+          "border-[length:var(--border-neo)] border-neo-border/30",
+          "shadow-[var(--shadow-neo-xl)]",
         ].join(" "),
         right: [
           "inset-y-0 right-0",
           "rounded-l-[var(--radius-neo-3xl)]",
           "w-3/4 max-w-sm",
+          "border-[length:var(--border-neo)] border-neo-border/30",
+          "shadow-[var(--shadow-neo-xl)]",
         ].join(" "),
+        fullscreen: ["inset-0"].join(" "),
       },
     },
     defaultVariants: {
@@ -70,13 +72,18 @@ const slideAnimations = {
     animate: { x: 0 },
     exit: { x: "100%" },
   },
+  fullscreen: {
+    initial: { opacity: 0, scale: 0.95 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.95 },
+  },
 };
 
 export type NeoSheetProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   children: React.ReactNode;
-  side?: "top" | "bottom" | "left" | "right";
+  side?: "top" | "bottom" | "left" | "right" | "fullscreen";
   showHandle?: boolean;
   showCloseButton?: boolean;
   title?: string;
@@ -129,6 +136,13 @@ const NeoSheet = ({
 
   const animation = slideAnimations[side];
   const isVertical = side === "top" || side === "bottom";
+  const isFullscreen = side === "fullscreen";
+  const [mounted, setMounted] = React.useState(false);
+
+  // Wait for client-side mount to use portal
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleDragEnd = (
     _: never,
@@ -147,7 +161,12 @@ const NeoSheet = ({
     }
   };
 
-  return (
+  // Don't render anything on server or before mount
+  if (!mounted) {
+    return null;
+  }
+
+  const sheetContent = (
     <AnimatePresence>
       {open && (
         <>
@@ -159,7 +178,7 @@ const NeoSheet = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={handleClose}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
           />
 
           {/* Sheet */}
@@ -174,7 +193,7 @@ const NeoSheet = ({
               damping: 30,
               stiffness: 400,
             }}
-            drag={draggable ? (isVertical ? "y" : "x") : false}
+            drag={draggable && !isFullscreen ? (isVertical ? "y" : "x") : false}
             dragControls={dragControls}
             dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
             dragElastic={0.2}
@@ -182,7 +201,7 @@ const NeoSheet = ({
             className={cn(neoSheetVariants({ side, className }))}
           >
             {/* Handle bar (for dragging) */}
-            {showHandle && isVertical && (
+            {showHandle && isVertical && !isFullscreen && (
               <div
                 onPointerDown={(e) => dragControls.start(e)}
                 className="flex cursor-grab justify-center py-3 active:cursor-grabbing"
@@ -192,7 +211,7 @@ const NeoSheet = ({
             )}
 
             {/* Header */}
-            {(title ?? showCloseButton) && (
+            {(title ?? description) && (
               <div className="border-neo-border/10 flex items-center justify-between border-b px-5 py-4">
                 <div>
                   {title && (
@@ -204,36 +223,45 @@ const NeoSheet = ({
                     </p>
                   )}
                 </div>
-                {showCloseButton && (
-                  <button
-                    type="button"
-                    onClick={handleClose}
-                    className={cn(
-                      "rounded-full p-2",
-                      "bg-neo-bg text-neo-text-muted",
-                      "border-neo-border/20 border-[length:var(--border-neo)]",
-                      "shadow-[var(--shadow-neo-sm)]",
-                      "hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)]",
-                      "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
-                      "transition-all duration-200",
-                    )}
-                  >
-                    <X className="size-5" />
-                  </button>
-                )}
               </div>
             )}
 
+            {/* Close button - always visible when enabled */}
+            {showCloseButton && (
+              <button
+                type="button"
+                onClick={handleClose}
+                className={cn(
+                  "absolute top-3 right-4 z-10",
+                  "rounded-full p-2",
+                  "bg-neo-bg text-neo-text-muted",
+                  "border-neo-border/20 border-[length:var(--border-neo)]",
+                  "shadow-[var(--shadow-neo-sm)]",
+                  "hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)]",
+                  "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+                  "transition-all duration-200",
+                )}
+              >
+                <X className="size-5" />
+              </button>
+            )}
+
             {/* Content */}
-            <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+              {children}
+            </div>
 
             {/* Safe area padding for mobile */}
-            <div className="pb-[env(safe-area-inset-bottom)]" />
+            <div className="shrink-0 pb-[env(safe-area-inset-bottom)]" />
           </motion.div>
         </>
       )}
     </AnimatePresence>
   );
+
+  // Use portal to render directly in document.body
+  // This fixes position:fixed issues when parent has transform
+  return <>{createPortal(sheetContent, document.body)}</>;
 };
 
 // Sheet Trigger (helper component)

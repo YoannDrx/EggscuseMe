@@ -4,7 +4,7 @@ import { LanguageToggle } from "@/components/nowts/language-toggle";
 import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import { NeoSheet } from "@/components/neo/neo-sheet";
 import { cn } from "@/lib/utils";
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import {
   Bell,
   CreditCard,
@@ -93,8 +93,8 @@ export function PlusMenuSheet({
     <NeoSheet
       open={open}
       onOpenChange={onOpenChange}
-      side="bottom"
-      showHandle={true}
+      side="fullscreen"
+      showHandle={false}
       showCloseButton={true}
     >
       {/* Menu Items */}

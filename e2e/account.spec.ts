@@ -30,10 +30,12 @@ test.describe("account", () => {
 
     // Confirm text is required ("Supprimer" FR / "Delete" EN)
     const confirmInput = deleteDialog.getByRole("textbox");
+    // The action button has the full label "Supprimer mon compte" / "Delete my account"
     const deleteButton = deleteDialog.getByRole("button", {
-      name: /supprimer|delete/i,
+      name: /supprimer mon compte|delete my account/i,
     });
 
+    // Try French first, then English
     await confirmInput.fill("Supprimer");
     if (!(await deleteButton.isEnabled().catch(() => false))) {
       await confirmInput.fill("Delete");
@@ -42,9 +44,9 @@ test.describe("account", () => {
     await expect(deleteButton).toBeEnabled();
     await deleteButton.click();
 
-    // Toast message in French: "Demande de suppression envoyée"
+    // Toast message in French: "Demande de suppression envoyée" / English: "Deletion request sent"
     await expect(
-      page.getByText(/demande de suppression|deletion has been asked/i),
+      page.getByText(/demande de suppression|deletion request sent/i),
     ).toBeVisible();
 
     const verification = await prisma.verification.findFirst({
@@ -105,10 +107,9 @@ test.describe("account", () => {
   test("change password flow", async ({ page }) => {
     const userData = await createTestAccount({
       page,
-      callbackURL: "/fridge/settings/profile",
+      callbackURL: "/fridge/settings/security",
     });
 
-    await page.getByRole("link", { name: /security|sécurité/i }).click();
     await page.waitForURL(/\/fridge\/settings\/security/, { timeout: 10000 });
 
     const newPassword = faker.internet.password({
