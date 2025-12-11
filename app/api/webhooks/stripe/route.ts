@@ -9,12 +9,45 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 export const maxDuration = 300;
 
-// Utility function to get plan from subscription metadata
+/**
+ * Résout le plan depuis une subscription Stripe avec plusieurs fallbacks
+ * 1. price.metadata.plan (source authoritative - configuré dans Stripe)
+ * 2. subscription.metadata.plan (défini lors du checkout)
+ * 3. Déduction depuis le priceId
+ */
 const getPlanFromSubscription = (subscription: Stripe.Subscription) => {
-  const planName = subscription.items.data[0].price.metadata.plan;
-  if (!planName) return null;
+  // 1. Essayer price.metadata.plan (source authoritative)
+  const priceMetadataPlan = subscription.items.data[0].price.metadata.plan;
+  if (priceMetadataPlan) {
+    const plan = AUTH_PLANS.find((p) => p.name === priceMetadataPlan);
+    if (plan) {
+      logger.debug(`Plan resolved from price.metadata: ${plan.name}`);
+      return plan;
+    }
+  }
 
-  return AUTH_PLANS.find((p) => p.name === planName);
+  // 2. Fallback: subscription.metadata.plan (défini lors du checkout)
+  const subscriptionMetadataPlan = subscription.metadata.plan;
+  if (subscriptionMetadataPlan) {
+    const plan = AUTH_PLANS.find((p) => p.name === subscriptionMetadataPlan);
+    if (plan) {
+      logger.debug(`Plan resolved from subscription.metadata: ${plan.name}`);
+      return plan;
+    }
+  }
+
+  // 3. Fallback: déduire du priceId
+  const priceId = subscription.items.data[0].price.id;
+  const planByPriceId = AUTH_PLANS.find(
+    (p) => p.priceId === priceId || p.annualDiscountPriceId === priceId,
+  );
+  if (planByPriceId) {
+    logger.debug(`Plan resolved from priceId: ${planByPriceId.name}`);
+    return planByPriceId;
+  }
+
+  logger.error(`Could not determine plan for subscription: ${subscription.id}`);
+  return null;
 };
 
 export const POST = async (req: NextRequest) => {

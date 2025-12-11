@@ -69,7 +69,6 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
           "absolute top-1/2 size-7 -translate-y-1/2 transition-all duration-200",
           "border-neo-border rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]",
           "bg-neo-bg shadow-[2px_2px_0_var(--neo-shadow-color)]",
-          // isDark ? "left-[calc(100%-34px)]" : "left-[6px]",
           isDark ? "left-[10px]" : "left-[calc(100%-38px)]",
         )}
       />

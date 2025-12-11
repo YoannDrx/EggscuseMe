@@ -12,6 +12,7 @@ import {
 import {
   createCheckoutAction,
   createPortalSessionAction,
+  upgradeSubscriptionAction,
 } from "@/features/fridge/billing.action";
 import { Eggy } from "@/features/mascot";
 import { PlanCard } from "@/features/plans/plan-card";
@@ -21,22 +22,54 @@ import {
   normalizePlanTypeForDisplay,
   type Locale,
 } from "@/lib/auth/stripe/plan-features";
-import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Crown, Loader2, Sparkles, Users, Zap } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Clock,
+  Crown,
+  Loader2,
+  Sparkles,
+  Users,
+  Zap,
+} from "lucide-react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useCurrentFridge } from "../../use-current-fridge";
+
+/**
+ * Calcule le nombre de jours restants jusqu'à une date
+ */
+function daysUntil(date: Date | null): number {
+  if (!date) return 0;
+  const now = new Date();
+  const diff = new Date(date).getTime() - now.getTime();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
+/**
+ * Formate une date pour l'affichage
+ */
+function formatDate(date: Date | null, locale: string): string {
+  if (!date) return "";
+  return new Date(date).toLocaleDateString(
+    locale === "fr" ? "fr-FR" : "en-US",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    },
+  );
+}
 
 export default function BillingPage() {
   const locale = useLocale() as Locale;
   const copy = getPricingCopy(locale);
   const fridgeState = useCurrentFridge();
 
-  // Normalize the current plan
-  const currentPlan = normalizePlanTypeForDisplay(
-    fridgeState?.isPremium ? "brigade" : "solo",
-  );
+  // Utiliser le plan exact du store (solo, brigade, ou chef)
+  const currentPlan = normalizePlanTypeForDisplay(fridgeState?.plan);
   const isSolo = currentPlan === "solo";
   const isBrigade = currentPlan === "brigade";
   const isChef = currentPlan === "chef";
@@ -95,6 +128,32 @@ export default function BillingPage() {
     },
   });
 
+  // Upgrade Brigade → Chef via server action (not new checkout)
+  const queryClient = useQueryClient();
+  const upgradeToChefFromBrigadeMutation = useMutation({
+    mutationFn: async () => {
+      return resolveActionResult(
+        upgradeSubscriptionAction({
+          targetPlan: "chef",
+          annual: false,
+        }),
+      );
+    },
+    onSuccess: () => {
+      toast.success(
+        locale === "fr"
+          ? "Félicitations ! Vous êtes maintenant Chef !"
+          : "Congratulations! You are now a Chef!",
+      );
+      // Refresh the page to get updated subscription data
+      void queryClient.invalidateQueries();
+      window.location.reload();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   if (!fridgeState) {
     return null;
   }
@@ -102,6 +161,7 @@ export default function BillingPage() {
   const isLoading =
     upgradeToBrigadeMutation.isPending ||
     upgradeToChefMutation.isPending ||
+    upgradeToChefFromBrigadeMutation.isPending ||
     portalMutation.isPending;
 
   // Get plan-specific display info
@@ -177,6 +237,31 @@ export default function BillingPage() {
           </div>
         </NeoCardHeader>
         <NeoCardContent>
+          {/* Trial status badge */}
+          {fridgeState.isTrialing && (
+            <div className="mb-4 flex items-center gap-2">
+              <NeoBadge
+                variant="outline"
+                className="border-amber-500 text-amber-500"
+              >
+                <Clock className="mr-1 size-3" />
+                {locale === "fr"
+                  ? `Essai gratuit - ${daysUntil(fridgeState.periodEnd)} jours restants`
+                  : `Free trial - ${daysUntil(fridgeState.periodEnd)} days left`}
+              </NeoBadge>
+            </div>
+          )}
+
+          {/* Cancel at period end warning */}
+          {fridgeState.cancelAtPeriodEnd && (
+            <div className="bg-destructive/10 text-destructive mb-4 rounded-lg p-4">
+              <AlertTriangle className="mr-2 inline size-4" />
+              {locale === "fr"
+                ? `Votre abonnement sera annulé le ${formatDate(fridgeState.periodEnd, locale)}`
+                : `Your subscription will be canceled on ${formatDate(fridgeState.periodEnd, locale)}`}
+            </div>
+          )}
+
           {isPaid ? (
             <NeoButton
               variant="outline"
@@ -220,7 +305,7 @@ export default function BillingPage() {
             </div>
           )}
 
-          {/* Upgrade to Chef from Brigade */}
+          {/* Upgrade to Chef from Brigade (uses server action, no new checkout) */}
           {isBrigade && (
             <div className="border-border mt-4 border-t pt-4">
               <p className="text-muted-foreground mb-3 text-sm">
@@ -231,10 +316,10 @@ export default function BillingPage() {
               <NeoButton
                 variant="secondary"
                 className="bg-amber-500 text-white hover:bg-amber-600"
-                onClick={() => upgradeToChefMutation.mutate()}
+                onClick={() => upgradeToChefFromBrigadeMutation.mutate()}
                 disabled={isLoading}
               >
-                {upgradeToChefMutation.isPending ? (
+                {upgradeToChefFromBrigadeMutation.isPending ? (
                   <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : (
                   <Sparkles className="mr-2 size-4" />

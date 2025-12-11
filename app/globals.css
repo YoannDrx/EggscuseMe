@@ -885,6 +885,72 @@
   --neo-input: oklch(0.12 0.02 60);              /* Dark input */
 }
 
+/* ============================================
+ * DEMO PHONE INVERTED THEME
+ * The demo phone displays the opposite theme
+ * of the main site for visual contrast
+ * ============================================ */
+
+/* When site is in light mode -> phone shows dark theme */
+.demo-phone-container {
+  --background: oklch(0.18 0.02 60);
+  --foreground: oklch(0.95 0.008 85);
+  --card: oklch(0.22 0.02 60);
+  --card-foreground: oklch(0.95 0.008 85);
+  --neo-bg: oklch(0.12 0.02 60);
+  --neo-card: oklch(0.18 0.02 60);
+  --neo-text: oklch(0.95 0.008 85);
+  --neo-text-muted: oklch(0.55 0.02 60);
+  --neo-border: oklch(0.40 0.02 60);
+  --neo-shadow-color: oklch(0 0 0);
+  --neo-accent: oklch(0.82 0.17 85);
+  --neo-accent-foreground: oklch(0.15 0.02 60);
+  --neo-input: oklch(0.12 0.02 60);
+  --fresh-extra: oklch(0.75 0.18 155);
+  --fresh-extra-foreground: oklch(0.15 0.04 155);
+  --fresh: oklch(0.90 0.14 95);
+  --fresh-foreground: oklch(0.15 0.04 60);
+  --fresh-cook: oklch(0.75 0.16 50);
+  --fresh-cook-foreground: oklch(0.15 0.04 50);
+  --expired: oklch(0.70 0.18 25);
+  --expired-foreground: oklch(0.98 0.01 25);
+  --border: oklch(0.32 0.02 60);
+  --border-width: 1.5px;
+  --shadow-hard: 3px 3px 0px oklch(0.10 0.02 60 / 0.3);
+  --shadow-hard-hover: 1px 1px 0px oklch(0.10 0.02 60 / 0.3);
+  --shadow-hard-lg: 5px 5px 0px oklch(0.10 0.02 60 / 0.3);
+}
+
+/* When site is in dark mode -> phone shows light theme */
+.dark .demo-phone-container {
+  --background: oklch(0.99 0.008 85);
+  --foreground: oklch(0.25 0.02 270);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 60);
+  --neo-bg: oklch(0.97 0.015 70);
+  --neo-card: oklch(1 0 0);
+  --neo-text: oklch(0.15 0.02 60);
+  --neo-text-muted: oklch(0.45 0.02 60);
+  --neo-border: oklch(0.15 0.02 60);
+  --neo-shadow-color: oklch(0.12 0.02 60);
+  --neo-accent: oklch(0.82 0.17 85);
+  --neo-accent-foreground: oklch(0.15 0.02 60);
+  --neo-input: oklch(1 0 0);
+  --fresh-extra: oklch(0.72 0.18 155);
+  --fresh-extra-foreground: oklch(0.20 0.04 155);
+  --fresh: oklch(0.88 0.14 95);
+  --fresh-foreground: oklch(0.25 0.04 60);
+  --fresh-cook: oklch(0.72 0.16 50);
+  --fresh-cook-foreground: oklch(0.20 0.04 50);
+  --expired: oklch(0.65 0.16 25);
+  --expired-foreground: oklch(0.98 0.01 25);
+  --border: oklch(0.90 0.02 85);
+  --border-width: 2px;
+  --shadow-hard: 4px 4px 0px var(--neo-shadow-color);
+  --shadow-hard-hover: 2px 2px 0px var(--neo-shadow-color);
+  --shadow-hard-lg: 6px 6px 0px var(--neo-shadow-color);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

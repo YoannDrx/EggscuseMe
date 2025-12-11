@@ -10,6 +10,13 @@ import {
 import { useEffect, useRef } from "react";
 import { create } from "zustand";
 
+type SubscriptionStatus =
+  | "active"
+  | "trialing"
+  | "past_due"
+  | "canceled"
+  | null;
+
 type FridgeStoreState = {
   id: string;
   name: string;
@@ -19,6 +26,11 @@ type FridgeStoreState = {
   plan: PlanName;
   ownerName: string;
   ownerImage: string | null;
+  // Subscription info for trial/cancellation display
+  subscriptionStatus: SubscriptionStatus;
+  periodEnd: Date | null;
+  cancelAtPeriodEnd: boolean;
+  isTrialing: boolean;
 };
 
 export const useCurrentFridge = create<FridgeStoreState | null>(() => null);
@@ -35,6 +47,14 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
   const isPremium = hasPaidAccess(fridge.subscription?.plan);
   const isChef = hasChefAccess(fridge.subscription?.plan);
 
+  // Extract subscription info for trial/cancellation display
+  const subscription = fridge.subscription;
+  const subscriptionStatus =
+    (subscription?.status as SubscriptionStatus) ?? null;
+  const periodEnd = subscription?.periodEnd ?? null;
+  const cancelAtPeriodEnd = subscription?.cancelAtPeriodEnd ?? false;
+  const isTrialing = subscriptionStatus === "trialing";
+
   // Set initial state synchronously on first render (before effects)
   // This ensures children have access to the store immediately
   if (!isInitialized.current) {
@@ -48,6 +68,10 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
       plan,
       ownerName: fridge.fridge.owner.name,
       ownerImage: fridge.fridge.owner.image,
+      subscriptionStatus,
+      periodEnd,
+      cancelAtPeriodEnd,
+      isTrialing,
     });
   }
 
@@ -62,8 +86,21 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
       plan,
       ownerName: fridge.fridge.owner.name,
       ownerImage: fridge.fridge.owner.image,
+      subscriptionStatus,
+      periodEnd,
+      cancelAtPeriodEnd,
+      isTrialing,
     });
-  }, [fridge, isPremium, isChef, plan]);
+  }, [
+    fridge,
+    isPremium,
+    isChef,
+    plan,
+    subscriptionStatus,
+    periodEnd,
+    cancelAtPeriodEnd,
+    isTrialing,
+  ]);
 
   return <>{children}</>;
 }

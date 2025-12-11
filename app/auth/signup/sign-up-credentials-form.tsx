@@ -12,14 +12,37 @@ import { toast } from "sonner";
 import type { LoginCredentialsFormType } from "./signup.schema";
 import { LoginCredentialsFormScheme } from "./signup.schema";
 
+/**
+ * Parse le paramètre de plan depuis l'URL
+ * Gère: brigade, brigade-yearly, chef, chef-yearly, premium (legacy), premium-yearly (legacy)
+ */
+const getPlanInfo = (
+  param: string | null,
+): { plan: string | null; isYearly: boolean } => {
+  if (!param) return { plan: null, isYearly: false };
+
+  const isYearly = param.endsWith("-yearly");
+  const basePlan = param.replace("-yearly", "");
+
+  // Normaliser les plans legacy (premium → brigade)
+  const normalizedPlan = basePlan === "premium" ? "brigade" : basePlan;
+
+  // Vérifier si c'est un plan payant valide
+  const isPaidPlan = normalizedPlan === "brigade" || normalizedPlan === "chef";
+
+  return {
+    plan: isPaidPlan ? normalizedPlan : null,
+    isYearly,
+  };
+};
+
 export const SignUpCredentialsForm = () => {
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
 
-  // Déterminer si on doit rediriger vers checkout après signup
-  const shouldCheckout =
-    planParam === "premium" || planParam === "premium-yearly";
-  const isYearly = planParam === "premium-yearly";
+  // Extraire les infos du plan depuis l'URL
+  const planInfo = getPlanInfo(planParam);
+  const shouldCheckout = planInfo.plan !== null;
 
   const { execute: createCheckout } = useAction(createCheckoutAction, {
     onSuccess: (result) => {
@@ -49,11 +72,11 @@ export const SignUpCredentialsForm = () => {
       toast.error(error.message);
     },
     onSuccess: () => {
-      if (shouldCheckout) {
-        // Rediriger vers Stripe checkout
+      if (shouldCheckout && planInfo.plan) {
+        // Rediriger vers Stripe checkout avec le plan sélectionné
         createCheckout({
-          plan: "premium",
-          annual: isYearly,
+          plan: planInfo.plan,
+          annual: planInfo.isYearly,
           successUrl: "/fridge/settings/billing?success=true",
           cancelUrl: "/fridge",
         });

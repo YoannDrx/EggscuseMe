@@ -12,6 +12,8 @@ import { z } from "zod";
 /**
  * Create a Stripe checkout session for upgrading to premium
  * Payment is attached to the USER, not the organization
+ *
+ * Trial eligibility: Per-plan (user can have Brigade trial, then later Chef trial)
  */
 export const createCheckoutAction = authAction
   .inputSchema(
@@ -41,6 +43,18 @@ export const createCheckoutAction = authAction
         throw new ActionError(`Price ID not found for plan "${plan}"`);
       }
 
+      // Vérifier l'éligibilité au trial (per-plan)
+      const existingSubscription = await prisma.userSubscription.findUnique({
+        where: { userId: user.id },
+      });
+
+      // Éligible au trial si:
+      // 1. Pas de subscription existante, OU
+      // 2. N'a jamais eu ce plan spécifique (permet trial Brigade puis trial Chef)
+      const hasHadThisPlan = existingSubscription?.plan === plan;
+      const isEligibleForTrial =
+        !hasHadThisPlan && authPlan.freeTrial?.days !== undefined;
+
       // Get or create Stripe customer for user
       const customerId = await getOrCreateStripeCustomer(user.id, user.email);
 
@@ -58,15 +72,18 @@ export const createCheckoutAction = authAction
         success_url: `${getServerUrl()}${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${getServerUrl()}${cancelUrl}`,
         metadata: {
-          userId: user.id, // NEW: User-based payment
+          userId: user.id,
           plan: plan,
         },
         subscription_data: {
           metadata: {
-            userId: user.id, // NEW: User-based payment
+            userId: user.id,
             plan: plan,
           },
-          trial_period_days: authPlan.freeTrial?.days,
+          // Trial seulement si éligible (per-plan)
+          ...(isEligibleForTrial && {
+            trial_period_days: authPlan.freeTrial?.days,
+          }),
         },
       });
 
@@ -79,6 +96,74 @@ export const createCheckoutAction = authAction
       };
     },
   );
+
+/**
+ * Upgrade an existing subscription to a new plan
+ * Uses stripe.subscriptions.update() instead of creating a new checkout
+ * No trial period for upgrades
+ */
+export const upgradeSubscriptionAction = authAction
+  .inputSchema(
+    z.object({
+      targetPlan: z.enum(["brigade", "chef"]),
+      annual: z.boolean().default(false),
+    }),
+  )
+  .action(async ({ parsedInput: { targetPlan, annual }, ctx: { user } }) => {
+    // Get existing subscription
+    const existingSub = await prisma.userSubscription.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (!existingSub?.stripeSubscriptionId) {
+      throw new ActionError(
+        "No active subscription found. Please use checkout instead.",
+      );
+    }
+
+    // Get the new plan
+    const newPlan = AUTH_PLANS.find((p) => p.name === targetPlan);
+    if (!newPlan) {
+      throw new ActionError(`Plan "${targetPlan}" not found`);
+    }
+
+    // Get the new price ID
+    const newPriceId = annual ? newPlan.annualDiscountPriceId : newPlan.priceId;
+    if (!newPriceId) {
+      throw new ActionError(`Price ID not found for plan "${targetPlan}"`);
+    }
+
+    // Get the current Stripe subscription
+    const subscription = await stripe.subscriptions.retrieve(
+      existingSub.stripeSubscriptionId,
+    );
+
+    // Update the subscription with the new price (prorated)
+    await stripe.subscriptions.update(existingSub.stripeSubscriptionId, {
+      items: [
+        {
+          id: subscription.items.data[0].id,
+          price: newPriceId,
+        },
+      ],
+      proration_behavior: "create_prorations",
+      metadata: {
+        userId: user.id,
+        plan: targetPlan,
+      },
+      // NO trial_period_days for upgrades
+    });
+
+    // Update local DB immediately (webhook will also update)
+    await prisma.userSubscription.update({
+      where: { userId: user.id },
+      data: {
+        plan: targetPlan,
+      },
+    });
+
+    return { success: true, plan: targetPlan };
+  });
 
 /**
  * Get or create a Stripe customer for the user
