@@ -1,12 +1,12 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { NeoAvatar } from "@/components/neo/neo-avatar";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import { Form, useForm } from "@/features/form/tanstack-form";
 import { authClient } from "@/lib/auth-client";
 import { unwrapSafePromise } from "@/lib/promises";
@@ -58,22 +58,29 @@ export function ResetPasswordPage({ token }: { token: string }) {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-md lg:max-w-lg lg:p-6">
-      <CardHeader>
+    <NeoCard
+      variant="elevated"
+      className="mx-auto w-full max-w-md lg:max-w-lg"
+      padding="lg"
+    >
+      <NeoCardHeader>
         <div className="flex justify-center">
-          <Avatar className="size-16">
-            <AvatarFallback>
-              <RefreshCcw />
-            </AvatarFallback>
-          </Avatar>
+          <NeoAvatar
+            fallback="RP"
+            size="lg"
+            shape="square"
+            className="flex items-center justify-center"
+          >
+            <RefreshCcw className="text-neo-accent size-6" />
+          </NeoAvatar>
         </div>
-        <CardHeader className="text-center">Reset Password</CardHeader>
+        <NeoCardHeader className="text-center">Reset Password</NeoCardHeader>
 
-        <CardDescription className="text-center">
+        <NeoCardDescription className="text-center">
           Enter your new password below
-        </CardDescription>
-      </CardHeader>
-      <CardFooter className="w-full border-t pt-6">
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardFooter className="border-t-neo-border w-full border-t-[length:var(--border-neo)] pt-6">
         <Form form={form} className="w-full space-y-4">
           <form.AppField name="password">
             {(field) => (
@@ -90,7 +97,7 @@ export function ResetPasswordPage({ token }: { token: string }) {
             Reset Password
           </form.SubmitButton>
         </Form>
-      </CardFooter>
-    </Card>
+      </NeoCardFooter>
+    </NeoCard>
   );
 }

@@ -1,13 +1,13 @@
 import { Loader } from "@/components/nowts/loader";
 import { Typography } from "@/components/nowts/typography";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { NeoAvatar } from "@/components/neo/neo-avatar";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import { getUser } from "@/lib/auth/auth-user";
 import { SiteConfig } from "@/site-config";
 import type { Metadata } from "next";
@@ -38,20 +38,26 @@ async function AuthSignInPage() {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-md lg:max-w-lg lg:p-6">
-      <CardHeader className="flex flex-col items-center justify-center gap-1">
-        <Avatar className="mb-4 rounded-sm">
-          <AvatarImage src={SiteConfig.appIcon} alt="app logo" />
-          <AvatarFallback>
-            {SiteConfig.title.substring(0, 1).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <CardTitle>Sign up to {SiteConfig.title}</CardTitle>
-        <CardDescription>
+    <NeoCard
+      variant="elevated"
+      className="mx-auto w-full max-w-md lg:max-w-lg"
+      padding="lg"
+    >
+      <NeoCardHeader className="flex flex-col items-center justify-center gap-1">
+        <NeoAvatar
+          src={SiteConfig.appIcon}
+          alt="app logo"
+          fallback={SiteConfig.title.substring(0, 1).toUpperCase()}
+          size="lg"
+          shape="square"
+          className="mb-4"
+        />
+        <NeoCardTitle>Sign up to {SiteConfig.title}</NeoCardTitle>
+        <NeoCardDescription>
           We just need a few details to get you started.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardContent>
         <Suspense fallback={<Loader />}>
           <SignUpCredentialsForm />
         </Suspense>
@@ -62,7 +68,7 @@ async function AuthSignInPage() {
             Sign in
           </Typography>
         </Typography>
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

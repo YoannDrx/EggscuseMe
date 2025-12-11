@@ -1,8 +1,13 @@
 "use client";
 
 import { RecipeTag } from "@/components/eggscuseme/illustrations";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoBadge } from "@/components/neo";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
@@ -86,8 +91,8 @@ export function RecipeCard({
 
   return (
     <Link href={`/fridge/recipes/${recipe.id}`} className="block">
-      <Card
-        variant="sunny-interactive"
+      <NeoCard
+        variant="interactive"
         className={cn(
           "group h-full transition-all",
           isSuggestion &&
@@ -96,9 +101,9 @@ export function RecipeCard({
           className,
         )}
       >
-        <CardHeader className={cn("pb-2", compact && "py-3")}>
+        <NeoCardHeader className={cn("pb-2", compact && "py-3")}>
           <div className="flex items-start justify-between gap-2">
-            <CardTitle
+            <NeoCardTitle
               className={cn(
                 "font-heading",
                 compact ? "text-base" : "text-lg",
@@ -106,12 +111,12 @@ export function RecipeCard({
               )}
             >
               {name}
-            </CardTitle>
+            </NeoCardTitle>
             {isSuggestion && recipe.urgency === "high" && (
-              <Badge variant="destructive" className="shrink-0">
+              <NeoBadge variant="destructive" className="shrink-0">
                 <AlertTriangle className="mr-1 size-3" />
                 {t("urgent")}
-              </Badge>
+              </NeoBadge>
             )}
           </div>
 
@@ -119,9 +124,9 @@ export function RecipeCard({
           {isSuggestion && (
             <p className="text-primary text-xs font-medium">{recipe.reason}</p>
           )}
-        </CardHeader>
+        </NeoCardHeader>
 
-        <CardContent className={cn("space-y-3", compact && "py-2")}>
+        <NeoCardContent className={cn("space-y-3", compact && "py-2")}>
           {/* Description */}
           {!compact && (
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -132,22 +137,25 @@ export function RecipeCard({
           {/* Meta info */}
           <div className="flex flex-wrap items-center gap-2">
             {/* Time */}
-            <Badge variant="outline" className="gap-1">
+            <NeoBadge variant="outline" className="gap-1">
               <Clock className="size-3" />
               {recipe.time} min
-            </Badge>
+            </NeoBadge>
 
             {/* Eggs required */}
-            <Badge variant="outline" className="gap-1">
+            <NeoBadge variant="outline" className="gap-1">
               <Egg className="size-3" />
               {t("eggs", { count: recipe.eggsRequired })}
-            </Badge>
+            </NeoBadge>
 
             {/* Difficulty */}
-            <Badge variant="outline" className={cn("gap-1", difficultyStyle)}>
+            <NeoBadge
+              variant="outline"
+              className={cn("gap-1", difficultyStyle)}
+            >
               <DifficultyIcon className="size-3" />
               {t(`difficulty.${recipe.difficulty}`)}
-            </Badge>
+            </NeoBadge>
           </div>
 
           {/* Tags */}
@@ -165,19 +173,19 @@ export function RecipeCard({
                   );
                 }
                 return (
-                  <Badge
+                  <NeoBadge
                     key={tag}
                     variant="secondary"
                     className="text-xs capitalize"
                   >
                     {tag}
-                  </Badge>
+                  </NeoBadge>
                 );
               })}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
     </Link>
   );
 }

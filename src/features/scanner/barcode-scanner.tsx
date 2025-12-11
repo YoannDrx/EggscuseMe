@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import { cn } from "@/lib/utils";
 import { Eggy } from "@/features/mascot";
 import { AlertCircle, Camera, Scan, X } from "lucide-react";
@@ -63,14 +63,12 @@ export function BarcodeScanner({
         <h3 className="font-heading text-lg font-semibold">
           {t("unsupported")}
         </h3>
-        <p className="text-muted-foreground mt-2 text-sm">
-          {t("unsupported")}
-        </p>
+        <p className="text-muted-foreground mt-2 text-sm">{t("unsupported")}</p>
         {onClose && (
-          <Button variant="outline" className="mt-4" onClick={onClose}>
+          <NeoButton variant="outline" className="mt-4" onClick={onClose}>
             <X className="mr-2 size-4" />
             {t("stopScan")}
-          </Button>
+          </NeoButton>
         )}
       </div>
     );
@@ -115,9 +113,7 @@ export function BarcodeScanner({
         {!isScanning && !error && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
             <Scan className="text-muted-foreground mb-4 size-16" />
-            <p className="text-muted-foreground">
-              {t("tapToEnable")}
-            </p>
+            <p className="text-muted-foreground">{t("tapToEnable")}</p>
           </div>
         )}
 
@@ -131,37 +127,37 @@ export function BarcodeScanner({
 
         {/* Close button */}
         {onClose && (
-          <Button
+          <NeoButton
             variant="ghost"
             size="icon"
             className="absolute top-2 right-2 size-8 rounded-full bg-black/50 text-white hover:bg-black/70"
             onClick={onClose}
           >
             <X className="size-4" />
-          </Button>
+          </NeoButton>
         )}
       </div>
 
       {/* Controls */}
       <div className="flex gap-2">
         {!isScanning ? (
-          <Button
-            variant="neubrutalism"
+          <NeoButton
+            variant="primary"
             className="flex-1"
             onClick={() => void startScanning()}
           >
             <Camera className="mr-2 size-5" />
             {t("enableCamera")}
-          </Button>
+          </NeoButton>
         ) : (
-          <Button
-            variant="neubrutalism-outline"
+          <NeoButton
+            variant="outline"
             className="flex-1"
             onClick={stopScanning}
           >
             <X className="mr-2 size-5" />
             {t("stopScan")}
-          </Button>
+          </NeoButton>
         )}
       </div>
 

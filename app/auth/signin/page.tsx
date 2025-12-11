@@ -1,11 +1,11 @@
 import { Typography } from "@/components/nowts/typography";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { NeoAvatar } from "@/components/neo/neo-avatar";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import { SocialProviders } from "@/lib/auth";
 import { getUser } from "@/lib/auth/auth-user";
 import { SiteConfig } from "@/site-config";
@@ -38,25 +38,30 @@ async function AuthSignInPage() {
   const providers = Object.keys(SocialProviders ?? {});
 
   return (
-    <Card className="mx-auto h-auto w-full max-w-md lg:max-w-lg lg:p-6">
-      <CardHeader className="flex flex-col items-center justify-center gap-2">
+    <NeoCard
+      variant="elevated"
+      className="mx-auto h-auto w-full max-w-md lg:max-w-lg"
+      padding="lg"
+    >
+      <NeoCardHeader className="flex flex-col items-center justify-center gap-2">
         <div className="mx-auto mt-4 flex flex-row items-center gap-2">
-          <Avatar className="size-8 rounded-md">
-            <AvatarImage src={SiteConfig.appIcon} alt="app logo" />
-            <AvatarFallback>
-              {SiteConfig.title.substring(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <NeoAvatar
+            src={SiteConfig.appIcon}
+            alt="app logo"
+            fallback={SiteConfig.title.substring(0, 1).toUpperCase()}
+            size="sm"
+            shape="square"
+          />
           <Typography variant="large">{SiteConfig.title}</Typography>
         </div>
 
-        <CardDescription className="text-center">
+        <NeoCardDescription className="text-center">
           Please sign in to your account to continue.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="mt-4">
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardContent className="mt-4">
         <SignInProviders providers={providers} />
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

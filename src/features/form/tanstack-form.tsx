@@ -4,8 +4,8 @@ import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 import type * as React from "react";
 import type { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { NeoButton } from "@/components/neo";
+import { NeoCheckbox } from "@/components/neo";
 import {
   Field,
   FieldContent,
@@ -13,31 +13,31 @@ import {
   FieldError,
   FieldLabel as FieldLabelComponent,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
+import { NeoInput } from "@/components/neo";
+import { NeoSelect } from "@/components/neo";
+import { NeoToggle } from "@/components/neo";
+import { NeoTextarea } from "@/components/neo";
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts();
 
-export function SubmitButton(props: React.ComponentProps<typeof Button>) {
+export function SubmitButton(props: React.ComponentProps<typeof NeoButton>) {
   const form = useFormContext();
 
   return (
     <form.Subscribe selector={(state) => state.isSubmitting}>
       {(isSubmitting) => (
-        <Button type="submit" disabled={isSubmitting} {...props} />
+        <NeoButton type="submit" disabled={isSubmitting} {...props} />
       )}
     </form.Subscribe>
   );
 }
 
-function FormInput(props: React.ComponentProps<typeof Input>) {
+function FormInput(props: React.ComponentProps<typeof NeoInput>) {
   const field = useFieldContext<string>();
 
   return (
-    <Input
+    <NeoInput
       id={field.name}
       name={field.name}
       value={field.state.value}
@@ -49,10 +49,10 @@ function FormInput(props: React.ComponentProps<typeof Input>) {
   );
 }
 
-function FormSelect(props: React.ComponentProps<typeof Select>) {
+function FormSelect(props: React.ComponentProps<typeof NeoSelect>) {
   const field = useFieldContext<string>();
   return (
-    <Select
+    <NeoSelect
       name={field.name}
       value={field.state.value}
       onValueChange={(value) => field.handleChange(value)}
@@ -61,10 +61,10 @@ function FormSelect(props: React.ComponentProps<typeof Select>) {
   );
 }
 
-function FormTextarea(props: React.ComponentProps<typeof Textarea>) {
+function FormTextarea(props: React.ComponentProps<typeof NeoTextarea>) {
   const field = useFieldContext<string>();
   return (
-    <Textarea
+    <NeoTextarea
       id={field.name}
       name={field.name}
       value={field.state.value}
@@ -76,10 +76,10 @@ function FormTextarea(props: React.ComponentProps<typeof Textarea>) {
   );
 }
 
-function FormCheckbox(props: React.ComponentProps<typeof Checkbox>) {
+function FormCheckbox(props: React.ComponentProps<typeof NeoCheckbox>) {
   const field = useFieldContext<boolean>();
   return (
-    <Checkbox
+    <NeoCheckbox
       id={field.name}
       name={field.name}
       checked={Boolean(field.state.value)}
@@ -89,10 +89,10 @@ function FormCheckbox(props: React.ComponentProps<typeof Checkbox>) {
   );
 }
 
-function FormSwitch(props: React.ComponentProps<typeof Switch>) {
+function FormSwitch(props: React.ComponentProps<typeof NeoToggle>) {
   const field = useFieldContext<boolean>();
   return (
-    <Switch
+    <NeoToggle
       id={field.name}
       name={field.name}
       checked={Boolean(field.state.value)}

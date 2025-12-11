@@ -1,6 +1,5 @@
 import { Typography } from "@/components/nowts/typography";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoBadge, NeoButton } from "@/components/neo";
 import { Separator } from "@/components/ui/separator";
 import { ServerMdx } from "@/features/markdown/server-mdx";
 import {
@@ -79,9 +78,11 @@ export default async function RoutePage(props: PostParams) {
   return (
     <Layout>
       <LayoutContent>
-        <Link className={buttonVariants({ variant: "link" })} href="/posts">
-          <ArrowLeft size={16} /> Back
-        </Link>
+        <NeoButton asChild variant="ghost">
+          <Link href="/posts">
+            <ArrowLeft size={16} /> Back
+          </Link>
+        </NeoButton>
       </LayoutContent>
       <LayoutHeader
         style={{
@@ -93,9 +94,9 @@ export default async function RoutePage(props: PostParams) {
       >
         <div className="flex w-full flex-col gap-2 bg-black/50 p-10 text-white backdrop-blur">
           {post.attributes.status === "draft" ? (
-            <Badge className="w-fit" variant="secondary">
+            <NeoBadge className="w-fit" variant="secondary">
               Draft
-            </Badge>
+            </NeoBadge>
           ) : null}
           <LayoutTitle className="drop-shadow-sm">
             {post.attributes.title}

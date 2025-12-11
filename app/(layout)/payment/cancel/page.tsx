@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoBadge, NeoButton } from "@/components/neo";
 import { ContactSupportDialog } from "@/features/contact/support/contact-support-dialog";
 import {
   Layout,
@@ -14,7 +13,7 @@ export default function CancelPaymentPage() {
   return (
     <Layout>
       <LayoutHeader>
-        <Badge variant="outline">Payment failed</Badge>
+        <NeoBadge variant="outline">Payment failed</NeoBadge>
         <LayoutTitle>
           We're sorry, but we couldn't process your payment
         </LayoutTitle>
@@ -27,9 +26,9 @@ export default function CancelPaymentPage() {
         </LayoutDescription>
       </LayoutHeader>
       <LayoutContent className="flex items-center gap-2">
-        <Link href="/" className={buttonVariants({ variant: "invert" })}>
-          Home
-        </Link>
+        <NeoButton asChild variant="outline">
+          <Link href="/">Home</Link>
+        </NeoButton>
         <ContactSupportDialog />
       </LayoutContent>
     </Layout>

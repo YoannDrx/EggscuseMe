@@ -1,31 +1,41 @@
 import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+  NeoSidebarInset,
+  NeoSidebarProvider,
+  NeoSidebarTrigger,
+} from "@/components/neo";
 import { Layout } from "@/features/page/layout";
 import type { PropsWithChildren } from "react";
 import { AdminSidebar } from "./admin-sidebar";
 
 export async function AdminNavigation({ children }: PropsWithChildren) {
   return (
-    <SidebarProvider>
+    <NeoSidebarProvider>
       <AdminSidebar />
-      <SidebarInset className="border-accent border">
-        <header className="flex h-16 shrink-0 items-center gap-2">
+      <NeoSidebarInset>
+        <header className="border-neo-border/20 bg-neo-bg flex h-16 shrink-0 items-center gap-2 border-b-[length:var(--border-neo)]">
           <Layout size="lg" className="flex items-center gap-2">
-            <SidebarTrigger
-              size="lg"
-              variant="outline"
-              className="size-9 cursor-pointer"
-            />
+            <NeoSidebarTrigger className="border-neo-border/20 hover:bg-neo-card size-9 cursor-pointer rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]">
+              <svg
+                className="size-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </NeoSidebarTrigger>
             <div className="flex items-center gap-2">
-              <span className="font-semibold">Admin Panel</span>
+              <span className="text-neo-text font-semibold">Admin Panel</span>
             </div>
           </Layout>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+      </NeoSidebarInset>
+    </NeoSidebarProvider>
   );
 }

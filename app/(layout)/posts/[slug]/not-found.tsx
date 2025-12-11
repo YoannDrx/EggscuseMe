@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoCard, NeoCardHeader, NeoCardTitle } from "@/components/neo";
 import {
   Layout,
   LayoutContent,
@@ -13,11 +13,13 @@ export default function NotFoundPage() {
         <LayoutTitle>404 - Not Found</LayoutTitle>
       </LayoutHeader>
       <LayoutContent>
-        <Card>
-          <CardHeader>
-            <CardTitle>The post you are looking for doesn't exist.</CardTitle>
-          </CardHeader>
-        </Card>
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle>
+              The post you are looking for doesn't exist.
+            </NeoCardTitle>
+          </NeoCardHeader>
+        </NeoCard>
       </LayoutContent>
     </Layout>
   );

@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  NeoTabs,
+  NeoTabsList,
+  NeoTabsTrigger,
+  NeoTabsContent,
+} from "@/components/neo";
 import {
   Layout,
   LayoutContent,
@@ -42,34 +47,34 @@ export default async function Page(props: PageProps<"/admin/users">) {
       </LayoutHeader>
 
       <LayoutContent>
-        <Tabs defaultValue="users" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="users" className="gap-2">
+        <NeoTabs defaultValue="users" className="space-y-6">
+          <NeoTabsList>
+            <NeoTabsTrigger value="users" className="gap-2">
               <Users className="size-4" />
               Utilisateurs
-            </TabsTrigger>
-            <TabsTrigger value="invitations" className="gap-2">
+            </NeoTabsTrigger>
+            <NeoTabsTrigger value="invitations" className="gap-2">
               <MailQuestion className="size-4" />
               Invitations
-            </TabsTrigger>
-          </TabsList>
+            </NeoTabsTrigger>
+          </NeoTabsList>
 
-          <TabsContent value="users">
+          <NeoTabsContent value="users">
             <UsersList
               users={users}
               total={total}
               limit={pageSize}
               currentPage={page}
             />
-          </TabsContent>
+          </NeoTabsContent>
 
-          <TabsContent value="invitations" className="space-y-6">
+          <NeoTabsContent value="invitations" className="space-y-6">
             <Suspense fallback={<div>Chargement des stats...</div>}>
               <InvitationsStats />
             </Suspense>
             <InvitationsTabs />
-          </TabsContent>
-        </Tabs>
+          </NeoTabsContent>
+        </NeoTabs>
       </LayoutContent>
     </Layout>
   );

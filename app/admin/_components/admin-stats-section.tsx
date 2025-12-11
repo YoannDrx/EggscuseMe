@@ -1,6 +1,6 @@
 "use cache";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoStatCard } from "@/components/neo";
 import { AUTH_PLANS } from "@/lib/auth/stripe/auth-plans";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
@@ -129,20 +129,13 @@ export async function AdminStatsSection() {
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-muted-foreground text-xs font-medium">
-                {stat.title}
-              </CardTitle>
-              <Icon className="text-muted-foreground size-4" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-muted-foreground text-xs">
-                {stat.description}
-              </p>
-            </CardContent>
-          </Card>
+          <NeoStatCard
+            key={stat.title}
+            title={stat.title}
+            value={stat.value}
+            icon={Icon}
+            trendLabel={stat.description}
+          />
         );
       })}
     </>

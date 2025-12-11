@@ -1,10 +1,10 @@
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import type { PropsWithChildren } from "react";
 import { Typography } from "../../components/nowts/typography";
 import { ContactSupportDialog } from "../contact/support/contact-support-dialog";
@@ -15,18 +15,18 @@ type Error401Props = PropsWithChildren<{
 
 export function Error401(props: Error401Props) {
   return (
-    <Card className="w-full max-w-lg">
-      <CardHeader className="flex flex-col">
+    <NeoCard className="w-full max-w-lg">
+      <NeoCardHeader className="flex flex-col">
         <Typography variant="code">401</Typography>
-        <CardTitle>{props.title ?? "Unauthorized"}</CardTitle>
-        <CardDescription>
+        <NeoCardTitle>{props.title ?? "Unauthorized"}</NeoCardTitle>
+        <NeoCardDescription>
           You don't have permission to access this resource. Please sign in or
           contact your administrator if you believe this is a mistake.
-        </CardDescription>
-      </CardHeader>
-      <CardFooter className="flex flex-row gap-2">
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardFooter className="flex flex-row gap-2">
         <ContactSupportDialog />
-      </CardFooter>
-    </Card>
+      </NeoCardFooter>
+    </NeoCard>
   );
 }

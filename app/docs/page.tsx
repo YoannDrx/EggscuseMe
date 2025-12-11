@@ -1,11 +1,11 @@
-import { buttonVariants } from "@/components/ui/button";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoButton,
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -41,26 +41,27 @@ async function DocsPage(props: PageProps<"/docs">) {
   return (
     <div className="grid flex-1 gap-6 sm:grid-cols-2">
       {sortedDocs.map((doc) => (
-        <Card key={doc.slug} className="h-fit overflow-hidden">
+        <NeoCard key={doc.slug} className="h-fit overflow-hidden">
           {doc.attributes.coverUrl && (
             <div
               className="h-36 bg-cover bg-center"
               style={{ backgroundImage: `url(${doc.attributes.coverUrl})` }}
             />
           )}
-          <CardHeader>
-            <CardTitle>{doc.attributes.title}</CardTitle>
-            <CardDescription>{doc.attributes.description}</CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Link
-              href={`/docs/${doc.slug}`}
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Read More <ArrowRightIcon className="ml-2 h-4 w-4" />
-            </Link>
-          </CardFooter>
-        </Card>
+          <NeoCardHeader>
+            <NeoCardTitle>{doc.attributes.title}</NeoCardTitle>
+            <NeoCardDescription>
+              {doc.attributes.description}
+            </NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardFooter>
+            <NeoButton asChild variant="outline">
+              <Link href={`/docs/${doc.slug}`}>
+                Read More <ArrowRightIcon className="ml-2 h-4 w-4" />
+              </Link>
+            </NeoButton>
+          </NeoCardFooter>
+        </NeoCard>
       ))}
     </div>
   );

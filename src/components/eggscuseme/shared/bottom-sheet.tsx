@@ -1,10 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
-import { useThemeColors } from "../theme";
+import { NeoButton } from "@/components/neo";
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -21,22 +21,17 @@ export function BottomSheet({
   children,
   className,
 }: BottomSheetProps) {
-  const colors = useThemeColors();
-
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[var(--z-modal)] flex items-end justify-center sm:items-center">
+        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className={cn(
-              "absolute inset-0 backdrop-blur-sm",
-              colors.modalOverlay,
-            )}
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -51,32 +46,29 @@ export function BottomSheet({
               stiffness: 400,
             }}
             className={cn(
-              "relative w-full rounded-t-[var(--radius-sheet)] p-6 shadow-[var(--shadow-modal)] sm:w-96 sm:rounded-[var(--radius-sheet)]",
-              colors.modalBg,
-              colors.cardBorder,
-              "border-t sm:border",
+              "relative w-full p-6 sm:w-96",
+              "rounded-t-[var(--radius-neo-xl)] sm:rounded-[var(--radius-neo-xl)]",
+              "bg-neo-card",
+              "border-neo-border border-t-[length:var(--border-neo)] sm:border-[length:var(--border-neo)]",
+              "shadow-[var(--shadow-neo-lg)]",
               className,
             )}
           >
             {/* Handle bar */}
-            <div className="absolute top-2 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-current opacity-20" />
+            <div className="bg-neo-text-muted/30 absolute top-2 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full" />
 
             {/* Header */}
             {title && (
               <div className="mb-4 flex items-center justify-between">
-                <h3 className={cn("text-xl font-bold", colors.text)}>
-                  {title}
-                </h3>
-                <button
+                <h3 className="text-neo-text text-xl font-bold">{title}</h3>
+                <NeoButton
+                  variant="ghost"
+                  size="sm"
                   onClick={onClose}
-                  className={cn(
-                    "rounded-full p-2 transition-colors",
-                    colors.textMuted,
-                    "hover:bg-current/10",
-                  )}
+                  className="size-8 rounded-full p-0"
                 >
                   <X size={20} />
-                </button>
+                </NeoButton>
               </div>
             )}
 

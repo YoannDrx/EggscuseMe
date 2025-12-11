@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
   Dialog,
   DialogContent,
@@ -58,7 +58,9 @@ export const ContactSupportDialog = (props: ContactSupportDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={(v) => setOpen(v)}>
       <DialogTrigger asChild>
-        {props.children ?? <Button variant="outline">Contact support</Button>}
+        {props.children ?? (
+          <NeoButton variant="outline">Contact support</NeoButton>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

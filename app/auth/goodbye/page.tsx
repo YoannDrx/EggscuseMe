@@ -1,11 +1,11 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { NeoAvatar } from "@/components/neo/neo-avatar";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import { SiteConfig } from "@/site-config";
 import { CheckCircle } from "lucide-react";
 import type { Metadata } from "next";
@@ -19,36 +19,43 @@ export const metadata: Metadata = {
 
 export default function GoodbyePage() {
   return (
-    <Card className="mx-auto w-full max-w-md lg:max-w-lg lg:p-6">
-      <CardHeader>
+    <NeoCard
+      variant="elevated"
+      className="mx-auto w-full max-w-md lg:max-w-lg"
+      padding="lg"
+    >
+      <NeoCardHeader>
         <div className="flex justify-center">
-          <Avatar className="size-16">
-            <AvatarFallback>
-              <CheckCircle />
-            </AvatarFallback>
-          </Avatar>
+          <NeoAvatar
+            fallback="GB"
+            size="lg"
+            shape="square"
+            className="flex items-center justify-center"
+          >
+            <CheckCircle className="text-neo-accent size-6" />
+          </NeoAvatar>
         </div>
-        <CardHeader className="text-center">Account Deleted</CardHeader>
+        <NeoCardHeader className="text-center">Account Deleted</NeoCardHeader>
 
-        <CardDescription className="text-center">
+        <NeoCardDescription className="text-center">
           Your account has been successfully deleted. We're sorry to see you go.
-        </CardDescription>
-      </CardHeader>
-      <CardFooter className="border-t pt-6">
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardFooter className="border-t-neo-border border-t-[length:var(--border-neo)] pt-6">
         <div className="w-full space-y-4 text-center">
-          <p className="text-muted-foreground text-sm">
+          <p className="text-neo-text-muted text-sm">
             Your account and all associated data have been permanently removed
             from our system.
           </p>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-neo-text-muted text-sm">
             If you change your mind, you're welcome to create a new account
             anytime.
           </p>
-          <Button asChild className="w-full">
+          <NeoButton asChild className="w-full">
             <Link href="/auth/signup">Create New Account</Link>
-          </Button>
+          </NeoButton>
         </div>
-      </CardFooter>
-    </Card>
+      </NeoCardFooter>
+    </NeoCard>
   );
 }

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo/neo-button";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { User } from "lucide-react";
@@ -24,7 +24,7 @@ async function FridgePageContent() {
   const eggBoxes = fridge?.eggBoxes ?? [];
 
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-neo-bg flex min-h-screen flex-col">
       {/* Mobile Header - Using new standardized component */}
       <MobileHeader
         title={fridge?.name ?? t("defaultName")}
@@ -33,17 +33,12 @@ async function FridgePageContent() {
         mascot
         mascotMood="happy"
         rightAction={
-          <Button
-            variant="ghost"
-            size="icon"
-            className="bg-primary/10 hover:bg-primary/20 size-10 rounded-full"
-            asChild
-          >
+          <NeoButton variant="ghost" size="icon" asChild>
             <Link href="/fridge/settings/profile">
-              <User className="text-primary size-4" />
+              <User className="size-4" />
               <span className="sr-only">{t("nav.profile")}</span>
             </Link>
-          </Button>
+          </NeoButton>
         }
       />
 
@@ -65,7 +60,7 @@ async function FridgePageContent() {
 
 function FridgePageSkeleton() {
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-neo-bg flex min-h-screen flex-col">
       {/* Header Skeleton - Mobile only */}
       <div className="border-nav-border bg-nav-bg h-[var(--header-height-mobile)] border-b md:hidden">
         <div className="flex h-full items-center justify-between px-4">

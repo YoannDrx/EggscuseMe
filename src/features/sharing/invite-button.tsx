@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { NeoButton } from "@/components/neo";
+import { NeoInput } from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
 import {
   Popover,
   PopoverContent,
@@ -87,10 +87,10 @@ export function InviteButton({ className }: InviteButtonProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="neubrutalism-outline" className={className}>
+        <NeoButton variant="outline" className={className}>
           <Users className="mr-2 size-4" />
           {t("invite")}
-        </Button>
+        </NeoButton>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="end">
         <div className="space-y-4">
@@ -105,8 +105,8 @@ export function InviteButton({ className }: InviteButtonProps) {
           </div>
 
           {!inviteLink ? (
-            <Button
-              variant="neubrutalism"
+            <NeoButton
+              variant="primary"
               className="w-full"
               onClick={handleCreateInvite}
               disabled={isPending}
@@ -122,7 +122,7 @@ export function InviteButton({ className }: InviteButtonProps) {
                   {t("createLink")}
                 </>
               )}
-            </Button>
+            </NeoButton>
           ) : (
             <div className="space-y-3">
               {showQR ? (
@@ -131,25 +131,25 @@ export function InviteButton({ className }: InviteButtonProps) {
                   <p className="text-muted-foreground text-center text-xs">
                     {t("scanQr")}
                   </p>
-                  <Button
+                  <NeoButton
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowQR(false)}
                   >
                     {t("showLink")}
-                  </Button>
+                  </NeoButton>
                 </div>
               ) : (
                 <>
                   <div className="space-y-2">
-                    <Label className="text-xs">{t("inviteLink")}</Label>
+                    <NeoLabel className="text-xs">{t("inviteLink")}</NeoLabel>
                     <div className="flex gap-2">
-                      <Input
+                      <NeoInput
                         value={inviteLink}
                         readOnly
                         className="h-9 text-xs"
                       />
-                      <Button
+                      <NeoButton
                         variant="outline"
                         size="sm"
                         className="shrink-0"
@@ -160,12 +160,12 @@ export function InviteButton({ className }: InviteButtonProps) {
                         ) : (
                           <Copy className="size-4" />
                         )}
-                      </Button>
+                      </NeoButton>
                     </div>
                   </div>
 
                   <div className="flex gap-2">
-                    <Button
+                    <NeoButton
                       variant="outline"
                       size="sm"
                       className="flex-1"
@@ -173,8 +173,8 @@ export function InviteButton({ className }: InviteButtonProps) {
                     >
                       <QrCode className="mr-2 size-4" />
                       QR Code
-                    </Button>
-                    <Button
+                    </NeoButton>
+                    <NeoButton
                       variant="outline"
                       size="sm"
                       className="flex-1"
@@ -182,7 +182,7 @@ export function InviteButton({ className }: InviteButtonProps) {
                     >
                       <Share2 className="mr-2 size-4" />
                       {t("share")}
-                    </Button>
+                    </NeoButton>
                   </div>
                 </>
               )}

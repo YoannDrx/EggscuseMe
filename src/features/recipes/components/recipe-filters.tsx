@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { NeoBadge } from "@/components/neo";
+import { NeoButton } from "@/components/neo";
+import { NeoInput } from "@/components/neo";
 import { cn } from "@/lib/utils";
 import {
   ChefHat,
@@ -64,7 +64,7 @@ function FilterBadge({
 }: FilterBadgeProps) {
   return (
     <button type="button" onClick={onClick}>
-      <Badge
+      <NeoBadge
         variant={active ? "default" : "outline"}
         className={cn(
           "cursor-pointer transition-all hover:scale-105",
@@ -73,7 +73,7 @@ function FilterBadge({
         )}
       >
         {children}
-      </Badge>
+      </NeoBadge>
     </button>
   );
 }
@@ -174,7 +174,7 @@ export function RecipeFilters() {
       {/* Search bar */}
       <div className="relative">
         <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-        <Input
+        <NeoInput
           placeholder={t("searchPlaceholder")}
           value={filters.search}
           onChange={(e) => void setFilters({ search: e.target.value })}
@@ -278,7 +278,7 @@ export function RecipeFilters() {
       {/* Clear filters button */}
       {hasActiveFilters && (
         <div className="flex justify-end">
-          <Button
+          <NeoButton
             variant="ghost"
             size="sm"
             onClick={clearFilters}
@@ -286,7 +286,7 @@ export function RecipeFilters() {
           >
             <RotateCcw className="size-3" />
             {t("clearAll")}
-          </Button>
+          </NeoButton>
         </div>
       )}
     </div>

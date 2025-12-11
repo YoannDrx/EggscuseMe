@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { NeoCard, NeoCardContent } from "@/components/neo/neo-card";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
@@ -30,7 +30,7 @@ export default async function RecipesPage() {
           <Eggy mood="chef" size="lg" />
           <div>
             <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
-            <p className="text-muted-foreground">{t("subtitle")}</p>
+            <p className="text-neo-text-muted">{t("subtitle")}</p>
           </div>
         </div>
       </div>
@@ -46,13 +46,13 @@ export default async function RecipesPage() {
           {/* All recipes */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ChefHat className="text-primary size-5" />
-              <h2 className="font-heading text-lg font-semibold md:text-xl">
-                {t("allRecipes")}
-              </h2>
-              <Badge variant="secondary" className="hidden sm:flex">
-                {RECIPES.length}
+              <div className="flex items-center gap-2">
+                <ChefHat className="text-neo-accent size-5" />
+                <h2 className="font-heading text-lg font-semibold md:text-xl">
+                  {t("allRecipes")}
+                </h2>
+                <Badge variant="secondary" className="hidden sm:flex">
+                  {RECIPES.length}
                 </Badge>
               </div>
             </div>
@@ -76,17 +76,17 @@ async function PersonalizedSuggestions() {
 
   if (eggBoxes.length === 0) {
     return (
-      <Card variant="sunny" className="bg-muted/50">
-        <CardContent className="flex items-center gap-3 p-4 md:gap-4 md:py-6">
+      <NeoCard variant="elevated" padding="md" className="bg-neo-card/50">
+        <NeoCardContent className="flex items-center gap-3 p-4 md:gap-4 md:py-6">
           <Eggy mood="sad" size="md" className="shrink-0" />
           <div className="min-w-0">
             <p className="font-medium">{t("personalized.emptyTitle")}</p>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-neo-text-muted text-sm">
               {t("personalized.emptyDescription")}
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
     );
   }
 
@@ -112,7 +112,7 @@ async function PersonalizedSuggestions() {
   return (
     <section className="space-y-3 md:space-y-4">
       <div className="flex items-center gap-2">
-        <Sparkles className="text-primary size-5" />
+        <Sparkles className="text-neo-accent size-5" />
         <h2 className="font-heading text-lg font-semibold md:text-xl">
           {hasUrgent ? t("personalized.urgentTitle") : t("personalized.title")}
         </h2>
@@ -131,12 +131,12 @@ async function PersonalizedSuggestions() {
       </div>
 
       {hasUrgent && (
-        <Card variant="sunny" className="border-fresh-cook bg-fresh-cook/5">
-          <CardContent className="flex items-start gap-3 p-3 md:py-4">
+        <NeoCard variant="elevated" padding="md" className="border-fresh-cook bg-fresh-cook/5">
+          <NeoCardContent className="flex items-start gap-3 p-3 md:py-4">
             <Eggy mood="worried" size="sm" className="shrink-0" />
             <p className="text-sm">{t("personalized.urgentNotice")}</p>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {/* Mobile: 2 columns, scroll horizontally if needed */}
@@ -153,14 +153,14 @@ function SuggestionsLoading() {
   return (
     <section className="space-y-3 md:space-y-4">
       <div className="flex items-center gap-2">
-        <div className="bg-muted size-5 animate-pulse rounded" />
-        <div className="bg-muted h-6 w-32 animate-pulse rounded" />
+        <div className="bg-neo-card size-5 animate-pulse rounded" />
+        <div className="bg-neo-card h-6 w-32 animate-pulse rounded" />
       </div>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="bg-muted h-40 animate-pulse rounded-xl md:h-48"
+            className="bg-neo-card h-40 animate-pulse rounded-xl md:h-48"
           />
         ))}
       </div>

@@ -1,6 +1,11 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
@@ -25,14 +30,14 @@ export function UserStatsSection({ userId }: { userId: string }) {
     return (
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <NeoCard key={i}>
+            <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="bg-muted h-4 w-20 animate-pulse rounded" />
-            </CardHeader>
-            <CardContent>
+            </NeoCardHeader>
+            <NeoCardContent>
               <div className="bg-muted h-8 w-16 animate-pulse rounded" />
-            </CardContent>
-          </Card>
+            </NeoCardContent>
+          </NeoCard>
         ))}
       </div>
     );
@@ -89,33 +94,33 @@ export function UserStatsSection({ userId }: { userId: string }) {
         {statItems.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-muted-foreground text-xs font-medium">
+            <NeoCard key={stat.title}>
+              <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <NeoCardTitle className="text-muted-foreground text-xs font-medium">
                   {stat.title}
-                </CardTitle>
+                </NeoCardTitle>
                 <Icon className="text-muted-foreground size-4" />
-              </CardHeader>
-              <CardContent>
+              </NeoCardHeader>
+              <NeoCardContent>
                 <div className="text-2xl font-bold">{stat.value}</div>
                 <p className="text-muted-foreground text-xs">
                   {stat.description}
                 </p>
-              </CardContent>
-            </Card>
+              </NeoCardContent>
+            </NeoCard>
           );
         })}
       </div>
 
       {data.fridge && data.fridge.members.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle className="flex items-center gap-2">
               <Users className="size-5" />
               Membres du frigo ({data.fridge.members.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
             <div className="flex flex-col gap-2">
               {data.fridge.members.map((member) => (
                 <div
@@ -134,16 +139,18 @@ export function UserStatsSection({ userId }: { userId: string }) {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {data.memberships.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Membre de frigos ({data.memberships.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle>
+              Membre de frigos ({data.memberships.length})
+            </NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
             <div className="flex flex-col gap-2">
               {data.memberships.map((membership) => (
                 <div
@@ -163,16 +170,16 @@ export function UserStatsSection({ userId }: { userId: string }) {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {data.recentConsumptions.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Consommations recentes</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle>Consommations recentes</NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
             <div className="flex flex-col gap-2">
               {data.recentConsumptions.slice(0, 10).map((consumption) => (
                 <div
@@ -193,8 +200,8 @@ export function UserStatsSection({ userId }: { userId: string }) {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
     </div>
   );

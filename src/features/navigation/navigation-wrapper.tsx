@@ -2,7 +2,7 @@ import { Menu } from "lucide-react";
 
 import { Typography } from "@/components/nowts/typography";
 import { LogoSvg } from "@/components/svg/logo-svg";
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "../theme/theme-toggle";
@@ -41,14 +41,14 @@ export function NavigationWrapper({
         <header className="bg-muted/40 flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
-              <Button
+              <NeoButton
                 variant="outline"
                 size="icon"
                 className="shrink-0 md:hidden"
               >
                 <Menu className="size-5" />
                 <span className="sr-only">Toggle navigation menu</span>
-              </Button>
+              </NeoButton>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
               <div className="flex items-center gap-2">

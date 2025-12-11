@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoButton,
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   acceptShareLinkAction,
   getShareLinkByCodeAction,
@@ -32,24 +32,24 @@ export default async function JoinPage({ params }: JoinPageProps) {
   if (result.data?.error || !result.data?.shareLink) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center p-4">
-        <Card variant="sunny" className="max-w-md">
-          <CardHeader className="text-center">
+        <NeoCard variant="elevated" className="max-w-md">
+          <NeoCardHeader className="text-center">
             <div className="mx-auto mb-4">
               <Eggy mood="sad" size="lg" />
             </div>
-            <CardTitle className="font-heading text-xl">
+            <NeoCardTitle className="font-heading text-xl">
               {t("invalidTitle")}
-            </CardTitle>
-            <CardDescription>
+            </NeoCardTitle>
+            <NeoCardDescription>
               {result.data?.error ?? t("invalidDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
+            </NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent className="text-center">
             <Link href="/fridge">
-              <Button variant="neubrutalism">{t("backToFridge")}</Button>
+              <NeoButton variant="primary">{t("backToFridge")}</NeoButton>
             </Link>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       </div>
     );
   }
@@ -59,19 +59,19 @@ export default async function JoinPage({ params }: JoinPageProps) {
   // Show join confirmation
   return (
     <div className="flex min-h-[60vh] items-center justify-center p-4">
-      <Card variant="sunny" className="max-w-md">
-        <CardHeader className="text-center">
+      <NeoCard variant="elevated" className="max-w-md">
+        <NeoCardHeader className="text-center">
           <div className="mx-auto mb-4">
             <Eggy mood="happy" size="lg" />
           </div>
-          <CardTitle className="font-heading text-xl">
+          <NeoCardTitle className="font-heading text-xl">
             {t("joinTitle")}
-          </CardTitle>
-          <CardDescription>
+          </NeoCardTitle>
+          <NeoCardDescription>
             {shareLink.ownerName} {t("inviteText")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+          </NeoCardDescription>
+        </NeoCardHeader>
+        <NeoCardContent className="space-y-6">
           {/* Fridge Info */}
           <div className="bg-muted/50 flex items-center gap-4 rounded-xl p-4">
             <div className="bg-primary/10 flex size-12 items-center justify-center rounded-full">
@@ -116,7 +116,7 @@ export default async function JoinPage({ params }: JoinPageProps) {
             <p className="text-muted-foreground text-xs">
               {shareLink.remainingUses} utilisation
               {shareLink.remainingUses > 1 ? "s" : ""} restante
-              {shareLink.remainingUses > 1 ? "s" : ""} • {" "}
+              {shareLink.remainingUses > 1 ? "s" : ""} •{" "}
               {t("expires", {
                 date: new Date(shareLink.expiresAt).toLocaleDateString(
                   locale === "fr" ? "fr-FR" : "en-US",
@@ -135,17 +135,17 @@ export default async function JoinPage({ params }: JoinPageProps) {
               }
             }}
           >
-            <Button type="submit" variant="neubrutalism" className="w-full">
+            <NeoButton type="submit" variant="primary" className="w-full">
               <Users className="mr-2 size-4" />
               {t("joinCta")}
-            </Button>
+            </NeoButton>
           </form>
 
           <p className="text-muted-foreground text-center text-xs">
             {t("leaveNote")}
           </p>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
     </div>
   );
 }

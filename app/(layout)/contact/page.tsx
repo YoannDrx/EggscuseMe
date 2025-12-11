@@ -1,9 +1,6 @@
 import GridBackground from "@/components/nowts/grid-background";
 import { Typography } from "@/components/nowts/typography";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { NeoButton, NeoInput, NeoLabel, NeoTextarea } from "@/components/neo";
 import { contactSupportAction } from "@/features/contact/support/contact-support.action";
 import { ContactSupportSchema } from "@/features/contact/support/contact-support.schema";
 import { serverToast } from "@/lib/server-toast";
@@ -316,14 +313,14 @@ export default async function ContactPage() {
           <div className="max-w-xl lg:mr-0 lg:max-w-lg">
             <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
               <div>
-                <Label
+                <NeoLabel
                   htmlFor="first-name"
                   className="text-foreground block text-sm font-semibold"
                 >
                   {copy.form.firstName}
-                </Label>
+                </NeoLabel>
                 <div className="mt-2.5">
-                  <Input
+                  <NeoInput
                     id="first-name"
                     name="first-name"
                     type="text"
@@ -334,14 +331,14 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div>
-                <Label
+                <NeoLabel
                   htmlFor="last-name"
                   className="text-foreground block text-sm font-semibold"
                 >
                   {copy.form.lastName}
-                </Label>
+                </NeoLabel>
                 <div className="mt-2.5">
-                  <Input
+                  <NeoInput
                     id="last-name"
                     name="last-name"
                     type="text"
@@ -352,14 +349,14 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div className="sm:col-span-2">
-                <Label
+                <NeoLabel
                   htmlFor="email"
                   className="text-foreground block text-sm font-semibold"
                 >
                   {copy.form.email}
-                </Label>
+                </NeoLabel>
                 <div className="mt-2.5">
-                  <Input
+                  <NeoInput
                     id="email"
                     name="email"
                     type="email"
@@ -370,14 +367,14 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div className="sm:col-span-2">
-                <Label
+                <NeoLabel
                   htmlFor="subject"
                   className="text-foreground block text-sm font-semibold"
                 >
                   {copy.form.subject}
-                </Label>
+                </NeoLabel>
                 <div className="mt-2.5">
-                  <Input
+                  <NeoInput
                     id="subject"
                     name="subject"
                     type="text"
@@ -388,14 +385,14 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div className="sm:col-span-2">
-                <Label
+                <NeoLabel
                   htmlFor="message"
                   className="text-foreground block text-sm font-semibold"
                 >
                   {copy.form.message}
-                </Label>
+                </NeoLabel>
                 <div className="mt-2.5">
-                  <Textarea
+                  <NeoTextarea
                     id="message"
                     name="message"
                     rows={4}
@@ -407,12 +404,12 @@ export default async function ContactPage() {
               </div>
             </div>
             <div className="mt-8 flex justify-end">
-              <Button
+              <NeoButton
                 type="submit"
                 className="rounded-md px-3.5 py-2.5 text-center text-sm font-semibold"
               >
                 {copy.form.submit}
-              </Button>
+              </NeoButton>
             </div>
           </div>
         </form>

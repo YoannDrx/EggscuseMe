@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 type SpringButtonProps = {
@@ -22,15 +22,30 @@ export function SpringButton({
   className,
 }: SpringButtonProps) {
   const variants = {
-    primary: "bg-amber-400 text-stone-950 shadow-md",
-    secondary: "bg-stone-800 text-stone-100 border border-stone-700",
-    ghost: "bg-transparent text-stone-400 hover:text-stone-100",
+    primary: [
+      "bg-neo-accent text-neo-accent-foreground",
+      "border-[length:var(--border-neo)] border-neo-border",
+      "shadow-[var(--shadow-neo-md)]",
+      "hover:shadow-[var(--shadow-neo-lg)]",
+      "active:translate-x-[4px] active:translate-y-[4px] active:shadow-none",
+    ].join(" "),
+    secondary: [
+      "bg-neo-card text-neo-text",
+      "border-[length:var(--border-neo)] border-neo-border",
+      "shadow-[var(--shadow-neo-sm)]",
+      "hover:shadow-[var(--shadow-neo-md)]",
+      "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+    ].join(" "),
+    ghost: [
+      "bg-transparent text-neo-text-muted",
+      "hover:text-neo-text hover:bg-neo-card/50",
+    ].join(" "),
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 text-sm rounded-lg",
-    md: "px-4 py-2 text-base rounded-xl",
-    lg: "px-6 py-3 text-lg rounded-2xl",
+    sm: "px-3 py-1.5 text-sm rounded-[var(--radius-neo-sm)]",
+    md: "px-4 py-2 text-base rounded-[var(--radius-neo-lg)]",
+    lg: "px-6 py-3 text-lg rounded-[var(--radius-neo-xl)]",
   };
 
   return (
@@ -38,7 +53,8 @@ export function SpringButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        "font-bold transition-all duration-200",
+        "focus-visible:ring-neo-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
         variants[variant],
         sizes[size],
         disabled && "pointer-events-none opacity-50",

@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo/neo-button";
 import { Header } from "@/features/layout/header";
 import {
   Layout,
@@ -48,9 +48,9 @@ async function NewUserPage(props: PageProps<"/auth/new-user">) {
           <LayoutDescription>You can now use the app</LayoutDescription>
         </LayoutHeader>
         <LayoutContent>
-          <Link href="/" className={buttonVariants({ size: "lg" })}>
-            Get Started
-          </Link>
+          <NeoButton size="lg" asChild>
+            <Link href="/">Get Started</Link>
+          </NeoButton>
         </LayoutContent>
       </Layout>
     </>

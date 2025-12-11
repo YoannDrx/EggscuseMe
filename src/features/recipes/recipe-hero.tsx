@@ -1,6 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { NeoBadge } from "@/components/neo";
+import { NeoButton } from "@/components/neo";
 import { cn } from "@/lib/utils";
 import {
   ChefHat,
@@ -16,7 +17,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Recipe } from "./types";
 import { getRecipeName, getRecipeDescription } from "./lib/recipe-i18n";
-import { Button } from "@/components/ui/button";
 
 type RecipeHeroProps = {
   recipe: Recipe;
@@ -53,10 +53,10 @@ export function RecipeHero({ recipe, className }: RecipeHeroProps) {
     <div className={cn("space-y-6", className)}>
       {/* Back button */}
       <Link href="/fridge/recipes">
-        <Button variant="ghost" size="sm" className="gap-2">
+        <NeoButton variant="ghost" size="sm" className="gap-2">
           <ArrowLeft className="size-4" />
           {t("backToList")}
-        </Button>
+        </NeoButton>
       </Link>
 
       {/* Image */}
@@ -84,33 +84,33 @@ export function RecipeHero({ recipe, className }: RecipeHeroProps) {
       {/* Meta badges */}
       <div className="flex flex-wrap items-center gap-2">
         {/* Time */}
-        <Badge variant="outline" className="gap-1 px-3 py-1.5">
+        <NeoBadge variant="outline" className="gap-1 px-3 py-1.5">
           <Clock className="size-4" />
           {recipe.time} min
-        </Badge>
+        </NeoBadge>
 
         {/* Eggs required */}
-        <Badge variant="outline" className="gap-1 px-3 py-1.5">
+        <NeoBadge variant="outline" className="gap-1 px-3 py-1.5">
           <Egg className="size-4" />
           {recipe.eggsRequired} {recipe.eggsRequired > 1 ? t("eggs") : t("egg")}
-        </Badge>
+        </NeoBadge>
 
         {/* Servings */}
         {recipe.servings && (
-          <Badge variant="outline" className="gap-1 px-3 py-1.5">
+          <NeoBadge variant="outline" className="gap-1 px-3 py-1.5">
             <Users className="size-4" />
             {recipe.servings} {t("servings")}
-          </Badge>
+          </NeoBadge>
         )}
 
         {/* Difficulty */}
-        <Badge
+        <NeoBadge
           variant="outline"
           className={cn("gap-1 px-3 py-1.5", difficulty.className)}
         >
           <DifficultyIcon className="size-4" />
           {tDifficulty(difficulty.labelKey)}
-        </Badge>
+        </NeoBadge>
       </div>
     </div>
   );

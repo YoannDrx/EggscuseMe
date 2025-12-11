@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -140,10 +140,10 @@ export function UserActions({ user }: UserActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <NeoButton variant="outline">
           <MoreHorizontal className="mr-2 size-4" />
           Actions
-        </Button>
+        </NeoButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {!user.banned && (

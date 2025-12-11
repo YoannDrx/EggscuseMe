@@ -10,9 +10,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { NeoButton } from "@/components/neo";
+import { NeoInput } from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { LoadingButton } from "../form/submit-button";
@@ -82,7 +82,7 @@ export function DialogComponent(props: { dialog: Dialog }) {
               Type <Typography variant="code">{dialog.confirmText}</Typography>{" "}
               to confirm this action.
             </Typography>
-            <Input
+            <NeoInput
               autoFocus
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
@@ -99,8 +99,8 @@ export function DialogComponent(props: { dialog: Dialog }) {
 
         {dialog.type === "input" && (
           <div className="mt-2">
-            <Label>{dialog.input.label}</Label>
-            <Input
+            <NeoLabel>{dialog.input.label}</NeoLabel>
+            <NeoInput
               value={inputValue}
               placeholder={dialog.input.placeholder}
               onChange={(e) => setInputValue(e.target.value)}
@@ -118,13 +118,13 @@ export function DialogComponent(props: { dialog: Dialog }) {
         )}
 
         <AlertDialogFooter>
-          <Button
+          <NeoButton
             variant="outline"
             disabled={dialog.loading}
             onClick={handleCancel}
           >
             {dialog.cancel?.label ?? "Cancel"}
-          </Button>
+          </NeoButton>
 
           <LoadingButton
             loading={dialog.loading}

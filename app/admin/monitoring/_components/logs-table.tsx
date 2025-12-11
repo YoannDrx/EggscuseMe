@@ -1,9 +1,13 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NeoBadge } from "@/components/neo/neo-badge";
+import { NeoButton } from "@/components/neo/neo-button";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import {
   Select,
   SelectContent,
@@ -12,13 +16,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  NeoTable,
+  NeoTableBody,
+  NeoTableCell,
+  NeoTableHead,
+  NeoTableHeader,
+  NeoTableRow,
+} from "@/components/neo/neo-table";
 import { dayjs } from "@/lib/dayjs";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -58,7 +62,14 @@ const actionIcons: Record<
   EXPORT_DATA: Download,
 };
 
-const actionColors: Record<string, string> = {
+type BadgeVariant =
+  | "default"
+  | "success"
+  | "destructive"
+  | "secondary"
+  | "outline";
+
+const actionColors: Record<string, BadgeVariant> = {
   IMPERSONATE: "default",
   BAN_USER: "destructive",
   UNBAN_USER: "default",
@@ -90,23 +101,19 @@ export function LogsTable() {
 
   const getActionBadge = (actionType: string) => {
     const Icon = actionIcons[actionType];
-    const variant = actionColors[actionType] as
-      | "default"
-      | "destructive"
-      | "secondary"
-      | "outline";
+    const variant = actionColors[actionType] ?? "default";
 
     return (
-      <Badge variant={variant} className="flex items-center gap-1">
+      <NeoBadge variant={variant} className="flex items-center gap-1">
         <Icon className="size-3" />
         {t(`actions.${actionType}`)}
-      </Badge>
+      </NeoBadge>
     );
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
+    <NeoCard>
+      <NeoCardHeader className="flex flex-row items-center gap-4">
         <Select
           value={action}
           onValueChange={(v) => {
@@ -138,35 +145,35 @@ export function LogsTable() {
             </SelectItem>
           </SelectContent>
         </Select>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t("table.admin")}</TableHead>
-              <TableHead>{t("table.action")}</TableHead>
-              <TableHead>{t("table.target")}</TableHead>
-              <TableHead>{t("table.metadata")}</TableHead>
-              <TableHead>{t("table.date")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+      </NeoCardHeader>
+      <NeoCardContent>
+        <NeoTable>
+          <NeoTableHeader>
+            <NeoTableRow>
+              <NeoTableHead>{t("table.admin")}</NeoTableHead>
+              <NeoTableHead>{t("table.action")}</NeoTableHead>
+              <NeoTableHead>{t("table.target")}</NeoTableHead>
+              <NeoTableHead>{t("table.metadata")}</NeoTableHead>
+              <NeoTableHead>{t("table.date")}</NeoTableHead>
+            </NeoTableRow>
+          </NeoTableHeader>
+          <NeoTableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center">
+              <NeoTableRow>
+                <NeoTableCell colSpan={5} className="text-center">
                   Chargement...
-                </TableCell>
-              </TableRow>
+                </NeoTableCell>
+              </NeoTableRow>
             ) : logs.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center">
+              <NeoTableRow>
+                <NeoTableCell colSpan={5} className="text-center">
                   Aucun log trouve
-                </TableCell>
-              </TableRow>
+                </NeoTableCell>
+              </NeoTableRow>
             ) : (
               logs.map((log) => (
-                <TableRow key={log.id}>
-                  <TableCell>
+                <NeoTableRow key={log.id}>
+                  <NeoTableCell>
                     <Link
                       href={`/admin/users/${log.admin.id}`}
                       className="flex items-center gap-2 hover:underline"
@@ -179,14 +186,14 @@ export function LogsTable() {
                       </Avatar>
                       <div className="text-sm">
                         <div>{log.admin.name}</div>
-                        <div className="text-muted-foreground text-xs">
+                        <div className="text-neo-text-muted text-xs">
                           {log.admin.email}
                         </div>
                       </div>
                     </Link>
-                  </TableCell>
-                  <TableCell>{getActionBadge(log.action)}</TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>{getActionBadge(log.action)}</NeoTableCell>
+                  <NeoTableCell>
                     {log.targetUser ? (
                       <Link
                         href={`/admin/users/${log.targetUser.id}`}
@@ -202,56 +209,56 @@ export function LogsTable() {
                         </Avatar>
                         <div className="text-sm">
                           <div>{log.targetUser.name}</div>
-                          <div className="text-muted-foreground text-xs">
+                          <div className="text-neo-text-muted text-xs">
                             {log.targetUser.email}
                           </div>
                         </div>
                       </Link>
                     ) : (
-                      <span className="text-muted-foreground">-</span>
+                      <span className="text-neo-text-muted">-</span>
                     )}
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {log.metadata ? (
-                      <code className="bg-muted rounded px-2 py-1 text-xs">
+                      <code className="bg-neo-bg rounded px-2 py-1 text-xs">
                         {JSON.stringify(log.metadata)}
                       </code>
                     ) : (
-                      <span className="text-muted-foreground">-</span>
+                      <span className="text-neo-text-muted">-</span>
                     )}
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {dayjs(log.createdAt).format("DD/MM/YYYY HH:mm")}
-                  </TableCell>
-                </TableRow>
+                  </NeoTableCell>
+                </NeoTableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+          </NeoTableBody>
+        </NeoTable>
         {totalPages > 1 && (
           <div className="mt-4 flex justify-center gap-2">
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
             >
               Precedent
-            </Button>
-            <span className="text-muted-foreground flex items-center text-sm">
+            </NeoButton>
+            <span className="text-neo-text-muted flex items-center text-sm">
               Page {page} / {totalPages}
             </span>
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
               Suivant
-            </Button>
+            </NeoButton>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

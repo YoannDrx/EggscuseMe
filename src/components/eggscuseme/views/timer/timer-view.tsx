@@ -1,11 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Pause, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Eggy } from "@/features/mascot/components/eggy";
-import { useThemeColors } from "../../theme";
 import { BottomSheet, PageHeader } from "../../shared";
 import { ProgressRing } from "./progress-ring";
 import {
@@ -13,13 +12,13 @@ import {
   getCookingTime,
   type CookingType,
 } from "./cooking-selector";
+import { NeoButton } from "@/components/neo";
 
 type TimerViewProps = {
   onTimerComplete?: () => void;
 };
 
 export function TimerView({ onTimerComplete }: TimerViewProps) {
-  const colors = useThemeColors();
   const [cookingType, setCookingType] = useState<CookingType>("medium");
   const [timeLeft, setTimeLeft] = useState(getCookingTime("medium"));
   const [isRunning, setIsRunning] = useState(false);
@@ -90,16 +89,14 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
         subtitle="Cuisson parfaite"
         eggyMood={isRunning ? "timer" : "cooking"}
         action={
-          <button
+          <NeoButton
+            variant="ghost"
+            size="sm"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            className={cn(
-              "rounded-full p-2 transition-colors",
-              colors.textMuted,
-              "hover:bg-current/10",
-            )}
+            className="rounded-full p-2"
           >
             {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-          </button>
+          </NeoButton>
         }
       />
 
@@ -124,12 +121,10 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
                 size="sm"
                 className="mb-2"
               />
-              <span
-                className={cn("text-5xl font-bold tabular-nums", colors.text)}
-              >
+              <span className="text-neo-text text-5xl font-bold tabular-nums">
                 {formatTime(timeLeft)}
               </span>
-              <span className={cn("text-sm", colors.textMuted)}>
+              <span className="text-neo-text-muted text-sm">
                 {isRunning ? "en cours..." : "prêt"}
               </span>
             </div>
@@ -142,10 +137,11 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
             onClick={resetTimer}
             disabled={timeLeft === totalTime && !isRunning}
             className={cn(
-              "flex h-14 w-14 items-center justify-center rounded-full border transition-colors",
-              colors.card,
-              colors.cardBorder,
-              colors.text,
+              "flex h-14 w-14 items-center justify-center rounded-full border-[length:var(--border-neo)] transition-colors",
+              "bg-neo-card border-neo-border text-neo-text",
+              "shadow-[var(--shadow-neo-md)]",
+              "hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-lg)]",
+              "active:translate-x-[4px] active:translate-y-[4px] active:shadow-none",
               "disabled:opacity-30",
             )}
             whileHover={{ scale: 1.05 }}
@@ -156,9 +152,11 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
           <motion.button
             onClick={toggleTimer}
             className={cn(
-              "flex h-20 w-20 items-center justify-center rounded-full shadow-lg",
-              colors.accentBg,
-              colors.accentForeground,
+              "flex h-20 w-20 items-center justify-center rounded-full",
+              "bg-neo-accent text-neo-accent-foreground",
+              "shadow-[var(--shadow-neo-lg)]",
+              "hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-xl)]",
+              "active:translate-x-[4px] active:translate-y-[4px] active:shadow-none",
             )}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -187,12 +185,12 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className={cn(
-            "mt-6 rounded-2xl border p-4 text-center",
-            colors.card,
-            colors.cardBorder,
+            "mt-6 rounded-[var(--radius-neo-2xl)] border-[length:var(--border-neo)] p-4 text-center",
+            "bg-neo-card border-neo-border",
+            "shadow-[var(--shadow-neo-md)]",
           )}
         >
-          <p className={cn("text-sm", colors.textMuted)}>
+          <p className="text-neo-text-muted text-sm">
             {cookingType === "soft" && "Plongez l'oeuf dans l'eau bouillante"}
             {cookingType === "medium" && "Démarrez le timer quand l'eau bout"}
             {cookingType === "hard" &&
@@ -209,7 +207,7 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
       >
         <div className="flex flex-col items-center py-4">
           <Eggy mood="celebrating" size="lg" className="mb-4" />
-          <p className={cn("mb-6 text-center text-lg", colors.text)}>
+          <p className="text-neo-text mb-6 text-center text-lg">
             Ton oeuf{" "}
             {cookingType === "soft"
               ? "coque"
@@ -218,15 +216,9 @@ export function TimerView({ onTimerComplete }: TimerViewProps) {
                 : "dur"}{" "}
             est parfait !
           </p>
-          <button
-            onClick={closeComplete}
-            className={cn(
-              "w-full rounded-xl py-4 font-bold text-white shadow-md transition-opacity hover:opacity-90",
-              colors.accentBg,
-            )}
-          >
+          <NeoButton onClick={closeComplete} className="w-full" size="lg">
             Super !
-          </button>
+          </NeoButton>
         </div>
       </BottomSheet>
     </div>

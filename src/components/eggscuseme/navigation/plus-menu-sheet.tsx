@@ -2,14 +2,9 @@
 
 import { LanguageToggle } from "@/components/nowts/language-toggle";
 import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { NeoSheet } from "@/components/neo/neo-sheet";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from 'motion/react';
 import {
   Bell,
   CreditCard,
@@ -95,106 +90,99 @@ export function PlusMenuSheet({
   );
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="bottom"
-        className={cn(
-          "rounded-t-[var(--radius-sheet)] px-0 pb-8",
-          "border-nav-border bg-card",
-          "max-h-[85vh] overflow-y-auto",
-        )}
+    <NeoSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      side="bottom"
+      showHandle={true}
+      showCloseButton={true}
+    >
+      {/* Menu Items */}
+      <motion.nav
+        className="space-y-1"
+        variants={containerVariants}
+        initial="hidden"
+        animate={open ? "visible" : "hidden"}
       >
-        <SheetHeader className="px-6 pb-2">
-          {/* Handle bar */}
-          <div className="bg-muted-foreground/30 mx-auto mb-2 h-1.5 w-12 rounded-full" />
-          <SheetTitle className="sr-only">Menu</SheetTitle>
-        </SheetHeader>
-
-        {/* Menu Items */}
-        <motion.nav
-          className="space-y-1 px-4"
-          variants={containerVariants}
-          initial="hidden"
-          animate={open ? "visible" : "hidden"}
-        >
-          {filteredMenuItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <motion.div key={item.href} variants={itemVariants}>
-                <Link
-                  href={item.href}
-                  onClick={() => onOpenChange(false)}
+        {filteredMenuItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <motion.div key={item.href} variants={itemVariants}>
+              <Link
+                href={item.href}
+                onClick={() => onOpenChange(false)}
+                className={cn(
+                  "flex items-center gap-4 rounded-[var(--radius-neo-lg)] px-4 py-3 transition-all",
+                  "min-h-[var(--touch-target-comfortable)]",
+                  isActive
+                    ? "bg-neo-accent/10 text-neo-accent border-neo-accent/30 border shadow-[var(--shadow-neo-sm)]"
+                    : "text-neo-text hover:bg-neo-bg hover:border-neo-border/20 border border-transparent hover:shadow-[var(--shadow-neo-sm)]",
+                  "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+                )}
+              >
+                <item.icon
                   className={cn(
-                    "flex items-center gap-4 rounded-xl px-4 py-3 transition-colors",
-                    "min-h-[var(--touch-target-comfortable)]",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-foreground hover:bg-muted",
+                    "size-5 shrink-0",
+                    isActive ? "text-neo-accent" : "text-neo-text-muted",
                   )}
-                >
-                  <item.icon
-                    className={cn(
-                      "size-5",
-                      isActive ? "text-primary" : "text-muted-foreground",
-                    )}
-                  />
-                  <span className="font-medium">{t(item.labelKey)}</span>
-                </Link>
-              </motion.div>
-            );
-          })}
+                />
+                <span className="font-medium">{t(item.labelKey)}</span>
+              </Link>
+            </motion.div>
+          );
+        })}
 
-          {/* Divider */}
-          <div className="border-border my-3 border-t" />
+        {/* Divider */}
+        <div className="border-neo-border/20 my-3 border-t" />
 
-          {/* Account Items */}
-          {accountItems.map((item) => {
-            const isActive = pathname === item.href;
-            const isSignOut = item.labelKey === "signOut";
-            return (
-              <motion.div key={item.href} variants={itemVariants}>
-                <Link
-                  href={item.href}
-                  onClick={() => onOpenChange(false)}
+        {/* Account Items */}
+        {accountItems.map((item) => {
+          const isActive = pathname === item.href;
+          const isSignOut = item.labelKey === "signOut";
+          return (
+            <motion.div key={item.href} variants={itemVariants}>
+              <Link
+                href={item.href}
+                onClick={() => onOpenChange(false)}
+                className={cn(
+                  "flex items-center gap-4 rounded-[var(--radius-neo-lg)] px-4 py-3 transition-all",
+                  "min-h-[var(--touch-target-comfortable)]",
+                  isSignOut
+                    ? "text-neo-destructive hover:bg-neo-destructive/10 hover:border-neo-destructive/30 border border-transparent hover:shadow-[var(--shadow-neo-sm)]"
+                    : isActive
+                      ? "bg-neo-accent/10 text-neo-accent border-neo-accent/30 border shadow-[var(--shadow-neo-sm)]"
+                      : "text-neo-text hover:bg-neo-bg hover:border-neo-border/20 border border-transparent hover:shadow-[var(--shadow-neo-sm)]",
+                  "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+                )}
+              >
+                <item.icon
                   className={cn(
-                    "flex items-center gap-4 rounded-xl px-4 py-3 transition-colors",
-                    "min-h-[var(--touch-target-comfortable)]",
+                    "size-5 shrink-0",
                     isSignOut
-                      ? "text-destructive hover:bg-destructive/10"
+                      ? "text-neo-destructive"
                       : isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-foreground hover:bg-muted",
+                        ? "text-neo-accent"
+                        : "text-neo-text-muted",
                   )}
-                >
-                  <item.icon
-                    className={cn(
-                      "size-5",
-                      isSignOut
-                        ? "text-destructive"
-                        : isActive
-                          ? "text-primary"
-                          : "text-muted-foreground",
-                    )}
-                  />
-                  <span className="font-medium">{t(item.labelKey)}</span>
-                </Link>
-              </motion.div>
-            );
-          })}
+                />
+                <span className="font-medium">{t(item.labelKey)}</span>
+              </Link>
+            </motion.div>
+          );
+        })}
 
-          {/* Divider */}
-          <div className="border-border my-3 border-t" />
+        {/* Divider */}
+        <div className="border-neo-border/20 my-3 border-t" />
 
-          {/* Theme and Language Toggles */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center justify-center gap-3 py-2"
-          >
-            <LanguageToggle />
-            <ThemeSwitcher />
-          </motion.div>
-        </motion.nav>
-      </SheetContent>
-    </Sheet>
+        {/* Theme and Language Toggles */}
+        <motion.div
+          variants={itemVariants}
+          className="flex items-center justify-center gap-3 py-2"
+        >
+          <LanguageToggle />
+          <ThemeSwitcher />
+        </motion.div>
+      </motion.nav>
+    </NeoSheet>
   );
 }

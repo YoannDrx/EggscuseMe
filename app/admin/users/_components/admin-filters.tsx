@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { NeoInput } from "@/components/neo/neo-input";
 import { Search } from "lucide-react";
 import { useQueryStates } from "nuqs";
 import { adminSearchParams } from "../_actions/search-params";
@@ -16,7 +16,7 @@ export const AdminFilters = () => {
       {/* Search */}
       <div className="relative flex-1">
         <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2 transform" />
-        <Input
+        <NeoInput
           placeholder="Search users by email..."
           value={filters.search}
           onChange={(e) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronDown } from "lucide-react";
 import * as React from "react";
 
@@ -37,6 +37,7 @@ export type NeoSelectProps = VariantProps<typeof neoSelectVariants> & {
   placeholder?: string;
   disabled?: boolean;
   label?: string;
+  name?: string;
   children: React.ReactNode;
   className?: string;
 };

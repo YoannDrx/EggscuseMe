@@ -15,8 +15,13 @@ import {
 } from "@/components/eggscuseme/illustrations";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoButton } from "@/components/neo/neo-button";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import type { ChartConfig } from "@/components/ui/chart";
 import {
   ChartContainer,
@@ -129,8 +134,8 @@ export default function StatisticsPage() {
         <MobileHeader title={t("title")} />
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-4">
-            <Loader2 className="text-primary size-8 animate-spin" />
-            <p className="text-muted-foreground">{t("loading")}</p>
+            <Loader2 className="text-neo-accent size-8 animate-spin" />
+            <p className="text-neo-text-muted">{t("loading")}</p>
           </div>
         </div>
       </div>
@@ -149,7 +154,7 @@ export default function StatisticsPage() {
         />
         <div className="flex flex-1 flex-col items-center justify-center gap-4 px-[var(--space-page-x)] py-12">
           <Eggy mood="sad" size="lg" className="md:hidden" />
-          <p className="text-muted-foreground text-center">{t("noData")}</p>
+          <p className="text-neo-text-muted text-center">{t("noData")}</p>
         </div>
 
         {/* Desktop empty state */}
@@ -158,7 +163,7 @@ export default function StatisticsPage() {
             <Eggy mood="sad" size="lg" />
             <div>
               <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
-              <p className="text-muted-foreground">{t("noData")}</p>
+              <p className="text-neo-text-muted">{t("noData")}</p>
             </div>
           </div>
         </div>
@@ -187,10 +192,10 @@ export default function StatisticsPage() {
 
   // Export button for header
   const exportButton = (
-    <Button
-      variant="ghost"
+    <NeoButton
+      variant="icon"
       size="icon"
-      className="size-10 rounded-full"
+      className="size-10"
       onClick={() => exportCSV()}
       disabled={isExporting}
     >
@@ -199,7 +204,7 @@ export default function StatisticsPage() {
       ) : (
         <Download className="size-4" />
       )}
-    </Button>
+    </NeoButton>
   );
 
   // Chart components
@@ -249,7 +254,7 @@ export default function StatisticsPage() {
         </ChartContainer>
       ) : (
         <div className="flex h-[250px] items-center justify-center md:h-[300px]">
-          <p className="text-muted-foreground">{t("chart.noData")}</p>
+          <p className="text-neo-text-muted">{t("chart.noData")}</p>
         </div>
       )}
     </>
@@ -293,7 +298,7 @@ export default function StatisticsPage() {
         </ChartContainer>
       ) : (
         <div className="flex h-[250px] items-center justify-center md:h-[300px]">
-          <p className="text-muted-foreground">{t("chart.noData")}</p>
+          <p className="text-neo-text-muted">{t("chart.noData")}</p>
         </div>
       )}
     </>
@@ -333,7 +338,7 @@ export default function StatisticsPage() {
         </ChartContainer>
       ) : (
         <div className="flex h-[250px] items-center justify-center md:h-[300px]">
-          <p className="text-muted-foreground">{t("chart.noData")}</p>
+          <p className="text-neo-text-muted">{t("chart.noData")}</p>
         </div>
       )}
     </>
@@ -361,7 +366,7 @@ export default function StatisticsPage() {
                   {item.count} {t("eggs")}
                 </Badge>
               </div>
-              <div className="bg-muted h-2 overflow-hidden rounded-full">
+              <div className="bg-neo-card h-2 overflow-hidden rounded-full">
                 <div
                   className="h-full transition-all"
                   style={{
@@ -375,7 +380,7 @@ export default function StatisticsPage() {
         </div>
       ) : (
         <div className="flex h-[200px] items-center justify-center">
-          <p className="text-muted-foreground">{t("noEggsInStock")}</p>
+          <p className="text-neo-text-muted">{t("noEggsInStock")}</p>
         </div>
       )}
     </>
@@ -397,10 +402,10 @@ export default function StatisticsPage() {
             <Eggy mood="happy" size="lg" />
             <div>
               <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
-              <p className="text-muted-foreground">{t("subtitle")}</p>
+              <p className="text-neo-text-muted">{t("subtitle")}</p>
             </div>
           </div>
-          <Button
+          <NeoButton
             variant="outline"
             onClick={() => exportCSV()}
             disabled={isExporting}
@@ -411,7 +416,7 @@ export default function StatisticsPage() {
               <Download className="mr-2 size-4" />
             )}
             {t("exportCSV")}
-          </Button>
+          </NeoButton>
         </div>
       </div>
 
@@ -422,7 +427,7 @@ export default function StatisticsPage() {
           {isMobile ? (
             <StatsCardCarousel>
               <StatsCard
-                icon={<Egg className="text-primary size-5" />}
+                icon={<Egg className="text-neo-accent size-5" />}
                 iconBg="bg-primary/10"
                 value={stats.totalEggs}
                 label={t("currentStock")}
@@ -452,72 +457,72 @@ export default function StatisticsPage() {
             </StatsCardCarousel>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card variant="sunny">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+              <NeoCard variant="elevated" padding="md">
+                <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <NeoCardTitle className="text-sm font-medium">
                     {t("currentStock")}
-                  </CardTitle>
-                  <Egg className="text-primary size-4" />
-                </CardHeader>
-                <CardContent>
+                  </NeoCardTitle>
+                  <Egg className="text-neo-accent size-4" />
+                </NeoCardHeader>
+                <NeoCardContent>
                   <div className="text-2xl font-bold">{stats.totalEggs}</div>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-neo-text-muted text-xs">
                     {t("activeBoxes", { count: stats.activeBoxes })}
                   </p>
-                </CardContent>
-              </Card>
+                </NeoCardContent>
+              </NeoCard>
 
-              <Card variant="sunny">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+              <NeoCard variant="elevated" padding="md">
+                <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <NeoCardTitle className="text-sm font-medium">
                     {t("consumed")}
-                  </CardTitle>
+                  </NeoCardTitle>
                   <TrendingUp className="text-fresh-extra size-4" />
-                </CardHeader>
-                <CardContent>
+                </NeoCardHeader>
+                <NeoCardContent>
                   <div className="text-2xl font-bold">
                     {stats.totalConsumed}
                   </div>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-neo-text-muted text-xs">
                     {t("last90days")}
                   </p>
-                </CardContent>
-              </Card>
+                </NeoCardContent>
+              </NeoCard>
 
-              <Card variant="sunny">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+              <NeoCard variant="elevated" padding="md">
+                <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <NeoCardTitle className="text-sm font-medium">
                     {t("savings")}
-                  </CardTitle>
+                  </NeoCardTitle>
                   <Euro className="text-fresh size-4" />
-                </CardHeader>
-                <CardContent>
+                </NeoCardHeader>
+                <NeoCardContent>
                   <div className="text-2xl font-bold">
                     {stats.moneySaved.toFixed(2)} EUR
                   </div>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-neo-text-muted text-xs">
                     {t("antiWasteEstimate")}
                   </p>
-                </CardContent>
-              </Card>
+                </NeoCardContent>
+              </NeoCard>
 
-              <Card variant="sunny">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+              <NeoCard variant="elevated" padding="md">
+                <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <NeoCardTitle className="text-sm font-medium">
                     {t("avgFreshness")}
-                  </CardTitle>
+                  </NeoCardTitle>
                   <Leaf className="text-fresh-extra size-4" />
-                </CardHeader>
-                <CardContent>
+                </NeoCardHeader>
+                <NeoCardContent>
                   <div className="text-2xl font-bold">
                     {stats.avgFreshnessScore}{" "}
                     {locale === "fr" ? "jours" : "days"}
                   </div>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-neo-text-muted text-xs">
                     {t("beforeExpiry")}
                   </p>
-                </CardContent>
-              </Card>
+                </NeoCardContent>
+              </NeoCard>
             </div>
           )}
 
@@ -541,63 +546,63 @@ export default function StatisticsPage() {
             <>
               {/* Desktop Charts Row 1 */}
               <div className="grid gap-6 lg:grid-cols-2">
-                <Card variant="sunny">
-                  <CardHeader>
+                <NeoCard variant="elevated" padding="md">
+                  <NeoCardHeader>
                     <div className="flex items-center gap-2">
                       <IconChartSticker className="size-6" />
-                      <CardTitle>{t("dailyConsumption")}</CardTitle>
+                      <NeoCardTitle>{t("dailyConsumption")}</NeoCardTitle>
                     </div>
-                  </CardHeader>
-                  <CardContent>
+                  </NeoCardHeader>
+                  <NeoCardContent>
                     <DailyConsumptionChart />
-                  </CardContent>
-                </Card>
+                  </NeoCardContent>
+                </NeoCard>
 
-                <Card variant="sunny">
-                  <CardHeader>
+                <NeoCard variant="elevated" padding="md">
+                  <NeoCardHeader>
                     <div className="flex items-center gap-2">
-                      <Package className="text-primary size-5" />
-                      <CardTitle>{t("cookingTypes")}</CardTitle>
+                      <Package className="text-neo-accent size-5" />
+                      <NeoCardTitle>{t("cookingTypes")}</NeoCardTitle>
                     </div>
-                  </CardHeader>
-                  <CardContent>
+                  </NeoCardHeader>
+                  <NeoCardContent>
                     <CookingTypesChart />
-                  </CardContent>
-                </Card>
+                  </NeoCardContent>
+                </NeoCard>
               </div>
 
               {/* Desktop Charts Row 2 */}
               <div className="grid gap-6 lg:grid-cols-2">
-                <Card variant="sunny">
-                  <CardHeader>
+                <NeoCard variant="elevated" padding="md">
+                  <NeoCardHeader>
                     <div className="flex items-center gap-2">
-                      <TrendingUp className="text-primary size-5" />
-                      <CardTitle>{t("monthlyConsumption")}</CardTitle>
+                      <TrendingUp className="text-neo-accent size-5" />
+                      <NeoCardTitle>{t("monthlyConsumption")}</NeoCardTitle>
                     </div>
-                  </CardHeader>
-                  <CardContent>
+                  </NeoCardHeader>
+                  <NeoCardContent>
                     <MonthlyConsumptionChart />
-                  </CardContent>
-                </Card>
+                  </NeoCardContent>
+                </NeoCard>
 
-                <Card variant="sunny">
-                  <CardHeader>
+                <NeoCard variant="elevated" padding="md">
+                  <NeoCardHeader>
                     <div className="flex items-center gap-2">
-                      <Leaf className="text-primary size-5" />
-                      <CardTitle>{t("currentFreshness")}</CardTitle>
+                      <Leaf className="text-neo-accent size-5" />
+                      <NeoCardTitle>{t("currentFreshness")}</NeoCardTitle>
                     </div>
-                  </CardHeader>
-                  <CardContent>
+                  </NeoCardHeader>
+                  <NeoCardContent>
                     <FreshnessDistribution />
-                  </CardContent>
-                </Card>
+                  </NeoCardContent>
+                </NeoCard>
               </div>
             </>
           )}
 
           {/* Savings Summary */}
           <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-emerald-500/30 bg-emerald-500/5 p-6">
-            <p className="text-muted-foreground text-sm font-medium">
+            <p className="text-neo-text-muted text-sm font-medium">
               {t("antiWasteEstimate")}
             </p>
             <SavingsSummary
@@ -608,22 +613,22 @@ export default function StatisticsPage() {
           </div>
 
           {/* Freshness at consumption - Full width on both */}
-          <Card variant="sunny">
-            <CardHeader>
+          <NeoCard variant="elevated" padding="md">
+            <NeoCardHeader>
               <div className="flex flex-wrap items-center gap-2">
                 <IconEggSticker className="size-6" />
-                <CardTitle className="text-base md:text-lg">
+                <NeoCardTitle className="text-base md:text-lg">
                   {t("freshnessAtConsumption")}
-                </CardTitle>
+                </NeoCardTitle>
                 <Badge variant="outline" className="text-xs">
                   {t("badge90days")}
                 </Badge>
               </div>
-              <p className="text-muted-foreground text-xs md:text-sm">
+              <p className="text-neo-text-muted text-xs md:text-sm">
                 {t("freshnessAtConsumptionDescription")}
               </p>
-            </CardHeader>
-            <CardContent>
+            </NeoCardHeader>
+            <NeoCardContent>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                 {stats.freshnessAtConsumption.map((item) => (
                   <div
@@ -642,15 +647,15 @@ export default function StatisticsPage() {
                       <p className="text-base font-bold md:text-lg">
                         {item.count}
                       </p>
-                      <p className="text-muted-foreground truncate text-xs md:text-sm">
+                      <p className="text-neo-text-muted truncate text-xs md:text-sm">
                         {freshnessLabels[item.status]}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </NeoCardContent>
+          </NeoCard>
         </div>
       </main>
     </div>

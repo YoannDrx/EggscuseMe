@@ -1,11 +1,11 @@
-import { buttonVariants } from "@/components/ui/button";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoButton,
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import { Typography } from "../../components/nowts/typography";
@@ -17,22 +17,22 @@ type Page400Props = PropsWithChildren<{
 
 export function Error400(props: Page400Props) {
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-col">
+    <NeoCard className="w-full">
+      <NeoCardHeader className="flex flex-col">
         <Typography variant="code">400</Typography>
-        <CardTitle>{props.title ?? "Bad request"}</CardTitle>
-        <CardDescription>
+        <NeoCardTitle>{props.title ?? "Bad request"}</NeoCardTitle>
+        <NeoCardDescription>
           It seems we're experiencing some technical difficulties. Not to worry,
           our team is working on it. In the meantime, try refreshing the page or
           visiting us a bit later.
-        </CardDescription>
-      </CardHeader>
-      <CardFooter className="flex flex-row gap-2">
-        <Link href="/" className={buttonVariants({ variant: "invert" })}>
-          Go back home
-        </Link>
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardFooter className="flex flex-row gap-2">
+        <NeoButton asChild variant="outline">
+          <Link href="/">Go back home</Link>
+        </NeoButton>
         <ContactSupportDialog />
-      </CardFooter>
-    </Card>
+      </NeoCardFooter>
+    </NeoCard>
   );
 }

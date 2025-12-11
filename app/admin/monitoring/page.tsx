@@ -1,5 +1,10 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NeoSkeleton } from "@/components/neo/neo-skeleton";
+import {
+  NeoTabs,
+  NeoTabsContent,
+  NeoTabsList,
+  NeoTabsTrigger,
+} from "@/components/neo/neo-tabs";
 import {
   Layout,
   LayoutContent,
@@ -48,32 +53,32 @@ async function MonitoringPage({ searchParams }: MonitoringPageProps) {
         <LayoutTitle>Monitoring</LayoutTitle>
       </LayoutHeader>
       <LayoutContent>
-        <Tabs defaultValue="logs" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="logs" className="gap-2">
+        <NeoTabs defaultValue="logs" className="space-y-6">
+          <NeoTabsList>
+            <NeoTabsTrigger value="logs" className="gap-2">
               <ScrollText className="size-4" />
               Logs d&apos;audit
-            </TabsTrigger>
-            <TabsTrigger value="feedback" className="gap-2">
+            </NeoTabsTrigger>
+            <NeoTabsTrigger value="feedback" className="gap-2">
               <MessageSquare className="size-4" />
               Feedback
-            </TabsTrigger>
-          </TabsList>
+            </NeoTabsTrigger>
+          </NeoTabsList>
 
-          <TabsContent value="logs" className="space-y-6">
+          <NeoTabsContent value="logs" className="space-y-6">
             <Suspense fallback={<div>Chargement des stats...</div>}>
               <LogsStats />
             </Suspense>
             <LogsTable />
-          </TabsContent>
+          </NeoTabsContent>
 
-          <TabsContent value="feedback" className="space-y-4">
+          <NeoTabsContent value="feedback" className="space-y-4">
             <FeedbackFilters />
             <Suspense fallback={<FeedbackTableSkeleton />}>
               <FeedbackTable searchParams={params} />
             </Suspense>
-          </TabsContent>
-        </Tabs>
+          </NeoTabsContent>
+        </NeoTabs>
       </LayoutContent>
     </Layout>
   );
@@ -83,7 +88,7 @@ function FeedbackTableSkeleton() {
   return (
     <div className="space-y-2">
       {Array.from({ length: 10 }).map((_, i) => (
-        <Skeleton key={i} className="h-16 w-full" />
+        <NeoSkeleton key={i} className="h-16 w-full" />
       ))}
     </div>
   );

@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Home } from "lucide-react";
+  NeoBreadcrumb,
+  NeoBreadcrumbList,
+  NeoBreadcrumbItem,
+  NeoBreadcrumbLink,
+  NeoBreadcrumbPage,
+  NeoBreadcrumbSeparator,
+  NeoBreadcrumbHome,
+} from "@/components/neo/neo-breadcrumb";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 import { useTranslations } from "next-intl";
@@ -30,15 +30,12 @@ export function FridgeBreadcrumb() {
   const basePath = "/fridge";
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList className="border-border bg-background rounded-lg border px-3 py-2 shadow-sm shadow-black/5">
-        <BreadcrumbItem>
-          <BreadcrumbLink href={basePath}>
-            <Home size={16} strokeWidth={2} aria-hidden="true" />
-            <span className="sr-only">{t("myFridge")}</span>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {paths.length > 1 && <BreadcrumbSeparator />}
+    <NeoBreadcrumb>
+      <NeoBreadcrumbList className="bg-neo-card border-neo-border/30 rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] px-3 py-2 shadow-[var(--shadow-neo-sm)]">
+        <NeoBreadcrumbItem>
+          <NeoBreadcrumbHome href={basePath} aria-label={t("myFridge")} />
+        </NeoBreadcrumbItem>
+        {paths.length > 1 && <NeoBreadcrumbSeparator />}
         {paths.slice(1).map((path, index) => {
           const isLast = index === paths.slice(1).length - 1;
           const currentPath = `/${paths.slice(0, index + 2).join("/")}`;
@@ -50,25 +47,25 @@ export function FridgeBreadcrumb() {
 
           return (
             <Fragment key={path + index}>
-              <BreadcrumbItem>
+              <NeoBreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="flex items-center gap-2">
+                  <NeoBreadcrumbPage className="flex items-center gap-2">
                     {displayName}
-                  </BreadcrumbPage>
+                  </NeoBreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink
+                  <NeoBreadcrumbLink
                     href={currentPath}
                     className="flex items-center gap-2"
                   >
                     {displayName}
-                  </BreadcrumbLink>
+                  </NeoBreadcrumbLink>
                 )}
-              </BreadcrumbItem>
-              {!isLast && <BreadcrumbSeparator />}
+              </NeoBreadcrumbItem>
+              {!isLast && <NeoBreadcrumbSeparator />}
             </Fragment>
           );
         })}
-      </BreadcrumbList>
-    </Breadcrumb>
+      </NeoBreadcrumbList>
+    </NeoBreadcrumb>
   );
 }

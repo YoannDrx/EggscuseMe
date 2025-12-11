@@ -1,5 +1,5 @@
 import { Typography } from "@/components/nowts/typography";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import Link from "next/link";
 import { SectionLayout } from "../section-layout";
 
@@ -14,8 +14,10 @@ export function CtaSection() {
         <span className="text-muted-foreground">It's time to start.</span>
       </Typography>
       <div className="mt-10 flex items-center gap-x-6 lg:mt-0 lg:shrink-0">
-        <Link className={buttonVariants({ size: "lg" })} href="#pricing">
-          Get started
+        <Link href="#pricing">
+          <NeoButton size="lg" asChild>
+            <span>Get started</span>
+          </NeoButton>
         </Link>
       </div>
     </SectionLayout>

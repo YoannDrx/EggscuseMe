@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 /**
  * Base skeleton component with shimmer animation
@@ -13,7 +13,7 @@ export function Skeleton({
   return (
     <div
       className={cn(
-        "bg-muted relative overflow-hidden rounded-md",
+        "bg-neo-card/50 relative overflow-hidden rounded-[var(--radius-neo-lg)]",
         "before:absolute before:inset-0",
         "before:translate-x-[-100%] before:animate-[shimmer_2s_infinite]",
         "before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent",
@@ -33,7 +33,8 @@ export function SkeletonEggBox({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "border-border bg-card rounded-2xl border p-[var(--space-card-padding)]",
+        "rounded-[var(--radius-neo-xl)] p-4",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
         "flex flex-col gap-3",
         className,
       )}
@@ -69,7 +70,8 @@ export function SkeletonHistoryCard({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "border-border bg-card rounded-2xl border p-[var(--space-card-padding)]",
+        "rounded-[var(--radius-neo-xl)] p-4",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
         "flex flex-col gap-3",
         className,
       )}
@@ -109,7 +111,8 @@ export function SkeletonStatsCard({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "border-border bg-card min-w-[140px] rounded-2xl border p-[var(--space-card-padding)]",
+        "min-w-[140px] rounded-[var(--radius-neo-xl)] p-4",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
         "flex flex-col gap-2",
         className,
       )}
@@ -128,7 +131,8 @@ export function SkeletonChart({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "border-border bg-card rounded-2xl border p-4",
+        "rounded-[var(--radius-neo-xl)] p-4",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
         "flex flex-col gap-4",
         className,
       )}
@@ -160,7 +164,8 @@ export function SkeletonRecipeCard({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "border-border bg-card overflow-hidden rounded-2xl border",
+        "overflow-hidden rounded-[var(--radius-neo-xl)]",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
         className,
       )}
     >
@@ -187,7 +192,7 @@ export function SkeletonMobileHeader({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "border-nav-border bg-nav-bg h-[var(--header-height-mobile)] border-b md:hidden",
+        "border-neo-border bg-neo-bg h-16 border-b-[length:var(--border-neo)] md:hidden",
         "flex items-center justify-between px-4",
         className,
       )}

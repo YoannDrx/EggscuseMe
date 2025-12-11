@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoStatCard } from "@/components/neo/neo-stat-card";
 import {
   calculateFreshness,
   type FreshnessStatus,
@@ -38,79 +38,33 @@ export async function FridgeStatsCards() {
 
   return (
     <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {/* Total Eggs */}
-      <Card variant="sunny">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            {t("tracked.title")}
-          </CardTitle>
-          <div className="bg-primary/10 flex size-9 items-center justify-center rounded-full">
-            <Egg className="text-primary size-5" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="font-heading text-3xl font-bold">{totalEggs}</div>
-          <p className="text-muted-foreground text-sm">
-            {t("tracked.inBoxes", { count: totalBoxes })}
-          </p>
-        </CardContent>
-      </Card>
+      <NeoStatCard
+        title={t("tracked.title")}
+        value={totalEggs}
+        icon={<Egg size={20} strokeWidth={2.5} />}
+        trendLabel={t("tracked.inBoxes", { count: totalBoxes })}
+      />
 
-      {/* Extra-Fresh */}
-      <Card variant="sunny">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            {t("extraFresh.title")}
-          </CardTitle>
-          <div className="bg-fresh-extra/20 flex size-9 items-center justify-center rounded-full">
-            <Leaf className="text-fresh-extra size-5" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="font-heading text-fresh-extra text-3xl font-bold">
-            {freshnessCounts["extra-fresh"]}
-          </div>
-          <p className="text-muted-foreground text-sm">
-            {t("extraFresh.description")}
-          </p>
-        </CardContent>
-      </Card>
+      <NeoStatCard
+        title={t("extraFresh.title")}
+        value={freshnessCounts["extra-fresh"]}
+        icon={<Leaf size={20} strokeWidth={2.5} />}
+        trendLabel={t("extraFresh.description")}
+      />
 
-      {/* Eggs Saved */}
-      <Card variant="sunny">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            {t("antiWaste.title")}
-          </CardTitle>
-          <div className="flex size-9 items-center justify-center rounded-full bg-emerald-500/10">
-            <TrendingUp className="size-5 text-emerald-600" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="font-heading text-3xl font-bold">{totalConsumed}</div>
-          <p className="text-muted-foreground text-sm">
-            {t("antiWaste.description")}
-          </p>
-        </CardContent>
-      </Card>
+      <NeoStatCard
+        title={t("antiWaste.title")}
+        value={totalConsumed}
+        icon={<TrendingUp size={20} strokeWidth={2.5} />}
+        trendLabel={t("antiWaste.description")}
+      />
 
-      {/* Money Saved */}
-      <Card variant="sunny">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            {t("savings.title")}
-          </CardTitle>
-          <div className="bg-primary/10 flex size-9 items-center justify-center rounded-full">
-            <Coins className="text-primary size-5" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="font-heading text-3xl font-bold">{moneySaved}€</div>
-          <p className="text-muted-foreground text-sm">
-            {t("savings.description")}
-          </p>
-        </CardContent>
-      </Card>
+      <NeoStatCard
+        title={t("savings.title")}
+        value={`${moneySaved}€`}
+        icon={<Coins size={20} strokeWidth={2.5} />}
+        trendLabel={t("savings.description")}
+      />
     </div>
   );
 }

@@ -1,7 +1,12 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, ChefHat, Lightbulb, Tag } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -48,67 +53,67 @@ export function RecipeDetailContent({
 
       {/* Safety note - shown first if present */}
       {safetyNote && (
-        <Card className="border-fresh-cook/30 bg-fresh-cook/5">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base">
+        <NeoCard variant="accent" padding="md" className="border-fresh-cook/30">
+          <NeoCardHeader className="pb-2">
+            <NeoCardTitle className="flex items-center gap-2 text-base">
               <AlertTriangle className="text-fresh-cook size-4" />
               {t("safetyNote")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground text-sm">{safetyNote}</p>
-          </CardContent>
-        </Card>
+            </NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
+            <p className="text-neo-text-muted text-sm">{safetyNote}</p>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {/* Chef tip */}
       {chefTip && (
-        <Card className="border-primary/30 bg-primary/5">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <ChefHat className="text-primary size-4" />
+        <NeoCard variant="accent" padding="md" className="border-neo-accent/30">
+          <NeoCardHeader className="pb-2">
+            <NeoCardTitle className="flex items-center gap-2 text-base">
+              <ChefHat className="text-neo-accent size-4" />
               {t("chefTip")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground text-sm">{chefTip}</p>
-          </CardContent>
-        </Card>
+            </NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
+            <p className="text-neo-text-muted text-sm">{chefTip}</p>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {/* Freshness tip */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-base">
+      <NeoCard variant="elevated" padding="md">
+        <NeoCardHeader className="pb-2">
+          <NeoCardTitle className="flex items-center gap-2 text-base">
             <Lightbulb className="text-fresh size-4" />
             {t("freshnessTip")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground text-sm">
+          </NeoCardTitle>
+        </NeoCardHeader>
+        <NeoCardContent>
+          <p className="text-neo-text-muted text-sm">
             {t("idealFor")}{" "}
-            <span className="text-foreground font-medium">
+            <span className="text-neo-text font-medium">
               {recipe.freshness
                 .map((f) => getFreshnessLabel(f, locale))
                 .join(", ")}
             </span>
           </p>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
 
       {/* Instructions */}
       <RecipeSteps instructions={recipe.instructions} />
 
       {/* Tags */}
       {tags.length > 0 && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-base">
+        <NeoCard variant="elevated" padding="md">
+          <NeoCardHeader className="pb-2">
+            <NeoCardTitle className="flex items-center gap-2 text-base">
               <Tag className="size-4" />
               Tags
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
                 <Badge key={tag} variant="secondary" className="capitalize">
@@ -116,8 +121,8 @@ export function RecipeDetailContent({
                 </Badge>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
     </div>
   );

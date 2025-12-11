@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { useThemeColors } from "../../theme";
+import { motion } from "motion/react";
 
 export type CookingType = "soft" | "medium" | "hard";
 
@@ -35,8 +34,6 @@ export function CookingSelector({
   onSelect,
   disabled = false,
 }: CookingSelectorProps) {
-  const colors = useThemeColors();
-
   return (
     <div className="relative flex w-full gap-2">
       {cookingOptions.map((option) => {
@@ -48,9 +45,9 @@ export function CookingSelector({
             onClick={() => onSelect(option.id)}
             disabled={disabled}
             className={cn(
-              "relative flex-1 rounded-2xl px-3 py-4 transition-colors",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-              isSelected ? "text-white" : colors.text,
+              "relative flex-1 rounded-[var(--radius-neo-xl)] px-3 py-4 transition-colors",
+              "focus-visible:ring-neo-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+              isSelected ? "text-neo-accent-foreground" : "text-neo-text",
               disabled && "pointer-events-none opacity-50",
             )}
             whileHover={{ scale: disabled ? 1 : 1.02 }}
@@ -59,7 +56,7 @@ export function CookingSelector({
             {isSelected && (
               <motion.div
                 layoutId="cooking-selector-pill"
-                className={cn("absolute inset-0 rounded-2xl", colors.accentBg)}
+                className="bg-neo-accent border-neo-border absolute inset-0 rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] shadow-[var(--shadow-neo-md)]"
                 transition={{
                   type: "spring",
                   stiffness: 500,
@@ -73,7 +70,9 @@ export function CookingSelector({
               <span
                 className={cn(
                   "block text-xs",
-                  isSelected ? "text-white/80" : colors.textMuted,
+                  isSelected
+                    ? "text-neo-accent-foreground/80"
+                    : "text-neo-text-muted",
                 )}
               >
                 {option.description}
@@ -81,7 +80,9 @@ export function CookingSelector({
               <span
                 className={cn(
                   "mt-1 block text-sm font-medium",
-                  isSelected ? "text-white/90" : colors.textMuted,
+                  isSelected
+                    ? "text-neo-accent-foreground/90"
+                    : "text-neo-text-muted",
                 )}
               >
                 {Math.floor(option.time / 60)} min

@@ -38,18 +38,18 @@ export function Footer() {
     ],
   };
   return (
-    <footer className="border-border bg-background border-t">
+    <footer className="border-neo-border/30 bg-neo-bg border-t-[length:var(--border-neo)]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_2fr]">
           {/* Brand Column */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <LogoSvg size={28} />
-              <span className="text-foreground text-lg font-bold">
+              <span className="text-neo-text text-lg font-bold">
                 {SiteConfig.title}
               </span>
             </div>
-            <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">
+            <p className="text-neo-text-muted max-w-xs text-sm leading-relaxed">
               {t("description")}
             </p>
             {/* Social Links */}
@@ -60,7 +60,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground flex size-10 items-center justify-center rounded-full border transition-colors"
+                  className="border-neo-border/30 bg-neo-card text-neo-text-muted hover:text-neo-text flex size-10 items-center justify-center rounded-full border-[length:var(--border-neo)] shadow-[var(--shadow-neo-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-y-[2px] active:shadow-none"
                   aria-label={social.label}
                 >
                   <social.icon className="size-4" />
@@ -73,7 +73,7 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
             {/* Produit */}
             <div className="flex flex-col gap-4">
-              <h4 className="text-muted-foreground text-sm font-semibold tracking-wider uppercase">
+              <h4 className="text-neo-text-muted text-sm font-black tracking-wider uppercase">
                 {t("product")}
               </h4>
               <nav className="flex flex-col gap-3">
@@ -81,7 +81,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary text-sm transition-colors"
+                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -91,7 +91,7 @@ export function Footer() {
 
             {/* Entreprise */}
             <div className="flex flex-col gap-4">
-              <h4 className="text-muted-foreground text-sm font-semibold tracking-wider uppercase">
+              <h4 className="text-neo-text-muted text-sm font-black tracking-wider uppercase">
                 {t("company")}
               </h4>
               <nav className="flex flex-col gap-3">
@@ -99,7 +99,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary text-sm transition-colors"
+                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -109,7 +109,7 @@ export function Footer() {
 
             {/* Legal */}
             <div className="flex flex-col gap-4">
-              <h4 className="text-muted-foreground text-sm font-semibold tracking-wider uppercase">
+              <h4 className="text-neo-text-muted text-sm font-black tracking-wider uppercase">
                 {t("legal")}
               </h4>
               <nav className="flex flex-col gap-3">
@@ -117,7 +117,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary text-sm transition-colors"
+                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -128,12 +128,12 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-border mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">
-          <p className="text-muted-foreground text-xs">
+        <div className="border-neo-border/20 mt-12 flex flex-col items-center justify-between gap-4 border-t-[length:var(--border-neo)] pt-8 sm:flex-row">
+          <p className="text-neo-text-muted text-xs">
             © {new Date().getFullYear()} {SiteConfig.company.name}.{" "}
             {t("allRightsReserved")}
           </p>
-          <p className="text-muted-foreground text-xs">
+          <p className="text-neo-text-muted text-xs">
             {t("madeWithLove")} {SiteConfig.company.address.split(",")[0]}
           </p>
         </div>

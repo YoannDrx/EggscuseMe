@@ -1,6 +1,6 @@
 import GridBackground from "@/components/nowts/grid-background";
 import { Typography } from "@/components/nowts/typography";
-import { Card, CardContent } from "@/components/ui/card";
+import { NeoCard, NeoCardContent } from "@/components/neo";
 import { SectionLayout } from "@/features/landing/section-layout";
 import { SiteConfig } from "@/site-config";
 import { Egg, Heart, Leaf, Timer, Users } from "lucide-react";
@@ -222,8 +222,8 @@ export default async function AboutPage() {
           </Typography>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {copy.stats.map((stat) => (
-              <Card key={stat.label} variant="sunny">
-                <CardContent className="flex flex-col items-center p-6 text-center">
+              <NeoCard key={stat.label} variant="elevated">
+                <NeoCardContent className="flex flex-col items-center p-6 text-center">
                   <stat.icon className="text-primary mb-2 size-8" />
                   <Typography
                     variant="h3"
@@ -237,8 +237,8 @@ export default async function AboutPage() {
                   >
                     {stat.label}
                   </Typography>
-                </CardContent>
-              </Card>
+                </NeoCardContent>
+              </NeoCard>
             ))}
           </div>
         </div>
@@ -261,8 +261,8 @@ export default async function AboutPage() {
           </Typography>
 
           <div className="grid gap-6 md:grid-cols-3">
-            <Card variant="sunny">
-              <CardContent className="p-6">
+            <NeoCard variant="elevated">
+              <NeoCardContent className="p-6">
                 <div className="bg-primary/10 mb-4 inline-flex rounded-lg p-3">
                   <Timer className="text-primary size-6" />
                 </div>
@@ -275,11 +275,11 @@ export default async function AboutPage() {
                 <Typography variant="p" className="text-muted-foreground">
                   {copy.featureTrackingDescription}
                 </Typography>
-              </CardContent>
-            </Card>
+              </NeoCardContent>
+            </NeoCard>
 
-            <Card variant="sunny">
-              <CardContent className="p-6">
+            <NeoCard variant="elevated">
+              <NeoCardContent className="p-6">
                 <div className="bg-primary/10 mb-4 inline-flex rounded-lg p-3">
                   <Egg className="text-primary size-6" />
                 </div>
@@ -292,11 +292,11 @@ export default async function AboutPage() {
                 <Typography variant="p" className="text-muted-foreground">
                   {copy.featureRecipesDescription}
                 </Typography>
-              </CardContent>
-            </Card>
+              </NeoCardContent>
+            </NeoCard>
 
-            <Card variant="sunny">
-              <CardContent className="p-6">
+            <NeoCard variant="elevated">
+              <NeoCardContent className="p-6">
                 <div className="bg-primary/10 mb-4 inline-flex rounded-lg p-3">
                   <Heart className="text-primary size-6" />
                 </div>
@@ -309,8 +309,8 @@ export default async function AboutPage() {
                 <Typography variant="p" className="text-muted-foreground">
                   {copy.featureNotificationsDescription}
                 </Typography>
-              </CardContent>
-            </Card>
+              </NeoCardContent>
+            </NeoCard>
           </div>
         </div>
       </SectionLayout>

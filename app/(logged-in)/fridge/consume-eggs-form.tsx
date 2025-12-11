@@ -1,16 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { NeoButton } from "@/components/neo/neo-button";
+import { NeoInput } from "@/components/neo/neo-input";
+import { NeoSelect, NeoSelectItem } from "@/components/neo/neo-select";
+import { NeoTextarea } from "@/components/neo/neo-textarea";
 import type { CookingType, EggBox } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { consumeEggsAction } from "@/features/fridge/fridge.action";
@@ -113,10 +106,11 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="quantity">{copy.quantityLabel}</Label>
-        <Input
+        <NeoInput
           id="quantity"
+          label={copy.quantityLabel}
           type="number"
+          inputSize="md"
           min={1}
           max={eggBox.remaining}
           required
@@ -125,53 +119,44 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
             setFormData({ ...formData, quantity: parseInt(e.target.value) })
           }
         />
-        <p className="text-muted-foreground text-sm">
+        <p className="text-neo-text-muted text-sm">
           {copy.remaining(eggBox.remaining)}
         </p>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="cookingType">{copy.cookingLabel}</Label>
-        <Select
-          value={formData.cookingType}
-          onValueChange={(value: CookingType) =>
-            setFormData({ ...formData, cookingType: value })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {cookingTypes.map((type) => (
-              <SelectItem key={type} value={type}>
-                {cookingTypeLabels[type]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <NeoSelect
+        label={copy.cookingLabel}
+        value={formData.cookingType}
+        onValueChange={(value: string) =>
+          setFormData({ ...formData, cookingType: value as CookingType })
+        }
+      >
+        {cookingTypes.map((type) => (
+          <NeoSelectItem key={type} value={type}>
+            {cookingTypeLabels[type]}
+          </NeoSelectItem>
+        ))}
+      </NeoSelect>
 
-      <div className="space-y-2">
-        <Label htmlFor="notes">{copy.notesLabel}</Label>
-        <Textarea
-          id="notes"
-          placeholder={copy.notesPlaceholder}
-          value={formData.notes}
-          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-        />
-      </div>
+      <NeoTextarea
+        id="notes"
+        label={copy.notesLabel}
+        placeholder={copy.notesPlaceholder}
+        value={formData.notes}
+        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+      />
 
       <div className="flex justify-end gap-2 pt-4">
-        <Button
+        <NeoButton
           type="button"
           variant="outline"
           onClick={() => dialogManager.closeAll()}
         >
           {copy.cancel}
-        </Button>
-        <Button type="submit" variant="neubrutalism" disabled={isPending}>
+        </NeoButton>
+        <NeoButton type="submit" variant="primary" disabled={isPending}>
           {isPending ? copy.saving : copy.save}
-        </Button>
+        </NeoButton>
       </div>
     </form>
   );

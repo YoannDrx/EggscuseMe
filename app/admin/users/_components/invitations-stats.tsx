@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { prisma } from "@/lib/prisma";
 import {
   CheckCircle2,
@@ -88,20 +93,20 @@ export async function InvitationsStats() {
       {statItems.map((stat) => {
         const Icon = stat.icon;
         return (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-muted-foreground text-xs font-medium">
+          <NeoCard key={stat.title}>
+            <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <NeoCardTitle className="text-muted-foreground text-xs font-medium">
                 {stat.title}
-              </CardTitle>
+              </NeoCardTitle>
               <Icon className="text-muted-foreground size-4" />
-            </CardHeader>
-            <CardContent>
+            </NeoCardHeader>
+            <NeoCardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-muted-foreground text-xs">
                 {stat.description}
               </p>
-            </CardContent>
-          </Card>
+            </NeoCardContent>
+          </NeoCard>
         );
       })}
     </div>

@@ -8,7 +8,6 @@ import {
   EggyChefMix,
   EggyScared,
   EggyZen,
-  EggyGamer,
   EggySick,
   EggyParty,
   EggyNinja,
@@ -50,7 +49,7 @@ const sizeMap = {
 export function Eggy({
   mood = "happy",
   size = "md",
-  animate = true, // Animation is now built-in to the components, but we can accept the prop for API compatibility
+  animate: _animate = true, // Animation is built-in to the components
   className,
   ...props
 }: EggyProps) {
@@ -62,41 +61,41 @@ export function Eggy({
     case "waving":
     case "fresh-extra":
       return <EggyHappy className={finalClass} {...props} />;
-    
+
     case "chef":
     case "cooking":
       return <EggyChefMix className={finalClass} {...props} />;
-      
+
     case "worried":
     case "expired-warning":
     case "cracked": // Fallback for cracked
       return <EggyScared className={finalClass} {...props} />;
-      
+
     case "sad":
       return <EggySick className={finalClass} {...props} />;
-      
+
     case "sleeping":
     case "thinking":
       return <EggyZen className={finalClass} {...props} />;
-      
+
     case "excited":
     case "celebrating":
       return <EggyParty className={finalClass} {...props} />;
-      
+
     case "timer":
       // Wrapping IconTimerSticker in a div to ensure sizing works if it expects specific props
       return (
         <div className={finalClass} {...props}>
-            <IconTimerSticker className="w-full h-full" />
+          <IconTimerSticker className="h-full w-full" />
         </div>
       );
-      
+
     case "searching":
       return <EggyCool className={finalClass} {...props} />;
-      
+
     case "hero":
       return <EggyNinja className={finalClass} {...props} />;
-      
+
     default:
       return <EggyHappy className={finalClass} {...props} />;
   }

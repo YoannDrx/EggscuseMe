@@ -1,7 +1,12 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoButton } from "@/components/neo";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { Eggy } from "@/features/mascot";
 import { AlertTriangle, ChefHat, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -32,14 +37,14 @@ export function RecipeSuggestion({
   const hasUrgent = displayedSuggestions.some((s) => s.urgency === "high");
 
   return (
-    <Card
-      variant="sunny"
+    <NeoCard
+      variant="elevated"
       className={
         hasUrgent ? "border-fresh-cook ring-fresh-cook/20 ring-2" : undefined
       }
     >
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+      <NeoCardHeader>
+        <NeoCardTitle className="flex items-center gap-2">
           {hasUrgent ? (
             <>
               <AlertTriangle className="text-fresh-cook size-5" />
@@ -51,9 +56,9 @@ export function RecipeSuggestion({
               <span>{t("ideasTitle")}</span>
             </>
           )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </NeoCardTitle>
+      </NeoCardHeader>
+      <NeoCardContent className="space-y-4">
         {/* Eggy chef intro */}
         <div className="flex items-start gap-3">
           <Eggy mood="chef" size="sm" />
@@ -71,19 +76,15 @@ export function RecipeSuggestion({
 
         {/* Link to full recipes page */}
         <div className="flex justify-center pt-2">
-          <Link
-            href={`/orgs/${organizationSlug}/recipes`}
-            className={buttonVariants({
-              variant: "neubrutalism-outline",
-              size: "sm",
-            })}
-          >
-            <ChefHat className="mr-2 size-4" />
-            {t("viewAll")}
-            <ExternalLink className="ml-2 size-3" />
+          <Link href={`/orgs/${organizationSlug}/recipes`}>
+            <NeoButton variant="outline" size="sm">
+              <ChefHat className="mr-2 size-4" />
+              {t("viewAll")}
+              <ExternalLink className="ml-2 size-3" />
+            </NeoButton>
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

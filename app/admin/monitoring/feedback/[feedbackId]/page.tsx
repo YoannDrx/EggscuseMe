@@ -1,11 +1,11 @@
 import { Typography } from "@/components/nowts/typography";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import { InlineTooltip } from "@/components/ui/tooltip";
 import {
   Layout,
@@ -81,18 +81,18 @@ async function FeedbackDetailPage(props: {
         {feedback.user ? (
           <UserDetailsCard user={feedback.user} />
         ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle>Anonymous</CardTitle>
-              <CardDescription>Email {feedback.email}</CardDescription>
-            </CardHeader>
-          </Card>
+          <NeoCard>
+            <NeoCardHeader>
+              <NeoCardTitle>Anonymous</NeoCardTitle>
+              <NeoCardDescription>Email {feedback.email}</NeoCardDescription>
+            </NeoCardHeader>
+          </NeoCard>
         )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Review</CardTitle>
-            <CardDescription>
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle>Review</NeoCardTitle>
+            <NeoCardDescription>
               {reviewIcon && (
                 <div className="flex items-center gap-3">
                   <InlineTooltip title={reviewIcon.tooltip}>
@@ -101,14 +101,14 @@ async function FeedbackDetailPage(props: {
                   <Typography variant="muted">{reviewIcon.tooltip}</Typography>
                 </div>
               )}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent>
             <Typography variant="p" className="whitespace-pre-wrap">
               {feedback.message}
             </Typography>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       </LayoutContent>
     </Layout>
   );

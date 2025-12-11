@@ -1,13 +1,13 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { NeoBadge } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   Table,
   TableBody,
@@ -68,14 +68,14 @@ export function UserProviders({ accounts }: UserProvidersProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Authentication Providers</CardTitle>
-        <CardDescription>
+    <NeoCard>
+      <NeoCardHeader>
+        <NeoCardTitle>Authentication Providers</NeoCardTitle>
+        <NeoCardDescription>
           Connected authentication methods for this user
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardContent>
         {accounts.length === 0 ? (
           <div className="text-muted-foreground py-4 text-center">
             No authentication providers found
@@ -106,7 +106,7 @@ export function UserProviders({ accounts }: UserProvidersProps) {
                       <code className="text-sm">{account.accountId}</code>
                     </TableCell>
                     <TableCell>
-                      <Badge
+                      <NeoBadge
                         variant={
                           account.accessTokenExpiresAt &&
                           new Date(account.accessTokenExpiresAt) > new Date()
@@ -122,7 +122,7 @@ export function UserProviders({ accounts }: UserProvidersProps) {
                           : account.accessToken
                             ? "Connected"
                             : "Inactive"}
-                      </Badge>
+                      </NeoBadge>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
@@ -138,7 +138,7 @@ export function UserProviders({ accounts }: UserProvidersProps) {
             </Table>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

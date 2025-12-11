@@ -1,8 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { NeoButton } from "@/components/neo";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
 import {
   Select,
   SelectContent,
@@ -10,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import { NeoSwitch } from "@/components/neo";
 import { Eggy } from "@/features/mascot";
 import {
   getNotificationPreferencesAction,
@@ -83,25 +88,28 @@ export default function NotificationsSettingsPage() {
       </div>
 
       {/* Main settings card */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <NeoCard>
+        <NeoCardHeader>
+          <NeoCardTitle className="flex items-center gap-2">
             <Bell className="size-5" />
             {t("title")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-8">
+          </NeoCardTitle>
+        </NeoCardHeader>
+        <NeoCardContent className="space-y-8">
           {/* Enable/Disable toggle */}
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="notify-enabled" className="text-base font-medium">
+              <NeoLabel
+                htmlFor="notify-enabled"
+                className="text-base font-medium"
+              >
                 {t("enable")}
-              </Label>
+              </NeoLabel>
               <p className="text-muted-foreground text-sm">
                 {t("enableDescription")}
               </p>
             </div>
-            <Switch
+            <NeoSwitch
               id="notify-enabled"
               checked={notifyEnabled}
               onCheckedChange={(checked) => {
@@ -116,8 +124,12 @@ export default function NotificationsSettingsPage() {
             className={`space-y-4 ${!notifyEnabled ? "pointer-events-none opacity-50" : ""}`}
           >
             <div className="space-y-0.5">
-              <Label className="text-base font-medium">{t("daysLabel")}</Label>
-              <p className="text-muted-foreground text-sm">{t("daysDescription")}</p>
+              <NeoLabel className="text-base font-medium">
+                {t("daysLabel")}
+              </NeoLabel>
+              <p className="text-muted-foreground text-sm">
+                {t("daysDescription")}
+              </p>
             </div>
             <Select
               value={notifyDaysBefore.toString()}
@@ -151,30 +163,30 @@ export default function NotificationsSettingsPage() {
                 <BellOff className="text-muted-foreground mt-0.5 size-5" />
               )}
               <div>
-                  <p className="font-medium">
-                    {notifyEnabled ? t("previewOn") : t("previewOff")}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    {notifyEnabled
-                      ? t("previewOnDetail", { days: notifyDaysBefore })
-                      : t("previewOffDetail")}
-                  </p>
-                </div>
+                <p className="font-medium">
+                  {notifyEnabled ? t("previewOn") : t("previewOff")}
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  {notifyEnabled
+                    ? t("previewOnDetail", { days: notifyDaysBefore })
+                    : t("previewOffDetail")}
+                </p>
               </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
 
       {/* Save button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={!hasChanges || isSaving}>
+        <NeoButton onClick={handleSave} disabled={!hasChanges || isSaving}>
           {isSaving ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Save className="mr-2 size-4" />
           )}
           {isSaving ? t("saving") : t("save")}
-        </Button>
+        </NeoButton>
       </div>
     </div>
   );

@@ -1,15 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { NeoButton } from "@/components/neo/neo-button";
+import { NeoInput } from "@/components/neo/neo-input";
+import { NeoSelect, NeoSelectItem } from "@/components/neo/neo-select";
 import type { EggSize } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { createEggBoxAction } from "@/features/fridge/fridge.action";
@@ -80,8 +73,10 @@ export function AddEggBoxForm() {
       {showScanner ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-base font-medium">{t("scannerTitle")}</Label>
-            <Button
+            <span className="text-neo-text text-base font-bold">
+              {t("scannerTitle")}
+            </span>
+            <NeoButton
               type="button"
               variant="ghost"
               size="sm"
@@ -89,103 +84,88 @@ export function AddEggBoxForm() {
             >
               <X className="mr-1 size-4" />
               {t("closeScanner")}
-            </Button>
+            </NeoButton>
           </div>
           <BarcodeScanner onScan={handleScan} />
         </div>
       ) : (
-        <Button
+        <NeoButton
           type="button"
-          variant="neubrutalism-outline"
+          variant="outline"
           className="w-full"
           onClick={() => setShowScanner(true)}
         >
           <Scan className="mr-2 size-4" />
           {t("openScanner")}
-        </Button>
+        </NeoButton>
       )}
 
-      <div className="space-y-2">
-        <Label htmlFor="name">{t("nameLabel")}</Label>
-        <Input
-          id="name"
-          placeholder={t("namePlaceholder")}
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        />
-      </div>
+      <NeoInput
+        id="name"
+        label={t("nameLabel")}
+        placeholder={t("namePlaceholder")}
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor="layingDate">{t("layingDate")}</Label>
-        <Input
-          id="layingDate"
-          type="date"
-          required
-          value={formData.layingDate}
-          onChange={(e) =>
-            setFormData({ ...formData, layingDate: e.target.value })
-          }
-        />
-      </div>
+      <NeoInput
+        id="layingDate"
+        label={t("layingDate")}
+        type="date"
+        required
+        value={formData.layingDate}
+        onChange={(e) =>
+          setFormData({ ...formData, layingDate: e.target.value })
+        }
+      />
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="quantity">{t("quantity")}</Label>
-          <Input
-            id="quantity"
-            type="number"
-            min={1}
-            max={100}
-            required
-            value={formData.quantity}
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: parseInt(e.target.value) })
-            }
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="size">{t("size")}</Label>
-          <Select
-            value={formData.size}
-            onValueChange={(value: string) =>
-              setFormData({ ...formData, size: value as EggSize })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="S">{t("sizeOptions.S")}</SelectItem>
-              <SelectItem value="M">{t("sizeOptions.M")}</SelectItem>
-              <SelectItem value="L">{t("sizeOptions.L")}</SelectItem>
-              <SelectItem value="XL">{t("sizeOptions.XL")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="source">{t("source")}</Label>
-        <Input
-          id="source"
-          placeholder={t("sourcePlaceholder")}
-          value={formData.source}
-          onChange={(e) => setFormData({ ...formData, source: e.target.value })}
+        <NeoInput
+          id="quantity"
+          label={t("quantity")}
+          type="number"
+          min={1}
+          max={100}
+          required
+          value={formData.quantity}
+          onChange={(e) =>
+            setFormData({ ...formData, quantity: parseInt(e.target.value) })
+          }
         />
+
+        <NeoSelect
+          label={t("size")}
+          value={formData.size}
+          onValueChange={(value: string) =>
+            setFormData({ ...formData, size: value as EggSize })
+          }
+        >
+          <NeoSelectItem value="S">{t("sizeOptions.S")}</NeoSelectItem>
+          <NeoSelectItem value="M">{t("sizeOptions.M")}</NeoSelectItem>
+          <NeoSelectItem value="L">{t("sizeOptions.L")}</NeoSelectItem>
+          <NeoSelectItem value="XL">{t("sizeOptions.XL")}</NeoSelectItem>
+        </NeoSelect>
       </div>
+
+      <NeoInput
+        id="source"
+        label={t("source")}
+        placeholder={t("sourcePlaceholder")}
+        value={formData.source}
+        onChange={(e) => setFormData({ ...formData, source: e.target.value })}
+      />
 
       <div className="flex justify-end gap-2 pt-4">
-        <Button
+        <NeoButton
           type="button"
           variant="outline"
           onClick={() => dialogManager.closeAll()}
         >
           {t("cancel")}
-        </Button>
-        <Button type="submit" variant="neubrutalism" disabled={isPending}>
+        </NeoButton>
+        <NeoButton type="submit" variant="primary" disabled={isPending}>
           {isPending ? t("saving") : t("save")}
-        </Button>
+        </NeoButton>
       </div>
     </form>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NeoButton } from "@/components/neo";
+import { NeoCard, NeoCardContent, NeoCardHeader } from "@/components/neo";
 import {
   InputGroup,
   InputGroupAddon,
@@ -83,9 +83,9 @@ export function AdminDataTable<T extends { id: string }>({
   const hasPagination = totalPages > 1 && onPageChange;
 
   return (
-    <Card className={className}>
+    <NeoCard className={className}>
       {hasFilters && (
-        <CardHeader className="flex flex-row items-center gap-4">
+        <NeoCardHeader className="flex flex-row items-center gap-4">
           {onSearchChange && (
             <InputGroup className="flex-1">
               <InputGroupInput
@@ -112,9 +112,9 @@ export function AdminDataTable<T extends { id: string }>({
               </SelectContent>
             </Select>
           )}
-        </CardHeader>
+        </NeoCardHeader>
       )}
-      <CardContent className={cn(!hasFilters && "pt-6")}>
+      <NeoCardContent className={cn(!hasFilters && "pt-6")}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -154,28 +154,28 @@ export function AdminDataTable<T extends { id: string }>({
 
         {hasPagination && (
           <div className="mt-4 flex justify-center gap-2">
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === 1}
               onClick={() => onPageChange(page - 1)}
             >
               Précédent
-            </Button>
+            </NeoButton>
             <span className="text-muted-foreground flex items-center text-sm">
               Page {page} / {totalPages}
             </span>
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === totalPages}
               onClick={() => onPageChange(page + 1)}
             >
               Suivant
-            </Button>
+            </NeoButton>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

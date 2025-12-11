@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import { Eggy, type EggyMood } from "@/features/mascot";
 import { useBackNavigation } from "@/hooks/use-back-navigation";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -66,7 +66,7 @@ export function MobileHeader({
         "transition-colors duration-200",
         transparent
           ? "bg-transparent"
-          : "border-nav-border bg-nav-bg border-b backdrop-blur-xl",
+          : "border-neo-border bg-neo-bg border-b-[length:var(--border-neo)] backdrop-blur-xl",
         className,
       )}
     >
@@ -78,7 +78,7 @@ export function MobileHeader({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Button
+            <NeoButton
               variant="ghost"
               size="icon"
               className="size-10 rounded-full"
@@ -87,7 +87,7 @@ export function MobileHeader({
               <Link href={backHref} aria-label="Retour">
                 <ChevronLeft className="size-5" />
               </Link>
-            </Button>
+            </NeoButton>
           </motion.div>
         )}
         {mascot && !showBack && (
@@ -109,7 +109,7 @@ export function MobileHeader({
         )}
       >
         <motion.h1
-          className="text-foreground max-w-full truncate text-lg font-bold"
+          className="text-neo-text max-w-full truncate text-lg font-bold"
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2, delay: 0.1 }}
@@ -118,7 +118,7 @@ export function MobileHeader({
         </motion.h1>
         {subtitle && (
           <motion.p
-            className="text-muted-foreground max-w-full truncate text-xs"
+            className="text-neo-text-muted max-w-full truncate text-xs"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2, delay: 0.15 }}
@@ -161,14 +161,16 @@ export function MobilePageHeader({
   return (
     <div className={cn("flex items-start gap-4 md:hidden", className)}>
       {icon && (
-        <div className="bg-primary/10 flex size-12 shrink-0 items-center justify-center rounded-2xl">
+        <div className="bg-neo-accent/10 flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-neo-lg)]">
           {icon}
         </div>
       )}
       <div className="flex-1">
-        <h1 className="font-heading text-xl font-bold">{title}</h1>
+        <h1 className="font-heading text-neo-text text-xl font-bold">
+          {title}
+        </h1>
         {description && (
-          <p className="text-muted-foreground mt-1 text-sm">{description}</p>
+          <p className="text-neo-text-muted mt-1 text-sm">{description}</p>
         )}
       </div>
     </div>

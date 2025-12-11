@@ -1,6 +1,11 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  NeoTabs,
+  NeoTabsList,
+  NeoTabsTrigger,
+  NeoTabsContent,
+} from "@/components/neo";
 import { useTranslations } from "next-intl";
 import { EmailInvitationsTable } from "./email-invitations-table";
 import { ShareLinksTable } from "./share-links-table";
@@ -9,19 +14,19 @@ export function InvitationsTabs() {
   const t = useTranslations("admin.invitations.tabs");
 
   return (
-    <Tabs defaultValue="shareLinks">
-      <TabsList>
-        <TabsTrigger value="shareLinks">{t("shareLinks")}</TabsTrigger>
-        <TabsTrigger value="emailInvitations">
+    <NeoTabs defaultValue="shareLinks">
+      <NeoTabsList>
+        <NeoTabsTrigger value="shareLinks">{t("shareLinks")}</NeoTabsTrigger>
+        <NeoTabsTrigger value="emailInvitations">
           {t("emailInvitations")}
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="shareLinks" className="mt-4">
+        </NeoTabsTrigger>
+      </NeoTabsList>
+      <NeoTabsContent value="shareLinks">
         <ShareLinksTable />
-      </TabsContent>
-      <TabsContent value="emailInvitations" className="mt-4">
+      </NeoTabsContent>
+      <NeoTabsContent value="emailInvitations">
         <EmailInvitationsTable />
-      </TabsContent>
-    </Tabs>
+      </NeoTabsContent>
+    </NeoTabs>
   );
 }

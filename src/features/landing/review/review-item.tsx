@@ -1,6 +1,6 @@
 import { Typography } from "@/components/nowts/typography";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NeoCard, NeoCardContent, NeoCardHeader } from "@/components/neo";
 import { ClientMarkdown } from "@/features/markdown/client-markdown";
 import { cn } from "@/lib/utils";
 import type { ComponentPropsWithoutRef } from "react";
@@ -26,11 +26,11 @@ export type ReviewItemProps = {
 
 export const ReviewItem = ({ className, ...props }: ReviewItemProps) => {
   return (
-    <Card className={cn("h-fit overflow-hidden pb-0", className)} {...props}>
-      <CardHeader>
+    <NeoCard className={cn("h-fit overflow-hidden pb-0", className)} {...props}>
+      <NeoCardHeader>
         <ClientMarkdown className="citation">{props.review}</ClientMarkdown>
-      </CardHeader>
-      <CardContent className="bg-background flex items-center gap-2 rounded-lg py-6">
+      </NeoCardHeader>
+      <NeoCardContent className="bg-background flex items-center gap-2 rounded-lg py-6">
         <div>
           <Avatar>
             <AvatarFallback>{props.name[0]}</AvatarFallback>
@@ -41,7 +41,7 @@ export const ReviewItem = ({ className, ...props }: ReviewItemProps) => {
           <Typography variant="small">{props.name}</Typography>
           <Typography variant="muted">{props.role}</Typography>
         </div>
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 };

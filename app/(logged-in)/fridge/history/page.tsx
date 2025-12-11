@@ -1,8 +1,13 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoButton } from "@/components/neo/neo-button";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import {
   Select,
   SelectContent,
@@ -107,7 +112,7 @@ export default function HistoryPage() {
   const filterContent = (
     <div className="space-y-4">
       <div>
-        <label className="text-muted-foreground mb-2 block text-sm font-medium">
+        <label className="text-neo-text-muted mb-2 block text-sm font-medium">
           {t("cookingType")}
         </label>
         <Select
@@ -143,7 +148,7 @@ export default function HistoryPage() {
           total > 0 ? t("consumptionCount", { count: total }) : undefined
         }
         rightAction={
-          <Button
+          <NeoButton
             variant="ghost"
             size="icon"
             className="size-10 rounded-full"
@@ -153,7 +158,7 @@ export default function HistoryPage() {
             {cookingTypeFilter && (
               <span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" />
             )}
-          </Button>
+          </NeoButton>
         }
       />
 
@@ -163,22 +168,22 @@ export default function HistoryPage() {
           <Eggy mood="happy" size="lg" />
           <div>
             <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
-            <p className="text-muted-foreground">{t("subtitle")}</p>
+            <p className="text-neo-text-muted">{t("subtitle")}</p>
           </div>
         </div>
 
         {/* Desktop Filters */}
-        <Card variant="sunny">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
+        <NeoCard variant="elevated" padding="md">
+          <NeoCardHeader>
+            <NeoCardTitle className="flex items-center gap-2 text-base">
               <History className="size-4" />
               {t("filters")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
             <div className="flex flex-wrap gap-4">
               <div className="min-w-[200px]">
-                <label className="text-muted-foreground mb-2 block text-sm">
+                <label className="text-neo-text-muted mb-2 block text-sm">
                   {t("cookingType")}
                 </label>
                 <Select
@@ -210,15 +215,15 @@ export default function HistoryPage() {
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       </div>
 
       {/* Content */}
       <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] md:px-0">
         {isPending ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="text-primary size-8 animate-spin" />
+            <Loader2 className="text-neo-accent size-8 animate-spin" />
           </div>
         ) : history.length === 0 ? (
           <HistoryEmpty />
@@ -233,8 +238,8 @@ export default function HistoryPage() {
               </div>
             ) : (
               /* Desktop: Table */
-              <Card variant="sunny">
-                <CardContent className="p-0">
+              <NeoCard variant="elevated" padding="md">
+                <NeoCardContent className="p-0">
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
@@ -289,12 +294,12 @@ export default function HistoryPage() {
                                   ))}
                                 </div>
                               ) : (
-                                <span className="text-muted-foreground">-</span>
+                                <span className="text-neo-text-muted">-</span>
                               )}
                             </TableCell>
                             <TableCell className="max-w-[200px] truncate">
                               {item.notes ?? (
-                                <span className="text-muted-foreground">-</span>
+                                <span className="text-neo-text-muted">-</span>
                               )}
                             </TableCell>
                           </TableRow>
@@ -302,18 +307,18 @@ export default function HistoryPage() {
                       </TableBody>
                     </Table>
                   </div>
-                </CardContent>
-              </Card>
+                </NeoCardContent>
+              </NeoCard>
             )}
 
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-6 flex items-center justify-between">
-                <p className="text-muted-foreground text-sm">
+                <p className="text-neo-text-muted text-sm">
                   {t("page", { current: page, total: totalPages })}
                 </p>
                 <div className="flex gap-2">
-                  <Button
+                  <NeoButton
                     variant="outline"
                     size="sm"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -321,8 +326,8 @@ export default function HistoryPage() {
                   >
                     <ChevronLeft className="size-4" />
                     <span className="hidden sm:inline">{t("previous")}</span>
-                  </Button>
-                  <Button
+                  </NeoButton>
+                  <NeoButton
                     variant="outline"
                     size="sm"
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
@@ -330,7 +335,7 @@ export default function HistoryPage() {
                   >
                     <span className="hidden sm:inline">{t("next")}</span>
                     <ChevronRight className="size-4" />
-                  </Button>
+                  </NeoButton>
                 </div>
               </div>
             )}

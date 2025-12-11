@@ -1,9 +1,7 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoAvatar, NeoButton } from "@/components/neo";
 import { useIsClient } from "@/hooks/use-is-client";
-import type { VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import { UserDropdown } from "./user-dropdown";
 
@@ -19,16 +17,13 @@ const useHref = () => {
   return pathname;
 };
 
-export const SignInButton = (props: VariantProps<typeof buttonVariants>) => {
+export const SignInButton = () => {
   const href = useHref();
 
   return (
-    <Link
-      className={buttonVariants({ size: "sm", variant: "outline", ...props })}
-      href={`/auth/signin?callbackUrl=${href}`}
-    >
-      Sign in
-    </Link>
+    <NeoButton asChild size="sm" variant="outline">
+      <Link href={`/auth/signin?callbackUrl=${href}`}>Sign in</Link>
+    </NeoButton>
   );
 };
 
@@ -44,12 +39,13 @@ export const LoggedInButton = ({
   return (
     <UserDropdown>
       <button className="group size-9 rounded-full">
-        <Avatar className="mr-2 size-full group-active:scale-95">
-          <AvatarFallback className="bg-card">
-            {user.email?.slice(0, 1).toUpperCase() ?? "U"}
-          </AvatarFallback>
-          {user.image && <AvatarImage src={user.image} />}
-        </Avatar>
+        <NeoAvatar
+          src={user.image ?? undefined}
+          alt={user.name ?? "User"}
+          fallback={user.email?.slice(0, 1).toUpperCase() ?? "U"}
+          size="sm"
+          className="size-full group-active:scale-95"
+        />
       </button>
     </UserDropdown>
   );

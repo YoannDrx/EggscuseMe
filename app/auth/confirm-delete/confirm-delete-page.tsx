@@ -1,14 +1,13 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { NeoAvatar } from "@/components/neo/neo-avatar";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { LoadingButton } from "@/features/form/submit-button";
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import { authClient } from "@/lib/auth-client";
 import { unwrapSafePromise } from "@/lib/promises";
 import { useMutation } from "@tanstack/react-query";
@@ -63,40 +62,51 @@ export function ConfirmDeletePage({
   }
 
   return (
-    <Card className="mx-auto w-full max-w-md">
-      <CardHeader>
+    <NeoCard
+      variant="elevated"
+      className="mx-auto w-full max-w-md"
+      padding="lg"
+    >
+      <NeoCardHeader>
         <div className="flex justify-center">
-          <Avatar className="size-16">
-            <AvatarFallback>
-              <Trash2 />
-            </AvatarFallback>
-          </Avatar>
+          <NeoAvatar
+            fallback="CD"
+            size="lg"
+            shape="square"
+            className="flex items-center justify-center"
+          >
+            <Trash2 className="text-destructive size-6" />
+          </NeoAvatar>
         </div>
-        <CardHeader className="text-center">
+        <NeoCardHeader className="text-center">
           Confirm Account Deletion
-        </CardHeader>
+        </NeoCardHeader>
 
-        <CardDescription className="text-center">
+        <NeoCardDescription className="text-center">
           Are you sure you want to delete your account? This action is permanent
           and cannot be undone.
-        </CardDescription>
-      </CardHeader>
-      <CardFooter className="border-t pt-6">
-        {error && <div className="mb-4 text-red-500">{error}</div>}
+        </NeoCardDescription>
+      </NeoCardHeader>
+      <NeoCardFooter className="border-t-neo-border border-t-[length:var(--border-neo)] pt-6">
+        {error && <div className="text-destructive mb-4">{error}</div>}
         <div className="flex w-full gap-4">
-          <LoadingButton
+          <NeoButton
             loading={isLoading || confirmDeleteMutation.isPending}
             variant="destructive"
             onClick={handleConfirmDelete}
             className="flex-1"
           >
             Yes, Delete My Account
-          </LoadingButton>
-          <Button variant="outline" onClick={handleCancel} className="flex-1">
+          </NeoButton>
+          <NeoButton
+            variant="outline"
+            onClick={handleCancel}
+            className="flex-1"
+          >
             Cancel
-          </Button>
+          </NeoButton>
         </div>
-      </CardFooter>
-    </Card>
+      </NeoCardFooter>
+    </NeoCard>
   );
 }

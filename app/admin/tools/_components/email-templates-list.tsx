@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import {
   Form,
   FormControl,
@@ -155,14 +155,14 @@ function FridgeInvitationForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -239,14 +239,14 @@ function ExpirationWarningForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -336,14 +336,14 @@ function MarkdownEmailForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -408,14 +408,14 @@ function OtpSigninForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -476,14 +476,14 @@ function ResetPasswordForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -544,14 +544,14 @@ function ChangeEmailForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -612,14 +612,14 @@ function DeleteAccountForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -680,14 +680,14 @@ function EmailVerificationForm({ defaultEmail }: { defaultEmail: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={mutation.isPending}>
+        <NeoButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <Send className="mr-2 size-4" />
           )}
           {t("form.send")}
-        </Button>
+        </NeoButton>
       </div>
     </Form>
   );
@@ -759,18 +759,18 @@ export function EmailTemplatesList() {
         const isSelected = selectedTemplate === template.id;
 
         return (
-          <Card
+          <NeoCard
             key={template.id}
-            className={isSelected ? "ring-primary ring-2" : ""}
+            className={isSelected ? "ring-neo-accent ring-2" : ""}
           >
-            <CardHeader>
+            <NeoCardHeader>
               <div className="flex items-center gap-2">
-                <Icon className="text-muted-foreground size-5" />
-                <CardTitle className="text-lg">{template.name}</CardTitle>
+                <Icon className="text-neo-text-muted size-5" />
+                <NeoCardTitle className="text-lg">{template.name}</NeoCardTitle>
               </div>
-              <CardDescription>{template.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
+              <NeoCardDescription>{template.description}</NeoCardDescription>
+            </NeoCardHeader>
+            <NeoCardContent>
               {isSelected ? (
                 <div className="flex flex-col gap-4">
                   {template.id === "fridge-invitation" && (
@@ -797,24 +797,24 @@ export function EmailTemplatesList() {
                   {template.id === "email-verification" && (
                     <EmailVerificationForm defaultEmail={defaultEmail} />
                   )}
-                  <Button
+                  <NeoButton
                     variant="outline"
                     onClick={() => setSelectedTemplate(null)}
                   >
                     {t("form.cancel")}
-                  </Button>
+                  </NeoButton>
                 </div>
               ) : (
-                <Button
+                <NeoButton
                   variant="outline"
                   className="w-full"
                   onClick={() => setSelectedTemplate(template.id)}
                 >
                   {t("form.configure")}
-                </Button>
+                </NeoButton>
               )}
-            </CardContent>
-          </Card>
+            </NeoCardContent>
+          </NeoCard>
         );
       })}
     </div>

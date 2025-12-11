@@ -1,30 +1,23 @@
 "use client";
 
 import { AutomaticPagination } from "@/components/nowts/automatic-pagination";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  NeoAvatar,
+  NeoBadge,
+  NeoButton,
+  NeoInput,
+  NeoDropdown,
+  NeoDropdownContent,
+  NeoDropdownItem,
+  NeoDropdownSeparator,
+  NeoDropdownTrigger,
+  NeoTable,
+  NeoTableBody,
+  NeoTableCell,
+  NeoTableHead,
+  NeoTableHeader,
+  NeoTableRow,
+} from "@/components/neo";
 import { authClient } from "@/lib/auth-client";
 import { dayjs } from "@/lib/dayjs";
 import { unwrapSafePromise } from "@/lib/promises";
@@ -139,92 +132,92 @@ export function UsersList({
 
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <InputGroup className="w-full">
-            <InputGroupInput
+      <div className="bg-neo-card border-neo-border/20 overflow-hidden rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] shadow-[var(--shadow-neo-md)]">
+        <div className="border-neo-border/20 border-b-[length:var(--border-neo)] p-4">
+          <div className="relative">
+            <NeoInput
               placeholder="Search users by email..."
               value={query}
               onChange={(e) => void setQuery(e.target.value)}
+              className="pl-10"
             />
-            <InputGroupAddon align="inline-start">
-              <Search
-                aria-hidden="true"
-                className="text-muted-foreground h-4 w-4"
-              />
-            </InputGroupAddon>
-          </InputGroup>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+            <Search
+              aria-hidden="true"
+              className="text-neo-text-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+            />
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <NeoTable variant="ghost">
+            <NeoTableHeader>
+              <NeoTableRow>
+                <NeoTableHead>User</NeoTableHead>
+                <NeoTableHead>Role</NeoTableHead>
+                <NeoTableHead>Status</NeoTableHead>
+                <NeoTableHead>Joined</NeoTableHead>
+                <NeoTableHead className="w-[100px]">Actions</NeoTableHead>
+              </NeoTableRow>
+            </NeoTableHeader>
+            <NeoTableBody>
               {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>
+                <NeoTableRow key={user.id}>
+                  <NeoTableCell>
                     <Link
                       href={`/admin/users/${user.id}`}
                       className="flex items-center gap-3"
                     >
-                      <Avatar>
-                        {user.image ? <AvatarImage src={user.image} /> : null}
-                        <AvatarFallback>
-                          {user.name.charAt(0) || "U"}
-                        </AvatarFallback>
-                      </Avatar>
+                      <NeoAvatar
+                        src={user.image ?? undefined}
+                        alt={user.name}
+                        fallback={user.name.charAt(0) || "U"}
+                      />
                       <div>
-                        <div className="font-medium">{user.name}</div>
-                        <div className="text-muted-foreground text-sm">
+                        <div className="text-neo-text font-medium">
+                          {user.name}
+                        </div>
+                        <div className="text-neo-text-muted text-sm">
                           {user.email}
                         </div>
                       </div>
                     </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{user.role ?? "user"}</Badge>
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
+                    <NeoBadge variant="outline">{user.role ?? "user"}</NeoBadge>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {user.banned ? (
-                      <Badge variant="outline" className="gap-1.5">
+                      <NeoBadge variant="outline" className="gap-1.5">
                         <span
                           className="size-1.5 rounded-full bg-red-500"
                           aria-hidden="true"
                         />
                         Banned
-                      </Badge>
+                      </NeoBadge>
                     ) : (
-                      <Badge variant="outline" className="gap-1.5">
+                      <NeoBadge variant="outline" className="gap-1.5">
                         <span
                           className="size-1.5 rounded-full bg-emerald-500"
                           aria-hidden="true"
                         />
                         Active
-                      </Badge>
+                      </NeoBadge>
                     )}
-                  </TableCell>
-                  <TableCell>{dayjs(user.createdAt).fromNow()}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
+                  </NeoTableCell>
+                  <NeoTableCell>{dayjs(user.createdAt).fromNow()}</NeoTableCell>
+                  <NeoTableCell>
+                    <NeoDropdown>
+                      <NeoDropdownTrigger>
+                        <NeoButton
                           variant="ghost"
                           className="h-8 w-8 p-0"
                           aria-label="Open actions menu"
                         >
                           <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                        </NeoButton>
+                      </NeoDropdownTrigger>
+                      <NeoDropdownContent align="end">
                         {!user.banned && (
-                          <DropdownMenuItem
+                          <NeoDropdownItem
                             onClick={async () => {
                               await impersonateUserMutation.mutateAsync({
                                 userId: user.id,
@@ -233,10 +226,10 @@ export function UsersList({
                           >
                             <UserCog className="mr-2 h-4 w-4" />
                             Impersonate
-                          </DropdownMenuItem>
+                          </NeoDropdownItem>
                         )}
                         {user.role !== "admin" && (
-                          <DropdownMenuItem
+                          <NeoDropdownItem
                             onClick={async () => {
                               await setRoleMutation.mutateAsync({
                                 userId: user.id,
@@ -246,10 +239,10 @@ export function UsersList({
                           >
                             <Crown className="mr-2 h-4 w-4" />
                             Make Admin
-                          </DropdownMenuItem>
+                          </NeoDropdownItem>
                         )}
                         {user.role === "admin" && (
-                          <DropdownMenuItem
+                          <NeoDropdownItem
                             onClick={async () => {
                               await setRoleMutation.mutateAsync({
                                 userId: user.id,
@@ -259,11 +252,11 @@ export function UsersList({
                           >
                             <UserCog className="mr-2 h-4 w-4" />
                             Make Regular User
-                          </DropdownMenuItem>
+                          </NeoDropdownItem>
                         )}
-                        <DropdownMenuSeparator />
+                        <NeoDropdownSeparator />
                         {user.banned ? (
-                          <DropdownMenuItem
+                          <NeoDropdownItem
                             onClick={async () => {
                               await unbanUserMutation.mutateAsync({
                                 userId: user.id,
@@ -273,9 +266,9 @@ export function UsersList({
                           >
                             <CheckCircle2 className="mr-2 h-4 w-4" />
                             Unban User
-                          </DropdownMenuItem>
+                          </NeoDropdownItem>
                         ) : (
-                          <DropdownMenuItem
+                          <NeoDropdownItem
                             onClick={async () => {
                               await banUserMutation.mutateAsync({
                                 userId: user.id,
@@ -285,24 +278,24 @@ export function UsersList({
                           >
                             <Ban className="mr-2 h-4 w-4" />
                             Ban User
-                          </DropdownMenuItem>
+                          </NeoDropdownItem>
                         )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                      </NeoDropdownContent>
+                    </NeoDropdown>
+                  </NeoTableCell>
+                </NeoTableRow>
               ))}
               {users.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center">
+                <NeoTableRow>
+                  <NeoTableCell colSpan={5} className="h-24 text-center">
                     No users found.
-                  </TableCell>
-                </TableRow>
+                  </NeoTableCell>
+                </NeoTableRow>
               )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            </NeoTableBody>
+          </NeoTable>
+        </div>
+      </div>
 
       {totalPages > 1 && (
         <AutomaticPagination

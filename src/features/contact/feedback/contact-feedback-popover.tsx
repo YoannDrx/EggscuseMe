@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
   Popover,
   PopoverContent,
@@ -56,7 +56,7 @@ export const ContactFeedbackPopover = (props: ContactFeedbackPopoverProps) => {
   return (
     <Popover open={open} onOpenChange={(v) => setOpen(v)}>
       <PopoverTrigger asChild>
-        {props.children ?? <Button variant="outline">Feedback</Button>}
+        {props.children ?? <NeoButton variant="outline">Feedback</NeoButton>}
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <Form form={form}>
@@ -101,7 +101,7 @@ export const ContactFeedbackPopover = (props: ContactFeedbackPopoverProps) => {
                   </div>
                 )}
               </form.AppField>
-              <form.SubmitButton variant="outline">Send</form.SubmitButton>
+              <form.SubmitButton variant="secondary">Send</form.SubmitButton>
             </div>
           </div>
         </Form>

@@ -1,6 +1,6 @@
 import { CmdOrOption } from "@/components/nowts/keyboard-shortcut";
 import { Typography } from "@/components/nowts/typography";
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import { Kbd } from "@/components/ui/kbd";
 import { useIsClient } from "@/hooks/use-is-client";
 import { AnimatePresence, motion } from "motion/react";
@@ -59,9 +59,9 @@ export const FormAutoSaveStickyBar = (props: FormAutoSaveStickyBarProps) => {
               Changes have been made. Save now!
             </Typography>
             {props.cancelLabel && (
-              <Button variant="secondary" onClick={onCancel} type="button">
+              <NeoButton variant="secondary" onClick={onCancel} type="button">
                 {props.cancelLabel}
-              </Button>
+              </NeoButton>
             )}
             <LoadingButton
               size="sm"

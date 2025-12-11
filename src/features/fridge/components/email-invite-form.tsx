@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { NeoButton } from "@/components/neo";
+import { NeoInput } from "@/components/neo";
 import { createEmailInvitationAction } from "@/features/fridge/email-invitation.action";
 import { Mail, Send } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -31,7 +31,7 @@ export function EmailInviteForm() {
     <form onSubmit={handleSubmit} className="flex gap-2">
       <div className="relative flex-1">
         <Mail className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-        <Input
+        <NeoInput
           type="email"
           placeholder="email@exemple.com"
           value={email}
@@ -40,14 +40,14 @@ export function EmailInviteForm() {
           disabled={isPending}
         />
       </div>
-      <Button
+      <NeoButton
         type="submit"
-        variant="neubrutalism"
+        variant="primary"
         disabled={isPending || !email.trim()}
       >
         <Send className="mr-2 size-4" />
         {isPending ? "Envoi..." : "Inviter"}
-      </Button>
+      </NeoButton>
     </form>
   );
 }

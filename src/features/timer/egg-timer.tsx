@@ -1,15 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { NeoButton } from "@/components/neo";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
+import { NeoSelect, NeoSelectItem } from "@/components/neo";
 import { Eggy } from "@/features/mascot";
 import type { EggSize } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
@@ -151,9 +150,9 @@ export function EggTimer() {
   };
 
   return (
-    <Card variant="sunny" className="w-full max-w-md">
-      <CardHeader className="pb-4">
-        <CardTitle className="font-heading flex items-center gap-3 text-xl">
+    <NeoCard variant="elevated" className="w-full max-w-md">
+      <NeoCardHeader className="pb-4">
+        <NeoCardTitle className="font-heading flex items-center gap-3 text-xl">
           <Eggy mood={getEggyMood()} size="sm" animate={isRunning} />
           {t("cookingTitle")}
           {isDone && (
@@ -165,9 +164,9 @@ export function EggTimer() {
               <Volume2 className="text-fresh-extra size-5 animate-pulse" />
             </motion.div>
           )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6 px-4">
+        </NeoCardTitle>
+      </NeoCardHeader>
+      <NeoCardContent className="space-y-6 px-4">
         {/* Timer Display with Circular Progress */}
         <div className="flex flex-col items-center justify-center gap-4">
           <CircularProgress
@@ -239,7 +238,7 @@ export function EggTimer() {
                 whileTap={{ x: 2, y: 2 }}
                 transition={{ duration: 0.1 }}
               >
-                <Button
+                <NeoButton
                   onClick={handleStart}
                   size="xl"
                   disabled={isDone || timeRemaining === 0}
@@ -253,7 +252,7 @@ export function EggTimer() {
                   {timeRemaining < totalTime && timeRemaining > 0
                     ? t("resume")
                     : t("start")}
-                </Button>
+                </NeoButton>
               </motion.div>
             </div>
           ) : (
@@ -266,7 +265,7 @@ export function EggTimer() {
                 whileTap={{ x: 2, y: 2 }}
                 transition={{ duration: 0.1 }}
               >
-                <Button
+                <NeoButton
                   onClick={handlePause}
                   size="xl"
                   variant="outline"
@@ -274,7 +273,7 @@ export function EggTimer() {
                 >
                   <Pause className="mr-2 size-5" />
                   {t("pause")}
-                </Button>
+                </NeoButton>
               </motion.div>
             </div>
           )}
@@ -288,7 +287,7 @@ export function EggTimer() {
               whileTap={{ x: 2, y: 2 }}
               transition={{ duration: 0.1 }}
             >
-              <Button
+              <NeoButton
                 onClick={handleReset}
                 size="xl"
                 variant="outline"
@@ -296,7 +295,7 @@ export function EggTimer() {
                 disabled={timeRemaining === totalTime && !isRunning && !isDone}
               >
                 <RotateCcw className="size-5" />
-              </Button>
+              </NeoButton>
             </motion.div>
           </div>
         </div>
@@ -326,9 +325,9 @@ export function EggTimer() {
           >
             {/* Yolk preference - Main setting with visual cards */}
             <div className="space-y-3">
-              <Label className="text-sm font-semibold">
+              <NeoLabel className="text-sm font-semibold">
                 {t("yolkCooking")}
-              </Label>
+              </NeoLabel>
               <div className="grid grid-cols-4 gap-2">
                 {YOLK_PREFERENCES.map((pref) => {
                   const colors = yolkColors[pref];
@@ -387,43 +386,35 @@ export function EggTimer() {
             {/* Size and Temperature row */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">{t("size")}</Label>
-                <Select
+                <NeoLabel className="text-sm font-medium">{t("size")}</NeoLabel>
+                <NeoSelect
                   value={size}
                   onValueChange={(v) => setSize(v as EggSize)}
+                  className="border-neo-border/50 rounded-xl"
                 >
-                  <SelectTrigger className="border-border/50 rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SIZES.map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {t(`sizes.${value}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  {SIZES.map((value) => (
+                    <NeoSelectItem key={value} value={value}>
+                      {t(`sizes.${value}`)}
+                    </NeoSelectItem>
+                  ))}
+                </NeoSelect>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">
+                <NeoLabel className="text-sm font-medium">
                   {t("temperature")}
-                </Label>
-                <Select
+                </NeoLabel>
+                <NeoSelect
                   value={temperature}
                   onValueChange={(v) => setTemperature(v as EggTemperature)}
+                  className="border-neo-border/50 rounded-xl"
                 >
-                  <SelectTrigger className="border-border/50 rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TEMPERATURES.map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {t(`temperatures.${value}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  {TEMPERATURES.map((value) => (
+                    <NeoSelectItem key={value} value={value}>
+                      {t(`temperatures.${value}`)}
+                    </NeoSelectItem>
+                  ))}
+                </NeoSelect>
               </div>
             </div>
           </motion.div>
@@ -433,7 +424,7 @@ export function EggTimer() {
         <audio ref={audioRef} preload="auto">
           <source src="/sounds/timer-done.mp3" type="audio/mpeg" />
         </audio>
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

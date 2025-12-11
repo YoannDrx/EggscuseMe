@@ -1,6 +1,5 @@
 import { Typography } from "@/components/nowts/typography";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoBadge, NeoButton } from "@/components/neo";
 import {
   Layout,
   LayoutContent,
@@ -50,9 +49,9 @@ export default async function RoutePage(props: CategoryParams) {
               pathname: `/posts/categories/${tag}`,
             }}
           >
-            <Badge variant={params.category === tag ? "default" : "outline"}>
+            <NeoBadge variant={params.category === tag ? "default" : "outline"}>
               {tag}
-            </Badge>
+            </NeoBadge>
           </Link>
         ))}
       </LayoutContent>
@@ -62,9 +61,9 @@ export default async function RoutePage(props: CategoryParams) {
           <div className="flex flex-col items-center rounded-lg border-2 border-dashed p-4 lg:gap-6 lg:p-8">
             <FileQuestion />
             <Typography variant="h2">No posts found</Typography>
-            <Link className={buttonVariants({ variant: "link" })} href="/posts">
-              View all posts
-            </Link>
+            <NeoButton asChild variant="ghost">
+              <Link href="/posts">View all posts</Link>
+            </NeoButton>
           </div>
         </LayoutContent>
       ) : (

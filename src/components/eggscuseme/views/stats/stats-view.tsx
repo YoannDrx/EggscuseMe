@@ -1,12 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Award, Euro, Leaf, TrendingUp } from "lucide-react";
 import { Eggy } from "@/features/mascot/components/eggy";
-import { useThemeColors } from "../../theme";
 import { PageHeader } from "../../shared";
 import { NumberCounter } from "./number-counter";
+import { NeoButton } from "@/components/neo";
 
 type StatCardProps = {
   title: string;
@@ -29,23 +29,21 @@ function StatCard({
   color,
   delay = 0,
 }: StatCardProps) {
-  const colors = useThemeColors();
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay, type: "spring", stiffness: 300, damping: 25 }}
       className={cn(
-        "relative overflow-hidden rounded-2xl border p-4",
-        colors.card,
-        colors.cardBorder,
+        "relative overflow-hidden rounded-[var(--radius-neo-xl)] p-4",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
+        "shadow-[var(--shadow-neo-md)]",
       )}
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className={cn("text-sm font-medium", colors.textMuted)}>{title}</p>
-          <p className={cn("mt-1 text-3xl font-bold", colors.text)}>
+          <p className="text-neo-text-muted text-sm font-medium">{title}</p>
+          <p className="text-neo-text mt-1 text-3xl font-bold">
             <NumberCounter
               value={value}
               prefix={prefix}
@@ -75,7 +73,6 @@ const mockMonthlyData: MonthData[] = [
 ];
 
 function MonthlyChart() {
-  const colors = useThemeColors();
   const maxValue = Math.max(...mockMonthlyData.map((d) => d.saved));
 
   return (
@@ -83,11 +80,13 @@ function MonthlyChart() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className={cn("rounded-2xl border p-4", colors.card, colors.cardBorder)}
+      className={cn(
+        "rounded-[var(--radius-neo-xl)] p-4",
+        "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
+        "shadow-[var(--shadow-neo-md)]",
+      )}
     >
-      <h3 className={cn("mb-4 font-bold", colors.text)}>
-        Oeufs sauvés par mois
-      </h3>
+      <h3 className="text-neo-text mb-4 font-bold">Oeufs sauvés par mois</h3>
 
       <div className="flex h-32 items-end justify-between gap-2">
         {mockMonthlyData.map((data, index) => {
@@ -98,9 +97,9 @@ function MonthlyChart() {
                 initial={{ height: 0 }}
                 animate={{ height: `${height}%` }}
                 transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-                className={cn("w-full rounded-t-lg", colors.accentBg)}
+                className="bg-neo-accent w-full rounded-t-lg"
               />
-              <span className={cn("mt-2 text-xs", colors.textMuted)}>
+              <span className="text-neo-text-muted mt-2 text-xs">
                 {data.month}
               </span>
             </div>
@@ -124,8 +123,6 @@ export function StatsView({
   co2Saved = 2.3,
   streak = 12,
 }: StatsViewProps) {
-  const colors = useThemeColors();
-
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <PageHeader
@@ -142,16 +139,16 @@ export function StatsView({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
           className={cn(
-            "flex flex-col items-center rounded-2xl border py-6",
-            colors.card,
-            colors.cardBorder,
+            "flex flex-col items-center rounded-[var(--radius-neo-xl)] py-6",
+            "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
+            "shadow-[var(--shadow-neo-md)]",
           )}
         >
           <Eggy mood="celebrating" size="lg" />
-          <p className={cn("mt-4 text-center font-bold", colors.text)}>
+          <p className="text-neo-text mt-4 text-center font-bold">
             Bravo pour ton engagement !
           </p>
-          <p className={cn("text-sm", colors.textMuted)}>
+          <p className="text-neo-text-muted text-sm">
             Tu fais une vraie différence
           </p>
         </motion.div>
@@ -189,7 +186,7 @@ export function StatsView({
             value={streak}
             suffix=" jours"
             icon={<TrendingUp size={20} className="text-white" />}
-            color={colors.accentBg}
+            color="bg-neo-accent"
             delay={0.35}
           />
         </div>
@@ -203,27 +200,20 @@ export function StatsView({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
           className={cn(
-            "relative overflow-hidden rounded-2xl border p-4",
-            colors.card,
-            colors.cardBorder,
+            "relative overflow-hidden rounded-[var(--radius-neo-xl)] p-4",
+            "bg-neo-card border-neo-border border-[length:var(--border-neo)]",
+            "shadow-[var(--shadow-neo-md)]",
           )}
         >
           <div className="flex items-center gap-4">
             <Eggy mood="hero" size="sm" />
             <div className="flex-1">
-              <h4 className={cn("font-bold", colors.text)}>Passe en Premium</h4>
-              <p className={cn("text-sm", colors.textMuted)}>
+              <h4 className="text-neo-text font-bold">Passe en Premium</h4>
+              <p className="text-neo-text-muted text-sm">
                 Historique complet et notifications
               </p>
             </div>
-            <button
-              className={cn(
-                "rounded-xl px-4 py-2 font-bold text-white",
-                colors.accentBg,
-              )}
-            >
-              2.99€
-            </button>
+            <NeoButton size="sm">2.99€</NeoButton>
           </div>
         </motion.div>
       </div>

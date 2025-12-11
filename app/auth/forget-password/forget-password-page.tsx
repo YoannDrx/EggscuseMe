@@ -1,12 +1,12 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { NeoAvatar } from "@/components/neo/neo-avatar";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import { Form, useForm } from "@/features/form/tanstack-form";
 import { authClient } from "@/lib/auth-client";
 import { unwrapSafePromise } from "@/lib/promises";
@@ -53,23 +53,30 @@ export function ForgetPasswordPage() {
   });
 
   return (
-    <Card className="mx-auto w-full max-w-md lg:max-w-lg lg:p-6">
-      <CardHeader>
+    <NeoCard
+      variant="elevated"
+      className="mx-auto w-full max-w-md lg:max-w-lg"
+      padding="lg"
+    >
+      <NeoCardHeader>
         <div className="flex justify-center">
-          <Avatar className="size-16">
-            <AvatarFallback>
-              <Lock />
-            </AvatarFallback>
-          </Avatar>
+          <NeoAvatar
+            fallback="LK"
+            size="lg"
+            shape="square"
+            className="flex items-center justify-center"
+          >
+            <Lock className="text-neo-accent size-6" />
+          </NeoAvatar>
         </div>
-        <CardHeader className="text-center">Forget Password</CardHeader>
+        <NeoCardHeader className="text-center">Forget Password</NeoCardHeader>
 
-        <CardDescription className="text-center">
+        <NeoCardDescription className="text-center">
           Enter your email to reset your password
-        </CardDescription>
-      </CardHeader>
+        </NeoCardDescription>
+      </NeoCardHeader>
 
-      <CardFooter className="border-t pt-6">
+      <NeoCardFooter className="border-t-neo-border border-t-[length:var(--border-neo)] pt-6">
         <Form form={form} className="w-full space-y-4">
           <form.AppField name="email">
             {(field) => (
@@ -87,7 +94,7 @@ export function ForgetPasswordPage() {
             Send Reset Link
           </form.SubmitButton>
         </Form>
-      </CardFooter>
-    </Card>
+      </NeoCardFooter>
+    </NeoCard>
   );
 }

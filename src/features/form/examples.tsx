@@ -4,12 +4,12 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { Form, useForm } from "./tanstack-form";
 
 const accountSchema = z.object({
@@ -33,13 +33,17 @@ export function TanstackFormDemo() {
   });
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">Create Account</CardTitle>
-        <CardDescription>TanStack Form with Zod validation</CardDescription>
-      </CardHeader>
+    <NeoCard className="w-full max-w-md">
+      <NeoCardHeader>
+        <NeoCardTitle className="text-lg font-semibold">
+          Create Account
+        </NeoCardTitle>
+        <NeoCardDescription>
+          TanStack Form with Zod validation
+        </NeoCardDescription>
+      </NeoCardHeader>
 
-      <CardContent>
+      <NeoCardContent>
         <Form form={form} className="space-y-4">
           <form.AppField name="email">
             {(field) => (
@@ -69,7 +73,7 @@ export function TanstackFormDemo() {
             Create Account
           </form.SubmitButton>
         </Form>
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

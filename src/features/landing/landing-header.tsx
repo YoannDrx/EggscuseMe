@@ -2,8 +2,8 @@
 
 import { LanguageToggle } from "@/components/nowts/language-toggle";
 import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
+import { NeoButton } from "@/components/neo";
 import { LogoSvg } from "@/components/svg/logo-svg";
-import { Button } from "@/components/ui/button";
 import { SiteConfig } from "@/site-config";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
@@ -75,8 +75,10 @@ export function LandingHeader() {
           height: useTransform(scrollYBoundedProgressDelayed, [0, 1], [80, 60]),
         }}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 flex w-screen border-b border-transparent backdrop-blur-md transition-colors",
-          "border-border/50 bg-background/95",
+          "fixed inset-x-0 top-0 z-50 flex w-screen backdrop-blur-md transition-all",
+          "border-neo-border/20 border-b-[length:var(--border-neo)]",
+          "bg-neo-card/95",
+          "shadow-[0_4px_0_var(--neo-shadow-color)]",
         )}
       >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 lg:px-8">
@@ -127,26 +129,22 @@ export function LandingHeader() {
               <LanguageToggle />
               <ThemeSwitcher />
               <AuthButtonClient />
-              <Link
-                href="/auth/signin"
-                className="glow-button bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2 text-sm font-semibold transition-all"
-              >
-                {t("getStarted")}
-              </Link>
+              <NeoButton asChild>
+                <Link href="/auth/signin">{t("getStarted")}</Link>
+              </NeoButton>
             </div>
           </motion.nav>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 sm:hidden">
-            <Button
+            <NeoButton
               variant="ghost"
               size="icon"
               aria-label={t("openMenu")}
               onClick={() => setMobileMenuOpen(true)}
-              className="text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <Menu className="size-5" />
-            </Button>
+            </NeoButton>
           </div>
         </div>
       </motion.header>

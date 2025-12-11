@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { Eggy } from "@/features/mascot";
 import { Form, useForm } from "@/features/form/tanstack-form";
 import { authClient, useSession } from "@/lib/auth-client";
@@ -28,7 +28,8 @@ export default function SecurityPage() {
           subtitle: "Gérez vos identifiants de connexion",
           back: "Retour aux paramètres",
           changePassword: "Changer le mot de passe",
-          changePasswordDesc: "Mettez à jour votre mot de passe pour sécuriser votre compte",
+          changePasswordDesc:
+            "Mettez à jour votre mot de passe pour sécuriser votre compte",
           currentPassword: "Mot de passe actuel",
           newPassword: "Nouveau mot de passe",
           confirmPassword: "Confirmer le mot de passe",
@@ -40,10 +41,12 @@ export default function SecurityPage() {
           submitPassword: "Changer le mot de passe",
           toastPassword: "Mot de passe modifié avec succès",
           changeEmail: "Changer l'adresse email",
-          changeEmailDesc: "Un email de vérification sera envoyé à la nouvelle adresse",
+          changeEmailDesc:
+            "Un email de vérification sera envoyé à la nouvelle adresse",
           emailLabel: "Nouvelle adresse email",
           emailPlaceholder: "nouveau@email.com",
-          toastEmail: "Email de vérification envoyé. Vérifiez votre boîte de réception.",
+          toastEmail:
+            "Email de vérification envoyé. Vérifiez votre boîte de réception.",
           verifyEmail: "Vérifier l'email",
           backToSettings: "Retour aux paramètres",
         }
@@ -64,7 +67,8 @@ export default function SecurityPage() {
           submitPassword: "Change password",
           toastPassword: "Password updated",
           changeEmail: "Change email address",
-          changeEmailDesc: "A verification email will be sent to the new address",
+          changeEmailDesc:
+            "A verification email will be sent to the new address",
           emailLabel: "New email address",
           emailPlaceholder: "new@email.com",
           toastEmail: "Verification email sent. Check your inbox.",
@@ -181,16 +185,16 @@ export default function SecurityPage() {
       </div>
 
       {/* Change Password */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <NeoCard variant="elevated">
+        <NeoCardHeader>
+          <NeoCardTitle className="flex items-center gap-2">
             <KeyRound className="size-5" />
             {copy.changePassword}
-          </CardTitle>
-          <CardDescription>{copy.changePasswordDesc}</CardDescription>
-        </CardHeader>
+          </NeoCardTitle>
+          <NeoCardDescription>{copy.changePasswordDesc}</NeoCardDescription>
+        </NeoCardHeader>
         <Form form={passwordForm}>
-          <CardContent className="space-y-4">
+          <NeoCardContent className="space-y-4">
             <passwordForm.AppField name="currentPassword">
               {(field) => (
                 <field.Field>
@@ -238,27 +242,30 @@ export default function SecurityPage() {
             <passwordForm.SubmitButton className="w-full">
               {copy.submitPassword}
             </passwordForm.SubmitButton>
-          </CardContent>
+          </NeoCardContent>
         </Form>
-      </Card>
+      </NeoCard>
 
       {/* Change Email */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <NeoCard variant="elevated">
+        <NeoCardHeader>
+          <NeoCardTitle className="flex items-center gap-2">
             <Mail className="size-5" />
             {copy.changeEmail}
-          </CardTitle>
-          <CardDescription>{copy.changeEmailDesc}</CardDescription>
-        </CardHeader>
+          </NeoCardTitle>
+          <NeoCardDescription>{copy.changeEmailDesc}</NeoCardDescription>
+        </NeoCardHeader>
         <Form form={emailForm}>
-          <CardContent className="space-y-4">
+          <NeoCardContent className="space-y-4">
             <emailForm.AppField name="newEmail">
               {(field) => (
                 <field.Field>
                   <field.Label>{copy.emailLabel}</field.Label>
                   <field.Content>
-                    <field.Input type="email" placeholder={copy.emailPlaceholder} />
+                    <field.Input
+                      type="email"
+                      placeholder={copy.emailPlaceholder}
+                    />
                     <field.Message />
                   </field.Content>
                 </field.Field>
@@ -267,9 +274,9 @@ export default function SecurityPage() {
             <emailForm.SubmitButton className="w-full">
               {copy.changeEmail}
             </emailForm.SubmitButton>
-          </CardContent>
+          </NeoCardContent>
         </Form>
-      </Card>
+      </NeoCard>
     </div>
   );
 }

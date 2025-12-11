@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo/neo-card";
 import { useMutation } from "@tanstack/react-query";
 import { Download, FileSpreadsheet, Loader2, Mail, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -112,16 +112,18 @@ export function ExportSection() {
         const isPending = exportItem.mutation.isPending;
 
         return (
-          <Card key={exportItem.id}>
-            <CardHeader>
+          <NeoCard key={exportItem.id}>
+            <NeoCardHeader>
               <div className="flex items-center gap-2">
-                <Icon className="text-muted-foreground size-5" />
-                <CardTitle className="text-lg">{exportItem.name}</CardTitle>
+                <Icon className="text-neo-text-muted size-5" />
+                <NeoCardTitle className="text-lg">
+                  {exportItem.name}
+                </NeoCardTitle>
               </div>
-              <CardDescription>{exportItem.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button
+              <NeoCardDescription>{exportItem.description}</NeoCardDescription>
+            </NeoCardHeader>
+            <NeoCardContent>
+              <NeoButton
                 className="w-full"
                 onClick={() => exportItem.mutation.mutate()}
                 disabled={isPending}
@@ -132,9 +134,9 @@ export function ExportSection() {
                   <Download className="mr-2 size-4" />
                 )}
                 {t("download")}
-              </Button>
-            </CardContent>
-          </Card>
+              </NeoButton>
+            </NeoCardContent>
+          </NeoCard>
         );
       })}
     </div>

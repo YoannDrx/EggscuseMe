@@ -1,12 +1,12 @@
 "use client";
 
-import { Typography } from "@/components/nowts/typography";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  NeoAccordion,
+  NeoAccordionContent,
+  NeoAccordionItem,
+  NeoAccordionTrigger,
+  NeoTitle,
+} from "@/components/neo";
 import { ClientMarkdown } from "../markdown/client-markdown";
 import { SectionLayout } from "./section-layout";
 import { useTranslations } from "next-intl";
@@ -26,28 +26,26 @@ export const FAQSection = (props: FeaturesPreviewProps) => {
   return (
     <SectionLayout size="lg" className="flex max-lg:flex-col">
       <div className="flex-1 space-y-2">
-        <Typography className="text-primary font-extrabold uppercase">
+        <span className="text-neo-accent text-sm font-black tracking-wider uppercase">
           FAQ
-        </Typography>
-        <Typography variant="h2" className="text-5xl">
-          {t("title")}
-        </Typography>
+        </span>
+        <NeoTitle size="2xl">{t("title")}</NeoTitle>
       </div>
       <div className="flex-1">
-        <Accordion type="single" collapsible>
+        <NeoAccordion type="single" collapsible>
           {props.faq.map((e, i) => {
             return (
-              <AccordionItem value={`item-${i}`} key={i}>
-                <AccordionTrigger className="text-left text-lg">
+              <NeoAccordionItem value={`item-${i}`} key={i}>
+                <NeoAccordionTrigger className="text-left text-lg">
                   {e.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-base">
+                </NeoAccordionTrigger>
+                <NeoAccordionContent className="text-base">
                   <ClientMarkdown>{e.answer}</ClientMarkdown>
-                </AccordionContent>
-              </AccordionItem>
+                </NeoAccordionContent>
+              </NeoAccordionItem>
             );
           })}
-        </Accordion>
+        </NeoAccordion>
       </div>
     </SectionLayout>
   );

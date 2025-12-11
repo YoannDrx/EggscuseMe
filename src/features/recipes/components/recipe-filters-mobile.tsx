@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { NeoBadge } from "@/components/neo";
+import { NeoButton } from "@/components/neo";
+import { NeoInput } from "@/components/neo";
 import { ResponsiveModal } from "@/components/eggscuseme/modals/responsive-modal";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -68,7 +68,7 @@ function FilterBadge({
 }: FilterBadgeProps) {
   return (
     <button type="button" onClick={onClick}>
-      <Badge
+      <NeoBadge
         variant={active ? "default" : "outline"}
         className={cn(
           "cursor-pointer transition-all hover:scale-105",
@@ -77,7 +77,7 @@ function FilterBadge({
         )}
       >
         {children}
-      </Badge>
+      </NeoBadge>
     </button>
   );
 }
@@ -272,7 +272,7 @@ export function RecipeFiltersWithModal() {
       {/* Clear filters button */}
       {hasActiveFilters && (
         <div className="flex justify-end">
-          <Button
+          <NeoButton
             variant="ghost"
             size="sm"
             onClick={clearFilters}
@@ -280,7 +280,7 @@ export function RecipeFiltersWithModal() {
           >
             <RotateCcw className="size-3" />
             {t("clearAll")}
-          </Button>
+          </NeoButton>
         </div>
       )}
     </div>
@@ -292,7 +292,7 @@ export function RecipeFiltersWithModal() {
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-          <Input
+          <NeoInput
             placeholder={t("searchPlaceholder")}
             value={filters.search}
             onChange={(e) => void setFilters({ search: e.target.value })}
@@ -311,7 +311,7 @@ export function RecipeFiltersWithModal() {
 
         {/* Mobile filter button */}
         {isMobile && (
-          <Button
+          <NeoButton
             variant="outline"
             size="icon"
             className="relative shrink-0"
@@ -323,7 +323,7 @@ export function RecipeFiltersWithModal() {
                 {activeFilterCount}
               </span>
             )}
-          </Button>
+          </NeoButton>
         )}
       </div>
 
@@ -338,7 +338,7 @@ export function RecipeFiltersWithModal() {
         description="Affiner votre recherche de recettes"
         footer={
           <div className="flex w-full gap-2">
-            <Button
+            <NeoButton
               variant="outline"
               className="flex-1"
               onClick={() => {
@@ -347,13 +347,13 @@ export function RecipeFiltersWithModal() {
               }}
             >
               Reinitialiser
-            </Button>
-            <Button
+            </NeoButton>
+            <NeoButton
               className="flex-1"
               onClick={() => setFilterModalOpen(false)}
             >
               Appliquer
-            </Button>
+            </NeoButton>
           </div>
         }
       >

@@ -1,6 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
+import { Eye, EyeOff } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -80,9 +81,14 @@ const NeoInput = React.forwardRef<HTMLInputElement, NeoInputProps>(
     },
     ref,
   ) => {
+    const [showPassword, setShowPassword] = React.useState(false);
+    const isPassword = type === "password";
+    const actualType = isPassword && showPassword ? "text" : type;
+
     const hasIcon = !!icon;
     const iconPaddingLeft = hasIcon && iconPosition === "left" ? "pl-12" : "";
-    const iconPaddingRight = hasIcon && iconPosition === "right" ? "pr-12" : "";
+    const iconPaddingRight =
+      (hasIcon && iconPosition === "right") || isPassword ? "pr-12" : "";
 
     return (
       <div className="w-full">
@@ -99,7 +105,7 @@ const NeoInput = React.forwardRef<HTMLInputElement, NeoInputProps>(
         <div className="group relative">
           <input
             ref={ref}
-            type={type}
+            type={actualType}
             data-slot="neo-input"
             className={cn(
               neoInputVariants({ variant, inputSize, error, className }),
@@ -120,6 +126,25 @@ const NeoInput = React.forwardRef<HTMLInputElement, NeoInputProps>(
             >
               {icon}
             </div>
+          )}
+          {isPassword && (
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className={cn(
+                "absolute top-1/2 right-4 -translate-y-1/2",
+                "text-neo-text-muted hover:text-neo-text",
+                "transition-colors duration-200",
+              )}
+              tabIndex={-1}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff size={20} strokeWidth={2} />
+              ) : (
+                <Eye size={20} strokeWidth={2} />
+              )}
+            </button>
           )}
         </div>
         {error && errorMessage && (

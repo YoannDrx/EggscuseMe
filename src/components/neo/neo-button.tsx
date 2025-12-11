@@ -124,27 +124,32 @@ const NeoButton = React.forwardRef<HTMLButtonElement, NeoButtonProps>(
     const isIconVariant = variant === "icon";
     const actualSize = isIconVariant ? "icon" : size;
 
+    // When asChild is true, pass children directly (Slot needs a single element child)
+    const content = asChild ? (
+      children
+    ) : loading ? (
+      <>
+        <Loader2 className="animate-spin" />
+        {!isIconVariant && children}
+      </>
+    ) : (
+      <>
+        {icon}
+        {children}
+      </>
+    );
+
     return (
       <Comp
         ref={ref}
-        data-slot="neo-button"
+        {...(!asChild && { "data-slot": "neo-button" })}
         className={cn(
           neoButtonVariants({ variant, size: actualSize, rounded, className }),
         )}
         disabled={disabled ?? loading}
         {...props}
       >
-        {loading ? (
-          <>
-            <Loader2 className="animate-spin" />
-            {!isIconVariant && children}
-          </>
-        ) : (
-          <>
-            {icon}
-            {children}
-          </>
-        )}
+        {content}
       </Comp>
     );
   },

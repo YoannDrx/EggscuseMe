@@ -2,6 +2,7 @@
 
 import { LanguageToggle } from "@/components/nowts/language-toggle";
 import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
+import { NeoButton } from "@/components/neo";
 import { LogoSvg } from "@/components/svg/logo-svg";
 import { SiteConfig } from "@/site-config";
 import {
@@ -16,7 +17,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -97,7 +98,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           initial="closed"
           animate="open"
           exit="closed"
-          className="bg-background fixed inset-0 z-[100] flex flex-col overflow-hidden"
+          className="bg-neo-bg fixed inset-0 z-[100] flex flex-col overflow-hidden"
         >
           {/* Animated background gradient */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -124,18 +125,13 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           >
             <div className="flex items-center gap-3">
               <LogoSvg size={32} />
-              <span className="text-foreground text-xl font-bold">
+              <span className="text-neo-text text-xl font-bold">
                 {SiteConfig.title}
               </span>
             </div>
-            <motion.button
-              onClick={onClose}
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground flex size-10 items-center justify-center rounded-full transition-colors"
-            >
+            <NeoButton variant="icon" onClick={onClose} aria-label="Close menu">
               <X className="size-5" />
-            </motion.button>
+            </NeoButton>
           </motion.header>
 
           {/* Main Navigation */}
@@ -148,31 +144,31 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           >
             <motion.p
               variants={itemVariants}
-              className="text-muted-foreground mb-6 text-xs font-semibold tracking-widest uppercase"
+              className="text-neo-text-muted mb-6 text-xs font-black tracking-widest uppercase"
             >
               {tMenu("navigation")}
             </motion.p>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {navLinks.map((link) => (
                 <motion.div key={link.href} variants={itemVariants}>
                   <Link
                     href={link.href}
                     onClick={onClose}
-                    className="hover:bg-muted/80 group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300"
+                    className="group border-neo-border/20 bg-neo-card flex items-center gap-4 rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] p-4 shadow-[var(--shadow-neo-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
                   >
-                    <div className="from-primary/20 to-primary/10 text-primary flex size-12 items-center justify-center rounded-xl bg-gradient-to-br transition-transform duration-300 group-hover:scale-110">
-                      <link.icon className="size-5" />
+                    <div className="border-neo-border/30 bg-neo-accent/10 text-neo-accent flex size-12 items-center justify-center rounded-xl border-[length:var(--border-neo)] transition-transform duration-200 group-hover:scale-105">
+                      <link.icon className="size-5" strokeWidth={2.5} />
                     </div>
                     <div className="flex-1">
-                      <span className="text-foreground group-hover:text-primary block text-lg font-semibold transition-colors">
+                      <span className="text-neo-text group-hover:text-neo-accent block text-lg font-bold transition-colors">
                         {link.label}
                       </span>
-                      <span className="text-muted-foreground text-sm">
+                      <span className="text-neo-text-muted text-sm">
                         {link.description}
                       </span>
                     </div>
-                    <ArrowRight className="text-muted-foreground group-hover:text-primary size-5 transition-all duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="text-neo-text-muted group-hover:text-neo-accent size-5 transition-all duration-200 group-hover:translate-x-1" />
                   </Link>
                 </motion.div>
               ))}
@@ -180,48 +176,45 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
             {/* Auth Section */}
             <motion.div variants={itemVariants} className="mt-8">
-              <p className="text-muted-foreground mb-4 text-xs font-semibold tracking-widest uppercase">
+              <p className="text-neo-text-muted mb-4 text-xs font-black tracking-widest uppercase">
                 {tMenu("account")}
               </p>
               <Link
                 href="/auth/signin"
                 onClick={onClose}
-                className="hover:bg-muted/80 group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300"
+                className="group border-neo-border/20 bg-neo-card flex items-center gap-4 rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] p-4 shadow-[var(--shadow-neo-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
               >
-                <div className="bg-muted text-muted-foreground group-hover:bg-muted/80 group-hover:text-foreground flex size-12 items-center justify-center rounded-xl transition-all duration-300">
-                  <User className="size-5" />
+                <div className="border-neo-border/30 bg-neo-bg text-neo-text-muted group-hover:text-neo-text flex size-12 items-center justify-center rounded-xl border-[length:var(--border-neo)] transition-all duration-200">
+                  <User className="size-5" strokeWidth={2.5} />
                 </div>
                 <div className="flex-1">
-                  <span className="text-foreground block text-lg font-semibold">
+                  <span className="text-neo-text block text-lg font-bold">
                     {tMenu("signIn")}
                   </span>
-                  <span className="text-muted-foreground text-sm">
+                  <span className="text-neo-text-muted text-sm">
                     {tMenu("accessYourFridge")}
                   </span>
                 </div>
-                <ArrowRight className="text-muted-foreground group-hover:text-foreground size-5 transition-all duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="text-neo-text-muted group-hover:text-neo-text size-5 transition-all duration-200 group-hover:translate-x-1" />
               </Link>
             </motion.div>
           </motion.nav>
 
           {/* CTA Button */}
           <motion.div variants={itemVariants} className="relative px-6 pb-4">
-            <Link
-              href="/auth/signin"
-              onClick={onClose}
-              className="from-primary to-primary/90 text-primary-foreground hover:shadow-primary/25 group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r px-6 py-4 font-semibold transition-all duration-300 hover:shadow-lg"
-            >
-              <motion.div className="from-primary/80 to-primary absolute inset-0 bg-gradient-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <Zap className="relative size-5" />
-              <span className="relative">{tMenu("startFree")}</span>
-              <ArrowRight className="relative size-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            <NeoButton asChild className="w-full" size="lg">
+              <Link href="/auth/signin" onClick={onClose} className="gap-2">
+                <Zap className="size-5" />
+                <span>{tMenu("startFree")}</span>
+                <ArrowRight className="size-5" />
+              </Link>
+            </NeoButton>
           </motion.div>
 
           {/* Footer */}
           <motion.footer
             variants={itemVariants}
-            className="border-border relative border-t px-6 py-6"
+            className="border-neo-border/20 relative border-t-[length:var(--border-neo)] px-6 py-6"
           >
             {/* Theme and Language Toggles */}
             <div className="mb-4 flex items-center justify-center gap-3">
@@ -230,7 +223,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </div>
 
             <div className="flex items-center justify-between">
-              <p className="text-muted-foreground text-xs">
+              <p className="text-neo-text-muted text-xs">
                 © {new Date().getFullYear()} {SiteConfig.company.name}
               </p>
               <div className="flex gap-2">
@@ -240,7 +233,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
+                    className="border-neo-border/30 bg-neo-card text-neo-text-muted hover:text-neo-text flex size-9 items-center justify-center rounded-full border-[length:var(--border-neo)] shadow-[var(--shadow-neo-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-y-[2px] active:shadow-none"
                     aria-label={social.label}
                   >
                     <social.icon className="size-4" />

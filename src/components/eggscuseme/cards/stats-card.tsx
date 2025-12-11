@@ -2,24 +2,25 @@
 
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import type { ReactNode } from "react";
 
 const statsCardVariants = cva(
   [
     "relative flex flex-col",
-    "rounded-2xl p-[var(--space-card-padding)]",
-    "bg-card text-card-foreground",
-    "border border-border shadow-sm",
+    "rounded-[var(--radius-neo-xl)] p-4",
+    "bg-neo-card text-neo-text",
+    "border-[length:var(--border-neo)] border-neo-border",
+    "shadow-[var(--shadow-neo-md)]",
     "min-w-[140px]",
   ],
   {
     variants: {
       size: {
-        sm: "gap-1",
+        sm: "gap-1 p-3",
         default: "gap-2",
-        lg: "gap-3 p-4",
+        lg: "gap-3 p-5",
       },
     },
     defaultVariants: {
@@ -104,7 +105,7 @@ export function StatsCard({
       </motion.span>
 
       {/* Label */}
-      <span className="text-muted-foreground text-sm">{label}</span>
+      <span className="text-neo-text-muted text-sm font-medium">{label}</span>
 
       {/* Trend */}
       {trend !== undefined && (
@@ -113,7 +114,7 @@ export function StatsCard({
             "flex items-center gap-1 text-xs font-medium",
             trendDirection === "up" && "text-success",
             trendDirection === "down" && "text-destructive",
-            trendDirection === "neutral" && "text-muted-foreground",
+            trendDirection === "neutral" && "text-neo-text-muted",
           )}
         >
           {trendDirection === "up" && <ArrowUp className="size-3" />}

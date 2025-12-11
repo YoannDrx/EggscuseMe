@@ -6,8 +6,8 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import type { NeoButton } from "@/components/neo";
+import { neoButtonVariants } from "@/components/neo";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -40,7 +40,7 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<React.ComponentProps<typeof Button>, "size"> &
+} & Pick<React.ComponentProps<typeof NeoButton>, "size"> &
   React.ComponentProps<"a">;
 
 function PaginationLink({
@@ -55,7 +55,7 @@ function PaginationLink({
       data-slot="pagination-link"
       data-active={isActive}
       className={cn(
-        buttonVariants({
+        neoButtonVariants({
           variant: isActive ? "outline" : "ghost",
           size,
         }),
@@ -73,7 +73,7 @@ function PaginationPrevious({
   return (
     <PaginationLink
       aria-label="Go to previous page"
-      size="default"
+      size="md"
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
       {...props}
     >
@@ -90,7 +90,7 @@ function PaginationNext({
   return (
     <PaginationLink
       aria-label="Go to next page"
-      size="default"
+      size="md"
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
       {...props}
     >

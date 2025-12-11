@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from 'motion/react';
 import { Check } from "lucide-react";
 import * as React from "react";
 

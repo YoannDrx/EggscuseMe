@@ -3,8 +3,9 @@
 import { ErrorIllustration } from "@/components/eggscuseme/illustrations";
 import { SwipeableRow } from "@/components/eggscuseme/lists/swipeable-row";
 import { Badge } from "@/components/ui/badge";
+import { NeoCard } from "@/components/neo/neo-card";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from 'motion/react';
 import { Calendar, Egg, Star, UtensilsCrossed } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -39,7 +40,7 @@ const COOKING_TYPE_COLORS: Record<string, string> = {
   OMELETTE: "bg-fresh/20 text-fresh-foreground",
   HARD_BOILED: "bg-fresh-cook/20 text-fresh-cook-foreground",
   BAKING: "bg-fresh/20 text-fresh-foreground",
-  OTHER: "bg-muted text-muted-foreground",
+  OTHER: "bg-muted text-neo-text-muted",
 };
 
 export type HistoryCardProps = {
@@ -88,62 +89,64 @@ export function HistoryCard({
   return (
     <SwipeableRow onDelete={onDelete} className={className}>
       <motion.div
-        className={cn(
-          "bg-card border-border rounded-2xl border p-[var(--space-card-padding)]",
-          "flex flex-col gap-3",
-        )}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay }}
       >
-        {/* Header: Date + Quantity */}
-        <div className="flex items-center justify-between">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
-            <Calendar className="size-4" />
-            <span>{formattedDate}</span>
-          </div>
-          <Badge variant="outline" className="gap-1">
-            <Egg className="size-3" />
-            {quantityLabel}
-          </Badge>
-        </div>
-
-        {/* Box name */}
-        <p className="text-foreground font-medium">{item.eggBoxName}</p>
-
-        {/* Footer: Cooking type + Rating */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <UtensilsCrossed className="text-muted-foreground size-4" />
-            <Badge className={cn("font-normal", cookingColor)}>
-              {cookingLabel}
+        <NeoCard
+          variant="interactive"
+          padding="md"
+          className="flex flex-col gap-3"
+        >
+          {/* Header: Date + Quantity */}
+          <div className="flex items-center justify-between">
+            <div className="text-neo-text-muted flex items-center gap-2 text-sm">
+              <Calendar className="size-4" />
+              <span>{formattedDate}</span>
+            </div>
+            <Badge variant="outline" className="gap-1">
+              <Egg className="size-3" />
+              {quantityLabel}
             </Badge>
           </div>
 
-          {/* Rating */}
-          {item.rating != null && (
-            <div className="flex items-center gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={cn(
-                    "size-4",
-                    i < (item.rating ?? 0)
-                      ? "fill-primary text-primary"
-                      : "text-muted-foreground/30",
-                  )}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+          {/* Box name */}
+          <p className="text-neo-text font-medium">{item.eggBoxName}</p>
 
-        {/* Notes */}
-        {item.notes && (
-          <p className="text-muted-foreground line-clamp-2 text-sm italic">
-            "{item.notes}"
-          </p>
-        )}
+          {/* Footer: Cooking type + Rating */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <UtensilsCrossed className="text-neo-text-muted size-4" />
+              <Badge className={cn("font-normal", cookingColor)}>
+                {cookingLabel}
+              </Badge>
+            </div>
+
+            {/* Rating */}
+            {item.rating != null && (
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={cn(
+                      "size-4",
+                      i < (item.rating ?? 0)
+                        ? "fill-neo-accent text-neo-accent"
+                        : "text-neo-text-muted/30",
+                    )}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Notes */}
+          {item.notes && (
+            <p className="text-neo-text-muted line-clamp-2 text-sm italic">
+              "{item.notes}"
+            </p>
+          )}
+        </NeoCard>
       </motion.div>
     </SwipeableRow>
   );
@@ -163,7 +166,7 @@ export function HistoryDateGroup({
 }) {
   return (
     <div className={cn("space-y-3", className)}>
-      <h3 className="text-muted-foreground bg-background sticky top-0 py-2 text-sm font-semibold">
+      <h3 className="text-neo-text-muted bg-neo-bg sticky top-0 py-2 text-sm font-semibold">
         {date}
       </h3>
       <div className="space-y-3">{children}</div>
@@ -180,7 +183,7 @@ export function HistoryEmpty({ message }: { message?: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
       <ErrorIllustration type="empty" size="md" />
-      <p className="text-muted-foreground">{message ?? t("noConsumption")}</p>
+      <p className="text-neo-text-muted">{message ?? t("noConsumption")}</p>
     </div>
   );
 }

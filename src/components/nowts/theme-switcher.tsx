@@ -22,11 +22,11 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
     return (
       <div
         className={cn(
-          "bg-muted flex h-9 w-[72px] items-center rounded-full p-1",
+          "border-neo-border bg-neo-input flex h-9 w-[76px] items-center rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] p-1",
           className,
         )}
       >
-        <div className="size-7 rounded-full" />
+        <div className="size-7 rounded-[var(--radius-neo-lg)]" />
       </div>
     );
   }
@@ -38,32 +38,37 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className={cn(
-        "relative flex h-9 w-[72px] items-center rounded-full p-1 transition-colors",
-        isDark ? "bg-stone-800" : "bg-stone-200",
+        "relative flex h-9 w-[76px] items-center p-1 transition-all duration-200",
+        "border-neo-border rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)]",
+        "shadow-[var(--shadow-neo-sm)] hover:shadow-[var(--shadow-neo-md)]",
+        "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+        isDark ? "bg-neo-card" : "bg-neo-accent/20",
         className,
       )}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {/* Icons */}
-      <div className="flex w-full items-center justify-between px-1.5">
+      <div className="relative z-10 flex w-full items-center justify-between px-2">
         <Sun
           className={cn(
             "size-4 transition-colors",
-            isDark ? "text-stone-500" : "text-amber-500",
+            isDark ? "text-neo-text-muted" : "text-neo-accent",
           )}
         />
         <Moon
           className={cn(
             "size-4 transition-colors",
-            isDark ? "text-amber-400" : "text-stone-400",
+            isDark ? "text-neo-accent" : "text-neo-text-muted",
           )}
         />
       </div>
 
-      {/* Sliding pill */}
+      {/* Sliding pill - Neo style */}
       <div
         className={cn(
-          "bg-background absolute top-1 size-7 rounded-full shadow-sm transition-all duration-200",
+          "absolute top-1 size-7 transition-all duration-200",
+          "border-neo-border rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]",
+          "bg-neo-bg shadow-[2px_2px_0_var(--neo-shadow-color)]",
           isDark ? "left-[calc(100%-32px)]" : "left-1",
         )}
       />

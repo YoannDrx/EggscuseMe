@@ -9,6 +9,7 @@ import { PhoneAppPreview } from "./phone-app-preview";
 import { FloatingBadge } from "./floating-badge";
 import { SocialProof } from "./social-proof";
 import { useTranslations } from "next-intl";
+import { NeoButton } from "@/components/neo";
 
 type HeroSectionProps = {
   className?: string;
@@ -20,12 +21,11 @@ export function HeroSection({ className }: HeroSectionProps) {
   return (
     <section
       className={cn(
-        "bg-background relative min-h-screen overflow-hidden pt-24",
+        "bg-neo-bg relative min-h-screen overflow-hidden pt-24",
         className,
       )}
     >
       {/* Background Gradient Blobs - Removed per user request */}
-
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
@@ -36,10 +36,10 @@ export function HeroSection({ className }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5"
+              className="border-neo-accent/30 bg-neo-accent/10 mb-6 inline-flex items-center gap-2 rounded-full border-[length:var(--border-neo)] px-4 py-1.5"
             >
-              <Sparkles className="size-4 text-amber-400" />
-              <span className="text-sm font-medium text-amber-400">
+              <Sparkles className="text-neo-accent size-4" />
+              <span className="text-neo-accent text-sm font-bold">
                 {t("hero.badge")}
               </span>
             </motion.div>
@@ -49,7 +49,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
-              className="font-heading text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
+              className="font-heading text-neo-text text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
             >
               {t("hero.title")}{" "}
               <span className="relative">
@@ -89,7 +89,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-muted-foreground mt-6 max-w-xl text-lg"
+              className="text-neo-text-muted mt-6 max-w-xl text-lg"
             >
               {t("hero.description")}
             </motion.p>
@@ -101,19 +101,15 @@ export function HeroSection({ className }: HeroSectionProps) {
               transition={{ delay: 0.3, duration: 0.5 }}
               className="mt-8 flex flex-wrap gap-4"
             >
-              <Link
-                href="/auth/signin"
-                className="glow-button inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3 font-semibold text-stone-900 transition-all hover:bg-amber-300"
-              >
-                <Egg className="size-5" />
-                {t("hero.cta")}
-              </Link>
-              <Link
-                href="#features"
-                className="border-border bg-card/50 text-foreground hover:border-muted-foreground hover:bg-muted/50 inline-flex items-center gap-2 rounded-full border px-6 py-3 font-semibold transition-all"
-              >
-                {t("hero.ctaSecondary")}
-              </Link>
+              <NeoButton asChild size="lg">
+                <Link href="/auth/signin" className="gap-2">
+                  <Egg className="size-5" />
+                  {t("hero.cta")}
+                </Link>
+              </NeoButton>
+              <NeoButton asChild variant="secondary" size="lg">
+                <Link href="#features">{t("hero.ctaSecondary")}</Link>
+              </NeoButton>
             </motion.div>
 
             {/* Social Proof */}
@@ -155,7 +151,7 @@ export function HeroSection({ className }: HeroSectionProps) {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="border-border mt-20 grid grid-cols-2 gap-8 border-t pt-12 sm:grid-cols-4"
+          className="border-neo-border/30 mt-20 grid grid-cols-2 gap-8 border-t-[length:var(--border-neo)] pt-12 sm:grid-cols-4"
         >
           {[
             { value: "10K+", label: t("stats.users") },
@@ -168,11 +164,11 @@ export function HeroSection({ className }: HeroSectionProps) {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7 + index * 0.1, type: "spring" }}
-                className="text-3xl font-bold text-amber-400"
+                className="text-neo-accent text-3xl font-bold"
               >
                 {stat.value}
               </motion.div>
-              <div className="text-muted-foreground mt-1 text-sm">
+              <div className="text-neo-text-muted mt-1 text-sm">
                 {stat.label}
               </div>
             </div>

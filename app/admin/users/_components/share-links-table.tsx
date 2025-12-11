@@ -1,8 +1,12 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NeoBadge } from "@/components/neo/neo-badge";
+import { NeoButton } from "@/components/neo/neo-button";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +26,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  NeoTable,
+  NeoTableBody,
+  NeoTableCell,
+  NeoTableHead,
+  NeoTableHeader,
+  NeoTableRow,
+} from "@/components/neo/neo-table";
 import { dayjs } from "@/lib/dayjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -91,20 +95,20 @@ export function ShareLinksTable() {
   const getStatusBadge = (link: (typeof links)[0]) => {
     const now = new Date();
     if (!link.isActive) {
-      return <Badge variant="secondary">Desactive</Badge>;
+      return <NeoBadge variant="secondary">Desactive</NeoBadge>;
     }
     if (new Date(link.expiresAt) < now) {
-      return <Badge variant="destructive">Expire</Badge>;
+      return <NeoBadge variant="destructive">Expire</NeoBadge>;
     }
     if (link.usedCount >= link.maxUses) {
-      return <Badge variant="outline">Max atteint</Badge>;
+      return <NeoBadge variant="outline">Max atteint</NeoBadge>;
     }
-    return <Badge variant="default">Actif</Badge>;
+    return <NeoBadge variant="default">Actif</NeoBadge>;
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
+    <NeoCard>
+      <NeoCardHeader className="flex flex-row items-center gap-4">
         <InputGroup className="flex-1">
           <InputGroupInput
             placeholder="Rechercher par code ou frigo..."
@@ -135,70 +139,70 @@ export function ShareLinksTable() {
             <SelectItem value="maxed">{t("filters.maxed")}</SelectItem>
           </SelectContent>
         </Select>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t("table.code")}</TableHead>
-              <TableHead>{t("table.fridge")}</TableHead>
-              <TableHead>{t("table.owner")}</TableHead>
-              <TableHead>{t("table.uses")}</TableHead>
-              <TableHead>{t("table.status")}</TableHead>
-              <TableHead>{t("table.expiresAt")}</TableHead>
-              <TableHead>{t("table.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+      </NeoCardHeader>
+      <NeoCardContent>
+        <NeoTable>
+          <NeoTableHeader>
+            <NeoTableRow>
+              <NeoTableHead>{t("table.code")}</NeoTableHead>
+              <NeoTableHead>{t("table.fridge")}</NeoTableHead>
+              <NeoTableHead>{t("table.owner")}</NeoTableHead>
+              <NeoTableHead>{t("table.uses")}</NeoTableHead>
+              <NeoTableHead>{t("table.status")}</NeoTableHead>
+              <NeoTableHead>{t("table.expiresAt")}</NeoTableHead>
+              <NeoTableHead>{t("table.actions")}</NeoTableHead>
+            </NeoTableRow>
+          </NeoTableHeader>
+          <NeoTableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
+              <NeoTableRow>
+                <NeoTableCell colSpan={7} className="text-center">
                   Chargement...
-                </TableCell>
-              </TableRow>
+                </NeoTableCell>
+              </NeoTableRow>
             ) : links.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
+              <NeoTableRow>
+                <NeoTableCell colSpan={7} className="text-center">
                   Aucun lien trouve
-                </TableCell>
-              </TableRow>
+                </NeoTableCell>
+              </NeoTableRow>
             ) : (
               links.map((link) => (
-                <TableRow key={link.id}>
-                  <TableCell>
-                    <code className="bg-muted rounded px-2 py-1 text-sm">
+                <NeoTableRow key={link.id}>
+                  <NeoTableCell>
+                    <code className="bg-neo-bg rounded px-2 py-1 text-sm">
                       {link.code}
                     </code>
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     <Link
                       href={`/admin/users/${link.fridge.owner.id}`}
                       className="hover:underline"
                     >
                       {link.fridge.name}
                     </Link>
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     <div className="text-sm">
                       <div>{link.fridge.owner.name}</div>
-                      <div className="text-muted-foreground">
+                      <div className="text-neo-text-muted">
                         {link.fridge.owner.email}
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {link.usedCount} / {link.maxUses}
-                  </TableCell>
-                  <TableCell>{getStatusBadge(link)}</TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>{getStatusBadge(link)}</NeoTableCell>
+                  <NeoTableCell>
                     {dayjs(link.expiresAt).format("DD/MM/YYYY")}
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <NeoButton variant="ghost" size="icon">
                           <MoreHorizontal className="size-4" />
-                        </Button>
+                        </NeoButton>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
@@ -218,36 +222,36 @@ export function ShareLinksTable() {
                         )}
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                  </NeoTableCell>
+                </NeoTableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+          </NeoTableBody>
+        </NeoTable>
         {totalPages > 1 && (
           <div className="mt-4 flex justify-center gap-2">
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
             >
               Precedent
-            </Button>
-            <span className="text-muted-foreground flex items-center text-sm">
+            </NeoButton>
+            <span className="text-neo-text-muted flex items-center text-sm">
               Page {page} / {totalPages}
             </span>
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
               Suivant
-            </Button>
+            </NeoButton>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

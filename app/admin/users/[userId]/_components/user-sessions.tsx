@@ -1,14 +1,13 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { NeoBadge, NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   Table,
   TableBody,
@@ -135,17 +134,17 @@ export function UserSessions({ userId }: UserSessionsProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <NeoCard>
+      <NeoCardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Active Sessions</CardTitle>
-            <CardDescription>
+            <NeoCardTitle>Active Sessions</NeoCardTitle>
+            <NeoCardDescription>
               View and manage user sessions for debugging
-            </CardDescription>
+            </NeoCardDescription>
           </div>
           {sessions.length > 0 && (
-            <Button
+            <NeoButton
               variant="destructive"
               size="sm"
               onClick={() => revokeAllSessionsMutation.mutate()}
@@ -153,11 +152,11 @@ export function UserSessions({ userId }: UserSessionsProps) {
             >
               <TrashIcon className="mr-2 size-4" />
               Revoke All Sessions
-            </Button>
+            </NeoButton>
           )}
         </div>
-      </CardHeader>
-      <CardContent>
+      </NeoCardHeader>
+      <NeoCardContent>
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="size-6 animate-spin" />
@@ -209,23 +208,23 @@ export function UserSessions({ userId }: UserSessionsProps) {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Badge
+                        <NeoBadge
                           variant={
                             new Date(session.expiresAt) > new Date()
-                              ? "default"
+                              ? "success"
                               : "destructive"
                           }
                         >
                           {new Date(session.expiresAt) > new Date()
                             ? "Active"
                             : "Expired"}
-                        </Badge>
+                        </NeoBadge>
                         {(
                           session as unknown as {
                             impersonatedBy: string | null;
                           }
                         ).impersonatedBy && (
-                          <Badge variant="outline">Impersonated</Badge>
+                          <NeoBadge variant="outline">Impersonated</NeoBadge>
                         )}
                       </div>
                     </TableCell>
@@ -246,7 +245,7 @@ export function UserSessions({ userId }: UserSessionsProps) {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Button
+                      <NeoButton
                         variant="destructive"
                         size="sm"
                         onClick={() =>
@@ -255,7 +254,7 @@ export function UserSessions({ userId }: UserSessionsProps) {
                         disabled={revokeSessionMutation.isPending}
                       >
                         <Trash2 className="size-4" />
-                      </Button>
+                      </NeoButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -263,7 +262,7 @@ export function UserSessions({ userId }: UserSessionsProps) {
             </Table>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

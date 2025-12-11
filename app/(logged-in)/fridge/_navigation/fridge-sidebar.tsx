@@ -1,26 +1,19 @@
 "use client";
 
+import { Collapsible } from "@/components/ui/collapsible";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar";
+  NeoSidebar,
+  NeoSidebarContent,
+  NeoSidebarFooter,
+  NeoSidebarGroup,
+  NeoSidebarHeader,
+  useSidebarContext,
+} from "@/components/neo/neo-sidebar";
 import { SidebarNavigationMenu } from "@/components/ui/sidebar-utils";
 import { ContactFeedbackPopover } from "@/features/contact/feedback/contact-feedback-popover";
 import { Eggy } from "@/features/mascot";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
-import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,51 +28,50 @@ type FridgeSidebarProps = {
 export function FridgeSidebar({ role }: FridgeSidebarProps) {
   const t = useTranslations("fridge.nav");
   const links: NavigationGroup[] = getFridgeNavigation(role);
+  const { expanded, mobile } = useSidebarContext();
 
   return (
-    <Sidebar variant="inset">
-      <SidebarHeader className="flex flex-col gap-2">
+    <NeoSidebar variant="elevated">
+      <NeoSidebarHeader className="flex flex-col gap-2">
         <Link
           href="/fridge"
-          className="hover:bg-accent flex items-center gap-2 rounded-lg p-2 transition-colors"
+          className="hover:bg-neo-bg flex items-center gap-2 rounded-[var(--radius-neo-lg)] p-2 transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
         >
           <Eggy mood="happy" size="sm" />
-          <span className="font-heading text-lg font-semibold">EggscuseMe</span>
+          {(expanded || mobile) && (
+            <span className="font-heading text-lg font-semibold">
+              EggscuseMe
+            </span>
+          )}
         </Link>
-      </SidebarHeader>
-      <SidebarContent>
+      </NeoSidebarHeader>
+      <NeoSidebarContent>
         {links.map((link) => (
           <ItemCollapsing
             defaultOpenStartPath={link.defaultOpenStartPath}
             key={link.titleKey}
           >
-            <SidebarGroup key={link.titleKey}>
-              <SidebarGroupLabel asChild>
-                <CollapsibleTrigger>
-                  {t(link.titleKey)}
-                  <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                </CollapsibleTrigger>
-              </SidebarGroupLabel>
-              <CollapsibleContent>
-                <SidebarGroupContent>
-                  <SidebarNavigationMenu link={link} />
-                </SidebarGroupContent>
-              </CollapsibleContent>
-            </SidebarGroup>
+            <NeoSidebarGroup
+              key={link.titleKey}
+              label={expanded || mobile ? t(link.titleKey) : undefined}
+            >
+              <Collapsible defaultOpen className="group/collapsible">
+                <SidebarNavigationMenu link={link} />
+              </Collapsible>
+            </NeoSidebarGroup>
           </ItemCollapsing>
         ))}
-      </SidebarContent>
-      <SidebarFooter className="flex flex-col gap-3">
+      </NeoSidebarContent>
+      <NeoSidebarFooter className="flex flex-col gap-3">
         {role === "GUEST" && (
-          <div className="bg-muted/50 rounded-lg p-3 text-sm">
-            <p className="text-muted-foreground">{t("guestNotice")}</p>
+          <div className="bg-neo-bg/50 border-neo-border/10 rounded-[var(--radius-neo-lg)] border p-3 text-sm">
+            <p className="text-neo-text-muted">{t("guestNotice")}</p>
           </div>
         )}
         <ContactFeedbackPopover />
         <SidebarUserButton />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
+      </NeoSidebarFooter>
+    </NeoSidebar>
   );
 }
 

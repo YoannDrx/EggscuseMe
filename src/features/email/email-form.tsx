@@ -89,7 +89,7 @@ export const EmailForm = ({
                   </field.Field>
                 )}
               </form.AppField>
-              <form.SubmitButton size="lg" variant="invert">
+              <form.SubmitButton size="lg" variant="secondary">
                 {submitButtonLabel}
               </form.SubmitButton>
             </div>

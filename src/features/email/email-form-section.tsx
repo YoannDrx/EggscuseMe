@@ -1,12 +1,12 @@
 import { Typography } from "@/components/nowts/typography";
-import { Card } from "@/components/ui/card";
+import { NeoCard } from "@/components/neo";
 import { SectionLayout } from "../landing/section-layout";
 import { EmailForm } from "./email-form";
 
 export const EmailFormSection = () => {
   return (
     <SectionLayout>
-      <Card className="relative isolate overflow-hidden py-24 text-center shadow-2xl lg:rounded-3xl">
+      <NeoCard className="relative isolate overflow-hidden py-24 text-center shadow-2xl lg:rounded-3xl">
         <Typography
           as="h2"
           className="mx-auto max-w-3xl text-center text-4xl font-semibold tracking-tight text-white sm:text-5xl"
@@ -42,7 +42,7 @@ export const EmailFormSection = () => {
             </radialGradient>
           </defs>
         </svg>
-      </Card>
+      </NeoCard>
     </SectionLayout>
   );
 };

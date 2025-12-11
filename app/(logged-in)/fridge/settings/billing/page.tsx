@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { NeoBadge } from "@/components/neo";
+import { NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   createCheckoutAction,
   createPortalSessionAction,
@@ -74,9 +74,9 @@ export default function BillingPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/fridge/settings">
-          <Button variant="ghost" size="icon">
+          <NeoButton variant="ghost" size="icon">
             <ArrowLeft className="size-5" />
-          </Button>
+          </NeoButton>
         </Link>
         <Eggy mood={isPremium ? "happy" : "chef"} size="lg" />
         <div>
@@ -90,11 +90,11 @@ export default function BillingPage() {
       </div>
 
       {/* Current Plan */}
-      <Card variant="sunny" className={isPremium ? "border-primary/30" : ""}>
-        <CardHeader>
+      <NeoCard className={isPremium ? "border-primary/30" : ""}>
+        <NeoCardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="font-heading flex items-center gap-2">
+              <NeoCardTitle className="font-heading flex items-center gap-2">
                 {isPremium ? (
                   <>
                     <Crown className="text-primary size-5" />
@@ -106,19 +106,19 @@ export default function BillingPage() {
                     {copy.freeTitle}
                   </>
                 )}
-              </CardTitle>
-              <CardDescription>
+              </NeoCardTitle>
+              <NeoCardDescription>
                 {isPremium ? copy.premiumDescription : copy.freeDescription}
-              </CardDescription>
+              </NeoCardDescription>
             </div>
-            <Badge variant={isPremium ? "default" : "secondary"}>
+            <NeoBadge variant={isPremium ? "default" : "secondary"}>
               {isPremium ? copy.badgeActive : copy.badgeFree}
-            </Badge>
+            </NeoBadge>
           </div>
-        </CardHeader>
-        <CardContent>
+        </NeoCardHeader>
+        <NeoCardContent>
           {isPremium ? (
-            <Button
+            <NeoButton
               variant="outline"
               onClick={() => portalMutation.mutate()}
               disabled={isLoading}
@@ -127,10 +127,10 @@ export default function BillingPage() {
                 <Loader2 className="mr-2 size-4 animate-spin" />
               )}
               {copy.manage}
-            </Button>
+            </NeoButton>
           ) : (
-            <Button
-              variant="neubrutalism"
+            <NeoButton
+              variant="primary"
               onClick={() => upgradeMutation.mutate()}
               disabled={isLoading}
             >
@@ -141,10 +141,10 @@ export default function BillingPage() {
               )}
               {copy.upgradeCta} - {copy.premiumPrice}
               {copy.premiumPriceSuffix}
-            </Button>
+            </NeoButton>
           )}
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
 
       {/* Plan Comparison */}
       <div className="grid gap-4 md:grid-cols-2">

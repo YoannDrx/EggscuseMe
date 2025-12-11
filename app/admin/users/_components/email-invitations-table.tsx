@@ -1,8 +1,12 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { NeoBadge } from "@/components/neo/neo-badge";
+import { NeoButton } from "@/components/neo/neo-button";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+} from "@/components/neo/neo-card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +26,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  NeoTable,
+  NeoTableBody,
+  NeoTableCell,
+  NeoTableHead,
+  NeoTableHeader,
+  NeoTableRow,
+} from "@/components/neo/neo-table";
 import { dayjs } from "@/lib/dayjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal, Search, XCircle } from "lucide-react";
@@ -88,21 +92,23 @@ export function EmailInvitationsTable() {
   const getStatusBadge = (invitationStatus: string) => {
     switch (invitationStatus) {
       case "PENDING":
-        return <Badge variant="outline">{t("stats.pending")}</Badge>;
+        return <NeoBadge variant="outline">{t("stats.pending")}</NeoBadge>;
       case "ACCEPTED":
-        return <Badge variant="default">{t("stats.accepted")}</Badge>;
+        return <NeoBadge variant="default">{t("stats.accepted")}</NeoBadge>;
       case "EXPIRED":
-        return <Badge variant="secondary">{t("stats.expired")}</Badge>;
+        return <NeoBadge variant="secondary">{t("stats.expired")}</NeoBadge>;
       case "CANCELLED":
-        return <Badge variant="destructive">{t("stats.cancelled")}</Badge>;
+        return (
+          <NeoBadge variant="destructive">{t("stats.cancelled")}</NeoBadge>
+        );
       default:
-        return <Badge variant="outline">{invitationStatus}</Badge>;
+        return <NeoBadge variant="outline">{invitationStatus}</NeoBadge>;
     }
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
+    <NeoCard>
+      <NeoCardHeader className="flex flex-row items-center gap-4">
         <InputGroup className="flex-1">
           <InputGroupInput
             placeholder="Rechercher par email..."
@@ -134,65 +140,67 @@ export function EmailInvitationsTable() {
             <SelectItem value="CANCELLED">{t("stats.cancelled")}</SelectItem>
           </SelectContent>
         </Select>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t("table.email")}</TableHead>
-              <TableHead>{t("table.fridge")}</TableHead>
-              <TableHead>Invite par</TableHead>
-              <TableHead>{t("table.status")}</TableHead>
-              <TableHead>{t("table.expiresAt")}</TableHead>
-              <TableHead>{t("table.createdAt")}</TableHead>
-              <TableHead>{t("table.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+      </NeoCardHeader>
+      <NeoCardContent>
+        <NeoTable>
+          <NeoTableHeader>
+            <NeoTableRow>
+              <NeoTableHead>{t("table.email")}</NeoTableHead>
+              <NeoTableHead>{t("table.fridge")}</NeoTableHead>
+              <NeoTableHead>Invite par</NeoTableHead>
+              <NeoTableHead>{t("table.status")}</NeoTableHead>
+              <NeoTableHead>{t("table.expiresAt")}</NeoTableHead>
+              <NeoTableHead>{t("table.createdAt")}</NeoTableHead>
+              <NeoTableHead>{t("table.actions")}</NeoTableHead>
+            </NeoTableRow>
+          </NeoTableHeader>
+          <NeoTableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
+              <NeoTableRow>
+                <NeoTableCell colSpan={7} className="text-center">
                   Chargement...
-                </TableCell>
-              </TableRow>
+                </NeoTableCell>
+              </NeoTableRow>
             ) : invitations.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center">
+              <NeoTableRow>
+                <NeoTableCell colSpan={7} className="text-center">
                   Aucune invitation trouvee
-                </TableCell>
-              </TableRow>
+                </NeoTableCell>
+              </NeoTableRow>
             ) : (
               invitations.map((invitation) => (
-                <TableRow key={invitation.id}>
-                  <TableCell>{invitation.email}</TableCell>
-                  <TableCell>{invitation.fridge.name}</TableCell>
-                  <TableCell>
+                <NeoTableRow key={invitation.id}>
+                  <NeoTableCell>{invitation.email}</NeoTableCell>
+                  <NeoTableCell>{invitation.fridge.name}</NeoTableCell>
+                  <NeoTableCell>
                     <Link
                       href={`/admin/users/${invitation.invitedBy.id}`}
                       className="hover:underline"
                     >
                       <div className="text-sm">
                         <div>{invitation.invitedBy.name}</div>
-                        <div className="text-muted-foreground">
+                        <div className="text-neo-text-muted">
                           {invitation.invitedBy.email}
                         </div>
                       </div>
                     </Link>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(invitation.status)}</TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
+                    {getStatusBadge(invitation.status)}
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {dayjs(invitation.expiresAt).format("DD/MM/YYYY")}
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {dayjs(invitation.createdAt).format("DD/MM/YYYY HH:mm")}
-                  </TableCell>
-                  <TableCell>
+                  </NeoTableCell>
+                  <NeoTableCell>
                     {invitation.status === "PENDING" && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <NeoButton variant="ghost" size="icon">
                             <MoreHorizontal className="size-4" />
-                          </Button>
+                          </NeoButton>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
@@ -205,36 +213,36 @@ export function EmailInvitationsTable() {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}
-                  </TableCell>
-                </TableRow>
+                  </NeoTableCell>
+                </NeoTableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+          </NeoTableBody>
+        </NeoTable>
         {totalPages > 1 && (
           <div className="mt-4 flex justify-center gap-2">
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
             >
               Precedent
-            </Button>
-            <span className="text-muted-foreground flex items-center text-sm">
+            </NeoButton>
+            <span className="text-neo-text-muted flex items-center text-sm">
               Page {page} / {totalPages}
             </span>
-            <Button
+            <NeoButton
               variant="outline"
               size="sm"
               disabled={page === totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
               Suivant
-            </Button>
+            </NeoButton>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

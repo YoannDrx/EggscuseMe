@@ -1,12 +1,12 @@
 import { Typography } from "@/components/nowts/typography";
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { NeoTableCell, NeoTableRow } from "@/components/neo/neo-table";
 import { InlineTooltip } from "@/components/ui/tooltip";
 import type { FeedbackWithUser } from "@/query/feedback/get-feedback";
 import {
@@ -56,16 +56,16 @@ export const FeedbackRow = ({ feedback }: FeedbackRowProps) => {
       : feedback.message;
 
   return (
-    <TableRow key={feedback.id}>
-      <TableCell>
+    <NeoTableRow key={feedback.id}>
+      <NeoTableCell>
         <UserTableCell
           user={feedback.user}
           fallbackEmail={feedback.email}
           href={`/admin/feedback/${feedback.id}`}
           size="sm"
         />
-      </TableCell>
-      <TableCell>
+      </NeoTableCell>
+      <NeoTableCell>
         {reviewIcon ? (
           <InlineTooltip title={reviewIcon.tooltip}>
             <div className="flex items-center">
@@ -75,8 +75,8 @@ export const FeedbackRow = ({ feedback }: FeedbackRowProps) => {
         ) : (
           <Typography variant="muted">No rating</Typography>
         )}
-      </TableCell>
-      <TableCell>
+      </NeoTableCell>
+      <NeoTableCell>
         <div className="max-w-md">
           <Typography
             variant="muted"
@@ -86,18 +86,18 @@ export const FeedbackRow = ({ feedback }: FeedbackRowProps) => {
             {truncatedMessage}
           </Typography>
         </div>
-      </TableCell>
-      <TableCell>
+      </NeoTableCell>
+      <NeoTableCell>
         <Typography variant="muted">
           {new Date(feedback.createdAt).toLocaleDateString()}
         </Typography>
-      </TableCell>
-      <TableCell>
+      </NeoTableCell>
+      <NeoTableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <NeoButton variant="outline" size="sm">
               <MoreHorizontal className="size-4" />
-            </Button>
+            </NeoButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
@@ -108,7 +108,7 @@ export const FeedbackRow = ({ feedback }: FeedbackRowProps) => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </TableCell>
-    </TableRow>
+      </NeoTableCell>
+    </NeoTableRow>
   );
 };

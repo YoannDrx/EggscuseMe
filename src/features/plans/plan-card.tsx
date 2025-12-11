@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoBadge,
+  NeoButton,
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   getPlanFeatures,
   getPricingCopy,
@@ -46,30 +46,28 @@ export function PlanCard({
   const freeFeatures = getPlanFeatures("free", locale);
 
   return (
-    <Card
-      variant="sunny"
+    <NeoCard
+      variant={isPremium ? "elevated" : "default"}
       className={cn(
         "flex h-full flex-col",
-        isPremium && "border-primary/30",
-        isCurrentPlan && "ring-primary ring-2",
+        isPremium && "border-neo-accent/50",
+        isCurrentPlan && "ring-neo-accent ring-2",
         className,
       )}
     >
-      <CardHeader>
+      <NeoCardHeader>
         <div className="flex items-center gap-2">
-          <CardTitle className="font-heading">
+          <NeoCardTitle className="font-heading">
             {isPremium ? copy.premiumTitle : copy.freeTitle}
-          </CardTitle>
-          {isPremium && (
-            <Badge className="bg-primary">{copy.recommended}</Badge>
-          )}
+          </NeoCardTitle>
+          {isPremium && <NeoBadge>{copy.recommended}</NeoBadge>}
           {isCurrentPlan && (
-            <Badge variant="secondary">{copy.currentPlan}</Badge>
+            <NeoBadge variant="secondary">{copy.currentPlan}</NeoBadge>
           )}
         </div>
-        <CardDescription>
+        <NeoCardDescription>
           {isPremium ? copy.premiumDescription : copy.freeDescription}
-        </CardDescription>
+        </NeoCardDescription>
 
         {/* Prix */}
         <div className="pt-2">
@@ -81,20 +79,15 @@ export function PlanCard({
                   <span className="font-heading text-3xl font-bold">
                     {copy.premiumYearlyEquivalent}
                   </span>
-                  <span className="text-muted-foreground text-base font-normal">
+                  <span className="text-neo-text-muted text-base font-normal">
                     {copy.premiumPriceSuffix}
                   </span>
-                  <span className="text-muted-foreground text-sm line-through">
+                  <span className="text-neo-text-muted text-sm line-through">
                     {copy.premiumPrice}
                   </span>
-                  <Badge
-                    variant="outline"
-                    className="border-primary/20 bg-primary/10 text-primary"
-                  >
-                    {copy.yearlyDiscount}
-                  </Badge>
+                  <NeoBadge variant="outline">{copy.yearlyDiscount}</NeoBadge>
                 </div>
-                <p className="text-muted-foreground mt-1 text-sm">
+                <p className="text-neo-text-muted mt-1 text-sm">
                   {copy.billedAs} {copy.premiumYearlyTotal}
                   {copy.premiumYearlySuffix}
                 </p>
@@ -103,7 +96,7 @@ export function PlanCard({
               // Prix mensuel standard
               <div className="font-heading text-3xl font-bold">
                 {copy.premiumPrice}
-                <span className="text-muted-foreground text-base font-normal">
+                <span className="text-neo-text-muted text-base font-normal">
                   {copy.premiumPriceSuffix}
                 </span>
               </div>
@@ -117,18 +110,18 @@ export function PlanCard({
 
           {/* Free trial pour Premium */}
           {isPremium && (
-            <div className="bg-primary/10 text-primary mt-3 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium">
+            <div className="bg-neo-accent/10 text-neo-accent mt-3 inline-flex items-center rounded-full px-3 py-1 text-sm font-bold">
               <Clock className="mr-1.5 size-3.5" />
               {copy.freeTrial}
             </div>
           )}
         </div>
-      </CardHeader>
+      </NeoCardHeader>
 
-      <CardContent className="flex flex-1 flex-col">
+      <NeoCardContent className="flex flex-1 flex-col">
         {/* Message d'héritage pour Premium */}
         {isPremium && (
-          <p className="text-muted-foreground mb-3 text-sm font-medium">
+          <p className="text-neo-text-muted mb-3 text-sm font-medium">
             {copy.premiumInheritance}
           </p>
         )}
@@ -139,14 +132,14 @@ export function PlanCard({
             ? // Pour Premium : afficher les features additionnelles
               features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2 text-sm">
-                  <Check className="text-primary size-4 shrink-0" />
+                  <Check className="text-neo-accent size-4 shrink-0" />
                   {feature}
                 </li>
               ))
             : // Pour Free : afficher toutes les features
               freeFeatures.map((feature) => (
                 <li key={feature} className="flex items-center gap-2 text-sm">
-                  <Check className="text-muted-foreground size-4 shrink-0" />
+                  <Check className="text-neo-text-muted size-4 shrink-0" />
                   {feature}
                 </li>
               ))}
@@ -154,8 +147,8 @@ export function PlanCard({
 
         {/* Bouton */}
         {showButton && !isCurrentPlan && onSelect && (
-          <Button
-            variant={isPremium ? "neubrutalism" : "outline"}
+          <NeoButton
+            variant={isPremium ? "primary" : "secondary"}
             className="mt-6 w-full"
             onClick={onSelect}
             disabled={isLoading}
@@ -166,9 +159,9 @@ export function PlanCard({
               <Sparkles className="mr-2 size-4" />
             ) : null}
             {isPremium ? copy.choosePremium : copy.chooseFree}
-          </Button>
+          </NeoButton>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

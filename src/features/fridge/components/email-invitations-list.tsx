@@ -1,13 +1,13 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { NeoBadge } from "@/components/neo";
+import { NeoButton } from "@/components/neo";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  NeoDropdown,
+  NeoDropdownContent,
+  NeoDropdownItem,
+  NeoDropdownTrigger,
+} from "@/components/neo";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import {
   cancelEmailInvitationAction,
@@ -201,10 +201,10 @@ function InvitationRow({
         <div>
           <p className="font-medium">{invitation.email}</p>
           <div className="text-muted-foreground flex items-center gap-2 text-xs">
-            <Badge variant={config.variant} className="text-xs">
+            <NeoBadge variant={config.variant} className="text-xs">
               <StatusIcon className="mr-1 size-3" />
               {config.label}
-            </Badge>
+            </NeoBadge>
             {invitation.status === "PENDING" && (
               <span>
                 Expire le{" "}
@@ -219,23 +219,23 @@ function InvitationRow({
       </div>
 
       {invitation.status === "PENDING" && onResend && onCancel && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" disabled={isPending}>
+        <NeoDropdown>
+          <NeoDropdownTrigger asChild>
+            <NeoButton variant="ghost" size="icon" disabled={isPending}>
               <MoreVertical className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={onResend}>
+            </NeoButton>
+          </NeoDropdownTrigger>
+          <NeoDropdownContent>
+            <NeoDropdownItem onClick={onResend}>
               <RefreshCw className="mr-2 size-4" />
               Renvoyer l&apos;email
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive" onClick={onCancel}>
+            </NeoDropdownItem>
+            <NeoDropdownItem className="text-destructive" onClick={onCancel}>
               <Trash2 className="mr-2 size-4" />
               Annuler l&apos;invitation
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </NeoDropdownItem>
+          </NeoDropdownContent>
+        </NeoDropdown>
       )}
     </div>
   );

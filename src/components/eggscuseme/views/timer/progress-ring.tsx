@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { useThemeColors } from "../../theme";
+import { motion } from "motion/react";
 
 type ProgressRingProps = {
   progress: number; // 0 to 1
@@ -19,7 +18,6 @@ export function ProgressRing({
   children,
   className,
 }: ProgressRingProps) {
-  const colors = useThemeColors();
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - progress * circumference;
@@ -43,7 +41,7 @@ export function ProgressRing({
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className={cn("opacity-10", colors.text)}
+          className="text-neo-text opacity-10"
         />
 
         {/* Progress circle */}
@@ -54,7 +52,7 @@ export function ProgressRing({
           fill="none"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
-          className={colors.accentStroke}
+          className="stroke-neo-accent"
           style={{
             strokeDasharray: circumference,
           }}

@@ -1,11 +1,11 @@
 import { AutomaticPagination } from "@/components/nowts/automatic-pagination";
 import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  NeoTable,
+  NeoTableBody,
+  NeoTableHead,
+  NeoTableHeader,
+  NeoTableRow,
+} from "@/components/neo/neo-table";
 import { getFeedbackList } from "@/query/feedback/get-feedback";
 import { FeedbackRow } from "./feedback-row";
 
@@ -30,22 +30,22 @@ export const FeedbackTable = async ({ searchParams }: FeedbackTableProps) => {
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Review</TableHead>
-            <TableHead>Message</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+      <NeoTable>
+        <NeoTableHeader>
+          <NeoTableRow>
+            <NeoTableHead>User</NeoTableHead>
+            <NeoTableHead>Review</NeoTableHead>
+            <NeoTableHead>Message</NeoTableHead>
+            <NeoTableHead>Date</NeoTableHead>
+            <NeoTableHead>Actions</NeoTableHead>
+          </NeoTableRow>
+        </NeoTableHeader>
+        <NeoTableBody>
           {feedback.map((item) => (
             <FeedbackRow key={item.id} feedback={item} />
           ))}
-        </TableBody>
-      </Table>
+        </NeoTableBody>
+      </NeoTable>
 
       <AutomaticPagination
         currentPage={currentPage}

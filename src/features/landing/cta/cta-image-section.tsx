@@ -1,5 +1,5 @@
 import { Typography } from "@/components/nowts/typography";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import Link from "next/link";
 import { SectionLayout } from "../section-layout";
 
@@ -25,8 +25,10 @@ export const CTAImageSection = () => {
         <Typography className="text-center font-bold">
           By posting every day with Threader !
         </Typography>
-        <Link href="#pricing" className={buttonVariants({ size: "lg" })}>
-          Get started
+        <Link href="#pricing">
+          <NeoButton size="lg" asChild>
+            <span>Get started</span>
+          </NeoButton>
         </Link>
       </SectionLayout>
     </div>

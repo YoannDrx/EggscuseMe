@@ -32,37 +32,42 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
       onClick={handleToggle}
       disabled={isPending}
       className={cn(
-        "relative flex h-9 w-[72px] items-center rounded-full p-1 transition-colors",
-        "bg-muted",
-        isPending && "opacity-50",
+        "relative flex h-9 w-[76px] items-center p-1 transition-all duration-200",
+        "border-neo-border rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)]",
+        "bg-neo-card shadow-[var(--shadow-neo-sm)]",
+        "hover:shadow-[var(--shadow-neo-md)]",
+        "active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+        isPending && "cursor-wait opacity-50",
         className,
       )}
       aria-label={isFrench ? "Switch to English" : "Passer en français"}
     >
       {/* Language labels */}
-      <div className="flex w-full items-center justify-between px-2">
+      <div className="relative z-10 flex w-full items-center justify-between px-2">
         <span
           className={cn(
-            "text-xs font-semibold transition-colors",
-            isFrench ? "text-primary" : "text-muted-foreground",
+            "text-xs font-bold transition-colors",
+            isFrench ? "text-neo-accent" : "text-neo-text-muted",
           )}
         >
           FR
         </span>
         <span
           className={cn(
-            "text-xs font-semibold transition-colors",
-            !isFrench ? "text-primary" : "text-muted-foreground",
+            "text-xs font-bold transition-colors",
+            !isFrench ? "text-neo-accent" : "text-neo-text-muted",
           )}
         >
           EN
         </span>
       </div>
 
-      {/* Sliding pill */}
+      {/* Sliding pill - Neo style */}
       <div
         className={cn(
-          "bg-background absolute top-1 size-7 rounded-full shadow-sm transition-all duration-200",
+          "absolute top-1 size-7 transition-all duration-200",
+          "border-neo-border rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]",
+          "bg-neo-bg shadow-[2px_2px_0_var(--neo-shadow-color)]",
           isFrench ? "left-1" : "left-[calc(100%-32px)]",
         )}
       />

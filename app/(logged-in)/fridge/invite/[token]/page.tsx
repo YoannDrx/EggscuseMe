@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   acceptEmailInvitationAction,
   getEmailInvitationByTokenAction,
@@ -32,24 +32,24 @@ export default async function InvitePage({ params }: InvitePageProps) {
   if (result.data?.error || !result.data?.invitation) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center p-4">
-        <Card variant="sunny" className="max-w-md">
-          <CardHeader className="text-center">
+        <NeoCard className="max-w-md">
+          <NeoCardHeader className="text-center">
             <div className="mx-auto mb-4">
               <Eggy mood="sad" size="lg" />
             </div>
-            <CardTitle className="font-heading text-xl">
+            <NeoCardTitle className="font-heading text-xl">
               {t("invalidTitle")}
-            </CardTitle>
-            <CardDescription>
+            </NeoCardTitle>
+            <NeoCardDescription>
               {result.data?.error ?? t("invalidDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
+            </NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent className="text-center">
             <Link href="/fridge">
-              <Button variant="neubrutalism">{t("backToFridge")}</Button>
+              <NeoButton variant="primary">{t("backToFridge")}</NeoButton>
             </Link>
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       </div>
     );
   }
@@ -59,29 +59,29 @@ export default async function InvitePage({ params }: InvitePageProps) {
   // Show join confirmation
   return (
     <div className="flex min-h-[60vh] items-center justify-center p-4">
-      <Card variant="sunny" className="max-w-md">
-        <CardHeader className="text-center">
+      <NeoCard className="max-w-md">
+        <NeoCardHeader className="text-center">
           <div className="mx-auto mb-4">
             <Eggy mood="happy" size="lg" />
           </div>
-          <CardTitle className="font-heading text-xl">
+          <NeoCardTitle className="font-heading text-xl">
             {t("joinTitle")}
-          </CardTitle>
-          <CardDescription>
+          </NeoCardTitle>
+          <NeoCardDescription>
             {invitation.inviterName} {t("inviteText")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+          </NeoCardDescription>
+        </NeoCardHeader>
+        <NeoCardContent className="space-y-6">
           {/* Fridge Info */}
-          <div className="bg-muted/50 flex items-center gap-4 rounded-xl p-4">
-            <div className="bg-primary/10 flex size-12 items-center justify-center rounded-full">
-              <RefrigeratorIcon className="text-primary size-6" />
+          <div className="bg-neo-card/50 flex items-center gap-4 rounded-xl p-4">
+            <div className="bg-neo-accent/10 flex size-12 items-center justify-center rounded-full">
+              <RefrigeratorIcon className="text-neo-accent size-6" />
             </div>
             <div>
               <p className="font-heading font-semibold">
                 {invitation.fridgeName}
               </p>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-neo-text-muted text-sm">
                 par {invitation.inviterName}
               </p>
             </div>
@@ -111,9 +111,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
           </div>
 
           {/* Expiration info */}
-          <div className="bg-muted/30 flex items-center justify-center gap-2 rounded-lg p-3">
-            <AlertTriangle className="text-muted-foreground size-4" />
-            <p className="text-muted-foreground text-xs">
+          <div className="bg-neo-card/30 flex items-center justify-center gap-2 rounded-lg p-3">
+            <AlertTriangle className="text-neo-text-muted size-4" />
+            <p className="text-neo-text-muted text-xs">
               {t("expires", {
                 date: new Date(invitation.expiresAt).toLocaleDateString(
                   locale === "fr" ? "fr-FR" : "en-US",
@@ -132,17 +132,17 @@ export default async function InvitePage({ params }: InvitePageProps) {
               }
             }}
           >
-            <Button type="submit" variant="neubrutalism" className="w-full">
+            <NeoButton type="submit" variant="primary" className="w-full">
               <Users className="mr-2 size-4" />
               {t("joinCta")}
-            </Button>
+            </NeoButton>
           </form>
 
-          <p className="text-muted-foreground text-center text-xs">
+          <p className="text-neo-text-muted text-center text-xs">
             {t("leaveNote")}
           </p>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
     </div>
   );
 }

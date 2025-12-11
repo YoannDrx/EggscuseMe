@@ -1,6 +1,6 @@
 import { Logo } from "@/components/nowts/logo";
-import { Badge } from "@/components/ui/badge";
-import { LoadingButton } from "@/features/form/submit-button";
+import { NeoBadge } from "@/components/neo/neo-badge";
+import { NeoButton } from "@/components/neo/neo-button";
 import { authClient } from "@/lib/auth-client";
 import { getCallbackUrl } from "@/lib/auth/auth-utils";
 import { cn } from "@/lib/utils";
@@ -49,19 +49,19 @@ export const ProviderButton = (props: ProviderButtonProps) => {
   return (
     <div className="relative w-full">
       {isLastUsed && (
-        <Badge
+        <NeoBadge
           variant="secondary"
           className="absolute -top-2.5 -right-2.5 z-10"
         >
           Last used
-        </Badge>
+        </NeoBadge>
       )}
-      <LoadingButton
+      <NeoButton
         loading={githubSignInMutation.isPending}
         className={cn("w-full", {
-          "border bg-white text-black hover:bg-white dark:border-neutral-700":
+          "text-neo-text border-neo-border bg-white hover:bg-white/90":
             data.name === "Google",
-          "border bg-black text-white hover:bg-gray-950 dark:border-neutral-700":
+          "bg-neo-text text-neo-bg border-neo-border hover:bg-neo-text/90":
             data.name === "Github",
         })}
         size="lg"
@@ -71,7 +71,7 @@ export const ProviderButton = (props: ProviderButtonProps) => {
       >
         {data.icon}
         <span className="ml-2">Sign in with {data.name}</span>
-      </LoadingButton>
+      </NeoButton>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Egg, ArrowRight } from "lucide-react";
 import { Eggy } from "@/features/mascot";
 import { useTranslations } from "next-intl";
+import { NeoButton } from "@/components/neo";
 
 type GradientCTAProps = {
   className?: string;
@@ -15,13 +16,13 @@ export function GradientCTA({ className }: GradientCTAProps) {
   const t = useTranslations("landing.gradientCta");
 
   return (
-    <section className={cn("bg-background py-24", className)}>
+    <section className={cn("bg-neo-bg py-24", className)}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="from-primary to-primary/80 relative overflow-hidden rounded-[3rem] bg-gradient-to-r px-8 py-16 sm:px-16 sm:py-20"
+          className="bg-neo-accent border-neo-border relative overflow-hidden rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] px-8 py-16 shadow-[var(--shadow-neo-lg)] sm:px-16 sm:py-20"
         >
           {/* Dot Pattern Overlay */}
           <div className="dot-pattern-cta pointer-events-none absolute inset-0 opacity-20" />
@@ -44,11 +45,11 @@ export function GradientCTA({ className }: GradientCTAProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="font-heading text-primary-foreground mt-8 text-3xl font-bold sm:text-4xl"
+              className="font-heading text-neo-accent-foreground mt-8 text-3xl font-bold sm:text-4xl"
             >
               {t("title")}
               <br />
-              <span className="text-primary-foreground/80">
+              <span className="text-neo-accent-foreground/80">
                 {t("titleHighlight")}
               </span>
             </motion.h2>
@@ -59,7 +60,7 @@ export function GradientCTA({ className }: GradientCTAProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="text-primary-foreground/90 mt-4 max-w-md text-lg"
+              className="text-neo-accent-foreground/90 mt-4 max-w-md text-lg"
             >
               {t("description")}
             </motion.p>
@@ -72,20 +73,18 @@ export function GradientCTA({ className }: GradientCTAProps) {
               transition={{ delay: 0.5 }}
               className="mt-8 flex flex-wrap items-center justify-center gap-4"
             >
-              <Link
-                href="/auth/signin"
-                className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold transition-all"
-              >
-                <Egg className="size-5" />
-                {t("button")}
-              </Link>
-              <Link
-                href="/preview"
-                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 inline-flex items-center gap-2 rounded-full border-2 bg-transparent px-6 py-3 font-semibold transition-all"
-              >
-                {t("demo")}
-                <ArrowRight className="size-4" />
-              </Link>
+              <NeoButton asChild variant="secondary" size="lg">
+                <Link href="/auth/signin" className="gap-2">
+                  <Egg className="size-5" />
+                  {t("button")}
+                </Link>
+              </NeoButton>
+              <NeoButton asChild variant="outline" size="lg">
+                <Link href="/preview" className="gap-2">
+                  {t("demo")}
+                  <ArrowRight className="size-4" />
+                </Link>
+              </NeoButton>
             </motion.div>
           </div>
 

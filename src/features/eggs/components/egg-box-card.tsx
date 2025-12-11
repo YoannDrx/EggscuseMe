@@ -1,13 +1,12 @@
 "use client";
 
 import { FreshnessTag } from "@/components/eggscuseme/illustrations";
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  NeoDropdown,
+  NeoDropdownContent,
+  NeoDropdownItem,
+  NeoDropdownTrigger,
+} from "@/components/neo/neo-dropdown";
 import type { EggBox } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
 import { MoreHorizontal, Trash2, Utensils } from "lucide-react";
@@ -87,8 +86,9 @@ export function EggBoxCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.3 }}
       className={cn(
-        "border-border bg-card relative overflow-hidden rounded-2xl border p-4",
-        "hover:border-muted-foreground/30 transition-all duration-200",
+        "border-neo-border bg-neo-card relative overflow-hidden rounded-[var(--radius-neo-2xl)] border-[length:var(--border-neo)] p-4",
+        "shadow-[var(--shadow-neo-md)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-lg)]",
+        "transition-all duration-200",
         className,
       )}
     >
@@ -96,66 +96,65 @@ export function EggBoxCard({
       <div className="mb-3 flex items-center justify-between">
         <FreshnessTag status={config.tagStatus} size="sm" />
         <div className="flex items-center gap-2">
-          <span className="text-muted-foreground text-xs">
+          <span className="text-neo-text-muted text-xs">
             {formatDaysRemainingFr(freshness.daysRemaining)}
           </span>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:bg-muted hover:text-foreground size-7"
+          <NeoDropdown>
+            <NeoDropdownTrigger>
+              <button
+                type="button"
+                className="text-neo-text-muted hover:text-neo-text rounded p-1 transition-colors"
               >
                 <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+              </button>
+            </NeoDropdownTrigger>
+            <NeoDropdownContent align="end">
               {onConsume && (
-                <DropdownMenuItem onClick={() => onConsume(eggBox)}>
+                <NeoDropdownItem onClick={() => onConsume(eggBox)}>
                   <Utensils className="mr-2 size-4" />
                   Consommer
-                </DropdownMenuItem>
+                </NeoDropdownItem>
               )}
               {onDelete && (
-                <DropdownMenuItem
+                <NeoDropdownItem
                   variant="destructive"
                   onClick={() => onDelete(eggBox)}
                 >
                   <Trash2 className="mr-2 size-4" />
                   Supprimer
-                </DropdownMenuItem>
+                </NeoDropdownItem>
               )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </NeoDropdownContent>
+          </NeoDropdown>
         </div>
       </div>
 
       {/* Name Row */}
       <div className="mb-2">
-        <h3 className="text-foreground truncate font-semibold">
+        <h3 className="text-neo-text truncate font-semibold">
           {eggBox.name ??
             `Boite du ${eggBox.layingDate.toLocaleDateString("fr-FR")}`}
         </h3>
         {eggBox.source && (
-          <p className="text-muted-foreground text-xs">{eggBox.source}</p>
+          <p className="text-neo-text-muted text-xs">{eggBox.source}</p>
         )}
       </div>
 
       {/* Content Row */}
       <div className="mb-4 flex items-end justify-between">
         <div className="flex-1">
-          <span className="text-muted-foreground text-xs">
+          <span className="text-neo-text-muted text-xs">
             Pour: {getSuggestedUse()}
           </span>
-          <p className="text-muted-foreground text-xs">
+          <p className="text-neo-text-muted text-xs">
             {getFreshnessDescriptionFr(freshness.status)}
           </p>
         </div>
         <div className="text-right">
-          <span className="text-foreground text-2xl font-bold">
+          <span className="text-neo-text text-2xl font-bold">
             {eggBox.remaining}
           </span>
-          <span className="text-muted-foreground ml-1 text-xs">
+          <span className="text-neo-text-muted ml-1 text-xs">
             / {eggBox.quantity} oeufs
           </span>
         </div>
@@ -163,17 +162,17 @@ export function EggBoxCard({
 
       {/* Size Badge */}
       <div className="mb-4 flex items-center gap-2">
-        <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
+        <span className="bg-neo-card text-neo-text-muted rounded-full px-2 py-0.5 text-xs">
           {sizeLabels[eggBox.size] ?? eggBox.size}
         </span>
-        <span className="text-muted-foreground text-xs">
+        <span className="text-neo-text-muted text-xs">
           {freshness.daysOld} jour{freshness.daysOld > 1 ? "s" : ""} depuis
           ponte
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-muted absolute bottom-0 left-0 h-1 w-full">
+      <div className="bg-neo-card/30 absolute bottom-0 left-0 h-1 w-full">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${100 - progress}%` }}

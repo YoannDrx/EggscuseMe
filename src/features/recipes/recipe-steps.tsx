@@ -1,6 +1,11 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { cn } from "@/lib/utils";
 import { ClipboardList } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -17,14 +22,14 @@ export function RecipeSteps({ instructions, className }: RecipeStepsProps) {
   const t = useTranslations("recipes.detail");
 
   return (
-    <Card variant="sunny" className={cn("", className)}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <NeoCard variant="elevated" className={cn("", className)}>
+      <NeoCardHeader>
+        <NeoCardTitle className="flex items-center gap-2">
           <ClipboardList className="size-5" />
           {t("instructions")}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </NeoCardTitle>
+      </NeoCardHeader>
+      <NeoCardContent className="space-y-4">
         {instructions.map((instruction) => (
           <div key={instruction.step} className="flex gap-4">
             <div className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-full font-bold">
@@ -37,7 +42,7 @@ export function RecipeSteps({ instructions, className }: RecipeStepsProps) {
             </div>
           </div>
         ))}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }

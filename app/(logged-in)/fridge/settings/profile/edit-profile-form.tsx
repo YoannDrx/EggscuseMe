@@ -2,15 +2,15 @@
 
 import { AvatarUploader } from "@/components/avatar-upload";
 import { Typography } from "@/components/nowts/typography";
-import { buttonVariants } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+  NeoCard,
+  NeoCardContent,
+  NeoCardFooter,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
 import { InlineTooltip } from "@/components/ui/tooltip";
 import { LoadingButton } from "@/features/form/submit-button";
 import { Form, useForm } from "@/features/form/tanstack-form";
@@ -101,8 +101,8 @@ export const EditProfileCardForm = ({
 
   return (
     <Form form={form}>
-      <Card variant="sunny">
-        <CardHeader>
+      <NeoCard variant="elevated">
+        <NeoCardHeader>
           <div className="flex items-center gap-4">
             <form.AppField name="image">
               {(field) => (
@@ -116,12 +116,12 @@ export const EditProfileCardForm = ({
             <form.Subscribe selector={(state) => state.values.name}>
               {(name) => (
                 <div>
-                  <CardTitle className="font-heading text-xl">
+                  <NeoCardTitle className="font-heading text-xl">
                     {displayName({
                       email: defaultValues.email,
                       name: name,
                     })}
-                  </CardTitle>
+                  </NeoCardTitle>
                   <Typography variant="muted" className="text-sm">
                     {defaultValues.email}
                   </Typography>
@@ -129,8 +129,8 @@ export const EditProfileCardForm = ({
               )}
             </form.Subscribe>
           </div>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+        </NeoCardHeader>
+        <NeoCardContent className="flex flex-col gap-4">
           <form.AppField name="name">
             {(field) => (
               <field.Field>
@@ -145,7 +145,7 @@ export const EditProfileCardForm = ({
             )}
           </form.AppField>
           <div className="flex flex-col gap-2">
-            <Label className="flex items-center gap-4">
+            <NeoLabel className="flex items-center gap-4">
               <span>{t("email")}</span>
               {defaultValues.emailVerified ? (
                 <InlineTooltip title={t("verifySent")}>
@@ -163,27 +163,21 @@ export const EditProfileCardForm = ({
                   {t("verify")}
                 </LoadingButton>
               )}
-            </Label>
+            </NeoLabel>
             <Typography>{defaultValues.email}</Typography>
           </div>
-        </CardContent>
-        <CardFooter className="flex flex-wrap gap-2">
-          <Link
-            className={buttonVariants({ size: "sm", variant: "link" })}
-            href="/fridge/settings/security"
-          >
-            {t("changeEmail")}
-          </Link>
-          <Link
-            className={buttonVariants({ size: "sm", variant: "link" })}
-            href="/fridge/settings/security"
-          >
-            {t("changePassword")}
-          </Link>
+        </NeoCardContent>
+        <NeoCardFooter className="flex flex-wrap gap-2">
+          <NeoButton asChild size="sm" variant="ghost">
+            <Link href="/fridge/settings/security">{t("changeEmail")}</Link>
+          </NeoButton>
+          <NeoButton asChild size="sm" variant="ghost">
+            <Link href="/fridge/settings/security">{t("changePassword")}</Link>
+          </NeoButton>
           <div className="flex-1" />
           <form.SubmitButton>{t("save")}</form.SubmitButton>
-        </CardFooter>
-      </Card>
+        </NeoCardFooter>
+      </NeoCard>
     </Form>
   );
 };

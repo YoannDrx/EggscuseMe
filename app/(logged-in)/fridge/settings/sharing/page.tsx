@@ -1,15 +1,14 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { NeoBadge, NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -286,9 +285,9 @@ export default function SharingPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/fridge/settings">
-          <Button variant="ghost" size="icon">
+          <NeoButton variant="ghost" size="icon">
             <ArrowLeft className="size-5" />
-          </Button>
+          </NeoButton>
         </Link>
         <Eggy mood="happy" size="lg" />
         <div>
@@ -303,25 +302,25 @@ export default function SharingPage() {
 
       {/* Share Links (Owner only) */}
       {isOwner && (
-        <Card variant="sunny">
-          <CardHeader className="flex flex-row items-center justify-between">
+        <NeoCard variant="elevated">
+          <NeoCardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="font-heading flex items-center gap-2">
+              <NeoCardTitle className="font-heading flex items-center gap-2">
                 <Link2 className="size-5" />
                 {copy.shareLinksTitle}
-              </CardTitle>
-              <CardDescription>{copy.shareLinksDesc}</CardDescription>
+              </NeoCardTitle>
+              <NeoCardDescription>{copy.shareLinksDesc}</NeoCardDescription>
             </div>
-            <Button
-              variant="neubrutalism"
+            <NeoButton
+              variant="primary"
               onClick={handleCreateLink}
               disabled={isPending}
             >
               <Share2 className="mr-2 size-4" />
               {isPending ? copy.creatingLink : copy.createLink}
-            </Button>
-          </CardHeader>
-          <CardContent>
+            </NeoButton>
+          </NeoCardHeader>
+          <NeoCardContent>
             {isLoading ? (
               <div className="space-y-3">
                 {[1, 2].map((i) => (
@@ -354,13 +353,13 @@ export default function SharingPage() {
                             ? "Scannez pour rejoindre"
                             : "Scan to join"}
                         </p>
-                        <Button
+                        <NeoButton
                           variant="ghost"
                           size="sm"
                           onClick={() => setShowQrFor(null)}
                         >
                           {locale === "fr" ? "Masquer le QR" : "Hide QR"}
-                        </Button>
+                        </NeoButton>
                       </div>
                     ) : (
                       <>
@@ -388,33 +387,33 @@ export default function SharingPage() {
 
                         {/* Actions */}
                         <div className="flex flex-wrap gap-2">
-                          <Button
+                          <NeoButton
                             variant="outline"
                             size="sm"
                             onClick={() => setShowQrFor(link.id)}
                           >
                             <QrCode className="mr-2 size-4" />
                             QR Code
-                          </Button>
+                          </NeoButton>
                           {canNativeShare && (
-                            <Button
+                            <NeoButton
                               variant="outline"
                               size="sm"
                               onClick={async () => handleNativeShare(link.code)}
                             >
                               <Share className="mr-2 size-4" />
                               {copy.shareCta}
-                            </Button>
+                            </NeoButton>
                           )}
-                          <Button
+                          <NeoButton
                             variant="outline"
                             size="sm"
                             onClick={async () => handleCopyLink(link.code)}
                           >
                             <Copy className="mr-2 size-4" />
                             {copy.toastCopy.replace("!", "")}
-                          </Button>
-                          <Button
+                          </NeoButton>
+                          <NeoButton
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeactivateLink(link.id)}
@@ -422,7 +421,7 @@ export default function SharingPage() {
                           >
                             <Trash2 className="mr-2 size-4" />
                             {copy.deactivateAction}
-                          </Button>
+                          </NeoButton>
                         </div>
                       </>
                     )}
@@ -430,37 +429,37 @@ export default function SharingPage() {
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {/* Email Invitations (Owner only) */}
       {isOwner && (
-        <Card variant="sunny">
-          <CardHeader>
-            <CardTitle className="font-heading flex items-center gap-2">
+        <NeoCard variant="elevated">
+          <NeoCardHeader>
+            <NeoCardTitle className="font-heading flex items-center gap-2">
               <Mail className="size-5" />
               {copy.emailTitle}
-            </CardTitle>
-            <CardDescription>{copy.emailDesc}</CardDescription>
-          </CardHeader>
-          <CardContent>
+            </NeoCardTitle>
+            <NeoCardDescription>{copy.emailDesc}</NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent>
             <EmailInviteForm />
             <EmailInvitationsList />
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
       )}
 
       {/* Members */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="font-heading flex items-center gap-2">
+      <NeoCard variant="elevated">
+        <NeoCardHeader>
+          <NeoCardTitle className="font-heading flex items-center gap-2">
             <Users className="size-5" />
             {copy.membersTitle(members.length)}
-          </CardTitle>
-          <CardDescription>{copy.membersDesc}</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </NeoCardTitle>
+          <NeoCardDescription>{copy.membersDesc}</NeoCardDescription>
+        </NeoCardHeader>
+        <NeoCardContent>
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
@@ -487,7 +486,7 @@ export default function SharingPage() {
                       {owner.user.email}
                     </p>
                   </div>
-                  <Badge variant="secondary">{copy.ownerBadge}</Badge>
+                  <NeoBadge variant="secondary">{copy.ownerBadge}</NeoBadge>
                 </div>
               )}
 
@@ -511,13 +510,13 @@ export default function SharingPage() {
                       {member.user.email}
                     </p>
                   </div>
-                  <Badge variant="outline">{copy.guestBadge}</Badge>
+                  <NeoBadge variant="outline">{copy.guestBadge}</NeoBadge>
                   {isOwner && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <NeoButton variant="ghost" size="icon">
                           <MoreVertical className="size-4" />
-                        </Button>
+                        </NeoButton>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuItem
@@ -542,8 +541,8 @@ export default function SharingPage() {
               )}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
     </div>
   );
 }

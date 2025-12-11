@@ -1,100 +1,61 @@
 "use client";
 
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import { SidebarNavigationMenu } from "@/components/ui/sidebar-utils";
+  NeoSidebar,
+  NeoSidebarContent,
+  NeoSidebarFooter,
+  NeoSidebarGroup,
+  NeoSidebarHeader,
+  NeoSidebarItem,
+} from "@/components/neo";
 import type { NavigationGroup } from "@/features/navigation/navigation.type";
 import { SidebarUserButton } from "@/features/sidebar/sidebar-user-button";
-import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import type { PropsWithChildren } from "react";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import { getAdminNavigation } from "./admin-navigation.links";
 
 export function AdminSidebar() {
   const t = useTranslations("admin.nav");
   const links: NavigationGroup[] = getAdminNavigation();
+  const pathname = usePathname();
+
+  const renderIcon = (
+    icon: NavigationGroup["links"][0]["Icon"],
+  ): LucideIcon => {
+    return icon as LucideIcon;
+  };
 
   return (
-    <Sidebar variant="inset">
-      <SidebarHeader className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg">
+    <NeoSidebar>
+      <NeoSidebarHeader>
+        <div className="flex items-center gap-2">
+          <div className="bg-neo-accent text-neo-accent-foreground flex size-8 items-center justify-center rounded-lg">
             <span className="text-sm font-semibold">A</span>
           </div>
           <span className="font-semibold">Admin Panel</span>
         </div>
-      </SidebarHeader>
-      <SidebarContent>
-        {links.map((link) => (
-          <ItemCollapsing
-            defaultOpenStartPath={link.defaultOpenStartPath}
-            key={link.titleKey}
-          >
-            <SidebarGroup key={link.titleKey}>
-              <SidebarGroupLabel asChild>
-                <CollapsibleTrigger>
-                  {t(link.titleKey)}
-                  <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                </CollapsibleTrigger>
-              </SidebarGroupLabel>
-              <CollapsibleContent>
-                <SidebarGroupContent>
-                  <SidebarNavigationMenu
-                    link={link}
-                    translationKey="admin.nav"
-                  />
-                </SidebarGroupContent>
-              </CollapsibleContent>
-            </SidebarGroup>
-          </ItemCollapsing>
+      </NeoSidebarHeader>
+      <NeoSidebarContent>
+        {links.map((group) => (
+          <NeoSidebarGroup key={group.titleKey} label={t(group.titleKey)}>
+            {group.links.map((link) => (
+              <Link key={link.href} href={link.href}>
+                <NeoSidebarItem
+                  active={pathname === link.href}
+                  icon={renderIcon(link.Icon)}
+                >
+                  {t(link.labelKey)}
+                </NeoSidebarItem>
+              </Link>
+            ))}
+          </NeoSidebarGroup>
         ))}
-      </SidebarContent>
-      <SidebarFooter className="flex flex-col gap-2">
+      </NeoSidebarContent>
+      <NeoSidebarFooter>
         <SidebarUserButton />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
+      </NeoSidebarFooter>
+    </NeoSidebar>
   );
 }
-
-const ItemCollapsing = (
-  props: PropsWithChildren<{ defaultOpenStartPath?: string }>,
-) => {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-
-  const isOpen = props.defaultOpenStartPath
-    ? pathname.startsWith(props.defaultOpenStartPath)
-    : true;
-
-  useEffect(() => {
-    if (isOpen) {
-      setOpen(isOpen);
-    }
-  }, [isOpen]);
-  return (
-    <Collapsible
-      defaultOpen={isOpen}
-      onOpenChange={setOpen}
-      open={open}
-      className="group/collapsible"
-    >
-      {props.children}
-    </Collapsible>
-  );
-};

@@ -1,4 +1,4 @@
-export { BottomNavBar, type TabId } from "./bottom-nav-bar";
+export { BottomNavBar } from "./bottom-nav-bar";
 export { MobileBottomNav } from "./mobile-bottom-nav";
 export {
   MobileHeader,

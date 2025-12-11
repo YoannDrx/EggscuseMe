@@ -2,7 +2,7 @@
 
 import { Typography } from "@/components/nowts/typography";
 import { DotPattern } from "@/components/svg/dot-pattern";
-import { Badge } from "@/components/ui/badge";
+import { NeoBadge } from "@/components/neo";
 import { ClientMarkdown } from "@/features/markdown/client-markdown";
 import type { ReactNode } from "react";
 import { SectionLayout } from "./section-layout";
@@ -16,7 +16,7 @@ export const FeaturesSection = ({
     <SectionLayout size="sm" className="relative" id="features">
       <div className="relative flex flex-col gap-16 lg:gap-28">
         <div className="flex flex-col items-center gap-2">
-          <Badge>The features you NEED.</Badge>
+          <NeoBadge>The features you NEED.</NeoBadge>
           <Typography variant="h2" className="m-auto max-w-xl text-center">
             More than a post schedulure, we will help you <u>grow</u>.
           </Typography>
@@ -57,7 +57,7 @@ const FeatureLine = (props: FeatureLineProps) => {
   return (
     <div className="flex items-center gap-4 odd:flex-row-reverse max-lg:!flex-col">
       <div className="flex flex-1 flex-col items-start gap-2">
-        <Badge color="pink">{props.badge}</Badge>
+        <NeoBadge color="pink">{props.badge}</NeoBadge>
         <Typography variant="h3" className="">
           {props.title}
         </Typography>

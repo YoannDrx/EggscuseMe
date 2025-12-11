@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
+import { NeoInput } from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
 import { Separator } from "@/components/ui/separator";
 import { renameFridgeAction } from "@/features/fridge/fridge-settings.action";
 import { Eggy } from "@/features/mascot";
@@ -49,13 +49,13 @@ function SettingsCard({
 
   return (
     <Link href={href}>
-      <Card
-        variant="sunny"
+      <NeoCard
+        variant="elevated"
         className={`hover:border-primary/30 h-full cursor-pointer transition-colors ${
           isDanger ? "border-destructive/30 hover:border-destructive/50" : ""
         }`}
       >
-        <CardHeader className="flex flex-row items-center gap-4">
+        <NeoCardHeader className="flex flex-row items-center gap-4">
           <div
             className={`flex size-12 items-center justify-center rounded-full ${
               isDanger ? "bg-destructive/10" : "bg-primary/10"
@@ -66,15 +66,15 @@ function SettingsCard({
             />
           </div>
           <div>
-            <CardTitle
+            <NeoCardTitle
               className={`font-heading text-lg ${isDanger ? "text-destructive" : ""}`}
             >
               {title}
-            </CardTitle>
-            <CardDescription>{description}</CardDescription>
+            </NeoCardTitle>
+            <NeoCardDescription>{description}</NeoCardDescription>
           </div>
-        </CardHeader>
-      </Card>
+        </NeoCardHeader>
+      </NeoCard>
     </Link>
   );
 }
@@ -181,40 +181,42 @@ export default function SettingsPage() {
 
         {/* Fridge Name - OWNER only */}
         {isOwner && (
-          <Card variant="sunny">
-            <CardHeader>
-              <CardTitle className="font-heading flex items-center gap-2">
+          <NeoCard variant="elevated">
+            <NeoCardHeader>
+              <NeoCardTitle className="font-heading flex items-center gap-2">
                 <Settings className="size-5" />
                 {t("fridgeSettings.title")}
-              </CardTitle>
-              <CardDescription>
+              </NeoCardTitle>
+              <NeoCardDescription>
                 {t("fridgeSettings.description")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </NeoCardDescription>
+            </NeoCardHeader>
+            <NeoCardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fridgeName">
+                <NeoLabel htmlFor="fridgeName">
                   {t("fridgeSettings.fridgeName")}
-                </Label>
+                </NeoLabel>
                 <div className="flex gap-2">
-                  <Input
+                  <NeoInput
                     id="fridgeName"
                     value={fridgeName}
-                    onChange={(e) => setFridgeName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFridgeName(e.target.value)
+                    }
                     placeholder="Mon Frigo"
                   />
-                  <Button
+                  <NeoButton
                     onClick={handleSaveName}
                     disabled={isSaving || fridgeName === fridgeState.name}
                   >
                     {isSaving
                       ? t("fridgeSettings.saving")
                       : t("fridgeSettings.save")}
-                  </Button>
+                  </NeoButton>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </NeoCardContent>
+          </NeoCard>
         )}
       </div>
 

@@ -1,15 +1,14 @@
 "use client";
 
 import { Typography } from "@/components/nowts/typography";
-import { buttonVariants } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { NeoButton, NeoCard } from "@/components/neo";
 import Link from "next/link";
 import { SectionLayout } from "../section-layout";
 
 export function CTASectionCard() {
   return (
     <SectionLayout>
-      <Card className="relative isolate overflow-hidden py-24 text-center shadow-2xl lg:rounded-3xl">
+      <NeoCard className="relative isolate overflow-hidden py-24 text-center shadow-2xl lg:rounded-3xl">
         <Typography
           as="h2"
           className="text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl"
@@ -20,16 +19,19 @@ export function CTASectionCard() {
           Create an account and start posting today.
         </Typography>
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Link href="#pricing" className={buttonVariants({ size: "lg" })}>
-            Get started
+          <Link href="#pricing">
+            <NeoButton size="lg" asChild>
+              <span>Get started</span>
+            </NeoButton>
           </Link>
 
-          <Link
-            href="#"
-            className={buttonVariants({ size: "lg", variant: "outline" })}
-          >
-            Learn more
-            <span aria-hidden="true">→</span>
+          <Link href="#">
+            <NeoButton size="lg" variant="outline" asChild>
+              <span>
+                Learn more
+                <span aria-hidden="true">→</span>
+              </span>
+            </NeoButton>
           </Link>
         </div>
         <svg
@@ -51,7 +53,7 @@ export function CTASectionCard() {
             </radialGradient>
           </defs>
         </svg>
-      </Card>
+      </NeoCard>
     </SectionLayout>
   );
 }

@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
+import { NeoLabel } from "@/components/neo";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Eggy } from "@/features/mascot";
 import { setLocale } from "@/i18n/locale.action";
@@ -135,18 +135,18 @@ export default function AppearancePage() {
       </div>
 
       {/* Theme Selection */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="font-heading">
+      <NeoCard>
+        <NeoCardHeader>
+          <NeoCardTitle className="font-heading">
             {locale === "fr" ? "Thème" : "Theme"}
-          </CardTitle>
-          <CardDescription>
+          </NeoCardTitle>
+          <NeoCardDescription>
             {locale === "fr"
               ? "Choisissez le thème qui vous convient le mieux"
               : "Choose the theme that suits you"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </NeoCardDescription>
+        </NeoCardHeader>
+        <NeoCardContent>
           <RadioGroup
             value={theme}
             onValueChange={setTheme}
@@ -160,7 +160,7 @@ export default function AppearancePage() {
                 themeOption.description[locale === "fr" ? "fr" : "en"];
 
               return (
-                <Label
+                <NeoLabel
                   key={themeOption.value}
                   htmlFor={themeOption.value}
                   className={cn(
@@ -198,26 +198,26 @@ export default function AppearancePage() {
                       {description}
                     </p>
                   </div>
-                </Label>
+                </NeoLabel>
               );
             })}
           </RadioGroup>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
 
       {/* Language Selection */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="font-heading">
+      <NeoCard>
+        <NeoCardHeader>
+          <NeoCardTitle className="font-heading">
             {locale === "fr" ? "Langue" : "Language"}
-          </CardTitle>
-          <CardDescription>
+          </NeoCardTitle>
+          <NeoCardDescription>
             {locale === "fr"
               ? "Choisissez la langue de l'interface"
               : "Choose the interface language"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </NeoCardDescription>
+        </NeoCardHeader>
+        <NeoCardContent>
           <RadioGroup
             value={locale}
             onValueChange={(value) => handleLanguageChange(value as Locale)}
@@ -230,7 +230,7 @@ export default function AppearancePage() {
                 lang.description[locale === "fr" ? "fr" : "en"];
 
               return (
-                <Label
+                <NeoLabel
                   key={lang.value}
                   htmlFor={`lang-${lang.value}`}
                   className={cn(
@@ -267,26 +267,26 @@ export default function AppearancePage() {
                       {description}
                     </p>
                   </div>
-                </Label>
+                </NeoLabel>
               );
             })}
           </RadioGroup>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
 
       {/* Preview */}
-      <Card variant="sunny">
-        <CardHeader>
-          <CardTitle className="font-heading">
+      <NeoCard>
+        <NeoCardHeader>
+          <NeoCardTitle className="font-heading">
             {locale === "fr" ? "Aperçu" : "Preview"}
-          </CardTitle>
-          <CardDescription>
+          </NeoCardTitle>
+          <NeoCardDescription>
             {locale === "fr"
               ? "Voici à quoi ressemble votre interface"
               : "Here is how your interface looks"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </NeoCardDescription>
+        </NeoCardHeader>
+        <NeoCardContent>
           <div className="flex items-center gap-4 rounded-xl border border-stone-800 bg-stone-900/50 p-4">
             <Eggy mood="happy" size="md" />
             <div className="flex-1">
@@ -305,8 +305,8 @@ export default function AppearancePage() {
               <div className="bg-fresh-cook size-3 rounded-full" />
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </NeoCardContent>
+      </NeoCard>
     </div>
   );
 }

@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardFooter,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
+import { NeoDivider } from "@/components/neo";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { LoadingButton } from "@/features/form/submit-button";
 import {
@@ -48,7 +48,8 @@ export default function DangerZonePage() {
           subtitle: "Actions irréversibles sur votre frigo et votre compte",
           fridgeData: "Données du frigo",
           exportTitle: "Exporter vos données",
-          exportDesc: "Téléchargez une copie de toutes vos données au format CSV",
+          exportDesc:
+            "Téléchargez une copie de toutes vos données au format CSV",
           exportContent:
             "L'export inclut toutes vos boîtes d'œufs, votre historique de consommation et vos préférences.",
           exportCta: "Exporter mes données",
@@ -83,7 +84,8 @@ export default function DangerZonePage() {
           personalData: "Données personnelles",
           personalDataDesc:
             "Toutes vos informations personnelles et paramètres seront définitivement effacés",
-          fridgeDataDesc: "Votre frigo et toutes ses données seront supprimés, ainsi que vos abonnements",
+          fridgeDataDesc:
+            "Votre frigo et toutes ses données seront supprimés, ainsi que vos abonnements",
           deleteAccountCta: "Supprimer mon compte",
           deleteAccountDialogTitle: "Supprimer votre compte ?",
           deleteAccountDialogDesc:
@@ -226,9 +228,7 @@ export default function DangerZonePage() {
       URL.revokeObjectURL(url);
       toast.success(copy.exportToast);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : copy.errorGeneric,
-      );
+      toast.error(error instanceof Error ? error.message : copy.errorGeneric);
     }
   };
 
@@ -255,7 +255,7 @@ export default function DangerZonePage() {
       {/* Back button */}
       <Link
         href="/fridge/settings"
-        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
+        className="text-neo-text-muted hover:text-neo-text inline-flex items-center gap-1 text-sm transition-colors"
       >
         <ChevronLeft className="size-4" />
         {copy.back}
@@ -266,55 +266,55 @@ export default function DangerZonePage() {
         <Eggy mood="worried" size="lg" />
         <div>
           <h1 className="font-heading text-2xl font-bold">{copy.title}</h1>
-          <p className="text-muted-foreground">{copy.subtitle}</p>
+          <p className="text-neo-text-muted">{copy.subtitle}</p>
         </div>
       </div>
 
       {/* Section: Données du frigo */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <Egg className="text-muted-foreground size-5" />
-          <h2 className="font-heading text-lg font-semibold">{copy.fridgeData}</h2>
+          <Egg className="text-neo-text-muted size-5" />
+          <h2 className="font-heading text-lg font-semibold">
+            {copy.fridgeData}
+          </h2>
         </div>
 
         {/* Export data */}
-        <Card variant="sunny">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle className="flex items-center gap-2 text-lg">
               <Download className="size-5" />
               {copy.exportTitle}
-            </CardTitle>
-            <CardDescription>{copy.exportDesc}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground text-sm">
-              {copy.exportContent}
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button variant="outline" onClick={handleExportData}>
+            </NeoCardTitle>
+            <NeoCardDescription>{copy.exportDesc}</NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent>
+            <p className="text-neo-text-muted text-sm">{copy.exportContent}</p>
+          </NeoCardContent>
+          <NeoCardFooter>
+            <NeoButton variant="outline" onClick={handleExportData}>
               <Download className="mr-2 size-4" />
               {copy.exportCta}
-            </Button>
-          </CardFooter>
-        </Card>
+            </NeoButton>
+          </NeoCardFooter>
+        </NeoCard>
 
         {/* Clear history */}
-        <Card className="border-fresh-cook">
-          <CardHeader>
-            <CardTitle className="text-fresh-cook flex items-center gap-2 text-lg">
+        <NeoCard className="border-fresh-cook">
+          <NeoCardHeader>
+            <NeoCardTitle className="text-fresh-cook flex items-center gap-2 text-lg">
               <History className="size-5" />
               {copy.clearHistoryTitle}
-            </CardTitle>
-            <CardDescription>{copy.clearHistoryDesc}</CardDescription>
-          </CardHeader>
-          <CardContent>
+            </NeoCardTitle>
+            <NeoCardDescription>{copy.clearHistoryDesc}</NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent>
             <div className="bg-fresh-cook/10 flex items-start gap-3 rounded-lg border border-dashed p-4">
               <AlertTriangle className="text-fresh-cook mt-0.5 size-5 shrink-0" />
               <p className="text-sm">{copy.clearHistoryWarning}</p>
             </div>
-          </CardContent>
-          <CardFooter>
+          </NeoCardContent>
+          <NeoCardFooter>
             <LoadingButton
               variant="outline"
               className="border-fresh-cook text-fresh-cook hover:bg-fresh-cook/10"
@@ -324,26 +324,26 @@ export default function DangerZonePage() {
               <Trash2 className="mr-2 size-4" />
               {copy.clearHistoryCta}
             </LoadingButton>
-          </CardFooter>
-        </Card>
+          </NeoCardFooter>
+        </NeoCard>
 
         {/* Clear all data - OWNER only */}
         {isOwner && (
-          <Card className="border-destructive">
-            <CardHeader>
-              <CardTitle className="text-destructive flex items-center gap-2 text-lg">
+          <NeoCard className="border-destructive">
+            <NeoCardHeader>
+              <NeoCardTitle className="text-destructive flex items-center gap-2 text-lg">
                 <Egg className="size-5" />
                 {copy.clearAllTitle}
-              </CardTitle>
-              <CardDescription>{copy.clearAllDesc}</CardDescription>
-            </CardHeader>
-            <CardContent>
+              </NeoCardTitle>
+              <NeoCardDescription>{copy.clearAllDesc}</NeoCardDescription>
+            </NeoCardHeader>
+            <NeoCardContent>
               <div className="bg-destructive/10 flex items-start gap-3 rounded-lg border border-dashed p-4">
                 <AlertTriangle className="text-destructive mt-0.5 size-5 shrink-0" />
                 <p className="text-sm">{copy.clearAllWarning}</p>
               </div>
-            </CardContent>
-            <CardFooter>
+            </NeoCardContent>
+            <NeoCardFooter>
               <LoadingButton
                 variant="destructive"
                 onClick={handleClearAllData}
@@ -352,43 +352,43 @@ export default function DangerZonePage() {
                 <Trash2 className="mr-2 size-4" />
                 {copy.clearAllCta}
               </LoadingButton>
-            </CardFooter>
-          </Card>
+            </NeoCardFooter>
+          </NeoCard>
         )}
       </div>
 
-      <Separator className="my-8" />
+      <NeoDivider className="my-8" />
 
       {/* Section: Compte utilisateur */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <UserX2 className="text-muted-foreground size-5" />
+          <UserX2 className="text-neo-text-muted size-5" />
           <h2 className="font-heading text-lg font-semibold">
             {copy.accountSection}
           </h2>
         </div>
 
-        <Card className="border-destructive">
-          <CardHeader>
+        <NeoCard className="border-destructive">
+          <NeoCardHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="text-destructive size-5" />
-              <CardTitle className="text-xl font-semibold">
+              <NeoCardTitle className="text-xl font-semibold">
                 {copy.deleteAccountTitle}
-              </CardTitle>
+              </NeoCardTitle>
             </div>
-            <CardDescription className="text-muted-foreground text-base">
+            <NeoCardDescription className="text-neo-text-muted text-base">
               {copy.deleteAccountDesc}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent className="space-y-4">
             <div className="rounded-lg border bg-stone-900/50 p-4">
               <div className="flex items-start gap-4">
-                <UserX2 className="text-muted-foreground mt-0.5 size-5" />
+                <UserX2 className="text-neo-text-muted mt-0.5 size-5" />
                 <div className="space-y-1">
                   <p className="leading-none font-medium">
                     {copy.personalData}
                   </p>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-neo-text-muted text-sm">
                     {copy.personalDataDesc}
                   </p>
                 </div>
@@ -396,19 +396,17 @@ export default function DangerZonePage() {
             </div>
             <div className="rounded-lg border bg-stone-900/50 p-4">
               <div className="flex items-start gap-4">
-                <Building2 className="text-muted-foreground mt-0.5 size-5" />
+                <Building2 className="text-neo-text-muted mt-0.5 size-5" />
                 <div className="space-y-1">
-                  <p className="leading-none font-medium">
-                    {copy.fridgeData}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="leading-none font-medium">{copy.fridgeData}</p>
+                  <p className="text-neo-text-muted text-sm">
                     {copy.fridgeDataDesc}
                   </p>
                 </div>
               </div>
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-end border-t pt-4">
+          </NeoCardContent>
+          <NeoCardFooter className="flex justify-end border-t pt-4">
             <LoadingButton
               variant="destructive"
               size="lg"
@@ -417,8 +415,8 @@ export default function DangerZonePage() {
             >
               {copy.deleteAccountCta}
             </LoadingButton>
-          </CardFooter>
-        </Card>
+          </NeoCardFooter>
+        </NeoCard>
       </div>
     </div>
   );

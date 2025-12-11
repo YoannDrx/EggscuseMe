@@ -1,7 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { NeoBadge } from "@/components/neo/neo-badge";
+import { NeoButton } from "@/components/neo/neo-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { NeoTableCell, NeoTableRow } from "@/components/neo/neo-table";
 import { authClient } from "@/lib/auth-client";
 import { unwrapSafePromise } from "@/lib/promises";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -120,31 +120,31 @@ export const UserRow = ({ user }: UserRowProps) => {
   });
 
   return (
-    <TableRow key={user.id}>
-      <TableCell>
+    <NeoTableRow key={user.id}>
+      <NeoTableCell>
         <UserTableCell user={user} href={`/admin/users/${user.id}`} />
-      </TableCell>
-      <TableCell>
-        <Badge variant={user.role === "admin" ? "default" : "secondary"}>
+      </NeoTableCell>
+      <NeoTableCell>
+        <NeoBadge variant={user.role === "admin" ? "default" : "secondary"}>
           {user.role ?? "user"}
-        </Badge>
-      </TableCell>
-      <TableCell>
+        </NeoBadge>
+      </NeoTableCell>
+      <NeoTableCell>
         <div className="text-sm">
           {new Date(user.createdAt).toLocaleDateString()}
         </div>
-      </TableCell>
-      <TableCell>
+      </NeoTableCell>
+      <NeoTableCell>
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
+              <NeoButton
                 variant="outline"
                 size="sm"
                 data-testid="user-row-menu-button"
               >
                 <MoreHorizontal className="size-4" />
-              </Button>
+              </NeoButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {!user.banned && (
@@ -195,7 +195,7 @@ export const UserRow = ({ user }: UserRowProps) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </TableCell>
-    </TableRow>
+      </NeoTableCell>
+    </NeoTableRow>
   );
 };

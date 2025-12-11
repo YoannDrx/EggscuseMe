@@ -1,7 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  NeoButton,
+  NeoCard,
+  NeoCardFooter,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { Layout, LayoutHeader, LayoutTitle } from "@/features/page/layout";
 import { logger } from "@/lib/logger";
 import type { ErrorParams } from "@/types/next";
@@ -17,17 +22,17 @@ export default function RouteError({ error, reset }: ErrorParams) {
       <LayoutHeader>
         <LayoutTitle>Error with post.</LayoutTitle>
       </LayoutHeader>
-      <Card>
-        <CardHeader>
-          <CardTitle>
+      <NeoCard>
+        <NeoCardHeader>
+          <NeoCardTitle>
             Sorry, the post you are looking for doesn't work as expected. Please
             try again later.
-          </CardTitle>
-        </CardHeader>
-        <CardFooter>
-          <Button onClick={reset}>Try again</Button>
-        </CardFooter>
-      </Card>
+          </NeoCardTitle>
+        </NeoCardHeader>
+        <NeoCardFooter>
+          <NeoButton onClick={reset}>Try again</NeoButton>
+        </NeoCardFooter>
+      </NeoCard>
     </Layout>
   );
 }

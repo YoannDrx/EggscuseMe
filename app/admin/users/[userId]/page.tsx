@@ -1,6 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NeoBadge } from "@/components/neo";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import {
   Item,
   ItemContent,
@@ -72,11 +77,11 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
 
       <LayoutContent className="flex flex-col gap-4">
         <UserDetailsCard user={userData} />
-        <Card>
-          <CardHeader>
-            <CardTitle>Fridge & Subscription</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <NeoCard>
+          <NeoCardHeader>
+            <NeoCardTitle>Fridge & Subscription</NeoCardTitle>
+          </NeoCardHeader>
+          <NeoCardContent>
             {!userData.ownedFridge ? (
               <div className="text-muted-foreground py-4 text-center">
                 No fridge found
@@ -103,7 +108,7 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
                       {userData.userSubscription && (
                         <>
                           {" • "}
-                          <Badge
+                          <NeoBadge
                             variant={
                               userData.userSubscription.status === "active"
                                 ? "default"
@@ -117,7 +122,7 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
                             {userData.userSubscription.plan}
                             {userData.userSubscription.status &&
                               ` (${userData.userSubscription.status})`}
-                          </Badge>
+                          </NeoBadge>
                         </>
                       )}
                     </ItemDescription>
@@ -125,8 +130,8 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
                 </Item>
               </ItemGroup>
             )}
-          </CardContent>
-        </Card>
+          </NeoCardContent>
+        </NeoCard>
 
         <UserStatsSection userId={userData.id} />
         <UserSessions userId={userData.id} />

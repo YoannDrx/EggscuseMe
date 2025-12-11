@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 import { Eggy, type EggyMood } from "@/features/mascot/components/eggy";
-import { useThemeColors } from "../theme";
 
 type PageHeaderProps = {
   title: string;
@@ -22,17 +21,13 @@ export function PageHeader({
   action,
   className,
 }: PageHeaderProps) {
-  const colors = useThemeColors();
-
   return (
     <header
       className={cn("flex items-center justify-between px-4 py-2", className)}
     >
       <div className="flex-1">
-        <h2 className={cn("text-3xl font-bold", colors.text)}>{title}</h2>
-        {subtitle && (
-          <p className={cn("text-sm", colors.textMuted)}>{subtitle}</p>
-        )}
+        <h2 className="text-neo-text text-3xl font-bold">{title}</h2>
+        {subtitle && <p className="text-neo-text-muted text-sm">{subtitle}</p>}
       </div>
 
       <div className="flex items-center gap-2">

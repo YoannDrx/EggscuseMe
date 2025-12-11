@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
   Layout,
   LayoutContent,
@@ -20,9 +20,9 @@ export default function SuccessPaymentPage() {
           </LayoutDescription>
         </LayoutHeader>
         <LayoutContent>
-          <Link href="/" className={buttonVariants({ size: "lg" })}>
-            Get Started
-          </Link>
+          <NeoButton asChild size="lg">
+            <Link href="/">Get Started</Link>
+          </NeoButton>
         </LayoutContent>
       </Layout>
     </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,16 +39,16 @@ export function LanguageSwitcher({
     return (
       <div className={cn("flex items-center gap-1", className)}>
         {locales.map((locale) => (
-          <Button
+          <NeoButton
             key={locale}
-            variant={currentLocale === locale ? "default" : "ghost"}
+            variant={currentLocale === locale ? "primary" : "ghost"}
             size="sm"
             onClick={() => handleLocaleChange(locale)}
             disabled={isPending}
             className="px-2"
           >
             {locale.toUpperCase()}
-          </Button>
+          </NeoButton>
         ))}
       </div>
     );
@@ -57,7 +57,7 @@ export function LanguageSwitcher({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
+        <NeoButton
           variant="ghost"
           size="icon"
           className={className}
@@ -67,7 +67,7 @@ export function LanguageSwitcher({
           <span className="sr-only">
             {localeNames[currentLocale]} - Change language
           </span>
-        </Button>
+        </NeoButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {locales.map((locale) => (

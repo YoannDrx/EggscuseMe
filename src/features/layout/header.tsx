@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { NeoButton } from "@/components/neo";
 import Link from "next/link";
 import { AuthButton } from "../auth/auth-button";
 import { HeaderBase } from "./header-base";
@@ -6,24 +6,15 @@ import { HeaderBase } from "./header-base";
 export function Header() {
   return (
     <HeaderBase>
-      <Link
-        href="/docs"
-        className={buttonVariants({ variant: "ghost", size: "sm" })}
-      >
-        Docs
-      </Link>
-      <Link
-        href="/about"
-        className={buttonVariants({ variant: "ghost", size: "sm" })}
-      >
-        About
-      </Link>
-      <Link
-        href="/contact"
-        className={buttonVariants({ variant: "ghost", size: "sm" })}
-      >
-        Contact
-      </Link>
+      <NeoButton asChild variant="ghost" size="sm">
+        <Link href="/docs">Docs</Link>
+      </NeoButton>
+      <NeoButton asChild variant="ghost" size="sm">
+        <Link href="/about">About</Link>
+      </NeoButton>
+      <NeoButton asChild variant="ghost" size="sm">
+        <Link href="/contact">Contact</Link>
+      </NeoButton>
       <AuthButton />
     </HeaderBase>
   );

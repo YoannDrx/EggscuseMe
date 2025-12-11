@@ -1,25 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { NeoButton, NeoModal, NeoSheet } from "@/components/neo";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 import type { ReactNode } from "react";
 
 export type ResponsiveModalProps = {
@@ -56,79 +39,52 @@ export function ResponsiveModal({
   children,
   footer,
   className,
-  fullHeightMobile = false,
+  fullHeightMobile: _ = false,
   showCloseButton = true,
 }: ResponsiveModalProps) {
   const isMobile = useIsMobile();
 
-  // Mobile: Use Sheet (bottom sheet)
+  // Mobile: Use NeoSheet (bottom sheet)
   if (isMobile) {
     return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent
-          side="bottom"
-          className={cn(
-            "rounded-t-[var(--radius-sheet)] px-4 pb-8",
-            fullHeightMobile ? "h-[90vh]" : "max-h-[85vh]",
-            "flex flex-col",
-            className,
-          )}
-        >
-          {/* Drag handle */}
-          <div className="bg-muted-foreground/30 mx-auto mb-4 h-1.5 w-12 shrink-0 rounded-full" />
+      <NeoSheet
+        open={open}
+        onOpenChange={onOpenChange}
+        side="bottom"
+        title={title}
+        description={description}
+        showCloseButton={showCloseButton}
+        className={className}
+      >
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto py-4">{children}</div>
 
-          <SheetHeader className="shrink-0 text-left">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <SheetTitle className="text-lg">{title}</SheetTitle>
-                {description && (
-                  <SheetDescription className="mt-1">
-                    {description}
-                  </SheetDescription>
-                )}
-              </div>
-              {showCloseButton && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8 shrink-0 rounded-full"
-                  onClick={() => onOpenChange(false)}
-                >
-                  <X className="size-4" />
-                  <span className="sr-only">Fermer</span>
-                </Button>
-              )}
-            </div>
-          </SheetHeader>
-
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto py-4">{children}</div>
-
-          {/* Footer */}
-          {footer && (
-            <SheetFooter className="shrink-0 border-t pt-4">
-              {footer}
-            </SheetFooter>
-          )}
-        </SheetContent>
-      </Sheet>
+        {/* Footer */}
+        {footer && (
+          <div className="border-neo-border/30 shrink-0 border-t-[length:var(--border-neo)] pt-4">
+            {footer}
+          </div>
+        )}
+      </NeoSheet>
     );
   }
 
-  // Desktop: Use Dialog
+  // Desktop: Use NeoModal
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn("sm:max-w-md", className)}>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
-        </DialogHeader>
-
-        <div className="py-4">{children}</div>
-
-        {footer && <DialogFooter>{footer}</DialogFooter>}
-      </DialogContent>
-    </Dialog>
+    <NeoModal
+      open={open}
+      onOpenChange={onOpenChange}
+      title={title}
+      description={description}
+      className={cn("sm:max-w-md", className)}
+    >
+      <div className="py-4">{children}</div>
+      {footer && (
+        <div className="border-neo-border/30 mt-4 border-t-[length:var(--border-neo)] pt-4">
+          {footer}
+        </div>
+      )}
+    </NeoModal>
   );
 }
 
@@ -176,21 +132,25 @@ export function ConfirmModal({
       showCloseButton={false}
       footer={
         <div className="flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <Button variant="outline" onClick={handleCancel} disabled={loading}>
+          <NeoButton
+            variant="outline"
+            onClick={handleCancel}
+            disabled={loading}
+          >
             {cancelLabel}
-          </Button>
-          <Button
-            variant={variant === "destructive" ? "destructive" : "default"}
+          </NeoButton>
+          <NeoButton
+            variant={variant === "destructive" ? "destructive" : "primary"}
             onClick={handleConfirm}
             disabled={loading}
           >
             {loading ? "..." : confirmLabel}
-          </Button>
+          </NeoButton>
         </div>
       }
     >
       {description && (
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <p className="text-neo-text-muted text-sm">{description}</p>
       )}
     </ResponsiveModal>
   );

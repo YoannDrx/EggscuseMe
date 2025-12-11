@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -41,20 +46,20 @@ export function AdminStatCard({
   const styles = variantStyles[variant];
 
   return (
-    <Card className={className}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-muted-foreground text-xs font-medium">
+    <NeoCard className={className}>
+      <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <NeoCardTitle className="text-muted-foreground text-xs font-medium">
           {title}
-        </CardTitle>
+        </NeoCardTitle>
         <Icon className={cn("size-4", styles.icon)} />
-      </CardHeader>
-      <CardContent>
+      </NeoCardHeader>
+      <NeoCardContent>
         <div className={cn("text-2xl font-bold", styles.value)}>{value}</div>
         {description && (
           <p className="text-muted-foreground text-xs">{description}</p>
         )}
-      </CardContent>
-    </Card>
+      </NeoCardContent>
+    </NeoCard>
   );
 }
 
