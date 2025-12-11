@@ -1225,5 +1225,143 @@
       "subject": "Freshness alert - {count} box(es) expiring soon",
       "bodyTitle": "Freshness alert"
     }
+  },
+  "pages": {
+    "posts": {
+      "title": "The EggscuseMe Blog",
+      "subtitle": "Tips, tricks, and recipes to cook your eggs perfectly",
+      "description": "Discover our articles on egg freshness, cooking techniques, and anti-waste recipes.",
+      "categories": "Categories",
+      "allCategories": "All categories",
+      "noPosts": "No posts found",
+      "noPostsDescription": "Come back soon to discover our tips and recipes!",
+      "viewAll": "View all articles",
+      "backToList": "Back to blog",
+      "readMore": "Read more",
+      "meta": {
+        "title": "Blog | EggscuseMe",
+        "description": "Tips, recipes, and tricks to manage your eggs and reduce food waste."
+      }
+    },
+    "contact": {
+      "title": "Contact us",
+      "subtitle": "Have a question about EggscuseMe? Need help managing your fridge? We're here to help.",
+      "form": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "subject": "Subject",
+        "subjectPlaceholder": "Question about egg tracking...",
+        "message": "Message",
+        "messagePlaceholder": "Describe your question or suggestion...",
+        "submit": "Send message",
+        "sending": "Sending...",
+        "success": "Your message has been sent successfully!",
+        "error": "An error occurred. Please try again."
+      },
+      "info": {
+        "title": "Information",
+        "address": "Address",
+        "addressValue": "Paris, France",
+        "email": "Email",
+        "emailValue": "contact@eggscuseme.com",
+        "hours": "Hours",
+        "hoursValue": "Monday - Friday, 9am - 6pm",
+        "timezone": "Timezone: Paris (CET)",
+        "response": "Response time",
+        "responseValue": "Response within 24-48 business hours"
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "items": [
+          {
+            "question": "Is the app free?",
+            "answer": "Yes! The free plan lets you manage up to 2 egg boxes. Upgrade to Premium for unlimited features."
+          },
+          {
+            "question": "How does fridge sharing work?",
+            "answer": "Create an invite link from settings and share it with family or friends. They can then view and manage the fridge with you."
+          },
+          {
+            "question": "How do you calculate freshness?",
+            "answer": "We use the laying date you provide. An egg is extra-fresh up to 9 days, fresh up to 21 days, and should be cooked thoroughly between 22 and 28 days."
+          }
+        ]
+      },
+      "meta": {
+        "title": "Contact | EggscuseMe",
+        "description": "Contact the EggscuseMe team for any questions or suggestions."
+      }
+    },
+    "about": {
+      "title": "Zero eggs wasted",
+      "eyebrow": "Our mission",
+      "subtitle": "EggscuseMe was born from a simple observation: too many eggs end up in the trash due to lack of tracking. We created the app that changes that.",
+      "stats": {
+        "wasted": "30%",
+        "wastedLabel": "of purchased eggs are thrown away",
+        "daily": "2M",
+        "dailyLabel": "eggs wasted per day in France",
+        "shelfLife": "28",
+        "shelfLifeLabel": "days maximum shelf life",
+        "free": "100%",
+        "freeLabel": "free to get started"
+      },
+      "problem": {
+        "title": "The waste problem",
+        "description": "Every year in France, millions of perfectly consumable eggs are thrown away. The cause? Confusion about dates and lack of information on how to cook them based on freshness."
+      },
+      "solution": {
+        "title": "Our solution",
+        "subtitle": "A smart virtual fridge that helps you every day.",
+        "tracking": {
+          "title": "Smart tracking",
+          "description": "Visualize each box's freshness with color indicators. Green for extra-fresh, yellow for fresh, orange for cook-thoroughly."
+        },
+        "recipes": {
+          "title": "Adapted recipes",
+          "description": "Recipe suggestions based on your eggs' freshness. Soft-boiled eggs for extra-fresh, cakes for older ones."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "Get an alert when your eggs are approaching their expiration. Never forget eggs at the back of the fridge again."
+        }
+      },
+      "values": {
+        "title": "Our values",
+        "antiWaste": {
+          "title": "Anti-waste",
+          "description": "Every saved egg counts. Our mission is to reduce food waste, one egg at a time."
+        },
+        "simplicity": {
+          "title": "Simplicity",
+          "description": "An intuitive interface for the whole family. Scan, track, cook. That's it."
+        },
+        "family": {
+          "title": "Family",
+          "description": "Share your fridge with loved ones. Real-time sync so everyone stays informed."
+        }
+      },
+      "cta": {
+        "title": "Ready to reduce waste?",
+        "subtitle": "Join thousands of families who manage their eggs better.",
+        "button": "Create my free fridge"
+      },
+      "meta": {
+        "title": "About | EggscuseMe",
+        "description": "Discover EggscuseMe, the anti-waste app for tracking your eggs' freshness."
+      }
+    },
+    "docs": {
+      "title": "Documentation",
+      "subtitle": "Everything you need to know to use EggscuseMe",
+      "general": "General",
+      "readMore": "Read more",
+      "backToList": "Back to documentation",
+      "meta": {
+        "title": "Documentation | EggscuseMe",
+        "description": "Complete guide to using EggscuseMe and managing your eggs efficiently."
+      }
+    }
   }
 }

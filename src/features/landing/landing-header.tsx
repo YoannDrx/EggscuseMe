@@ -3,7 +3,6 @@
 import { LanguageToggle } from "@/components/nowts/language-toggle";
 import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import { NeoButton } from "@/components/neo";
-import { LogoSvg } from "@/components/svg/logo-svg";
 import { EggyChefMix } from "@/features/mascot/components/eggy-sticker-components";
 import { SiteConfig } from "@/site-config";
 import { cn } from "@/lib/utils";
@@ -89,7 +88,6 @@ export function LandingHeader() {
             onClick={() => router.push("/")}
           >
             <EggyChefMix className="size-9" />
-            <LogoSvg size={24} />
             <span className="font-heading text-neo-text text-lg font-bold tracking-tight max-sm:hidden">
               {SiteConfig.title}
             </span>

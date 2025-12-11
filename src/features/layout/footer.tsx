@@ -1,7 +1,6 @@
 "use client";
 
 import { EggyChefMix } from "@/features/mascot/components/eggy-sticker-components";
-import { LogoSvg } from "@/components/svg/logo-svg";
 import { SiteConfig } from "@/site-config";
 import Link from "next/link";
 import { Twitter, Github, Linkedin } from "lucide-react";
@@ -42,7 +41,6 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <div className="border-neo-border bg-neo-card inline-flex w-fit items-center gap-3 rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] px-4 py-2 shadow-[var(--shadow-neo-md)]">
               <EggyChefMix className="size-12" />
-              <LogoSvg size={28} />
               <span className="font-heading text-neo-text text-xl font-bold tracking-tight">
                 {SiteConfig.title}
               </span>

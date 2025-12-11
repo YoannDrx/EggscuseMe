@@ -1225,5 +1225,143 @@
       "subject": "Alerte fraîcheur - {count} boîte(s) bientôt périmée(s)",
       "bodyTitle": "Alerte fraîcheur"
     }
+  },
+  "pages": {
+    "posts": {
+      "title": "Le Blog EggscuseMe",
+      "subtitle": "Conseils, astuces et recettes pour cuisiner vos œufs parfaitement",
+      "description": "Découvrez nos articles sur la fraîcheur des œufs, les techniques de cuisson et les recettes anti-gaspi.",
+      "categories": "Catégories",
+      "allCategories": "Toutes les catégories",
+      "noPosts": "Aucun article trouvé",
+      "noPostsDescription": "Revenez bientôt pour découvrir nos conseils et recettes !",
+      "viewAll": "Voir tous les articles",
+      "backToList": "Retour au blog",
+      "readMore": "Lire la suite",
+      "meta": {
+        "title": "Blog | EggscuseMe",
+        "description": "Conseils, recettes et astuces pour gérer vos œufs et réduire le gaspillage alimentaire."
+      }
+    },
+    "contact": {
+      "title": "Nous contacter",
+      "subtitle": "Une question sur EggscuseMe ? Besoin d'aide pour gérer votre frigo ? Nous sommes à votre écoute.",
+      "form": {
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "subject": "Sujet",
+        "subjectPlaceholder": "Question sur le suivi des œufs...",
+        "message": "Message",
+        "messagePlaceholder": "Décrivez votre question ou suggestion...",
+        "submit": "Envoyer le message",
+        "sending": "Envoi en cours...",
+        "success": "Votre message a bien été envoyé !",
+        "error": "Une erreur est survenue. Veuillez réessayer."
+      },
+      "info": {
+        "title": "Informations",
+        "address": "Adresse",
+        "addressValue": "Paris, France",
+        "email": "Email",
+        "emailValue": "contact@eggscuseme.com",
+        "hours": "Horaires",
+        "hoursValue": "Lundi - Vendredi, 9h - 18h",
+        "timezone": "Fuseau horaire : Paris (CET)",
+        "response": "Délai de réponse",
+        "responseValue": "Réponse sous 24-48h ouvrées"
+      },
+      "faq": {
+        "title": "Questions fréquentes",
+        "items": [
+          {
+            "question": "L'application est-elle gratuite ?",
+            "answer": "Oui ! Le plan gratuit permet de gérer jusqu'à 2 boîtes d'œufs. Passez à Premium pour des fonctionnalités illimitées."
+          },
+          {
+            "question": "Comment fonctionne le partage de frigo ?",
+            "answer": "Créez un lien d'invitation depuis les paramètres et partagez-le avec vos proches. Ils pourront voir et gérer le frigo avec vous."
+          },
+          {
+            "question": "Comment calculez-vous la fraîcheur ?",
+            "answer": "Nous utilisons la date de ponte que vous indiquez. Un œuf est extra-frais jusqu'à 9 jours, frais jusqu'à 21 jours, et à cuire entre 22 et 28 jours."
+          }
+        ]
+      },
+      "meta": {
+        "title": "Contact | EggscuseMe",
+        "description": "Contactez l'équipe EggscuseMe pour toute question ou suggestion."
+      }
+    },
+    "about": {
+      "title": "Zéro œuf gaspillé",
+      "eyebrow": "Notre mission",
+      "subtitle": "EggscuseMe est né d'un constat simple : trop d'œufs finissent à la poubelle par manque de suivi. Nous avons créé l'application qui change ça.",
+      "stats": {
+        "wasted": "30%",
+        "wastedLabel": "des œufs achetés sont jetés",
+        "daily": "2M",
+        "dailyLabel": "d'œufs gaspillés/jour en France",
+        "shelfLife": "28",
+        "shelfLifeLabel": "jours de durée de vie max",
+        "free": "100%",
+        "freeLabel": "gratuit pour commencer"
+      },
+      "problem": {
+        "title": "Le problème du gaspillage",
+        "description": "Chaque année en France, des millions d'œufs parfaitement consommables sont jetés. La cause ? Une confusion sur les dates et un manque d'information sur comment les cuisiner selon leur fraîcheur."
+      },
+      "solution": {
+        "title": "Notre solution",
+        "subtitle": "Un frigo virtuel intelligent qui vous accompagne au quotidien.",
+        "tracking": {
+          "title": "Suivi intelligent",
+          "description": "Visualisez la fraîcheur de chaque boîte avec des indicateurs couleur. Vert pour extra-frais, jaune pour frais, orange pour à cuire."
+        },
+        "recipes": {
+          "title": "Recettes adaptées",
+          "description": "Des suggestions de recettes basées sur la fraîcheur de vos œufs. Œufs à la coque pour les extra-frais, gâteaux pour les plus anciens."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "Recevez une alerte quand vos œufs approchent de leur date limite. Plus jamais d'œufs oubliés au fond du frigo."
+        }
+      },
+      "values": {
+        "title": "Nos valeurs",
+        "antiWaste": {
+          "title": "Anti-gaspi",
+          "description": "Chaque œuf sauvé compte. Notre mission est de réduire le gaspillage alimentaire, un œuf à la fois."
+        },
+        "simplicity": {
+          "title": "Simplicité",
+          "description": "Une interface intuitive pour toute la famille. Scanner, suivre, cuisiner. C'est tout."
+        },
+        "family": {
+          "title": "Famille",
+          "description": "Partagez votre frigo avec vos proches. Synchronisation en temps réel pour que tout le monde soit au courant."
+        }
+      },
+      "cta": {
+        "title": "Prêt à réduire le gaspillage ?",
+        "subtitle": "Rejoignez des milliers de familles qui gèrent mieux leurs œufs.",
+        "button": "Créer mon frigo gratuit"
+      },
+      "meta": {
+        "title": "À propos | EggscuseMe",
+        "description": "Découvrez EggscuseMe, l'application anti-gaspi pour suivre la fraîcheur de vos œufs."
+      }
+    },
+    "docs": {
+      "title": "Documentation",
+      "subtitle": "Tout ce que vous devez savoir pour utiliser EggscuseMe",
+      "general": "Général",
+      "readMore": "Lire la suite",
+      "backToList": "Retour à la documentation",
+      "meta": {
+        "title": "Documentation | EggscuseMe",
+        "description": "Guide complet pour utiliser EggscuseMe et gérer vos œufs efficacement."
+      }
+    }
   }
 }
