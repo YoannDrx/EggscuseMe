@@ -5,13 +5,21 @@ export const SiteConfig = {
   prodUrl: "https://eggscuseme.app",
   appId: "eggscuseme",
   domain: "eggscuseme.app",
-  appIcon: "/images/logo.svg",
+  appIcon: "/images/eggy-icon.svg",
   company: {
     name: "EggscuseMe",
     address: "Paris, France",
   },
   brand: {
     primary: "#D4A853", // Golden egg yolk color
+  },
+
+  // PWA Configuration
+  pwa: {
+    description:
+      "Ne jetez plus jamais vos œufs. Suivez leur fraîcheur et cuisinez-les parfaitement.",
+    backgroundColor: "#0a0a0a", // Dark mode default
+    categories: ["food", "lifestyle", "utilities"] as string[],
   },
   team: {
     image: "",

@@ -6,7 +6,7 @@ import { defaultLocale } from "@/i18n/config";
 import { getServerUrl } from "@/lib/server-url";
 import { cn } from "@/lib/utils";
 import { SiteConfig } from "@/site-config";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fredoka, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -16,10 +16,33 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: SiteConfig.title,
   description: SiteConfig.description,
   metadataBase: new URL(getServerUrl()),
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: SiteConfig.title,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 // Heading font - Rounded, friendly, egg-like
