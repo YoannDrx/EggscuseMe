@@ -28,7 +28,7 @@ export function IlluFridgeEmpty({
 }: FridgeEmptyProps) {
   return (
     <svg
-      viewBox="0 0 200 220"
+      viewBox="0 -15 200 235"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn(sizeMap[size], className)}

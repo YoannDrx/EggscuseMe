@@ -1,7 +1,7 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { AnimatePresence, motion, useDragControls } from 'motion/react';
+import { AnimatePresence, motion, useDragControls } from "motion/react";
 import { X } from "lucide-react";
 import * as React from "react";
 
@@ -27,7 +27,8 @@ const neoSheetVariants = cva(
         bottom: [
           "inset-x-0 bottom-0",
           "rounded-t-[var(--radius-neo-3xl)]",
-          "max-h-[85vh]",
+          "min-h-[70vh]",
+          "max-h-[90vh]",
         ].join(" "),
         left: [
           "inset-y-0 left-0",

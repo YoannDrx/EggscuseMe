@@ -12,11 +12,15 @@ import {
   recipeSearchParams,
   timeRangeBoundaries,
 } from "../lib/recipe-search-params";
-import { getRecipeName, getRecipeDescription } from "../lib/recipe-i18n";
+import { getRecipeDescription, getRecipeName } from "../lib/recipe-i18n";
 import { useLocale } from "next-intl";
 import { Eggy } from "@/features/mascot";
 
-export function RecipeGrid() {
+type RecipeGridProps = {
+  isChef?: boolean;
+};
+
+export function RecipeGrid({ isChef = false }: RecipeGridProps) {
   const locale = useLocale();
   const t = useTranslations("recipes.filters");
 
@@ -32,6 +36,11 @@ export function RecipeGrid() {
 
   const filteredRecipes = useMemo(() => {
     let recipes = [...RECIPES];
+
+    // Filter Chef exclusive recipes for non-Chef users
+    if (!isChef) {
+      recipes = recipes.filter((recipe) => !recipe.isChefExclusive);
+    }
 
     // Search filter
     if (filters.search) {
@@ -94,7 +103,7 @@ export function RecipeGrid() {
     }
 
     return recipes;
-  }, [filters, locale]);
+  }, [filters, locale, isChef]);
 
   const hasActiveFilters =
     filters.tags.length > 0 ||
@@ -129,8 +138,8 @@ export function RecipeGrid() {
         </div>
       )}
 
-      {/* Recipe grid - 2 columns on mobile */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-3">
+      {/* Recipe grid - 1 column on mobile, 2 on tablet, 3 on desktop */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
         {filteredRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}

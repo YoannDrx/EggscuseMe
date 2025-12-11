@@ -137,7 +137,7 @@ export const EggyCool = ({ className = "w-32 h-32" }) => (
 
 export const EggyChefMix = ({ className = "w-32 h-32" }) => (
   <motion.div className={className}>
-    <svg viewBox="0 0 140 130" className="h-full w-full drop-shadow-xl">
+    <svg viewBox="-20 0 160 130" className="h-full w-full drop-shadow-xl">
       <g transform="translate(20, 10)">
         <BaseEggShape />
         <g transform="translate(0, -15)">

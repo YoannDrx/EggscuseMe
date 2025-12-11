@@ -30,6 +30,7 @@ export type Recipe = {
   chefTipEn?: string; // Chef's professional tip (EN)
   safetyNote?: string; // Food safety warning (FR)
   safetyNoteEn?: string; // Food safety warning (EN)
+  isChefExclusive?: boolean; // Available only to Chef plan users
 };
 
 export type RecipeSuggestion = Recipe & {

@@ -19,7 +19,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
-import { getFridgeNavigation } from "./fridge-navigation.links";
+import {
+  getFridgeNavigation,
+  getSettingsLinks,
+} from "./fridge-navigation.links";
+import { SettingsDropdown } from "./settings-dropdown";
 
 type FridgeSidebarProps = {
   role: "OWNER" | "GUEST";
@@ -28,6 +32,7 @@ type FridgeSidebarProps = {
 export function FridgeSidebar({ role }: FridgeSidebarProps) {
   const t = useTranslations("fridge.nav");
   const links: NavigationGroup[] = getFridgeNavigation(role);
+  const settingsLinks = getSettingsLinks(role);
   const { expanded, mobile } = useSidebarContext();
 
   return (
@@ -45,7 +50,7 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
           )}
         </Link>
       </NeoSidebarHeader>
-      <NeoSidebarContent>
+      <NeoSidebarContent className="space-y-2">
         {links.map((link) => (
           <ItemCollapsing
             defaultOpenStartPath={link.defaultOpenStartPath}
@@ -54,6 +59,7 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
             <NeoSidebarGroup
               key={link.titleKey}
               label={expanded || mobile ? t(link.titleKey) : undefined}
+              className="space-y-2"
             >
               <Collapsible defaultOpen className="group/collapsible">
                 <SidebarNavigationMenu link={link} />
@@ -61,6 +67,9 @@ export function FridgeSidebar({ role }: FridgeSidebarProps) {
             </NeoSidebarGroup>
           </ItemCollapsing>
         ))}
+
+        {/* Settings dropdown */}
+        <SettingsDropdown settingsLinks={settingsLinks} />
       </NeoSidebarContent>
       <NeoSidebarFooter className="flex flex-col gap-3">
         {role === "GUEST" && (

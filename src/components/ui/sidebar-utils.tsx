@@ -30,7 +30,7 @@ export const NeoMenuItemLink = ({
       <div
         className={cn(
           "group relative flex w-full items-center gap-3",
-          "rounded-[var(--radius-neo-lg)] px-3 py-2.5",
+          "rounded-[var(--radius-neo-lg)] px-3 py-3",
           "text-sm font-medium",
           "outline-none",
           "transition-all duration-200",
@@ -99,6 +99,66 @@ export const NeoSubItemLink = ({
   );
 };
 
+// Classic sidebar menu button link (for use with SidebarProvider from @/components/ui/sidebar)
+export const SidebarMenuButtonLink = ({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <Link
+      href={href}
+      prefetch={true}
+      className={cn(
+        "flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+        isActive
+          ? "bg-accent text-accent-foreground"
+          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+        className,
+      )}
+    >
+      {children}
+    </Link>
+  );
+};
+
+// Classic sidebar sub button link
+export const SidebarSubButtonLink = ({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <Link
+      href={href}
+      prefetch={true}
+      className={cn(
+        "flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors",
+        isActive
+          ? "bg-accent text-accent-foreground font-medium"
+          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+        className,
+      )}
+    >
+      {children}
+    </Link>
+  );
+};
+
 export const SidebarNavigationMenu = (props: {
   link: NavigationGroup;
   translationKey?: string;
@@ -107,7 +167,7 @@ export const SidebarNavigationMenu = (props: {
   const t = useTranslations(translationKey);
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       {link.links.map((item) => {
         if (item.links) {
           return (

@@ -49,7 +49,10 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
       id: params.userId,
     },
     include: {
-      ownedFridge: true,
+      ownedFridges: {
+        where: { isDefault: true },
+        take: 1,
+      },
       userSubscription: true,
       accounts: {
         orderBy: {
@@ -62,6 +65,10 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
   if (!userData) {
     notFound();
   }
+
+  const defaultFridge = userData.ownedFridges[0] as
+    | (typeof userData.ownedFridges)[0]
+    | undefined;
 
   return (
     <Layout size="lg">
@@ -82,7 +89,7 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
             <NeoCardTitle>Fridge & Subscription</NeoCardTitle>
           </NeoCardHeader>
           <NeoCardContent>
-            {!userData.ownedFridge ? (
+            {!defaultFridge ? (
               <div className="text-muted-foreground py-4 text-center">
                 No fridge found
               </div>
@@ -91,20 +98,16 @@ async function RoutePage(props: PageProps<"/admin/users/[userId]">) {
                 <Item variant="outline" size="sm">
                   <ItemMedia variant="image">
                     <Avatar className="size-10">
-                      <AvatarImage
-                        src={undefined}
-                        alt={userData.ownedFridge.name}
-                      />
+                      <AvatarImage src={undefined} alt={defaultFridge.name} />
                       <AvatarFallback className="text-sm">
-                        {userData.ownedFridge.name.charAt(0)}
+                        {defaultFridge.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>{userData.ownedFridge.name}</ItemTitle>
+                    <ItemTitle>{defaultFridge.name}</ItemTitle>
                     <ItemDescription>
-                      Created:{" "}
-                      {userData.ownedFridge.createdAt.toLocaleDateString()}
+                      Created: {defaultFridge.createdAt.toLocaleDateString()}
                       {userData.userSubscription && (
                         <>
                           {" • "}

@@ -9,7 +9,7 @@ import {
 } from "@/components/neo/neo-dropdown";
 import type { EggBox } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
-import { MoreHorizontal, Trash2, Utensils } from "lucide-react";
+import { ChefHat, MoreHorizontal, Trash2, Utensils } from "lucide-react";
 import { motion } from "motion/react";
 import {
   calculateExpirationProgress,
@@ -170,6 +170,18 @@ export function EggBoxCard({
           ponte
         </span>
       </div>
+
+      {/* Pro Mode Info (if available) */}
+      {(eggBox.lotNumber ?? eggBox.producerCode) && (
+        <div className="mb-4 flex items-center gap-2 rounded border border-amber-500/30 bg-amber-500/5 px-2 py-1">
+          <ChefHat className="size-3 text-amber-500" />
+          <span className="text-neo-text-muted text-xs">
+            {eggBox.lotNumber && `Lot: ${eggBox.lotNumber}`}
+            {eggBox.lotNumber && eggBox.producerCode && " • "}
+            {eggBox.producerCode && `Prod: ${eggBox.producerCode}`}
+          </span>
+        </div>
+      )}
 
       {/* Progress Bar */}
       <div className="bg-neo-card/30 absolute bottom-0 left-0 h-1 w-full">

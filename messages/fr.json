@@ -411,17 +411,61 @@
     },
     "pricing": {
       "title": "Choisissez votre formule",
-      "subtitle": "Commencez gratuitement, passez au Premium quand vous le souhaitez.",
+      "subtitle": "Commencez gratuitement, passez Brigade ou Chef selon vos besoins.",
       "monthly": "Mensuel",
       "yearly": "Annuel",
       "discount": "-50%",
       "footer": "Tous les plans incluent le suivi de fraîcheur et les recommandations de recettes.",
       "question": "Une question ?",
       "contactUs": "Contactez-nous",
-      "free": {
-        "title": "Gratuit",
+      "solo": {
+        "title": "Solo",
         "price": "0€",
-        "description": "Pour commencer",
+        "description": "Pour cuisiner tes œufs rien que pour toi",
+        "features": [
+          "2 boîtes d'œufs max",
+          "Minuteur intelligent",
+          "Suivi de fraîcheur",
+          "Historique limité (30 jours)",
+          "1 utilisateur"
+        ],
+        "cta": "Commencer gratuitement"
+      },
+      "brigade": {
+        "title": "Brigade",
+        "price": "4,99€",
+        "period": "/mois",
+        "description": "Pour cuisiner à plusieurs, en équipe",
+        "badge": "Recommandé",
+        "features": [
+          "Boîtes illimitées",
+          "Notifications fraîcheur",
+          "Stats anti-gaspi",
+          "Historique complet",
+          "Partage famille (5 membres)"
+        ],
+        "cta": "Choisir Brigade"
+      },
+      "chef": {
+        "title": "Chef",
+        "price": "14,99€",
+        "period": "/mois",
+        "description": "Pour les pros et gros volumes",
+        "badge": "Pro",
+        "features": [
+          "Multi-frigos",
+          "Export PDF/CSV",
+          "Mode pro (lots)",
+          "Recettes exclusives",
+          "Membres illimités",
+          "Support prioritaire"
+        ],
+        "cta": "Passer Chef"
+      },
+      "free": {
+        "title": "Solo",
+        "price": "0€",
+        "description": "Pour cuisiner tes œufs rien que pour toi",
         "features": [
           "2 boîtes d'œufs max",
           "Minuteur basique",
@@ -430,10 +474,10 @@
         "cta": "Commencer gratuitement"
       },
       "premium": {
-        "title": "Premium",
-        "price": "2,99€",
+        "title": "Brigade",
+        "price": "4,99€",
         "period": "/mois",
-        "description": "Pour les amateurs d'œufs",
+        "description": "Pour cuisiner à plusieurs, en équipe",
         "features": [
           "Boîtes illimitées",
           "Historique complet",
@@ -442,7 +486,7 @@
           "Recettes exclusives",
           "Export des données"
         ],
-        "cta": "Essayer Premium"
+        "cta": "Choisir Brigade"
       }
     },
     "faq": {
@@ -605,6 +649,7 @@
     "limitReached": "Limite atteinte",
     "limitReachedDescription": "Vous avez atteint la limite de {limit} boîtes. Passez à Premium pour des boîtes illimitées.",
     "upgradeToPremium": "Passer à Premium",
+    "chefRequired": "Cette fonctionnalite necessite le plan Chef.",
     "fridge": {
       "ownerOnly": "Seul le propriétaire du frigo peut modifier les boîtes d'oeufs.",
       "freePlanLimit": "Le plan gratuit est limité à {count} boîtes d'oeufs. Passez Premium pour des boîtes illimitées !",
@@ -912,6 +957,10 @@
         "title": "Abonnement",
         "description": "Plan et paiements"
       },
+      "fridges": {
+        "title": "Mes frigos",
+        "description": "Gerez vos espaces de stockage (Chef)"
+      },
       "danger": {
         "title": "Zone de danger",
         "description": "Supprimer données, frigo ou compte"
@@ -1055,6 +1104,13 @@
       },
       "source": "Origine (optionnel)",
       "sourcePlaceholder": "ex: Ferme locale, Supermarché",
+      "proMode": {
+        "title": "Mode Pro",
+        "lotNumber": "N° de lot",
+        "lotNumberPlaceholder": "ex: 2FR123456",
+        "producerCode": "Code producteur",
+        "producerCodePlaceholder": "ex: 0FRABC01"
+      },
       "cancel": "Annuler",
       "save": "Ajouter",
       "saving": "Ajout...",

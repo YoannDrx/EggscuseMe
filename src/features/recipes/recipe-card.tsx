@@ -112,12 +112,23 @@ export function RecipeCard({
             >
               {name}
             </NeoCardTitle>
-            {isSuggestion && recipe.urgency === "high" && (
-              <NeoBadge variant="destructive" className="shrink-0">
-                <AlertTriangle className="mr-1 size-3" />
-                {t("urgent")}
-              </NeoBadge>
-            )}
+            <div className="flex shrink-0 gap-1">
+              {recipe.isChefExclusive && (
+                <NeoBadge
+                  variant="secondary"
+                  className="border-amber-500/30 bg-amber-500/10 text-amber-500"
+                >
+                  <ChefHat className="mr-1 size-3" />
+                  Chef
+                </NeoBadge>
+              )}
+              {isSuggestion && recipe.urgency === "high" && (
+                <NeoBadge variant="destructive">
+                  <AlertTriangle className="mr-1 size-3" />
+                  {t("urgent")}
+                </NeoBadge>
+              )}
+            </div>
           </div>
 
           {/* Suggestion reason */}

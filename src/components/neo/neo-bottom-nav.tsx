@@ -1,8 +1,9 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -79,22 +80,8 @@ const NeoBottomNav = React.forwardRef<HTMLElement, NeoBottomNavProps>(
             const isActive = item.id === activeId;
             const Icon = item.icon;
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  item.onClick?.();
-                  onItemClick?.(item);
-                }}
-                className={cn(
-                  "relative flex flex-col items-center justify-center gap-1",
-                  "outline-none",
-                  "transition-all duration-200",
-                  // Press effect
-                  "active:scale-95",
-                )}
-              >
+            const itemContent = (
+              <>
                 <motion.div
                   animate={{ scale: isActive ? 1.15 : 1 }}
                   transition={{ type: "spring", stiffness: 500, damping: 25 }}
@@ -117,6 +104,44 @@ const NeoBottomNav = React.forwardRef<HTMLElement, NeoBottomNavProps>(
                     {item.label}
                   </span>
                 )}
+              </>
+            );
+
+            const commonClasses = cn(
+              "relative flex flex-col items-center justify-center gap-1",
+              "outline-none",
+              "transition-all duration-200",
+              "active:scale-95",
+            );
+
+            // Use Link for items with href, button for onClick-only items
+            if (item.href) {
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => {
+                    item.onClick?.();
+                    onItemClick?.(item);
+                  }}
+                  className={commonClasses}
+                >
+                  {itemContent}
+                </Link>
+              );
+            }
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  item.onClick?.();
+                  onItemClick?.(item);
+                }}
+                className={commonClasses}
+              >
+                {itemContent}
               </button>
             );
           })}
@@ -126,7 +151,7 @@ const NeoBottomNav = React.forwardRef<HTMLElement, NeoBottomNavProps>(
             <motion.div
               layoutId="neo-nav-pill"
               className={cn(
-                "absolute -top-0.5 h-1 w-10 rounded-full",
+                "absolute bottom-2 h-1 w-10 rounded-full",
                 pillColor,
               )}
               style={{

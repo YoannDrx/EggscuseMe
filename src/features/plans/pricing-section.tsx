@@ -13,13 +13,18 @@ export function Pricing() {
 
   // Sur la landing page, on redirige vers signup avec le plan en paramètre
   // Le checkout Stripe sera fait après l'inscription
-  const handleSelectPremium = () => {
-    const plan = isYearly ? "premium-yearly" : "premium";
+  const handleSelectSolo = () => {
+    window.location.href = "/auth/signup";
+  };
+
+  const handleSelectBrigade = () => {
+    const plan = isYearly ? "brigade-yearly" : "brigade";
     window.location.href = `/auth/signup?plan=${plan}`;
   };
 
-  const handleSelectFree = () => {
-    window.location.href = "/auth/signup";
+  const handleSelectChef = () => {
+    const plan = isYearly ? "chef-yearly" : "chef";
+    window.location.href = `/auth/signup?plan=${plan}`;
   };
 
   return (
@@ -63,20 +68,21 @@ export function Pricing() {
           </div>
         </div>
 
-        <div
-          className="mx-auto mt-16 grid max-w-3xl gap-8 lg:gap-12"
-          style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          }}
-        >
+        {/* Grille 3 colonnes pour les 3 plans */}
+        <div className="mx-auto mt-16 grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           <PlanCard
-            plan="free"
-            onSelect={handleSelectFree}
+            plan="solo"
+            onSelect={handleSelectSolo}
             showYearly={false}
           />
           <PlanCard
-            plan="premium"
-            onSelect={handleSelectPremium}
+            plan="brigade"
+            onSelect={handleSelectBrigade}
+            showYearly={isYearly}
+          />
+          <PlanCard
+            plan="chef"
+            onSelect={handleSelectChef}
             showYearly={isYearly}
           />
         </div>

@@ -5,9 +5,14 @@ model Fridge {
   id   String @id @default(nanoid(11))
   name String @default("Mon Frigo")
 
-  // One fridge per user (owner)
-  ownerId String @unique
-  owner   User   @relation("OwnedFridge", fields: [ownerId], references: [id], onDelete: Cascade)
+  // Owner of the fridge (Chef plan can have multiple fridges)
+  ownerId   String
+  owner     User    @relation("OwnedFridge", fields: [ownerId], references: [id], onDelete: Cascade)
+  isDefault Boolean @default(true) // Primary fridge for the user
+
+  // Fridge type/location for multi-fridge (Chef plan)
+  fridgeType FridgeType @default(MAIN)
+  location   String? // Custom location description
 
   // Guest members
   members FridgeMember[]
@@ -24,7 +29,16 @@ model Fridge {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([ownerId])
   @@map("fridge")
+}
+
+enum FridgeType {
+  MAIN // Main kitchen fridge
+  CELLAR // Cave / Cellar
+  GARAGE // Garage fridge
+  SECONDARY // Secondary kitchen fridge
+  OTHER // Other location
 }
 
 model FridgeMember {

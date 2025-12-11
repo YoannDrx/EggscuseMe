@@ -45,7 +45,30 @@ export const SiteConfig = {
     // Day 29+: Expired
   },
 
+  // Plan limits
+  plans: {
+    solo: {
+      maxEggBoxes: 2,
+      maxFridges: 1,
+      maxMembers: 1,
+      historyDays: 30,
+    },
+    brigade: {
+      maxEggBoxes: 999, // Unlimited
+      maxFridges: 1,
+      maxMembers: 5,
+      historyDays: 999, // Unlimited
+    },
+    chef: {
+      maxEggBoxes: 999, // Unlimited
+      maxFridges: 999, // Unlimited
+      maxMembers: 999, // Unlimited
+      historyDays: 999, // Unlimited
+    },
+  },
+
+  // Legacy alias (for backward compatibility)
   freePlan: {
-    maxEggBoxes: 2, // Free users can track up to 2 egg boxes
+    maxEggBoxes: 2,
   },
 };

@@ -72,6 +72,8 @@ export const createEggBoxAction = authAction
         size: data.size,
         source: data.source,
         barcode: data.barcode,
+        lotNumber: data.lotNumber,
+        producerCode: data.producerCode,
         userId: user.id,
         fridgeId: fridge.id,
       },
@@ -115,6 +117,8 @@ export const updateEggBoxAction = authAction
         remaining: data.remaining,
         size: data.size,
         source: data.source,
+        lotNumber: data.lotNumber,
+        producerCode: data.producerCode,
       },
     });
 
@@ -174,14 +178,14 @@ export const consumeEggsAction = authAction
     });
 
     if (!eggBox) {
-      throw new ActionError((await getTranslations("errors.fridge"))("notFound"));
+      throw new ActionError(
+        (await getTranslations("errors.fridge"))("notFound"),
+      );
     }
 
     if (eggBox.remaining < data.quantity) {
       const t = await getTranslations("errors.fridge");
-      throw new ActionError(
-        t("notEnough", { count: eggBox.remaining }),
-      );
+      throw new ActionError(t("notEnough", { count: eggBox.remaining }));
     }
 
     // Create consumption record and update remaining count

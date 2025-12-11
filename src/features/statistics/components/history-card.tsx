@@ -5,7 +5,7 @@ import { SwipeableRow } from "@/components/eggscuseme/lists/swipeable-row";
 import { Badge } from "@/components/ui/badge";
 import { NeoCard } from "@/components/neo/neo-card";
 import { cn } from "@/lib/utils";
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import { Calendar, Egg, Star, UtensilsCrossed } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -177,13 +177,26 @@ export function HistoryDateGroup({
 /**
  * Empty state for history
  */
-export function HistoryEmpty({ message }: { message?: string }) {
+export function HistoryEmpty({
+  message,
+  className,
+}: {
+  message?: string;
+  className?: string;
+}) {
   const t = useTranslations("fridge.history");
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-      <ErrorIllustration type="empty" size="md" />
-      <p className="text-neo-text-muted">{message ?? t("noConsumption")}</p>
+    <div
+      className={cn(
+        "flex w-full flex-col items-center justify-center gap-4 py-8 text-center",
+        className,
+      )}
+    >
+      <ErrorIllustration type="empty" size="lg" />
+      <p className="text-neo-text-muted text-lg">
+        {message ?? t("noConsumption")}
+      </p>
     </div>
   );
 }

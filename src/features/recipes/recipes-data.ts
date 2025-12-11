@@ -466,6 +466,7 @@ export const RECIPES: Recipe[] = [
     tags: ["brunch", "réconfortant", "champignons"],
     tagsEn: ["brunch", "comfort", "mushrooms"],
     servings: 2,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,
@@ -564,6 +565,7 @@ export const RECIPES: Recipe[] = [
     tags: ["repas", "italien", "pâtes"],
     tagsEn: ["meal", "italian", "pasta"],
     servings: 4,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,
@@ -630,6 +632,7 @@ export const RECIPES: Recipe[] = [
     tags: ["dessert", "italien", "élégant", "technique"],
     tagsEn: ["dessert", "italian", "elegant", "technique"],
     servings: 4,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,
@@ -1145,6 +1148,7 @@ export const RECIPES: Recipe[] = [
     tags: ["apéritif", "japonais", "bento"],
     tagsEn: ["appetizer", "japanese", "bento"],
     servings: 2,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,
@@ -1194,6 +1198,7 @@ export const RECIPES: Recipe[] = [
     tags: ["dessert", "vanille", "français"],
     tagsEn: ["dessert", "vanilla", "french"],
     servings: 4,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,
@@ -1585,6 +1590,7 @@ export const RECIPES: Recipe[] = [
     tags: ["apéritif", "fromage", "français"],
     tagsEn: ["appetizer", "cheese", "french"],
     servings: 20,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,
@@ -1639,6 +1645,7 @@ export const RECIPES: Recipe[] = [
     tags: ["dessert", "boulangerie", "technique"],
     tagsEn: ["dessert", "bakery", "technique"],
     servings: 12,
+    isChefExclusive: true,
     instructions: [
       {
         step: 1,

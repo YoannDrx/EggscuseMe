@@ -1,6 +1,12 @@
 "use client";
 
 import type { FridgeAccessResult } from "@/lib/fridge/get-fridge-access";
+import {
+  hasChefAccess,
+  hasPaidAccess,
+  normalizePlanName,
+  type PlanName,
+} from "@/lib/auth/stripe/auth-plans";
 import { useEffect, useRef } from "react";
 import { create } from "zustand";
 
@@ -9,6 +15,8 @@ type FridgeStoreState = {
   name: string;
   role: "OWNER" | "GUEST";
   isPremium: boolean;
+  isChef: boolean;
+  plan: PlanName;
   ownerName: string;
   ownerImage: string | null;
 };
@@ -23,6 +31,10 @@ type InjectProps = {
 export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
   const isInitialized = useRef(false);
 
+  const plan = normalizePlanName(fridge.subscription?.plan);
+  const isPremium = hasPaidAccess(fridge.subscription?.plan);
+  const isChef = hasChefAccess(fridge.subscription?.plan);
+
   // Set initial state synchronously on first render (before effects)
   // This ensures children have access to the store immediately
   if (!isInitialized.current) {
@@ -31,8 +43,9 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
       id: fridge.fridge.id,
       name: fridge.fridge.name,
       role: fridge.role,
-      isPremium:
-        fridge.subscription !== null && fridge.subscription.plan !== "free",
+      isPremium,
+      isChef,
+      plan,
       ownerName: fridge.fridge.owner.name,
       ownerImage: fridge.fridge.owner.image,
     });
@@ -44,12 +57,13 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
       id: fridge.fridge.id,
       name: fridge.fridge.name,
       role: fridge.role,
-      isPremium:
-        fridge.subscription !== null && fridge.subscription.plan !== "free",
+      isPremium,
+      isChef,
+      plan,
       ownerName: fridge.fridge.owner.name,
       ownerImage: fridge.fridge.owner.image,
     });
-  }, [fridge]);
+  }, [fridge, isPremium, isChef, plan]);
 
   return <>{children}</>;
 }

@@ -2,11 +2,40 @@ import type { UserSubscription } from "@/generated/prisma";
 import { logger } from "@/lib/logger";
 import { SiteConfig } from "@/site-config";
 
+// Plan names and aliases for backward compatibility
+export const PLAN_ALIASES: Record<string, string> = {
+  gratuit: "solo",
+  free: "solo",
+  premium: "brigade",
+};
+
+export type PlanName = "solo" | "brigade" | "chef";
+
+// Normalize plan name (handle legacy names)
+export function normalizePlanName(plan: string | null | undefined): PlanName {
+  if (!plan) return "solo";
+  const normalized = PLAN_ALIASES[plan] ?? plan;
+  if (
+    normalized === "solo" ||
+    normalized === "brigade" ||
+    normalized === "chef"
+  ) {
+    return normalized;
+  }
+  return "solo";
+}
+
 const DEFAULT_LIMIT = {
-  eggBoxes: SiteConfig.freePlan.maxEggBoxes, // 2 boîtes max en gratuit
-  notifications: 0, // Pas de notifications en gratuit
-  advancedStats: 0, // Pas de stats avancées en gratuit
-  unlimitedHistory: 0, // Historique limité en gratuit
+  eggBoxes: SiteConfig.plans.solo.maxEggBoxes,
+  notifications: 0,
+  advancedStats: 0,
+  unlimitedHistory: 0,
+  maxFridges: SiteConfig.plans.solo.maxFridges,
+  maxMembers: SiteConfig.plans.solo.maxMembers,
+  exportPdf: 0,
+  proMode: 0,
+  exclusiveRecipes: 0,
+  prioritySupport: 0,
 };
 
 export type PlanLimit = typeof DEFAULT_LIMIT;
@@ -60,49 +89,98 @@ export type AppAuthPlan = {
 };
 
 export const AUTH_PLANS: AppAuthPlan[] = [
+  // Plan Solo (gratuit)
   {
-    name: "gratuit",
-    description: "Parfait pour commencer à suivre vos oeufs",
+    name: "solo",
+    description: "Pour cuisiner tes œufs rien que pour toi",
     limits: DEFAULT_LIMIT,
     price: 0,
     currency: "EUR",
     yearlyPrice: 0,
   },
+  // Plan Brigade (ex-Premium)
   {
-    name: "premium",
+    name: "brigade",
     isPopular: true,
-    description: "Pour les familles qui veulent zéro gaspillage",
-    priceId: process.env.STRIPE_PREMIUM_PLAN_ID ?? "",
-    annualDiscountPriceId: process.env.STRIPE_PREMIUM_YEARLY_PLAN_ID ?? "",
+    description: "Pour cuisiner à plusieurs, en équipe",
+    priceId:
+      process.env.STRIPE_BRIGADE_PLAN_ID ??
+      process.env.STRIPE_PREMIUM_PLAN_ID ??
+      "",
+    annualDiscountPriceId:
+      process.env.STRIPE_BRIGADE_YEARLY_PLAN_ID ??
+      process.env.STRIPE_PREMIUM_YEARLY_PLAN_ID ??
+      "",
     limits: {
-      eggBoxes: 999, // Illimité
-      notifications: 1, // Notifications activées
-      advancedStats: 1, // Stats avancées activées
-      unlimitedHistory: 1, // Historique illimité
+      eggBoxes: SiteConfig.plans.brigade.maxEggBoxes,
+      notifications: 1,
+      advancedStats: 1,
+      unlimitedHistory: 1,
+      maxFridges: SiteConfig.plans.brigade.maxFridges,
+      maxMembers: SiteConfig.plans.brigade.maxMembers,
+      exportPdf: 0,
+      proMode: 0,
+      exclusiveRecipes: 0,
+      prioritySupport: 0,
     },
     freeTrial: {
       days: 7,
       onTrialStart: async (subscription) => {
-        logger.debug(`Essai Premium démarré pour ${subscription.userId}`);
+        logger.debug(`Essai Brigade démarré pour ${subscription.userId}`);
       },
       onTrialExpired: async (subscription) => {
-        logger.debug(`Essai Premium expiré pour ${subscription.userId}`);
+        logger.debug(`Essai Brigade expiré pour ${subscription.userId}`);
       },
       onTrialEnd: async ({ subscription }) => {
-        logger.debug(`Essai Premium terminé pour ${subscription.userId}`);
+        logger.debug(`Essai Brigade terminé pour ${subscription.userId}`);
       },
     },
     price: 4.99,
-    yearlyPrice: 29.99, // ~50% de réduction (6 mois gratuits)
+    yearlyPrice: 29.99,
+    currency: "EUR",
+  },
+  // Plan Chef (Pro)
+  {
+    name: "chef",
+    description: "Pour les pros et gros volumes",
+    priceId: process.env.STRIPE_CHEF_PLAN_ID ?? "",
+    annualDiscountPriceId: process.env.STRIPE_CHEF_YEARLY_PLAN_ID ?? "",
+    limits: {
+      eggBoxes: SiteConfig.plans.chef.maxEggBoxes,
+      notifications: 1,
+      advancedStats: 1,
+      unlimitedHistory: 1,
+      maxFridges: SiteConfig.plans.chef.maxFridges,
+      maxMembers: SiteConfig.plans.chef.maxMembers,
+      exportPdf: 1,
+      proMode: 1,
+      exclusiveRecipes: 1,
+      prioritySupport: 1,
+    },
+    freeTrial: {
+      days: 7,
+      onTrialStart: async (subscription) => {
+        logger.debug(`Essai Chef démarré pour ${subscription.userId}`);
+      },
+      onTrialExpired: async (subscription) => {
+        logger.debug(`Essai Chef expiré pour ${subscription.userId}`);
+      },
+      onTrialEnd: async ({ subscription }) => {
+        logger.debug(`Essai Chef terminé pour ${subscription.userId}`);
+      },
+    },
+    price: 14.99,
+    yearlyPrice: 99.99,
     currency: "EUR",
   },
 ];
 
 export const getPlanLimits = (
-  plan = "gratuit",
+  plan: string | null | undefined = "solo",
   overrideLimits?: OverrideLimits | null,
 ): PlanLimit => {
-  const planLimits = AUTH_PLANS.find((p) => p.name === plan)?.limits;
+  const normalizedPlan = normalizePlanName(plan);
+  const planLimits = AUTH_PLANS.find((p) => p.name === normalizedPlan)?.limits;
 
   const baseLimits = planLimits ?? DEFAULT_LIMIT;
 
@@ -116,11 +194,19 @@ export const getPlanLimits = (
   };
 };
 
-// Helper pour vérifier si un utilisateur a accès à une feature premium
-export const hasPremiumAccess = (
-  planName: string | null | undefined,
-): boolean => {
-  return planName === "premium";
+// Helper pour vérifier si un utilisateur a un plan payant (Brigade ou Chef)
+export const hasPaidAccess = (planName: string | null | undefined): boolean => {
+  const normalized = normalizePlanName(planName);
+  return normalized === "brigade" || normalized === "chef";
+};
+
+// Alias for backward compatibility
+export const hasPremiumAccess = hasPaidAccess;
+
+// Helper pour vérifier si un utilisateur a le plan Chef
+export const hasChefAccess = (planName: string | null | undefined): boolean => {
+  const normalized = normalizePlanName(planName);
+  return normalized === "chef";
 };
 
 // Helper pour vérifier la limite de boîtes
@@ -128,6 +214,24 @@ export const canAddEggBox = (
   currentCount: number,
   planName: string | null | undefined,
 ): boolean => {
-  if (hasPremiumAccess(planName)) return true;
+  if (hasPaidAccess(planName)) return true;
   return currentCount < DEFAULT_LIMIT.eggBoxes;
+};
+
+// Helper pour vérifier la limite de frigos
+export const canAddFridge = (
+  currentCount: number,
+  planName: string | null | undefined,
+): boolean => {
+  const limits = getPlanLimits(planName);
+  return currentCount < limits.maxFridges;
+};
+
+// Helper pour vérifier accès à une feature
+export const hasFeatureAccess = (
+  planName: string | null | undefined,
+  feature: keyof PlanLimit,
+): boolean => {
+  const limits = getPlanLimits(planName);
+  return limits[feature] > 0;
 };

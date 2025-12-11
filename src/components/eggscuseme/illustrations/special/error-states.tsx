@@ -375,96 +375,57 @@ function ErrorOffline({ animate }: { animate: boolean }) {
 }
 
 /**
- * Empty state - Lonely Eggy
+ * Empty state - Lonely Eggy (simple, centered, no animation)
  */
-function ErrorEmpty({ animate }: { animate: boolean }) {
+function ErrorEmpty(_: { animate: boolean }) {
   return (
     <g>
-      {/* Dust particles */}
-      <g
-        opacity={0.4}
-        className={animate ? "animate-[float_6s_ease-in-out_infinite]" : ""}
-      >
-        <circle cx="50" cy="70" r="2" fill="#D1D5DB" />
-        <circle cx="130" cy="80" r="3" fill="#D1D5DB" />
-        <circle cx="60" cy="110" r="2" fill="#D1D5DB" />
-        <circle cx="120" cy="60" r="2" fill="#D1D5DB" />
-      </g>
-
-      {/* Eggy looking lonely */}
-      <g
-        transform="translate(90, 80)"
-        className={animate ? "animate-[float_4s_ease-in-out_infinite]" : ""}
-      >
-        {/* Eggy body */}
-        <ellipse
-          cx="0"
-          cy="0"
-          rx="28"
-          ry="35"
-          fill={STICKER_STYLE.fillEgg}
-          stroke={STICKER_STYLE.stroke}
-          strokeWidth={2}
-        />
-
-        {/* Sad puppy eyes */}
-        <ellipse cx="-9" cy="-5" rx="6" ry="8" fill={STICKER_STYLE.stroke} />
-        <ellipse cx="9" cy="-5" rx="6" ry="8" fill={STICKER_STYLE.stroke} />
-        <circle cx="-8" cy="-6" r="2.5" fill="white" />
-        <circle cx="10" cy="-6" r="2.5" fill="white" />
-
-        {/* Sad eyebrows */}
-        <path
-          d="M-18 -18 L-5 -13"
-          stroke={STICKER_STYLE.stroke}
-          strokeWidth={2}
-          strokeLinecap="round"
-        />
-        <path
-          d="M5 -13 L18 -18"
-          stroke={STICKER_STYLE.stroke}
-          strokeWidth={2}
-          strokeLinecap="round"
-        />
-
-        {/* Sad mouth */}
-        <path
-          d="M-8 18 Q0 12, 8 18"
-          stroke={STICKER_STYLE.stroke}
-          strokeWidth={2}
-          strokeLinecap="round"
-          fill="none"
-        />
-
-        {/* Blush (even when sad) */}
-        <ellipse cx="-20" cy="8" rx="5" ry="3" fill="#FFB6C1" opacity={0.3} />
-        <ellipse cx="20" cy="8" rx="5" ry="3" fill="#FFB6C1" opacity={0.3} />
-      </g>
-
-      {/* Empty box outline */}
-      <rect
-        x="45"
-        y="115"
-        width="90"
-        height="15"
-        rx="2"
-        fill="none"
-        stroke="#D1D5DB"
-        strokeWidth={2}
-        strokeDasharray="6 3"
+      {/* Eggy centered in viewBox */}
+      <ellipse
+        cx="90"
+        cy="80"
+        rx="40"
+        ry="50"
+        fill={STICKER_STYLE.fillEgg}
+        stroke={STICKER_STYLE.stroke}
+        strokeWidth={3}
       />
 
-      {/* Text */}
-      <text
-        x="90"
-        y="145"
-        textAnchor="middle"
-        fill="#9CA3AF"
-        fontSize="12"
-        fontWeight="medium"
-      >
-        Rien à afficher
-      </text>
+      {/* Sad eyes */}
+      <ellipse cx="78" cy="72" rx="6" ry="8" fill={STICKER_STYLE.stroke} />
+      <ellipse cx="102" cy="72" rx="6" ry="8" fill={STICKER_STYLE.stroke} />
+      <circle cx="80" cy="70" r="2.5" fill="white" />
+      <circle cx="104" cy="70" r="2.5" fill="white" />
+
+      {/* Sad eyebrows */}
+      <path
+        d="M65 58 L82 62"
+        stroke={STICKER_STYLE.stroke}
+        strokeWidth={2.5}
+        strokeLinecap="round"
+      />
+      <path
+        d="M98 62 L115 58"
+        stroke={STICKER_STYLE.stroke}
+        strokeWidth={2.5}
+        strokeLinecap="round"
+      />
+
+      {/* Sad mouth */}
+      <path
+        d="M80 105 Q90 95, 100 105"
+        stroke={STICKER_STYLE.stroke}
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Blush */}
+      <ellipse cx="60" cy="90" rx="7" ry="4" fill="#FFB6C1" opacity={0.5} />
+      <ellipse cx="120" cy="90" rx="7" ry="4" fill="#FFB6C1" opacity={0.5} />
+
+      {/* Tear */}
+      <ellipse cx="65" cy="85" rx="3" ry="5" fill="#87CEEB" opacity={0.7} />
     </g>
   );
 }

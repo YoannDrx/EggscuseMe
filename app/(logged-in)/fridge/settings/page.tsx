@@ -20,6 +20,7 @@ import {
   CreditCard,
   KeyRound,
   Palette,
+  Refrigerator,
   Settings,
   Share2,
   User,
@@ -87,6 +88,7 @@ export default function SettingsPage() {
   );
   const [isSaving, setIsSaving] = useState(false);
   const isOwner = fridgeState?.role === "OWNER";
+  const isChef = fridgeState?.isChef ?? false;
 
   const handleSaveName = async () => {
     if (!fridgeState) return;
@@ -175,6 +177,14 @@ export default function SettingsPage() {
               icon={CreditCard}
               title={t("billing.title")}
               description={t("billing.description")}
+            />
+          )}
+          {isOwner && isChef && (
+            <SettingsCard
+              href="/fridge/settings/fridges"
+              icon={Refrigerator}
+              title={t("fridges.title")}
+              description={t("fridges.description")}
             />
           )}
         </div>

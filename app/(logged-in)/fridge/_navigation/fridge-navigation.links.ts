@@ -19,11 +19,18 @@ export const getFridgeNavigation = (
   role: "OWNER" | "GUEST",
 ): NavigationGroup[] => {
   if (role === "GUEST") {
-    // Guests see main menu + limited settings (profile, security, appearance, danger)
-    return [FRIDGE_LINKS[0], GUEST_SETTINGS];
+    // Guests see only main menu (settings are in drawer)
+    return [FRIDGE_LINKS[0]];
   }
-  // Owners see everything
-  return FRIDGE_LINKS;
+  // Owners see only main menu (settings are in drawer)
+  return [FRIDGE_LINKS[0]];
+};
+
+export const getSettingsLinks = (role: "OWNER" | "GUEST") => {
+  if (role === "GUEST") {
+    return GUEST_SETTINGS.links;
+  }
+  return FRIDGE_LINKS[1].links;
 };
 
 // Settings section for guests (limited options)

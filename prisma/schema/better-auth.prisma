@@ -23,7 +23,7 @@ model User {
   // Fridge system
   stripeCustomerId  String? // Stripe customer ID directly on user
   userSubscription  UserSubscription? // Subscription linked to user
-  ownedFridge       Fridge?           @relation("OwnedFridge") // One fridge per user
+  ownedFridges      Fridge[]          @relation("OwnedFridge") // User's fridges (Chef plan can have multiple)
   fridgeMemberships FridgeMember[]    @relation("FridgeMemberships") // Guest access to other fridges
 
   // Email invitations

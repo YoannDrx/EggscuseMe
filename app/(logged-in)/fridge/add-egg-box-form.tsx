@@ -7,23 +7,30 @@ import type { EggSize } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { createEggBoxAction } from "@/features/fridge/fridge.action";
 import { BarcodeScanner, type ParsedEggInfo } from "@/features/scanner";
-import { Scan, X } from "lucide-react";
+import { ChefHat, Scan, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useCurrentFridge } from "./use-current-fridge";
 
 export function AddEggBoxForm() {
   const t = useTranslations("fridge.addBoxForm");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [showScanner, setShowScanner] = useState(false);
+  const fridgeStore = useCurrentFridge();
+  const isChef = fridgeStore?.isChef ?? false;
+
   const [formData, setFormData] = useState({
     name: "",
     layingDate: new Date().toISOString().split("T")[0],
     quantity: 6,
     size: "M" as EggSize,
     source: "",
+    // Pro mode fields (Chef only)
+    lotNumber: "",
+    producerCode: "",
   });
 
   const handleScan = (info: ParsedEggInfo) => {
@@ -55,6 +62,11 @@ export function AddEggBoxForm() {
         quantity: formData.quantity,
         size: formData.size,
         source: formData.source || undefined,
+        // Pro mode fields (Chef only)
+        lotNumber:
+          isChef && formData.lotNumber ? formData.lotNumber : undefined,
+        producerCode:
+          isChef && formData.producerCode ? formData.producerCode : undefined,
       });
 
       if (result.data?.eggBox) {
@@ -154,6 +166,38 @@ export function AddEggBoxForm() {
         value={formData.source}
         onChange={(e) => setFormData({ ...formData, source: e.target.value })}
       />
+
+      {/* Pro mode fields - Chef plan only */}
+      {isChef && (
+        <div className="space-y-4 rounded-lg border-2 border-amber-500/30 bg-amber-500/5 p-4">
+          <div className="flex items-center gap-2">
+            <ChefHat className="size-5 text-amber-500" />
+            <span className="text-sm font-semibold text-amber-500">
+              {t("proMode.title")}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <NeoInput
+              id="lotNumber"
+              label={t("proMode.lotNumber")}
+              placeholder={t("proMode.lotNumberPlaceholder")}
+              value={formData.lotNumber}
+              onChange={(e) =>
+                setFormData({ ...formData, lotNumber: e.target.value })
+              }
+            />
+            <NeoInput
+              id="producerCode"
+              label={t("proMode.producerCode")}
+              placeholder={t("proMode.producerCodePlaceholder")}
+              value={formData.producerCode}
+              onChange={(e) =>
+                setFormData({ ...formData, producerCode: e.target.value })
+              }
+            />
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-end gap-2 pt-4">
         <NeoButton

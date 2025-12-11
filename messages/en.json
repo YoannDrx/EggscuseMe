@@ -411,17 +411,61 @@
     },
     "pricing": {
       "title": "Choose your plan",
-      "subtitle": "Start for free, upgrade to Premium when you're ready.",
+      "subtitle": "Start for free, upgrade to Brigade or Chef when you're ready.",
       "monthly": "Monthly",
       "yearly": "Yearly",
       "discount": "-50%",
       "footer": "All plans include freshness tracking and recipe recommendations.",
       "question": "Have a question?",
       "contactUs": "Contact us",
+      "solo": {
+        "title": "Solo",
+        "price": "€0",
+        "description": "Cook your eggs just for yourself",
+        "features": [
+          "2 egg boxes max",
+          "Smart timer",
+          "Freshness tracking",
+          "Limited history (30 days)",
+          "1 user"
+        ],
+        "cta": "Start for free"
+      },
+      "brigade": {
+        "title": "Brigade",
+        "price": "€4.99",
+        "period": "/month",
+        "description": "Cook together, as a team",
+        "badge": "Recommended",
+        "features": [
+          "Unlimited boxes",
+          "Freshness notifications",
+          "Anti-waste stats",
+          "Full history",
+          "Family sharing (5 members)"
+        ],
+        "cta": "Choose Brigade"
+      },
+      "chef": {
+        "title": "Chef",
+        "price": "€14.99",
+        "period": "/month",
+        "description": "For pros and high volume",
+        "badge": "Pro",
+        "features": [
+          "Multi-fridges",
+          "PDF/CSV export",
+          "Pro mode (batches)",
+          "Exclusive recipes",
+          "Unlimited members",
+          "Priority support"
+        ],
+        "cta": "Go Chef"
+      },
       "free": {
-        "title": "Free",
-        "price": "$0",
-        "description": "To get started",
+        "title": "Solo",
+        "price": "€0",
+        "description": "Cook your eggs just for yourself",
         "features": [
           "2 egg boxes max",
           "Basic timer",
@@ -430,10 +474,10 @@
         "cta": "Start for free"
       },
       "premium": {
-        "title": "Premium",
-        "price": "$2.99",
+        "title": "Brigade",
+        "price": "€4.99",
         "period": "/month",
-        "description": "For egg lovers",
+        "description": "Cook together, as a team",
         "features": [
           "Unlimited boxes",
           "Full history",
@@ -442,7 +486,7 @@
           "Exclusive recipes",
           "Data export"
         ],
-        "cta": "Try Premium"
+        "cta": "Choose Brigade"
       }
     },
     "faq": {
@@ -605,6 +649,7 @@
     "limitReached": "Limit reached",
     "limitReachedDescription": "You've reached the limit of {limit} boxes. Upgrade to Premium for unlimited boxes.",
     "upgradeToPremium": "Upgrade to Premium",
+    "chefRequired": "This feature requires the Chef plan.",
     "fridge": {
       "ownerOnly": "Only the fridge owner can modify egg boxes.",
       "freePlanLimit": "The free plan is limited to {count} egg boxes. Upgrade to Premium for unlimited boxes!",
@@ -912,6 +957,10 @@
         "title": "Subscription",
         "description": "Plan and payments"
       },
+      "fridges": {
+        "title": "My fridges",
+        "description": "Manage your storage spaces (Chef)"
+      },
       "danger": {
         "title": "Danger Zone",
         "description": "Delete data, fridge or account"
@@ -1055,6 +1104,13 @@
       },
       "source": "Source (optional)",
       "sourcePlaceholder": "e.g. Local farm, Supermarket",
+      "proMode": {
+        "title": "Pro Mode",
+        "lotNumber": "Lot number",
+        "lotNumberPlaceholder": "e.g. 2FR123456",
+        "producerCode": "Producer code",
+        "producerCodePlaceholder": "e.g. 0FRABC01"
+      },
       "cancel": "Cancel",
       "save": "Add",
       "saving": "Adding...",

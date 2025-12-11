@@ -54,7 +54,10 @@ test("sign up and verify account creation", async ({ page }) => {
   const user = await prisma.user.findUnique({
     where: { email: userData.email },
     include: {
-      ownedFridge: true,
+      ownedFridges: {
+        where: { isDefault: true },
+        take: 1,
+      },
     },
   });
 
@@ -65,7 +68,7 @@ test("sign up and verify account creation", async ({ page }) => {
   expect(user?.emailVerified).toBe(false); // Email should not be verified yet
 
   // Verify user has a fridge
-  expect(user?.ownedFridge).not.toBeNull();
+  expect(user?.ownedFridges.length).toBeGreaterThan(0);
 
   // Clean up - delete the test user
   // This is optional but helps keep the test database clean

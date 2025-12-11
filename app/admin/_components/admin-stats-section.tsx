@@ -133,7 +133,7 @@ export async function AdminStatsSection() {
             key={stat.title}
             title={stat.title}
             value={stat.value}
-            icon={Icon}
+            icon={<Icon className="size-5" />}
             trendLabel={stat.description}
           />
         );

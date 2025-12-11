@@ -226,7 +226,15 @@ export default function HistoryPage() {
             <Loader2 className="text-neo-accent size-8 animate-spin" />
           </div>
         ) : history.length === 0 ? (
-          <HistoryEmpty />
+          <NeoCard
+            variant="elevated"
+            padding="lg"
+            className="mx-auto w-full max-w-5xl"
+          >
+            <NeoCardContent>
+              <HistoryEmpty />
+            </NeoCardContent>
+          </NeoCard>
         ) : (
           <>
             {/* Mobile: Card List */}

@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import * as React from "react";
@@ -70,7 +70,7 @@ const NeoSidebarProvider = ({
     <SidebarContext.Provider
       value={{ expanded, setExpanded, mobile, mobileOpen, setMobileOpen }}
     >
-      {children}
+      <div className="flex min-h-svh w-full">{children}</div>
     </SidebarContext.Provider>
   );
 };
@@ -290,7 +290,7 @@ const NeoSidebarItem = React.forwardRef<HTMLButtonElement, NeoSidebarItemProps>(
         data-slot="neo-sidebar-item"
         className={cn(
           "group relative flex w-full items-center gap-3",
-          "rounded-[var(--radius-neo-lg)] px-3 py-2.5",
+          "rounded-[var(--radius-neo-lg)] px-3 py-3",
           "text-sm font-medium",
           "outline-none",
           "transition-all duration-200",

@@ -38,7 +38,7 @@ export type FridgeAccessResult = {
  * Get or create the user's fridge access
  *
  * This function:
- * 1. Checks if user owns a fridge -> returns it with role OWNER
+ * 1. Checks if user owns a fridge -> returns the default one with role OWNER
  * 2. Checks if user is a guest of a fridge -> returns it with role GUEST
  * 3. If no fridge access, creates a new fridge for the user
  *
@@ -46,10 +46,13 @@ export type FridgeAccessResult = {
  */
 export async function getFridgeAccess(
   user: SessionUser,
+  fridgeId?: string,
 ): Promise<FridgeAccessResult | null> {
-  // 1. Check if user owns a fridge
-  const ownedFridge = await prisma.fridge.findUnique({
-    where: { ownerId: user.id },
+  // 1. Check if user owns a fridge (get specific or default)
+  const ownedFridge = await prisma.fridge.findFirst({
+    where: fridgeId
+      ? { id: fridgeId, ownerId: user.id }
+      : { ownerId: user.id, isDefault: true },
     include: {
       eggBoxes: {
         orderBy: { layingDate: "asc" },
@@ -75,6 +78,38 @@ export async function getFridgeAccess(
       subscription,
       user,
     };
+  }
+
+  // If specific fridge requested but not found as owner, try any owned fridge
+  if (!fridgeId) {
+    const anyOwnedFridge = await prisma.fridge.findFirst({
+      where: { ownerId: user.id },
+      include: {
+        eggBoxes: {
+          orderBy: { layingDate: "asc" },
+        },
+        members: {
+          include: {
+            user: {
+              select: { id: true, name: true, image: true },
+            },
+          },
+        },
+        owner: {
+          select: { id: true, name: true, image: true, email: true },
+        },
+      },
+    });
+
+    if (anyOwnedFridge) {
+      const subscription = await getUserSubscription(user.id);
+      return {
+        fridge: anyOwnedFridge,
+        role: "OWNER",
+        subscription,
+        user,
+      };
+    }
   }
 
   // 2. Check if user is guest of a fridge
@@ -121,7 +156,6 @@ export async function getFridgeAccess(
 /**
  * Get or create fridge for the user
  * Creates a new fridge if user doesn't have one and isn't a guest anywhere
- * Uses upsert to prevent race conditions (P2002 unique constraint errors)
  */
 export async function getOrCreateFridge(
   user: SessionUser,
@@ -132,16 +166,15 @@ export async function getOrCreateFridge(
     return existingAccess;
   }
 
-  // Use upsert to prevent race conditions when multiple requests
-  // try to create a fridge for the same user simultaneously
-  const fridge = await prisma.fridge.upsert({
-    where: { ownerId: user.id },
-    create: {
+  // Create new default fridge for the user
+  const fridge = await prisma.fridge.create({
+    data: {
       id: nanoid(11),
       name: "Mon Frigo",
       ownerId: user.id,
+      isDefault: true,
+      fridgeType: "MAIN",
     },
-    update: {}, // No updates needed if it already exists
     include: {
       eggBoxes: true,
       members: {

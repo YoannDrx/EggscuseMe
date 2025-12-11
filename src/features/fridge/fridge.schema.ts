@@ -30,6 +30,9 @@ export const CreateEggBoxSchema = z.object({
   size: z.enum(["S", "M", "L", "XL"]).default("M"),
   source: z.string().max(100).optional(),
   barcode: z.string().max(50).optional(),
+  // Pro mode fields (Chef plan only)
+  lotNumber: z.string().max(50).optional(),
+  producerCode: z.string().max(50).optional(),
 });
 
 /**
@@ -42,6 +45,9 @@ export const UpdateEggBoxSchema = z.object({
   remaining: z.number().int().min(0).max(100).optional(),
   size: z.enum(["S", "M", "L", "XL"]).optional(),
   source: z.string().max(100).optional(),
+  // Pro mode fields (Chef plan only)
+  lotNumber: z.string().max(50).optional(),
+  producerCode: z.string().max(50).optional(),
 });
 
 /**

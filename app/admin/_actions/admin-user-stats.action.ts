@@ -16,7 +16,9 @@ export const getUserDetailedStatsAction = adminAction
       where: { id: userId },
       include: {
         userSubscription: true,
-        ownedFridge: {
+        ownedFridges: {
+          where: { isDefault: true },
+          take: 1,
           include: {
             eggBoxes: {
               include: {
@@ -77,7 +79,9 @@ export const getUserDetailedStatsAction = adminAction
     }
 
     // Calculs statistiques
-    const fridge = user.ownedFridge;
+    const fridge = user.ownedFridges[0] as
+      | (typeof user.ownedFridges)[0]
+      | undefined;
     const stats = {
       totalEggBoxes: 0,
       activeEggBoxes: 0,
@@ -94,7 +98,7 @@ export const getUserDetailedStatsAction = adminAction
       for (const box of fridge.eggBoxes) {
         const freshness = calculateFreshness(box.layingDate);
         const consumed = box.consumptions.reduce(
-          (sum, c) => sum + c.quantity,
+          (sum: number, c: { quantity: number }) => sum + c.quantity,
           0,
         );
 
@@ -131,30 +135,36 @@ export const getUserDetailedStatsAction = adminAction
         ? {
             id: fridge.id,
             name: fridge.name,
-            members: fridge.members.map((m) => ({
-              id: m.id,
-              role: m.role,
-              user: m.user,
-              joinedAt: m.createdAt,
-            })),
+            members: fridge.members.map(
+              (m: (typeof fridge.members)[number]) => ({
+                id: m.id,
+                role: m.role,
+                user: m.user,
+                joinedAt: m.createdAt,
+              }),
+            ),
             recentInvitations: fridge.emailInvitations,
             recentShareLinks: fridge.shareLinks,
           }
         : null,
-      memberships: user.fridgeMemberships.map((m) => ({
-        fridgeId: m.fridge.id,
-        fridgeName: m.fridge.name,
-        ownerName: m.fridge.owner.name,
-        ownerEmail: m.fridge.owner.email,
-        role: m.role,
-        joinedAt: m.createdAt,
-      })),
-      recentConsumptions: user.eggConsumptions.map((c) => ({
-        id: c.id,
-        quantity: c.quantity,
-        cookingType: c.cookingType,
-        eggBoxName: c.eggBox.name,
-        createdAt: c.createdAt,
-      })),
+      memberships: user.fridgeMemberships.map(
+        (m: (typeof user.fridgeMemberships)[number]) => ({
+          fridgeId: m.fridge.id,
+          fridgeName: m.fridge.name,
+          ownerName: m.fridge.owner.name,
+          ownerEmail: m.fridge.owner.email,
+          role: m.role,
+          joinedAt: m.createdAt,
+        }),
+      ),
+      recentConsumptions: user.eggConsumptions.map(
+        (c: (typeof user.eggConsumptions)[number]) => ({
+          id: c.id,
+          quantity: c.quantity,
+          cookingType: c.cookingType,
+          eggBoxName: c.eggBox.name,
+          createdAt: c.createdAt,
+        }),
+      ),
     };
   });

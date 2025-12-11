@@ -9,11 +9,17 @@ export const exportUsersCSVAction = adminAction.action(
     const users = await prisma.user.findMany({
       include: {
         userSubscription: true,
-        ownedFridge: {
+        ownedFridges: {
+          where: { isDefault: true },
           include: { _count: { select: { eggBoxes: true, members: true } } },
+          take: 1,
         },
         _count: {
-          select: { eggConsumptions: true, sentInvitations: true },
+          select: {
+            eggConsumptions: true,
+            sentInvitations: true,
+            ownedFridges: true,
+          },
         },
       },
       orderBy: { createdAt: "desc" },
@@ -30,26 +36,33 @@ export const exportUsersCSVAction = adminAction.action(
       "fridgeId",
       "eggBoxes",
       "fridgeMembers",
+      "fridgesCount",
       "consumptions",
       "invitationsSent",
       "createdAt",
     ];
 
-    const rows = users.map((u) => [
-      u.id,
-      u.email,
-      `"${u.name.replace(/"/g, '""')}"`,
-      u.role ?? "user",
-      u.banned ? "true" : "false",
-      u.userSubscription?.plan ?? "free",
-      u.userSubscription?.status ?? "-",
-      u.ownedFridge?.id ?? "-",
-      u.ownedFridge?._count.eggBoxes ?? 0,
-      u.ownedFridge?._count.members ?? 0,
-      u._count.eggConsumptions,
-      u._count.sentInvitations,
-      u.createdAt.toISOString(),
-    ]);
+    const rows = users.map((u) => {
+      const defaultFridge = u.ownedFridges[0] as
+        | (typeof u.ownedFridges)[0]
+        | undefined;
+      return [
+        u.id,
+        u.email,
+        `"${u.name.replace(/"/g, '""')}"`,
+        u.role ?? "user",
+        u.banned ? "true" : "false",
+        u.userSubscription?.plan ?? "free",
+        u.userSubscription?.status ?? "-",
+        defaultFridge?.id ?? "-",
+        defaultFridge?._count.eggBoxes ?? 0,
+        defaultFridge?._count.members ?? 0,
+        u._count.ownedFridges,
+        u._count.eggConsumptions,
+        u._count.sentInvitations,
+        u.createdAt.toISOString(),
+      ];
+    });
 
     await prisma.adminLog.create({
       data: {

@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { NeoCard, NeoCardContent } from "@/components/neo/neo-card";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
+import { hasChefAccess } from "@/lib/auth/stripe/auth-plans";
 import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
@@ -14,12 +15,21 @@ import { Suspense } from "react";
 export default async function RecipesPage() {
   const t = await getTranslations("recipes.dashboard");
 
+  // Get user's subscription to check if they have Chef access
+  const result = await getMyFridgeAction();
+  const isChef = hasChefAccess(result.data?.subscription?.plan);
+
+  // Count recipes available to this user
+  const availableRecipesCount = isChef
+    ? RECIPES.length
+    : RECIPES.filter((r) => !r.isChefExclusive).length;
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
       <MobileHeader
         title={t("title")}
-        subtitle={t("count", { count: RECIPES.length })}
+        subtitle={t("count", { count: availableRecipesCount })}
         mascot
         mascotMood="chef"
       />
@@ -52,7 +62,7 @@ export default async function RecipesPage() {
                   {t("allRecipes")}
                 </h2>
                 <Badge variant="secondary" className="hidden sm:flex">
-                  {RECIPES.length}
+                  {availableRecipesCount}
                 </Badge>
               </div>
             </div>
@@ -61,7 +71,7 @@ export default async function RecipesPage() {
             <RecipeFiltersWithModal />
 
             {/* Recipe grid with filtering */}
-            <RecipeGrid />
+            <RecipeGrid isChef={isChef} />
           </section>
         </div>
       </main>
@@ -131,7 +141,11 @@ async function PersonalizedSuggestions() {
       </div>
 
       {hasUrgent && (
-        <NeoCard variant="elevated" padding="md" className="border-fresh-cook bg-fresh-cook/5">
+        <NeoCard
+          variant="elevated"
+          padding="md"
+          className="border-fresh-cook bg-fresh-cook/5"
+        >
           <NeoCardContent className="flex items-start gap-3 p-3 md:py-4">
             <Eggy mood="worried" size="sm" className="shrink-0" />
             <p className="text-sm">{t("personalized.urgentNotice")}</p>

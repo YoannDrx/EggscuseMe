@@ -31,15 +31,21 @@ async function main() {
     });
 
     // Create fridge for user if doesn't exist
-    await prisma.fridge.upsert({
+    const existingFridge = await prisma.fridge.findFirst({
       where: { ownerId: user.id },
-      update: {},
-      create: {
-        id: fridgeId,
-        name: `Frigo de ${user.name}`,
-        ownerId: user.id,
-      },
     });
+
+    if (!existingFridge) {
+      await prisma.fridge.create({
+        data: {
+          id: fridgeId,
+          name: `Frigo de ${user.name}`,
+          ownerId: user.id,
+          isDefault: true,
+          fridgeType: "MAIN",
+        },
+      });
+    }
 
     return user;
   });
