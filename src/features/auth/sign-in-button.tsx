@@ -19,10 +19,11 @@ const useHref = () => {
 
 export const SignInButton = () => {
   const href = useHref();
+  const callbackUrl = href === "/" ? "/fridge" : href;
 
   return (
     <NeoButton asChild size="sm" variant="outline">
-      <Link href={`/auth/signin?callbackUrl=${href}`}>Sign in</Link>
+      <Link href={`/auth/signin?callbackUrl=${callbackUrl}`}>Sign in</Link>
     </NeoButton>
   );
 };

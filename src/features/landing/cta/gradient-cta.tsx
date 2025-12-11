@@ -80,7 +80,7 @@ export function GradientCTA({ className }: GradientCTAProps) {
                 </Link>
               </NeoButton>
               <NeoButton asChild variant="outline" size="lg">
-                <Link href="/preview" className="gap-2">
+                <Link href="#features" className="gap-2">
                   {t("demo")}
                   <ArrowRight className="size-4" />
                 </Link>

@@ -24,6 +24,9 @@ export default async function RecipesPage() {
     ? RECIPES.length
     : RECIPES.filter((r) => !r.isChefExclusive).length;
 
+  const pageContainer =
+    "mx-auto w-full max-w-5xl md:max-w-6xl lg:max-w-6xl xl:max-w-7xl";
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
@@ -36,7 +39,7 @@ export default async function RecipesPage() {
 
       {/* Desktop Header */}
       <div className="hidden space-y-6 md:block">
-        <div className="flex items-center gap-4">
+        <div className={`${pageContainer} flex items-center gap-4`}>
           <Eggy mood="chef" size="lg" />
           <div>
             <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
@@ -47,7 +50,7 @@ export default async function RecipesPage() {
 
       {/* Main Content */}
       <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] md:px-0">
-        <div className="space-y-[var(--space-section)]">
+        <div className={`${pageContainer} space-y-[var(--space-section)]`}>
           {/* Personalized suggestions */}
           <Suspense fallback={<SuggestionsLoading />}>
             <PersonalizedSuggestions />

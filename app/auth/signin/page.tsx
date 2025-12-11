@@ -20,22 +20,31 @@ export const metadata: Metadata = {
     "Sign in to your account to access testimonials and manage your projects.",
 };
 
-export default function Page() {
+export default async function Page(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   return (
     <Suspense fallback={null}>
-      <AuthSignInPage />
+      <AuthSignInPage searchParams={props.searchParams} />
     </Suspense>
   );
 }
 
-async function AuthSignInPage() {
+async function AuthSignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const user = await getUser();
 
   if (user) {
     redirect("/fridge");
   }
 
-  const providers = Object.keys(SocialProviders ?? {});
+  const params = await searchParams;
+  const callbackUrl = (params.callbackUrl as string) || "/fridge";
+
+  const providers = Object.keys(SocialProviders);
 
   return (
     <NeoCard
@@ -60,7 +69,7 @@ async function AuthSignInPage() {
         </NeoCardDescription>
       </NeoCardHeader>
       <NeoCardContent className="mt-4">
-        <SignInProviders providers={providers} />
+        <SignInProviders providers={providers} callbackUrl={callbackUrl} />
       </NeoCardContent>
     </NeoCard>
   );

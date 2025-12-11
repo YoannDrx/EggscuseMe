@@ -1,7 +1,6 @@
 import {
   IconChefHatSticker,
   IconTipSticker,
-  IlluKitchenScene,
 } from "@/components/eggscuseme/illustrations";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import {
@@ -11,6 +10,7 @@ import {
   NeoCardTitle,
 } from "@/components/neo/neo-card";
 import { EggTimer } from "@/features/timer";
+import { Eggy } from "@/features/mascot";
 import {
   getCookingTips,
   getCookingTipsFr,
@@ -45,6 +45,9 @@ export default function TimerPage() {
     },
   ];
 
+  const pageContainer =
+    "mx-auto w-full max-w-5xl md:max-w-6xl lg:max-w-6xl xl:max-w-7xl";
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Mobile Header */}
@@ -57,8 +60,8 @@ export default function TimerPage() {
 
       {/* Desktop Header */}
       <div className="hidden md:block">
-        <div className="flex items-center gap-4">
-          <IlluKitchenScene size="sm" cooking />
+        <div className={`${pageContainer} flex items-center gap-4`}>
+          <Eggy mood="timer" size="lg" />
           <div>
             <h1 className="font-heading text-2xl font-bold">
               {t("cookingTitle")}
@@ -70,7 +73,9 @@ export default function TimerPage() {
 
       {/* Main Content */}
       <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] md:px-0">
-        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+        <div
+          className={`${pageContainer} flex flex-col gap-6 lg:flex-row lg:gap-8`}
+        >
           {/* Timer - Centered on mobile, left on desktop */}
           <div className="flex justify-center lg:justify-start">
             <EggTimer />

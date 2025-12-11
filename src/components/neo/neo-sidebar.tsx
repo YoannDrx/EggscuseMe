@@ -17,7 +17,7 @@ type SidebarContextValue = {
   setMobileOpen: (open: boolean) => void;
 };
 
-const SidebarContext = React.createContext<SidebarContextValue | null>(null);
+export const SidebarContext = React.createContext<SidebarContextValue | null>(null);
 
 function useSidebarContext() {
   const context = React.useContext(SidebarContext);

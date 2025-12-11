@@ -4,7 +4,7 @@ import {
   NeoSidebarInset,
   NeoSidebarTrigger,
 } from "@/components/neo/neo-sidebar";
-import { Layout } from "@/features/page/layout";
+
 import type { PropsWithChildren } from "react";
 import { FridgeBreadcrumb } from "./fridge-breadcrumb";
 import { FridgeSidebar } from "./fridge-sidebar";
@@ -22,7 +22,7 @@ export function FridgeNavigation({ children, role }: FridgeNavigationProps) {
       <NeoSidebarInset className="border-neo-border">
         {/* Desktop Header - Hidden on mobile */}
         <header className="hidden h-16 shrink-0 items-center gap-2 md:flex">
-          <div className="flex w-full items-center gap-2 px-[var(--space-page-x)] md:px-6 lg:px-8">
+          <div className="flex w-full items-center gap-2 px-[var(--space-page-x)] md:px-8 lg:px-12 xl:px-16">
             <NeoSidebarTrigger className="bg-neo-bg text-neo-text border-neo-border/20 size-9 cursor-pointer rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] p-2 shadow-[var(--shadow-neo-sm)] transition-all duration-200 outline-none hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
               <svg
                 className="size-5"
@@ -43,7 +43,7 @@ export function FridgeNavigation({ children, role }: FridgeNavigationProps) {
         </header>
 
         {/* Main Content - No padding on mobile */}
-        <div className="flex flex-1 flex-col gap-4 p-0 pb-24 md:px-6 md:pb-6 lg:px-8">
+        <div className="flex flex-1 flex-col gap-4 p-0 pb-24 md:px-8 md:pb-8 lg:px-12 xl:px-16">
           {children}
         </div>
 

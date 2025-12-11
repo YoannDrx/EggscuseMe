@@ -81,7 +81,6 @@ export function HeroSection({ className }: HeroSectionProps) {
                   </defs>
                 </svg>
               </span>
-              .
             </motion.h1>
 
             {/* Description */}
@@ -124,7 +123,7 @@ export function HeroSection({ className }: HeroSectionProps) {
           </div>
 
           {/* Right Column - Phone Mockup */}
-          <div className="relative flex justify-center lg:justify-end">
+          <div className="relative flex justify-center lg:justify-end lg:pt-6">
             {/* Floating Badges - Hidden on mobile */}
             <div className="pointer-events-none absolute inset-0 hidden lg:block">
               <FloatingBadge

@@ -54,10 +54,8 @@ const withSidebarProvider = (children: React.ReactNode) => (
 
 describe("SidebarMenuButtonLink", () => {
   it("renders link with correct props", async () => {
-    const { usePathname } = await import("next/navigation");
-    vi.mocked(usePathname).mockReturnValue("/test");
-
-    const { container } = setup(
+    const { usePathname: _usePathname } = await import("next/navigation");
+    const { container: _container } = setup(
       withSidebarProvider(
         <SidebarMenuButtonLink href="/test">Test Link</SidebarMenuButtonLink>,
       ),
@@ -85,10 +83,8 @@ describe("SidebarMenuButtonLink", () => {
 
 describe("SidebarSubButtonLink", () => {
   it("renders sub link with correct props", async () => {
-    const { usePathname } = await import("next/navigation");
-    vi.mocked(usePathname).mockReturnValue("/test");
-
-    const { container } = setup(
+    const { usePathname: _usePathname } = await import("next/navigation");
+    const { container: _container } = setup(
       withSidebarProvider(
         <SidebarSubButtonLink href="/test">Test Sub Link</SidebarSubButtonLink>,
       ),

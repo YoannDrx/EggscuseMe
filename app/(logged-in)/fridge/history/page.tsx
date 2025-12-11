@@ -97,6 +97,9 @@ export default function HistoryPage() {
   const totalPages = data?.pages ?? 0;
   const total = data?.total ?? 0;
 
+  const pageContainer =
+    "mx-auto w-full max-w-5xl md:max-w-6xl lg:max-w-6xl xl:max-w-7xl";
+
   // Transform data for HistoryCard
   const historyItems: HistoryItem[] = history.map((item) => ({
     id: item.id,
@@ -164,7 +167,7 @@ export default function HistoryPage() {
 
       {/* Desktop Header */}
       <div className="hidden space-y-6 md:block">
-        <div className="flex items-center gap-4">
+        <div className={`${pageContainer} flex items-center gap-4`}>
           <Eggy mood="happy" size="lg" />
           <div>
             <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
@@ -173,7 +176,7 @@ export default function HistoryPage() {
         </div>
 
         {/* Desktop Filters */}
-        <NeoCard variant="elevated" padding="md">
+        <NeoCard variant="elevated" padding="md" className={pageContainer}>
           <NeoCardHeader>
             <NeoCardTitle className="flex items-center gap-2 text-base">
               <History className="size-4" />
@@ -221,134 +224,141 @@ export default function HistoryPage() {
 
       {/* Content */}
       <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] md:px-0">
-        {isPending ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="text-neo-accent size-8 animate-spin" />
-          </div>
-        ) : history.length === 0 ? (
-          <NeoCard
-            variant="elevated"
-            padding="lg"
-            className="mx-auto w-full max-w-5xl"
-          >
-            <NeoCardContent>
-              <HistoryEmpty />
-            </NeoCardContent>
-          </NeoCard>
-        ) : (
-          <>
-            {/* Mobile: Card List */}
-            {isMobile ? (
-              <div className="space-y-3">
-                {historyItems.map((item, index) => (
-                  <HistoryCard key={item.id} item={item} delay={index * 0.05} />
-                ))}
-              </div>
-            ) : (
-              /* Desktop: Table */
-              <NeoCard variant="elevated" padding="md">
-                <NeoCardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>{t("date")}</TableHead>
-                          <TableHead>{t("box")}</TableHead>
-                          <TableHead>{t("quantity")}</TableHead>
-                          <TableHead>{t("type")}</TableHead>
-                          <TableHead>{t("rating")}</TableHead>
-                          <TableHead>{t("comment")}</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {history.map((item) => (
-                          <TableRow key={item.id}>
-                            <TableCell className="whitespace-nowrap">
-                              {new Date(item.date).toLocaleDateString(locale, {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}
-                            </TableCell>
-                            <TableCell className="font-medium">
-                              {item.eggBoxName}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline">
-                                {t("eggCount", { count: item.quantity })}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {tCooking(
-                                item.cookingType in COOKING_TYPE_OPTIONS
-                                  ? COOKING_TYPE_OPTIONS[
-                                      item.cookingType as keyof typeof COOKING_TYPE_OPTIONS
-                                    ]
-                                  : COOKING_TYPE_OPTIONS.OTHER,
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {item.rating != null ? (
-                                <div className="flex items-center gap-1">
-                                  {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star
-                                      key={i}
-                                      className={`size-4 ${
-                                        i < (item.rating ?? 0)
-                                          ? "fill-primary text-primary"
-                                          : "text-muted"
-                                      }`}
-                                    />
-                                  ))}
-                                </div>
-                              ) : (
-                                <span className="text-neo-text-muted">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="max-w-[200px] truncate">
-                              {item.notes ?? (
-                                <span className="text-neo-text-muted">-</span>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </NeoCardContent>
-              </NeoCard>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-6 flex items-center justify-between">
-                <p className="text-neo-text-muted text-sm">
-                  {t("page", { current: page, total: totalPages })}
-                </p>
-                <div className="flex gap-2">
-                  <NeoButton
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page <= 1}
-                  >
-                    <ChevronLeft className="size-4" />
-                    <span className="hidden sm:inline">{t("previous")}</span>
-                  </NeoButton>
-                  <NeoButton
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page >= totalPages}
-                  >
-                    <span className="hidden sm:inline">{t("next")}</span>
-                    <ChevronRight className="size-4" />
-                  </NeoButton>
+        <div className={pageContainer}>
+          {isPending ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="text-neo-accent size-8 animate-spin" />
+            </div>
+          ) : history.length === 0 ? (
+            <NeoCard variant="elevated" padding="lg">
+              <NeoCardContent>
+                <HistoryEmpty />
+              </NeoCardContent>
+            </NeoCard>
+          ) : (
+            <>
+              {/* Mobile: Card List */}
+              {isMobile ? (
+                <div className="space-y-3">
+                  {historyItems.map((item, index) => (
+                    <HistoryCard
+                      key={item.id}
+                      item={item}
+                      delay={index * 0.05}
+                    />
+                  ))}
                 </div>
-              </div>
-            )}
-          </>
-        )}
+              ) : (
+                /* Desktop: Table */
+                <NeoCard variant="elevated" padding="md">
+                  <NeoCardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>{t("date")}</TableHead>
+                            <TableHead>{t("box")}</TableHead>
+                            <TableHead>{t("quantity")}</TableHead>
+                            <TableHead>{t("type")}</TableHead>
+                            <TableHead>{t("rating")}</TableHead>
+                            <TableHead>{t("comment")}</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {history.map((item) => (
+                            <TableRow key={item.id}>
+                              <TableCell className="whitespace-nowrap">
+                                {new Date(item.date).toLocaleDateString(
+                                  locale,
+                                  {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                  },
+                                )}
+                              </TableCell>
+                              <TableCell className="font-medium">
+                                {item.eggBoxName}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="outline">
+                                  {t("eggCount", { count: item.quantity })}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {tCooking(
+                                  item.cookingType in COOKING_TYPE_OPTIONS
+                                    ? COOKING_TYPE_OPTIONS[
+                                        item.cookingType as keyof typeof COOKING_TYPE_OPTIONS
+                                      ]
+                                    : COOKING_TYPE_OPTIONS.OTHER,
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {item.rating != null ? (
+                                  <div className="flex items-center gap-1">
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                      <Star
+                                        key={i}
+                                        className={`size-4 ${
+                                          i < (item.rating ?? 0)
+                                            ? "fill-primary text-primary"
+                                            : "text-muted"
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span className="text-neo-text-muted">-</span>
+                                )}
+                              </TableCell>
+                              <TableCell className="max-w-[200px] truncate">
+                                {item.notes ?? (
+                                  <span className="text-neo-text-muted">-</span>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </NeoCardContent>
+                </NeoCard>
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-6 flex items-center justify-between">
+                  <p className="text-neo-text-muted text-sm">
+                    {t("page", { current: page, total: totalPages })}
+                  </p>
+                  <div className="flex gap-2">
+                    <NeoButton
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      disabled={page <= 1}
+                    >
+                      <ChevronLeft className="size-4" />
+                      <span className="hidden sm:inline">{t("previous")}</span>
+                    </NeoButton>
+                    <NeoButton
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      disabled={page >= totalPages}
+                    >
+                      <span className="hidden sm:inline">{t("next")}</span>
+                      <ChevronRight className="size-4" />
+                    </NeoButton>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </main>
 
       {/* Mobile Filter Modal */}

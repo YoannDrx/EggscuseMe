@@ -557,6 +557,104 @@ export const EggyNinja = ({ className = "w-32 h-32" }) => (
   </motion.div>
 );
 
+export const EggyTimerHold = ({ className = "w-32 h-32" }) => (
+  <motion.div
+    className={className}
+    animate={{ y: [0, -4, 0] }}
+    transition={{ repeat: Infinity, duration: 2.8 }}
+  >
+    <svg viewBox="-15 0 140 130" className="h-full w-full drop-shadow-xl">
+      <g transform="translate(15, 8)">
+        <BaseEggShape />
+
+        {/* Eyes + smile */}
+        <g transform="translate(0, 15)">
+          <circle cx="38" cy="55" r="3" fill="#000" />
+          <circle cx="62" cy="55" r="3" fill="#000" />
+          <path
+            d="M40 66 Q 50 74 60 66"
+            stroke="#000"
+            strokeWidth="3"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
+
+        {/* Left arm holding stopwatch */}
+        <g transform="translate(5, 65)">
+          <path
+            d="M0 10 Q -10 0 -5 -10"
+            stroke="#000"
+            strokeWidth="4"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <g transform="translate(-10, -20)">
+            <circle
+              cx="0"
+              cy="0"
+              r="12"
+              fill="#FEE2B4"
+              stroke="#000"
+              strokeWidth="3"
+            />
+            <circle cx="0" cy="0" r="2" fill="#000" />
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="-7"
+              stroke="#000"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <line
+              x1="0"
+              y1="0"
+              x2="6"
+              y2="2"
+              stroke="#000"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <rect
+              x="-4"
+              y="-18"
+              width="8"
+              height="4"
+              rx="1"
+              fill="#000"
+            />
+            <rect
+              x="-6"
+              y="-22"
+              width="12"
+              height="6"
+              rx="2"
+              fill="#FCD34D"
+              stroke="#000"
+              strokeWidth="2"
+            />
+          </g>
+        </g>
+
+        {/* Right arm waving */}
+        <g transform="translate(85, 55)">
+          <motion.path
+            d="M0 10 Q 12 -5 20 10"
+            stroke="#000"
+            strokeWidth="4"
+            strokeLinecap="round"
+            fill="none"
+            animate={{ rotate: [-6, 6, -6] }}
+            transition={{ repeat: Infinity, duration: 1.6 }}
+          />
+        </g>
+      </g>
+    </svg>
+  </motion.div>
+);
+
 /**
  * ------------------------------------------------------------------
  * ILLUSTRATIONS DE SCÈNE & ICONES FUN

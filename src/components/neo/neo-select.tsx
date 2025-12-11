@@ -81,8 +81,11 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
           child.props.value === value,
       );
 
-      return option?.props.children;
-    }, [children, value]);
+      if (option) {
+        return option.props.children;
+      }
+      return undefined;
+    }, [children, value]) as React.ReactNode | null | undefined;
 
     // Close on outside click
     React.useEffect(() => {
@@ -137,11 +140,8 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
       [handleSelect, value],
     );
 
-    const displayLabel =
-      selectedContent === null || selectedContent === undefined
-        ? placeholder
-        : selectedContent;
-    const isPlaceholder = selectedContent === null || selectedContent === undefined;
+    const displayLabel = selectedContent ?? placeholder;
+    const isPlaceholder = selectedContent == null;
 
     return (
       <SelectContext.Provider value={contextValue}>

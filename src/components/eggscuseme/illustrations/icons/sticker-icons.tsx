@@ -110,6 +110,139 @@ export function IconTimerSticker({
 }
 
 /**
+ * Large timer illustration
+ */
+export function TimerIllustration({
+  size = 140,
+  className,
+  ...props
+}: StickerIconProps) {
+  const parsedSize =
+    typeof size === "number" ? size : parseInt(String(size), 10) || 140;
+
+  return (
+    <svg
+      width={parsedSize}
+      height={parsedSize}
+      viewBox="0 0 160 180"
+      className={className}
+      {...defaultProps}
+      {...props}
+    >
+      <defs>
+        <filter id="timerShadow" x="-10%" y="-10%" width="130%" height="130%">
+          <feOffset dx="6" dy="6" />
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood floodColor="rgba(0,0,0,0.18)" />
+          <feComposite in2="blur" operator="in" />
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <g filter="url(#timerShadow)">
+        <circle
+          cx="80"
+          cy="95"
+          r="60"
+          fill="#FFF7ED"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={4}
+        />
+        <circle
+          cx="80"
+          cy="95"
+          r="46"
+          fill="#FFFFFF"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={3}
+        />
+        <circle cx="80" cy="95" r="3" fill="#000" />
+
+        <path
+          d="M80 95 L80 60"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={4}
+          strokeLinecap="round"
+        />
+        <path
+          d="M80 95 L110 105"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={4}
+          strokeLinecap="round"
+        />
+
+        <rect
+          x="58"
+          y="32"
+          width="44"
+          height="10"
+          rx="4"
+          fill="#0F172A"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={2.5}
+        />
+        <rect
+          x="66"
+          y="24"
+          width="28"
+          height="10"
+          rx="3"
+          fill="#FCD34D"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={2}
+        />
+
+        <rect
+          x="25"
+          y="70"
+          width="10"
+          height="16"
+          rx="4"
+          fill="#F59E0B"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={2}
+        />
+        <rect
+          x="125"
+          y="70"
+          width="10"
+          height="16"
+          rx="4"
+          fill="#F59E0B"
+          stroke={STICKER_STYLE.stroke}
+          strokeWidth={2}
+        />
+
+        {Array.from({ length: 12 }).map((_, i) => {
+          const angle = (i * Math.PI) / 6;
+          const rOuter = 80;
+          const rInner = i % 3 === 0 ? 66 : 70;
+          const x1 = 80 + rOuter * Math.cos(angle);
+          const y1 = 95 + rOuter * Math.sin(angle);
+          const x2 = 80 + rInner * Math.cos(angle);
+          const y2 = 95 + rInner * Math.sin(angle);
+          return (
+            <line
+              key={i}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke={STICKER_STYLE.stroke}
+              strokeWidth={i % 3 === 0 ? 3 : 2}
+              strokeLinecap="round"
+            />
+          );
+        })}
+      </g>
+    </svg>
+  );
+}
+
+/**
  * Sticker-style chef hat icon
  */
 export function IconChefHatSticker({
@@ -711,6 +844,7 @@ export function IconErrorSticker({
 export const StickerIcons = {
   Trash: IconTrashSticker,
   Timer: IconTimerSticker,
+  TimerIllustration,
   ChefHat: IconChefHatSticker,
   Fridge: IconFridgeSticker,
   Chart: IconChartSticker,

@@ -19,6 +19,7 @@
   },
   "sidebar": {
     "userMenu": {
+      "dashboard": "Dashboard",
       "profile": "My profile",
       "settings": "Settings",
       "admin": "Administration",

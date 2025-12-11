@@ -130,7 +130,9 @@ export function LandingHeader() {
               <ThemeSwitcher />
               <AuthButtonClient />
               <NeoButton asChild>
-                <Link href="/auth/signin">{t("getStarted")}</Link>
+                <Link href="/auth/signin?callbackUrl=/fridge">
+                  {t("getStarted")}
+                </Link>
               </NeoButton>
             </div>
           </motion.nav>

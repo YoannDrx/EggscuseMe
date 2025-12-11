@@ -1,5 +1,6 @@
 "use client";
 
+import { SidebarContext } from "@/components/neo/neo-sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -10,16 +11,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient, useSession } from "@/lib/auth-client";
-import { LogOut, Settings, Shield, User } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { LayoutDashboard, LogOut, Settings, Shield, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 
 export const SidebarUserButton = () => {
   const session = useSession();
   const router = useRouter();
   const t = useTranslations("sidebar.userMenu");
   const data = session.data?.user;
+  const sidebarContext = useContext(SidebarContext);
+
+  const showInfo = sidebarContext
+    ? sidebarContext.expanded || sidebarContext.mobile
+    : true;
 
   // Afficher un skeleton pendant le chargement pour éviter le mismatch d'hydratation
   // On utilise un <button> désactivé pour matcher la structure HTML du composant final
@@ -27,13 +35,18 @@ export const SidebarUserButton = () => {
     return (
       <button
         disabled
-        className="border-foreground/20 bg-muted/50 flex w-full items-center gap-3 rounded-xl border-2 p-3"
+        className={cn(
+          "border-foreground/20 bg-muted/50 flex w-full items-center gap-3 rounded-xl border-2 p-3",
+          !showInfo && "justify-center p-1",
+        )}
       >
         <Skeleton className="size-10 rounded-full" />
-        <div className="grid flex-1 gap-1">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-3 w-32" />
-        </div>
+        {showInfo && (
+          <div className="grid flex-1 gap-1">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-32" />
+          </div>
+        )}
       </button>
     );
   }
@@ -53,24 +66,42 @@ export const SidebarUserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="border-foreground/20 bg-muted/50 hover:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl border-2 p-3 transition-colors"
+          className={cn(
+            "border-foreground/20 bg-muted/50 hover:bg-muted flex w-full cursor-pointer items-center gap-3 rounded-xl border-2 p-3 transition-colors",
+            !showInfo && "justify-center p-1",
+          )}
           data-testid="user-profile-button"
         >
           <Avatar className="border-foreground/10 size-10 rounded-full border-2">
-            <AvatarImage src={data.image ?? ""} alt={data.name[0]} />
+            <AvatarImage
+              src={data.image ?? ""}
+              alt={data.name[0]}
+              referrerPolicy="no-referrer"
+            />
             <AvatarFallback className="rounded-full">
               {data.name[0]}
             </AvatarFallback>
           </Avatar>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{data.name}</span>
-            <span className="text-muted-foreground truncate text-xs">
-              {data.email}
-            </span>
-          </div>
+          {showInfo && (
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-semibold">{data.name}</span>
+              <span className="text-muted-foreground truncate text-xs">
+                {data.email}
+              </span>
+            </div>
+          )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuItem asChild>
+          <Link
+            href="/fridge"
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <LayoutDashboard className="size-4" />
+            {t("dashboard")}
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
             href="/fridge/settings/profile"

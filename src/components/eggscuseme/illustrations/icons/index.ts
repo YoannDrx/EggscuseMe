@@ -17,5 +17,6 @@ export {
   IconCheckSticker,
   IconWarningSticker,
   IconErrorSticker,
+  TimerIllustration,
   StickerIcons,
 } from "./sticker-icons";

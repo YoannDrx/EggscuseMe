@@ -34,8 +34,8 @@ async function FridgePageContent() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 px-[var(--space-page-x)] pt-2 pb-[var(--space-page-y)] sm:px-6 sm:py-[var(--space-page-y)] md:px-6 lg:px-8">
-        <div className="space-y-[var(--space-section)]">
+      <main className="flex-1 px-[var(--space-page-x)] pt-2 pb-[var(--space-page-y)] sm:px-6 sm:py-[var(--space-page-y)] md:px-0">
+        <div className="mx-auto w-full max-w-5xl space-y-[var(--space-section)] md:max-w-6xl lg:max-w-6xl xl:max-w-7xl">
           {/* Stats Cards - Horizontal scroll on mobile */}
           <Suspense fallback={<StatsCardsSkeleton />}>
             <FridgeStatsCards />
@@ -68,7 +68,7 @@ function FridgePageSkeleton() {
 
       {/* Content Skeleton */}
       <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] sm:px-6 md:px-0">
-        <div className="space-y-[var(--space-section)]">
+        <div className="mx-auto w-full max-w-5xl space-y-[var(--space-section)] md:max-w-6xl lg:max-w-6xl xl:max-w-7xl">
           <StatsCardsSkeleton />
           <div className="space-y-[var(--space-card-gap)]">
             {[...Array(3)].map((_, i) => (

@@ -11,7 +11,7 @@ import {
   EggySick,
   EggyParty,
   EggyNinja,
-  IconTimerSticker,
+  EggyTimerHold,
 } from "./eggy-sticker-components";
 
 export type EggyMood =
@@ -83,12 +83,7 @@ export function Eggy({
       return <EggyParty className={finalClass} {...props} />;
 
     case "timer":
-      // Wrapping IconTimerSticker in a div to ensure sizing works if it expects specific props
-      return (
-        <div className={finalClass} {...props}>
-          <IconTimerSticker className="h-full w-full" />
-        </div>
-      );
+      return <EggyTimerHold className={finalClass} {...props} />;
 
     case "searching":
       return <EggyCool className={finalClass} {...props} />;

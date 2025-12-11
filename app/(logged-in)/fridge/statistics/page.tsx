@@ -126,6 +126,8 @@ export default function StatisticsPage() {
   }, [loadStats]);
 
   const stats = result.data?.stats;
+  const pageContainer =
+    "mx-auto w-full max-w-5xl md:max-w-6xl lg:max-w-6xl xl:max-w-7xl";
 
   // Loading state
   if (isPending) {
@@ -159,7 +161,7 @@ export default function StatisticsPage() {
 
         {/* Desktop empty state */}
         <div className="hidden space-y-6 md:block">
-          <div className="flex items-center gap-4">
+          <div className={`${pageContainer} flex items-center gap-4`}>
             <Eggy mood="sad" size="lg" />
             <div>
               <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
@@ -397,7 +399,9 @@ export default function StatisticsPage() {
 
       {/* Desktop Header */}
       <div className="hidden space-y-6 md:block">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          className={`${pageContainer} flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between`}
+        >
           <div className="flex items-center gap-4">
             <Eggy mood="happy" size="lg" />
             <div>
@@ -422,7 +426,7 @@ export default function StatisticsPage() {
 
       {/* Main Content */}
       <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] md:px-0">
-        <div className="space-y-[var(--space-section)]">
+        <div className={`${pageContainer} space-y-[var(--space-section)]`}>
           {/* KPI Cards */}
           {isMobile ? (
             <StatsCardCarousel>

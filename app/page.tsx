@@ -19,7 +19,9 @@ export default async function HomePage() {
       <HeroSection />
 
       {/* Features Grid */}
-      <FeatureCards />
+      <div id="features">
+        <FeatureCards />
+      </div>
 
       {/* How it Works - Bento Grid */}
       <BentoGrid />

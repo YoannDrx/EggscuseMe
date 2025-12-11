@@ -48,7 +48,7 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {/* Icons */}
-      <div className="relative z-10 flex w-full items-center justify-between px-2">
+      <div className="relative z-10 grid w-full grid-cols-2 place-items-center px-2">
         <Sun
           className={cn(
             "size-4 transition-colors",
@@ -66,10 +66,11 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
       {/* Sliding pill - Neo style */}
       <div
         className={cn(
-          "absolute top-1 size-7 transition-all duration-200",
+          "absolute top-1/2 size-7 -translate-y-1/2 transition-all duration-200",
           "border-neo-border rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]",
           "bg-neo-bg shadow-[2px_2px_0_var(--neo-shadow-color)]",
-          isDark ? "left-[calc(100%-32px)]" : "left-1",
+          // isDark ? "left-[calc(100%-34px)]" : "left-[6px]",
+          isDark ? "left-[10px]" : "left-[calc(100%-38px)]",
         )}
       />
     </button>

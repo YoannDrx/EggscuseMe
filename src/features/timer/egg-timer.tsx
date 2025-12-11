@@ -9,7 +9,7 @@ import {
 } from "@/components/neo";
 import { NeoLabel } from "@/components/neo";
 import { NeoSelect, NeoSelectItem } from "@/components/neo";
-import { Eggy } from "@/features/mascot";
+import { TimerIllustration } from "@/components/eggscuseme/illustrations";
 import type { EggSize } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
@@ -142,18 +142,11 @@ export function EggTimer() {
 
   const progress = totalTime > 0 ? (totalTime - timeRemaining) / totalTime : 0;
 
-  // Get Eggy mood based on state
-  const getEggyMood = () => {
-    if (isDone) return "happy";
-    if (isRunning) return "chef";
-    return "happy";
-  };
-
   return (
     <NeoCard variant="elevated" className="w-full max-w-md">
       <NeoCardHeader className="pb-4">
         <NeoCardTitle className="font-heading flex items-center gap-3 text-xl">
-          <Eggy mood={getEggyMood()} size="sm" animate={isRunning} />
+          <TimerIllustration className="h-16 w-16 md:h-20 md:w-20" />
           {t("cookingTitle")}
           {isDone && (
             <motion.div

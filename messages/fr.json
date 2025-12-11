@@ -19,6 +19,7 @@
   },
   "sidebar": {
     "userMenu": {
+      "dashboard": "Tableau de bord",
       "profile": "Mon profil",
       "settings": "Parametres",
       "admin": "Administration",
@@ -346,138 +347,138 @@
   },
   "landing": {
     "hero": {
-      "badge": "Application #1 Anti-Gaspillage",
-      "title": "Ne jetez plus jamais",
-      "titleHighlight": "un seul œuf",
-      "description": "Suivez la fraîcheur de vos œufs, recevez des recommandations de cuisson personnalisées et réduisez le gaspillage alimentaire. Simple comme bonjour.",
-      "cta": "Créer mon frigo gratuit",
-      "ctaSecondary": "En savoir plus"
+      "badge": "Votre Assistant Culinaire de Précision",
+      "title": "Cuisinez l'œuf parfait,",
+      "titleHighlight": "à chaque fois",
+      "description": "Un œuf extra-frais mérite une coque. Un œuf de 15 jours mérite un gâteau. EggscuseMe vous guide vers la recette idéale selon la fraîcheur réelle de vos produits.",
+      "cta": "Démarrer mon frigo",
+      "ctaSecondary": "Comment ça marche ?"
     },
     "nav": {
-      "features": "Fonctionnalités",
-      "pricing": "Tarifs",
-      "blog": "Blog",
-      "getStarted": "Commencer",
+      "features": "Expertise",
+      "pricing": "Offres",
+      "blog": "Conseils",
+      "getStarted": "Cuisiner",
       "openMenu": "Ouvrir le menu"
     },
     "stats": {
-      "users": "Utilisateurs",
-      "eggsSaved": "Œufs sauvés",
+      "users": "Gourmets",
+      "eggsSaved": "Recettes réussies",
       "appStoreRating": "Note App Store",
-      "freeToStart": "Pour commencer"
+      "freeToStart": "Gratuit pour démarrer"
     },
     "problem": {
-      "title": "Le problème",
-      "stat1": "10 milliards",
-      "stat1Label": "d'œufs jetés chaque année en France",
-      "stat2": "30%",
-      "stat2Label": "des œufs achetés finissent à la poubelle",
-      "stat3": "2 semaines",
-      "stat3Label": "de fraîcheur perdues par méconnaissance"
+      "title": "Le dilemme",
+      "stat1": "Incertitude",
+      "stat1Label": "Fini le test du verre d'eau peu fiable",
+      "stat2": "Gâchis",
+      "stat2Label": "Ne sacrifiez plus un œuf extra-frais pour un gâteau",
+      "stat3": "Confiance",
+      "stat3Label": "Cuisinez sans jamais douter de la fraîcheur"
     },
     "features": {
-      "title": "Comment ça marche",
+      "title": "L'expertise en poche",
       "fridge": {
-        "title": "Frigo Virtuel",
-        "description": "Suivez toutes vos boîtes d'œufs avec des indicateurs de fraîcheur colorés"
+        "title": "Inventaire Intelligent",
+        "description": "Visualisez en un coup d'œil quels œufs sont prêts pour une mayonnaise et lesquels doivent être cuits."
       },
       "recommendations": {
-        "title": "Recommandations",
-        "description": "Savez exactement quoi cuisiner selon l'âge de vos œufs"
+        "title": "Suggestions Culinaires",
+        "description": "En manque d'inspiration ? L'app vous suggère la recette parfaite pour l'état de vos œufs."
       },
       "timer": {
-        "title": "Minuteur Intelligent",
-        "description": "Temps de cuisson ajustés selon la taille et la température"
+        "title": "Cuisson de Précision",
+        "description": "Coque, mollet, dur ? Un minuteur qui s'adapte à la taille et à la température de l'œuf."
       },
       "stats": {
-        "title": "Anti-Gaspi",
-        "description": "Suivez vos économies et les œufs que vous avez sauvés"
+        "title": "Tableau de Bord",
+        "description": "Suivez votre consommation et optimisez votre gestion des stocks."
       }
     },
     "howItWorks": {
-      "title": "3 étapes simples",
+      "title": "La méthode EggscuseMe",
       "step1": {
-        "title": "Ajoutez vos œufs",
-        "description": "Scannez ou entrez la date de ponte de vos boîtes"
+        "title": "Remplissez",
+        "description": "Scannez votre boîte. Nous enregistrons la date de ponte réelle pour une précision absolue."
       },
       "step2": {
-        "title": "Suivez la fraîcheur",
-        "description": "Code couleur intuitif : vert, jaune, orange, rouge"
+        "title": "Consultez",
+        "description": "Notre algorithme détermine le mode de cuisson idéal : Cru, Coque, ou Bien cuit."
       },
       "step3": {
-        "title": "Cuisinez parfaitement",
-        "description": "Recettes et minuteur adaptés à l'âge de vos œufs"
+        "title": "Savourez",
+        "description": "Suivez nos recettes et minuteurs pour un résultat digne d'un chef."
       }
     },
     "pricing": {
-      "title": "Choisissez votre formule",
-      "subtitle": "Commencez gratuitement, passez Brigade ou Chef selon vos besoins.",
+      "title": "Équipez votre cuisine",
+      "subtitle": "Du cuisinier du dimanche au chef de brigade.",
       "monthly": "Mensuel",
       "yearly": "Annuel",
       "discount": "-50%",
-      "footer": "Tous les plans incluent le suivi de fraîcheur et les recommandations de recettes.",
+      "footer": "La précision culinaire accessible à tous.",
       "question": "Une question ?",
       "contactUs": "Contactez-nous",
       "solo": {
-        "title": "Solo",
+        "title": "Commis",
         "price": "0€",
-        "description": "Pour cuisiner tes œufs rien que pour toi",
+        "description": "Pour maîtriser ses cuissons au quotidien",
         "features": [
           "2 boîtes d'œufs max",
           "Minuteur intelligent",
-          "Suivi de fraîcheur",
-          "Historique limité (30 jours)",
+          "Guide de fraîcheur",
+          "Recettes de base",
           "1 utilisateur"
         ],
         "cta": "Commencer gratuitement"
       },
       "brigade": {
-        "title": "Brigade",
+        "title": "Chef de Partie",
         "price": "4,99€",
         "period": "/mois",
-        "description": "Pour cuisiner à plusieurs, en équipe",
+        "description": "Pour gérer le frigo de toute la famille",
         "badge": "Recommandé",
         "features": [
           "Boîtes illimitées",
-          "Notifications fraîcheur",
-          "Stats anti-gaspi",
-          "Historique complet",
-          "Partage famille (5 membres)"
+          "Notifications de consommation",
+          "Historique culinaire",
+          "Mode Brigade (Partage 5 membres)",
+          "Recettes exclusives"
         ],
-        "cta": "Choisir Brigade"
+        "cta": "Devenir Chef"
       },
       "chef": {
-        "title": "Chef",
+        "title": "Chef Exécutif",
         "price": "14,99€",
         "period": "/mois",
-        "description": "Pour les pros et gros volumes",
+        "description": "Pour les pros et grandes tablées",
         "badge": "Pro",
         "features": [
           "Multi-frigos",
-          "Export PDF/CSV",
-          "Mode pro (lots)",
-          "Recettes exclusives",
+          "Export Inventaire",
+          "Mode Traçabilité (Lots)",
+          "Support prioritaire",
           "Membres illimités",
-          "Support prioritaire"
+          "API Access"
         ],
-        "cta": "Passer Chef"
+        "cta": "Passer Pro"
       },
       "free": {
-        "title": "Solo",
+        "title": "Commis",
         "price": "0€",
-        "description": "Pour cuisiner tes œufs rien que pour toi",
+        "description": "Pour maîtriser ses cuissons au quotidien",
         "features": [
           "2 boîtes d'œufs max",
-          "Minuteur basique",
-          "Recommandations de cuisson"
+          "Minuteur intelligent",
+          "Guide de fraîcheur"
         ],
         "cta": "Commencer gratuitement"
       },
       "premium": {
-        "title": "Brigade",
+        "title": "Chef de Partie",
         "price": "4,99€",
         "period": "/mois",
-        "description": "Pour cuisiner à plusieurs, en équipe",
+        "description": "Pour gérer le frigo de toute la famille",
         "features": [
           "Boîtes illimitées",
           "Historique complet",
@@ -486,136 +487,136 @@
           "Recettes exclusives",
           "Export des données"
         ],
-        "cta": "Choisir Brigade"
+        "cta": "Devenir Chef"
       }
     },
     "faq": {
-      "title": "Questions fréquentes",
+      "title": "Questions Gourmandes",
       "q1": {
-        "question": "Comment savoir si un œuf est encore bon ?",
-        "answer": "Un œuf peut être consommé en toute sécurité jusqu'à 28 jours après la ponte. EggscuseMe fait le suivi pour vous et vous dit exactement quelle méthode de cuisson est la meilleure à chaque étape de fraîcheur."
+        "question": "Pourquoi la date de ponte est-elle si importante ?",
+        "answer": "C'est la seule donnée fiable. Contrairement à la DCR, elle nous permet de calculer l'âge exact de l'œuf et de vous dire s'il est encore 'Extra-Frais' (pour les coques) ou simplement 'Frais'."
       },
       "q2": {
-        "question": "Quelle est la différence entre 'à consommer jusqu'au' et 'à consommer de préférence avant' ?",
-        "answer": "La DCR (Date de Consommation Recommandée) est généralement 28 jours après la ponte. La date sur les boîtes est souvent plus courte par précaution des distributeurs. EggscuseMe utilise la date de ponte réelle pour un suivi précis."
+        "question": "Puis-je vraiment manger un œuf après 21 jours ?",
+        "answer": "Absolument, mais pas n'importe comment ! Après 21 jours, l'œuf doit être bien cuit (œuf dur, gâteau). EggscuseMe vous signale quand un œuf passe ce cap pour éviter les risques."
       },
       "q3": {
-        "question": "Puis-je manger des œufs crus ?",
-        "answer": "Oui, mais uniquement dans les 9 premiers jours après la ponte (extra-frais). Après, préférez des cuissons qui chauffent bien le jaune, comme au plat ou dur."
+        "question": "Le minuteur prend-il en compte la température ?",
+        "answer": "Oui. Un œuf sortant du frigo demande plus de temps de cuisson qu'un œuf à température ambiante pour obtenir le même résultat mollet. Nous ajustons le temps pour vous."
       },
       "q4": {
-        "question": "Comment fonctionne le code couleur de fraîcheur ?",
-        "answer": "Vert (0-9 jours) : Extra-frais, parfait pour coque ou cru. Jaune (10-21 jours) : Frais, idéal pour omelette ou au plat. Orange (22-28 jours) : À bien cuire, meilleur dur. Gris (29+ jours) : Expiré, à jeter."
+        "question": "Comment fonctionne l'inspiration recette ?",
+        "answer": "L'app analyse votre stock. Vous avez des œufs 'à cuire' ? On vous propose un cake ou des œufs durs. Des œufs 'extra-frais' ? On vous suggère des œufs cocotte ou à la coque."
       },
       "q5": {
-        "question": "Puis-je partager mon frigo avec ma famille ?",
-        "answer": "Oui ! EggscuseMe supporte les organisations. Partagez votre frigo virtuel avec famille ou colocs. Tout le monde peut ajouter, consommer et suivre les œufs ensemble."
+        "question": "Est-ce adapté aux familles ?",
+        "answer": "Oui, le mode 'Chef de Partie' permet de partager le frigo. Idéal pour que tout le monde sache quoi cuisiner ou quoi acheter sans faire de doublons."
       },
       "q6": {
-        "question": "Y a-t-il un plan gratuit ?",
-        "answer": "Oui ! Le plan gratuit permet de suivre jusqu'à 2 boîtes d'œufs avec les fonctionnalités de base. Premium débloque les boîtes illimitées, statistiques détaillées et notifications."
+        "question": "Y a-t-il un coût ?",
+        "answer": "Les fonctionnalités essentielles (suivi, minuteur, guide) sont gratuites pour toujours. Les fonctions avancées (illimité, partage, export) sont sur abonnement."
       }
     },
     "cta": {
-      "title": "Prêt à sauver vos œufs ?",
-      "description": "Rejoignez des milliers d'utilisateurs qui réduisent leur gaspillage alimentaire",
-      "button": "Créer mon frigo gratuit"
+      "title": "Passez au niveau supérieur",
+      "description": "Rejoignez les gourmets qui ne laissent rien au hasard.",
+      "button": "Créer mon compte gourmand"
     },
     "featureCards": {
-      "badge": "Tout en un",
-      "title": "Votre assistant culinaire de poche",
-      "description": "Des outils simples pour suivre la fraîcheur et réduire le gaspillage",
+      "badge": "L'excellence",
+      "title": "La précision au service du goût",
+      "description": "Ne laissez plus le hasard décider de la qualité de vos plats.",
       "virtualFridge": {
-        "title": "Frigo Virtuel",
-        "description": "Suivez toutes vos boîtes d'œufs avec des indicateurs de fraîcheur colorés. Ne perdez plus le fil."
+        "title": "Suivi de Fraîcheur",
+        "description": "Un code couleur simple pour identifier l'usage idéal de chaque œuf instantanément."
       },
       "smartTimer": {
-        "title": "Timer Intelligent",
-        "description": "Temps de cuisson ajustés à la taille et température. Résultats parfaits garantis à chaque fois."
+        "title": "Minuteur Adaptatif",
+        "description": "Le seul minuteur qui s'adapte à la taille, la température et l'âge de l'œuf."
       },
       "cookingGuide": {
-        "title": "Guide Cuisson",
-        "description": "Suggestions de cuisson selon l'âge. Coque, frits ou durs ? On vous dit exactement quoi faire."
+        "title": "Guide Culinaire",
+        "description": "Ne vous demandez plus 'est-ce encore bon ?'. On vous dit 'comment le cuisiner'."
       },
       "quickScan": {
-        "title": "Scan Rapide",
-        "description": "Scannez le code-barres pour ajouter une boîte en un instant. Date de ponte automatique."
+        "title": "Ajout Éclair",
+        "description": "Scannez, c'est enregistré. La date de ponte est calculée automatiquement."
       },
       "familySharing": {
-        "title": "Partage Famille",
-        "description": "Partagez votre frigo avec famille ou colocs. Tout le monde synchronisé en temps réel."
+        "title": "Brigade Familiale",
+        "description": "Gérez le stock à plusieurs. Synchronisation en temps réel pour toute la maison."
       },
       "smartAlerts": {
-        "title": "Alertes Smart",
-        "description": "Notifications quand vos œufs approchent de l'expiration. Ne jetez plus jamais un œuf."
+        "title": "Alertes Inspiration",
+        "description": "Recevez une notif quand il est temps de cuisiner vos œufs avant qu'ils ne perdent leur qualité."
       }
     },
     "bentoGrid": {
-      "badge": "Comment ça marche",
-      "title": "Si simple que vous n'aurez",
-      "titleHighlight": "aucune excuse",
+      "badge": "Simplicité",
+      "title": "Cuisinez avec",
+      "titleHighlight": "confiance",
       "step1": {
-        "title": "Scannez ou Saisissez",
-        "description": "Ajoutez vos boîtes d'œufs en scannant le code ou en entrant la date de ponte."
+        "title": "Scannez",
+        "description": "Enregistrez vos achats en une seconde."
       },
       "step2": {
-        "title": "Laissez faire la magie",
-        "description": "L'app calcule automatiquement la fraîcheur et vous suggère les meilleures recettes."
+        "title": "Choisissez",
+        "description": "Sélectionnez la recette adaptée à la fraîcheur."
       },
       "step3": {
-        "title": "Cuisinez & Savourez",
-        "description": "Suivez le timer intelligent pour des œufs parfaitement cuits à chaque fois."
+        "title": "Réussissez",
+        "description": "Cuisson parfaite grâce à nos outils de précision."
       },
       "stats": {
         "rating": "App Store",
-        "users": "Utilisateurs actifs",
-        "eggsSaved": "Œufs sauvés",
-        "familySharing": "Partage Familial",
-        "familySharingDesc": "Synchronisez avec votre famille"
+        "users": "Cuisiniers actifs",
+        "eggsSaved": "Recettes cuisinées",
+        "familySharing": "Mode Brigade",
+        "familySharingDesc": "Cuisinez en équipe"
       },
       "testimonial": {
-        "quote": "Depuis que j'utilise EggscuseMe, je n'ai plus jamais jeté un seul œuf. L'app est géniale !",
-        "author": "Marie D. - Paris"
+        "quote": "Mes œufs à la coque sont enfin parfaits à chaque fois. Et je ne jette plus rien par doute.",
+        "author": "Thomas B. - Lyon"
       }
     },
     "gradientCta": {
-      "title": "Prêt à casser des œufs",
-      "titleHighlight": "(sans les gâcher) ?",
-      "description": "Rejoignez des milliers d'utilisateurs qui réduisent leur gaspillage alimentaire. C'est gratuit pour commencer.",
-      "button": "Créer mon frigo gratuit",
-      "demo": "Voir la démo"
+      "title": "Révélez le chef",
+      "titleHighlight": "qui est en vous",
+      "description": "Plus de doute, plus de gâchis, juste le goût parfait. Commencez l'expérience maintenant.",
+      "button": "Je commence à cuisiner",
+      "demo": "Voir les fonctionnalités"
     },
     "phonePreview": {
-      "title": "Mon Frigo",
-      "boxesCount": "{count} boîtes en cours",
-      "extraFresh": "Extra Frais",
-      "fresh": "Frais",
-      "cookThoroughly": "À cuire",
-      "for": "Pour:",
+      "title": "Mon Garde-Manger",
+      "boxesCount": "{count} boîtes en stock",
+      "extraFresh": "Extra Frais (Coque)",
+      "fresh": "Frais (Plat)",
+      "cookThoroughly": "À cuire (Dur)",
+      "for": "Usage:",
       "eggs": "œufs",
       "nav": {
-        "fridge": "Frigo",
-        "timer": "Timer",
+        "fridge": "Stock",
+        "timer": "Chrono",
         "guide": "Guide",
         "stats": "Stats"
       },
       "recipes": {
-        "chocoMousse": "Mousse choco",
+        "chocoMousse": "Mousse",
         "omelette": "Omelette",
-        "hardBoiled": "Œuf dur"
+        "hardBoiled": "Œuf mimosa"
       }
     },
     "floatingBadge": {
-      "safe": "100% Sûr",
-      "eco": "Anti-Gaspi",
-      "premium": "Premium",
+      "safe": "Sécurité 100%",
+      "eco": "Gourmand",
+      "premium": "Pro",
       "rating": "4.9/5",
-      "ratingSubtext": "App Store"
+      "ratingSubtext": "Avis Gourmets"
     },
     "socialProof": {
-      "joinedBy": "Rejoint par",
+      "joinedBy": "Approuvé par",
       "count": "+10,000",
-      "satisfiedUsers": "utilisateurs satisfaits"
+      "satisfiedUsers": "cuisiniers du quotidien"
     }
   },
   "auth": {

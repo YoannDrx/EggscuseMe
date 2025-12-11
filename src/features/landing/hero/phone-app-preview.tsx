@@ -7,13 +7,14 @@ import {
   Timer,
   ChefHat,
   BarChart3,
-  User,
   Plus,
   Egg,
   Utensils,
   PiggyBank,
   Clock,
   Play,
+  MoreHorizontal,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -37,6 +38,7 @@ const eggBoxes = [
     status: "extra-fresh" as const,
     daysLeft: "J-4",
     progress: 85,
+    size: "L",
   },
   {
     id: "2",
@@ -47,6 +49,7 @@ const eggBoxes = [
     status: "fresh" as const,
     daysLeft: "J-12",
     progress: 55,
+    size: "M",
   },
   {
     id: "3",
@@ -57,6 +60,7 @@ const eggBoxes = [
     status: "cook" as const,
     daysLeft: "J-25",
     progress: 15,
+    size: "XL",
   },
 ];
 
@@ -118,28 +122,32 @@ const kpis = [
     value: "24",
     icon: Egg,
     trend: "+6",
-    color: "text-amber-400",
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
   },
   {
     label: "Consommés",
     value: "18",
     icon: Utensils,
     trend: "ce mois",
-    color: "text-neutral-400",
+    color: "text-neutral-500",
+    bg: "bg-neutral-500/10",
   },
   {
     label: "Économies",
     value: "12€",
     icon: PiggyBank,
     trend: "sauvés",
-    color: "text-emerald-400",
+    color: "text-emerald-500",
+    bg: "bg-emerald-500/10",
   },
   {
     label: "Fraîcheur",
     value: "8j",
     icon: Clock,
     trend: "moyenne",
-    color: "text-amber-400",
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
   },
 ];
 
@@ -157,12 +165,12 @@ const cookingTypes = [
   { type: "Dur", percent: 35, color: "bg-amber-400" },
   { type: "Mollet", percent: 25, color: "bg-orange-400" },
   { type: "Plat", percent: 25, color: "bg-emerald-400" },
-  { type: "Autre", percent: 15, color: "bg-neutral-500" },
+  { type: "Autre", percent: 15, color: "bg-neutral-400" },
 ];
 
 const tabConfig = {
   fridge: { title: "Mon Frigo", subtitle: "3 boîtes en cours" },
-  timer: { title: "Timer", subtitle: "Choisissez votre cuisson" },
+  timer: { title: "Minuteur", subtitle: "Choisissez votre cuisson" },
   guide: { title: "Recettes", subtitle: "6 suggestions" },
   stats: { title: "Statistiques", subtitle: "Ce mois-ci" },
 };
@@ -252,21 +260,21 @@ function MiniFreshnessTag({
 }) {
   const config = {
     "extra-fresh": {
-      bg: "bg-emerald-500/20",
+      bg: "bg-emerald-500/10",
       border: "border-emerald-500",
-      text: "text-emerald-400",
+      text: "text-emerald-600",
       fill: "#22C55E",
     },
     fresh: {
-      bg: "bg-amber-400/20",
+      bg: "bg-amber-400/10",
       border: "border-amber-400",
-      text: "text-amber-400",
+      text: "text-amber-600",
       fill: "#FBBF24",
     },
     cook: {
-      bg: "bg-orange-500/20",
+      bg: "bg-orange-500/10",
       border: "border-orange-500",
-      text: "text-orange-400",
+      text: "text-orange-600",
       fill: "#F97316",
     },
   };
@@ -275,13 +283,13 @@ function MiniFreshnessTag({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border-2 px-2 py-0.5 text-[10px] font-medium",
+        "inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-medium",
         c.bg,
         c.border,
         c.text,
       )}
     >
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
         <ellipse
           cx="12"
           cy="13"
@@ -325,7 +333,7 @@ function NavButton({
       onClick={onClick}
       className={cn(
         "relative flex flex-col items-center gap-0.5 py-2 transition-colors",
-        active ? "text-amber-400" : "text-neutral-500",
+        active ? "text-neo-accent" : "text-neo-text-muted",
       )}
     >
       <Icon className="size-5" />
@@ -333,7 +341,7 @@ function NavButton({
       {active && (
         <motion.div
           layoutId="phone-nav-pill"
-          className="absolute -bottom-1 h-0.5 w-6 rounded-full bg-amber-400"
+          className="absolute -bottom-1 h-0.5 w-6 rounded-full bg-neo-accent"
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
         />
       )}
@@ -356,57 +364,99 @@ function FridgeContent() {
     fresh: "bg-amber-400",
     cook: "bg-orange-500",
   };
-  const borderColors = {
-    "extra-fresh": "border-emerald-500/30",
-    fresh: "border-amber-400/30",
-    cook: "border-orange-500/30",
-  };
 
   return (
-    <div className="space-y-3">
-      {eggBoxes.map((box, index) => (
-        <motion.div
-          key={box.id}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
-          className={cn(
-            "relative overflow-hidden rounded-2xl border bg-neutral-900/80 p-3",
-            borderColors[box.status],
-          )}
-        >
-          <div className="mb-1.5 flex items-center justify-between">
-            <MiniFreshnessTag
-              status={box.status}
-              label={statusLabels[box.status]}
-            />
-            <span className="text-[10px] text-neutral-500">{box.daysLeft}</span>
-          </div>
-          <h3 className="mb-1 truncate text-sm font-semibold text-white">
-            {box.source}
-          </h3>
-          <div className="flex items-end justify-between">
-            <span className="text-[10px] text-neutral-400">{box.name}</span>
-            <div>
-              <span className="text-lg font-bold text-white">
-                {box.remaining}
-              </span>
-              <span className="text-[10px] text-neutral-500">
-                {" "}
-                / {box.total}
-              </span>
+    <div className="space-y-4">
+      {/* Stats Cards - Horizontal Scroll */}
+      <div className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+        {kpis.map((kpi, index) => (
+          <motion.div
+            key={kpi.label}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.08 }}
+            className="border-neo-border bg-neo-card flex min-w-[100px] flex-col rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] p-2 shadow-[var(--shadow-neo-sm)]"
+          >
+            <div className="mb-1 flex items-center gap-1.5">
+              <div
+                className={cn(
+                  "flex size-5 items-center justify-center rounded-full",
+                  kpi.bg,
+                )}
+              >
+                <kpi.icon className={cn("size-3", kpi.color)} />
+              </div>
             </div>
-          </div>
-          <div className="absolute bottom-0 left-0 h-1 w-full bg-neutral-800">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${box.progress}%` }}
-              transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
-              className={cn("h-full", statusColors[box.status])}
-            />
-          </div>
-        </motion.div>
-      ))}
+            <div className="mt-1">
+              <span className="text-neo-text text-sm font-bold">
+                {kpi.value}
+              </span>
+              <p className="text-neo-text-muted text-[8px] leading-tight">
+                {kpi.label}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Egg Boxes List */}
+      <div className="space-y-3">
+        {eggBoxes.map((box, index) => (
+          <motion.div
+            key={box.id}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="border-neo-border bg-neo-card relative overflow-hidden rounded-[var(--radius-neo-2xl)] border-[length:var(--border-neo)] p-3 shadow-[var(--shadow-neo-md)]"
+          >
+            <div className="mb-2 flex items-center justify-between">
+              <MiniFreshnessTag
+                status={box.status}
+                label={statusLabels[box.status]}
+              />
+              <button className="text-neo-text-muted hover:text-neo-text">
+                <MoreHorizontal className="size-4" />
+              </button>
+            </div>
+
+            <div className="mb-2">
+              <h3 className="text-neo-text truncate text-sm font-bold">
+                {box.name}
+              </h3>
+              <p className="text-neo-text-muted text-[10px]">{box.source}</p>
+            </div>
+
+            <div className="mb-3 flex items-end justify-between">
+              <div className="flex flex-col">
+                <span className="text-neo-text-muted text-[10px]">
+                  Taille: {box.size}
+                </span>
+                <span className="text-neo-text-muted text-[10px]">
+                  {box.daysLeft}
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="text-neo-text text-lg font-bold">
+                  {box.remaining}
+                </span>
+                <span className="text-neo-text-muted ml-0.5 text-[10px]">
+                  / {box.total}
+                </span>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="bg-neo-bg absolute bottom-0 left-0 h-1 w-full">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${box.progress}%` }}
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                className={cn("h-full", statusColors[box.status])}
+              />
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -418,13 +468,18 @@ function TimerContent() {
     <div className="space-y-4">
       {/* Timer display */}
       <div className="flex justify-center">
-        <div className="relative flex size-28 items-center justify-center rounded-full border-4 border-neutral-700 bg-neutral-900">
-          <div className="absolute inset-1 rounded-full border-4 border-amber-400/20" />
-          <span className="text-2xl font-bold text-white">
-            {selected
-              ? timerOptions.find((t) => t.id === selected)?.time
-              : "0:00"}
-          </span>
+        <div className="border-neo-border bg-neo-card relative flex size-32 items-center justify-center rounded-full border-[length:var(--border-neo)] shadow-[var(--shadow-neo-lg)]">
+          <div className="absolute inset-2 rounded-full border-2 border-dashed border-neutral-200" />
+          <div className="flex flex-col items-center">
+            <span className="text-neo-text text-3xl font-bold">
+              {selected
+                ? timerOptions.find((t) => t.id === selected)?.time
+                : "0:00"}
+            </span>
+            <span className="text-neo-text-muted text-[10px] font-medium">
+              MINUTES
+            </span>
+          </div>
         </div>
       </div>
 
@@ -438,17 +493,19 @@ function TimerContent() {
             transition={{ delay: index * 0.08 }}
             onClick={() => setSelected(option.id)}
             className={cn(
-              "flex flex-col items-center gap-1 rounded-xl border p-3 transition-all",
+              "border-neo-border flex flex-col items-center gap-1 rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] p-3 transition-all",
               selected === option.id
-                ? "border-amber-400 bg-amber-400/10"
-                : "border-neutral-800 bg-neutral-900/50 hover:border-neutral-700",
+                ? "bg-neo-accent shadow-[var(--shadow-neo-sm)]"
+                : "bg-neo-card hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-sm)]",
             )}
           >
             <div className={cn("size-3 rounded-full", option.color)} />
-            <span className="text-xs font-medium text-white">
+            <span className="text-neo-text text-xs font-bold">
               {option.label}
             </span>
-            <span className="text-[10px] text-neutral-500">{option.time}</span>
+            <span className="text-neo-text-muted text-[10px]">
+              {option.time}
+            </span>
           </motion.button>
         ))}
       </div>
@@ -457,14 +514,14 @@ function TimerContent() {
       <motion.button
         whileTap={{ scale: 0.95 }}
         className={cn(
-          "flex w-full items-center justify-center gap-2 rounded-xl py-3 font-medium transition-colors",
+          "flex w-full items-center justify-center gap-2 rounded-full py-3 font-bold transition-all",
           selected
-            ? "bg-amber-400 text-neutral-900"
-            : "bg-neutral-800 text-neutral-500",
+            ? "bg-neo-text text-white shadow-[var(--shadow-neo-md)]"
+            : "cursor-not-allowed bg-neutral-200 text-neutral-400",
         )}
       >
-        <Play className="size-4" />
-        <span>Lancer</span>
+        <Play className="size-4 fill-current" />
+        <span>Lancer le minuteur</span>
       </motion.button>
     </div>
   );
@@ -485,22 +542,24 @@ function GuideContent() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.05 }}
-          className="flex flex-col gap-1.5 rounded-xl border border-neutral-800 bg-neutral-900/50 p-2.5"
+          className="border-neo-border bg-neo-card flex flex-col gap-1.5 rounded-[var(--radius-neo-md)] border-[length:var(--border-neo)] p-2.5 shadow-[var(--shadow-neo-sm)] hover:-translate-y-0.5"
         >
           <div className="flex items-center justify-between">
             <div
               className={cn("size-2 rounded-full", statusColors[recipe.status])}
             />
-            <span className="text-[9px] text-neutral-500">{recipe.time}</span>
+            <span className="text-neo-text-muted text-[9px] font-medium">
+              {recipe.time}
+            </span>
           </div>
-          <h4 className="truncate text-xs font-semibold text-white">
+          <h4 className="text-neo-text truncate text-xs font-bold">
             {recipe.name}
           </h4>
           <div className="flex items-center justify-between">
-            <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[8px] text-neutral-400">
+            <span className="bg-neo-bg text-neo-text-muted rounded px-1.5 py-0.5 text-[8px] font-medium">
               {recipe.tag}
             </span>
-            <span className="text-[9px] text-neutral-500">
+            <span className="text-neo-text-muted text-[9px]">
               {recipe.eggs} œufs
             </span>
           </div>
@@ -523,23 +582,36 @@ function StatsContent() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.08 }}
-            className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-2.5"
+            className="border-neo-border bg-neo-card flex flex-col rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] p-3 shadow-[var(--shadow-neo-sm)]"
           >
-            <div className="mb-1 flex items-center gap-1.5">
-              <kpi.icon className={cn("size-3.5", kpi.color)} />
-              <span className="text-[9px] text-neutral-500">{kpi.label}</span>
+            <div className="mb-2 flex items-center gap-1.5">
+              <div
+                className={cn(
+                  "flex size-6 items-center justify-center rounded-full",
+                  kpi.bg,
+                )}
+              >
+                <kpi.icon className={cn("size-3.5", kpi.color)} />
+              </div>
+              <span className="text-neo-text-muted text-[10px] font-medium">
+                {kpi.label}
+              </span>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-bold text-white">{kpi.value}</span>
-              <span className="text-[8px] text-neutral-500">{kpi.trend}</span>
+              <span className="text-neo-text text-xl font-bold">
+                {kpi.value}
+              </span>
+              <span className="text-neo-text-muted text-[9px]">
+                {kpi.trend}
+              </span>
             </div>
           </motion.div>
         ))}
       </div>
 
       {/* Weekly chart */}
-      <div className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-3">
-        <h4 className="mb-2 text-[10px] font-medium text-neutral-400">
+      <div className="border-neo-border bg-neo-card rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] p-3 shadow-[var(--shadow-neo-md)]">
+        <h4 className="text-neo-text mb-3 text-[10px] font-bold uppercase tracking-wider">
           Cette semaine
         </h4>
         <div className="flex items-end justify-between gap-1">
@@ -552,26 +624,28 @@ function StatsContent() {
                 initial={{ height: 0 }}
                 animate={{ height: `${(day.value / maxValue) * 40}px` }}
                 transition={{ delay: 0.3 + index * 0.05, duration: 0.4 }}
-                className="w-full rounded-sm bg-amber-400"
+                className="bg-neo-accent w-full rounded-sm"
               />
-              <span className="text-[8px] text-neutral-500">{day.day}</span>
+              <span className="text-neo-text-muted text-[8px] font-medium">
+                {day.day}
+              </span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Cooking types */}
-      <div className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-3">
-        <h4 className="mb-2 text-[10px] font-medium text-neutral-400">
+      <div className="border-neo-border bg-neo-card rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] p-3 shadow-[var(--shadow-neo-md)]">
+        <h4 className="text-neo-text mb-3 text-[10px] font-bold uppercase tracking-wider">
           Types de cuisson
         </h4>
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {cookingTypes.map((type, index) => (
             <div key={type.type} className="flex items-center gap-2">
-              <span className="w-10 text-[9px] text-neutral-400">
+              <span className="text-neo-text-muted w-10 text-[9px] font-medium">
                 {type.type}
               </span>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-800">
+              <div className="bg-neo-bg h-2 flex-1 overflow-hidden rounded-full">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${type.percent}%` }}
@@ -579,7 +653,7 @@ function StatsContent() {
                   className={cn("h-full rounded-full", type.color)}
                 />
               </div>
-              <span className="w-6 text-right text-[8px] text-neutral-500">
+              <span className="text-neo-text-muted w-6 text-right text-[8px]">
                 {type.percent}%
               </span>
             </div>
@@ -611,44 +685,51 @@ export function PhoneAppPreview({ className }: { className?: string }) {
   };
 
   return (
-    <div className={cn("flex h-full flex-col", className)}>
+    <div className={cn("bg-neo-bg text-neo-text flex h-full flex-col font-sans", className)}>
       {/* Status Bar */}
       <div className="flex h-12 items-center justify-between px-6 pt-8">
-        <span className="text-xs font-medium text-neutral-400">9:41</span>
+        <span className="text-neo-text-muted text-xs font-medium">9:41</span>
         <div className="flex items-center gap-1">
-          <div className="h-2.5 w-4 rounded-sm bg-neutral-400" />
-          <div className="h-2.5 w-2.5 rounded-full bg-neutral-400" />
-          <div className="h-2.5 w-5 rounded-sm border border-neutral-400">
-            <div className="h-full w-3/4 rounded-sm bg-emerald-400" />
+          <div className="bg-neo-text-muted h-2.5 w-4 rounded-sm" />
+          <div className="bg-neo-text-muted h-2.5 w-2.5 rounded-full" />
+          <div className="border-neo-text-muted h-2.5 w-5 rounded-sm border">
+            <div className="bg-neo-text h-full w-3/4 rounded-sm" />
           </div>
         </div>
       </div>
 
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3">
-        <div className="flex items-center gap-3">
+      {/* Header (MobileHeader style) */}
+      <div className="flex items-center justify-between px-4 py-3">
+        {/* Left: Mascot */}
+        <div className="flex min-w-[40px] items-center">
           <MiniEggyChef size={32} />
-          <div>
-            <motion.h2
-              key={`${activeTab}-title`}
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-base font-bold text-white"
-            >
-              {tabConfig[activeTab].title}
-            </motion.h2>
-            <motion.p
-              key={`${activeTab}-subtitle`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-[10px] text-neutral-500"
-            >
-              {tabConfig[activeTab].subtitle}
-            </motion.p>
-          </div>
         </div>
-        <div className="flex size-8 items-center justify-center rounded-full bg-amber-400/20">
-          <User className="size-3.5 text-amber-400" />
+
+        {/* Center: Title */}
+        <div className="flex flex-1 flex-col items-center">
+          <motion.h2
+            key={`${activeTab}-title`}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-neo-text text-base font-bold"
+          >
+            {tabConfig[activeTab].title}
+          </motion.h2>
+          <motion.p
+            key={`${activeTab}-subtitle`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-neo-text-muted text-[10px]"
+          >
+            {tabConfig[activeTab].subtitle}
+          </motion.p>
+        </div>
+
+        {/* Right: Action */}
+        <div className="flex min-w-[40px] justify-end">
+          <button className="border-neo-border bg-neo-card text-neo-text flex size-9 items-center justify-center rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] shadow-[var(--shadow-neo-sm)] hover:translate-y-0.5 hover:shadow-none">
+            <Settings className="size-4" />
+          </button>
         </div>
       </div>
 
@@ -657,9 +738,9 @@ export function PhoneAppPreview({ className }: { className?: string }) {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.2 }}
           >
             {renderContent()}
@@ -668,7 +749,7 @@ export function PhoneAppPreview({ className }: { className?: string }) {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="rounded-t-[20px] border-t border-neutral-800 bg-neutral-900/95 px-2 pt-2 pb-4 backdrop-blur-xl">
+      <div className="border-neo-border bg-neo-bg/95 border-t-[length:var(--border-neo)] px-2 pt-2 pb-4 backdrop-blur-xl">
         <div className="grid grid-cols-5 items-center">
           <NavButton
             icon={Refrigerator}
@@ -684,11 +765,11 @@ export function PhoneAppPreview({ className }: { className?: string }) {
           />
 
           {/* FAB as regular nav button */}
-          <button className="flex flex-col items-center gap-0.5 py-2">
-            <div className="flex size-8 items-center justify-center rounded-full bg-amber-400">
-              <Plus className="size-4 text-neutral-900" strokeWidth={2.5} />
-            </div>
-          </button>
+          <div className="relative -top-5 flex justify-center">
+            <button className="bg-neo-accent text-neo-accent-foreground border-neo-border flex size-12 items-center justify-center rounded-full border-[length:var(--border-neo)] shadow-[var(--shadow-neo-md)] hover:-translate-y-1 hover:shadow-[var(--shadow-neo-lg)] transition-all active:translate-y-0 active:shadow-[var(--shadow-neo-sm)]">
+              <Plus className="size-6" strokeWidth={3} />
+            </button>
+          </div>
 
           <NavButton
             icon={ChefHat}
