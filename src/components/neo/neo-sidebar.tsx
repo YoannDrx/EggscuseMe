@@ -382,14 +382,20 @@ const NeoSidebarTrigger = React.forwardRef<
   HTMLButtonElement,
   NeoSidebarTriggerProps
 >(({ className, children, ...props }, ref) => {
-  const { setMobileOpen } = useSidebarContext();
+  const { setMobileOpen, mobile, expanded, setExpanded } = useSidebarContext();
 
   return (
     <button
       ref={ref}
       type="button"
       data-slot="neo-sidebar-trigger"
-      onClick={() => setMobileOpen(true)}
+      onClick={() => {
+        if (mobile) {
+          setMobileOpen(true);
+        } else {
+          setExpanded(!expanded);
+        }
+      }}
       className={cn("outline-none", className)}
       {...props}
     >

@@ -74,7 +74,7 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
     const [open, setOpen] = React.useState(false);
     const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-    const selectedContent = React.useMemo(() => {
+    const selectedContent = React.useMemo(async () => {
       const option = React.Children.toArray(children).find(
         (child): child is React.ReactElement<NeoSelectItemProps> =>
           React.isValidElement<NeoSelectItemProps>(child) &&
