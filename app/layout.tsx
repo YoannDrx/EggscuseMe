@@ -2,7 +2,6 @@ import { TailwindIndicator } from "@/components/utils/tailwind-indicator";
 import { FloatingLegalFooter } from "@/features/legal/floating-legal-footer";
 import { NextTopLoader } from "@/features/page/next-top-loader";
 import { ServerToaster } from "@/features/server-sonner/server-toaster";
-import { defaultLocale } from "@/i18n/config";
 import { getServerUrl } from "@/lib/server-url";
 import { cn } from "@/lib/utils";
 import { SiteConfig } from "@/site-config";
@@ -11,7 +10,6 @@ import { Fredoka, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import type { ReactNode } from "react";
 import { Suspense } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -74,44 +72,15 @@ function LoadingFallback() {
   );
 }
 
-// Async wrapper component for i18n - wrapped in Suspense
-async function LocaleWrapper({
+export default async function RootLayout({
   children,
   modal,
-}: {
-  children: ReactNode;
-  modal: ReactNode;
-}) {
+}: LayoutProps<"/">) {
   const locale = await getLocale();
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages} locale={locale}>
-      <NuqsAdapter>
-        <Providers>
-          <NextTopLoader
-            delay={100}
-            showSpinner={false}
-            color="hsl(var(--primary))"
-          />
-          <Suspense fallback={null}>
-            {children}
-            {modal}
-          </Suspense>
-          <TailwindIndicator />
-          <FloatingLegalFooter />
-          <Suspense>
-            <ServerToaster />
-          </Suspense>
-        </Providers>
-      </NuqsAdapter>
-    </NextIntlClientProvider>
-  );
-}
-
-export default function RootLayout({ children, modal }: LayoutProps<"/">) {
-  return (
-    <html lang={defaultLocale} className="h-full" suppressHydrationWarning>
+    <html lang={locale} className="h-full" suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className={cn(
@@ -121,9 +90,26 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
           MonoFont.variable,
         )}
       >
-        <Suspense fallback={<LoadingFallback />}>
-          <LocaleWrapper modal={modal}>{children}</LocaleWrapper>
-        </Suspense>
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <NuqsAdapter>
+            <Providers>
+              <NextTopLoader
+                delay={100}
+                showSpinner={false}
+                color="hsl(var(--primary))"
+              />
+              <Suspense fallback={<LoadingFallback />}>
+                {children}
+                {modal}
+              </Suspense>
+              <TailwindIndicator />
+              <FloatingLegalFooter />
+              <Suspense>
+                <ServerToaster />
+              </Suspense>
+            </Providers>
+          </NuqsAdapter>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

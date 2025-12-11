@@ -191,19 +191,6 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
           />
         ))}
       </div>
-
-      {/* FAB - Add button mobile */}
-      {canModify && (
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.5, type: "spring" }}
-          onClick={handleAddBox}
-          className="bg-neo-accent fixed right-4 bottom-24 z-40 flex size-14 items-center justify-center rounded-full shadow-[var(--shadow-neo-lg)] transition-transform hover:scale-105 active:scale-95 sm:hidden"
-        >
-          <Plus className="text-neo-accent-foreground size-6" />
-        </motion.button>
-      )}
     </div>
   );
 }

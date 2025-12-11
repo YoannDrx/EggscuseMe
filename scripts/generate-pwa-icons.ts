@@ -3,6 +3,7 @@
  *
  * Run with: pnpm tsx scripts/generate-pwa-icons.ts
  */
+import { logger } from "@/lib/logger";
 import { Resvg } from "@resvg/resvg-js";
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -32,7 +33,7 @@ async function generateIcons() {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  console.log("Generating PWA icons from eggy-icon.svg...\n");
+  logger.info("Generating PWA icons from eggy-icon.svg...");
 
   for (const icon of ICONS) {
     // For maskable icons, we need to add padding (safe zone)
@@ -67,11 +68,13 @@ async function generateIcons() {
     const outputPath = path.join(OUTPUT_DIR, icon.name);
     fs.writeFileSync(outputPath, pngBuffer);
 
-    console.log(`  Generated: ${icon.name} (${icon.size}x${icon.size})`);
+    logger.info(`Generated: ${icon.name} (${icon.size}x${icon.size})`);
   }
 
-  console.log("\nAll icons generated successfully!");
-  console.log(`Output directory: ${OUTPUT_DIR}`);
+  logger.info("All icons generated successfully!");
+  logger.info(`Output directory: ${OUTPUT_DIR}`);
 }
 
-generateIcons().catch(console.error);
+generateIcons().catch((error) =>
+  logger.error("Failed to generate icons", error),
+);
