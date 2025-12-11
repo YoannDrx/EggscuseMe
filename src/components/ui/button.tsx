@@ -23,13 +23,6 @@ const buttonVariants = cva(
         invert: "bg-foreground text-background hover:bg-foreground/90",
         success: "bg-success text-success-foreground hover:bg-success/90",
         warning: "bg-warning text-warning-foreground hover:bg-warning/90",
-        // Sunny Side UI - Neubrutalism variants
-        neubrutalism:
-          "bg-primary text-primary-foreground border-[1.5px] border-foreground shadow-[3px_3px_0px_var(--foreground)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_var(--foreground)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none transition-all duration-100 rounded-xl",
-        "neubrutalism-outline":
-          "bg-background text-foreground border-[1.5px] border-foreground shadow-[3px_3px_0px_var(--foreground)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_var(--foreground)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none transition-all duration-100 rounded-xl",
-        "neubrutalism-ghost":
-          "bg-transparent text-foreground border-[1.5px] border-foreground/20 hover:border-foreground hover:bg-accent/10 transition-all duration-100 rounded-xl",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

@@ -927,6 +927,23 @@
       "signOut": "Sign out",
       "guestNotice": "You are a guest on this fridge"
     },
+    "quickActions": {
+      "title": "Quick actions",
+      "addBox": {
+        "label": "Add a box",
+        "hint": "New egg box to track",
+        "title": "Add a box",
+        "description": "Add a new egg box"
+      },
+      "consume": {
+        "label": "Consume eggs",
+        "hint": "Record a consumption",
+        "title": "Consume eggs",
+        "description": "Select a box from your fridge",
+        "selectFromFridge": "Go to your fridge to select a box"
+      },
+      "ownerOnlyHint": "Only the owner can add boxes"
+    },
     "settings": {
       "title": "Settings",
       "subtitle": "Manage your fridge and account",

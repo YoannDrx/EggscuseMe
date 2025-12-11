@@ -129,8 +129,8 @@
   --touch-target-large: 56px;
 
   /* Mobile spacing */
-  --space-page-x: 16px;
-  --space-page-y: 16px;
+  --space-page-x: 8px;
+  --space-page-y: 8px;
   --space-section: 24px;
   --space-card-padding: 12px;
   --space-card-gap: 12px;

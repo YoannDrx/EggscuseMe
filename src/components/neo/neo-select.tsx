@@ -72,8 +72,17 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
     ref,
   ) => {
     const [open, setOpen] = React.useState(false);
-    const [selectedLabel, setSelectedLabel] = React.useState<string>("");
     const triggerRef = React.useRef<HTMLButtonElement>(null);
+
+    const selectedContent = React.useMemo(() => {
+      const option = React.Children.toArray(children).find(
+        (child): child is React.ReactElement<NeoSelectItemProps> =>
+          React.isValidElement<NeoSelectItemProps>(child) &&
+          child.props.value === value,
+      );
+
+      return option?.props.children;
+    }, [children, value]);
 
     // Close on outside click
     React.useEffect(() => {
@@ -95,13 +104,47 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
       };
     }, [open]);
 
-    const handleSelect = (itemValue: string) => {
-      onValueChange?.(itemValue);
-      setOpen(false);
-    };
+    // Close on escape
+    React.useEffect(() => {
+      if (!open) return;
+
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setOpen(false);
+          triggerRef.current?.focus();
+        }
+      };
+
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [open]);
+
+    const handleSelect = React.useCallback(
+      (itemValue: string) => {
+        onValueChange?.(itemValue);
+        setOpen(false);
+        triggerRef.current?.focus();
+      },
+      [onValueChange],
+    );
+
+    const contextValue = React.useMemo(
+      () => ({
+        value,
+        onSelect: handleSelect,
+      }),
+      [handleSelect, value],
+    );
+
+    const displayLabel =
+      selectedContent === null || selectedContent === undefined
+        ? placeholder
+        : selectedContent;
+    const isPlaceholder = selectedContent === null || selectedContent === undefined;
 
     return (
-      <SelectContext.Provider value={{ value, onSelect: handleSelect }}>
+      <SelectContext.Provider value={contextValue}>
         <div ref={ref} className="relative w-full">
           {label && (
             <label className="text-neo-text mb-2 ml-1 block text-sm font-bold tracking-wider uppercase">
@@ -115,21 +158,28 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
             type="button"
             disabled={disabled}
             onClick={() => setOpen(!open)}
+            aria-haspopup="listbox"
+            aria-expanded={open}
             className={cn(
               neoSelectVariants({ size, className }),
               "border-neo-border/30",
               open
                 ? "border-neo-border -translate-y-0.5 shadow-[var(--shadow-neo-sm)]"
                 : "hover:border-neo-border",
+              "gap-3 focus-visible:ring-2 focus-visible:ring-neo-border/70 focus-visible:ring-offset-2 focus-visible:ring-offset-neo-card",
             )}
+            title={
+              typeof displayLabel === "string" ? displayLabel : placeholder
+            }
           >
-            <span
+            <div
               className={cn(
-                !value && !selectedLabel && "text-neo-text-muted/60",
+                "min-w-0 flex-1 text-left leading-tight",
+                isPlaceholder && "text-neo-text-muted/60",
               )}
             >
-              {selectedLabel || placeholder}
-            </span>
+              {displayLabel}
+            </div>
             <motion.div
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.2 }}
@@ -153,19 +203,9 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
                   "shadow-[var(--shadow-neo-lg)]",
                   "overflow-hidden py-2",
                 )}
+                role="listbox"
               >
-                {React.Children.map(children, async (child) => {
-                  if (React.isValidElement<NeoSelectItemProps>(child)) {
-                    return React.cloneElement(child, {
-                      onLabelChange: (label: string) => {
-                        if (child.props.value === value) {
-                          setSelectedLabel(label);
-                        }
-                      },
-                    });
-                  }
-                  return child;
-                })}
+                {React.Children.map(children, async (child) => child)}
               </motion.div>
             )}
           </AnimatePresence>
@@ -183,20 +223,12 @@ type NeoSelectItemProps = {
   children: React.ReactNode;
   disabled?: boolean;
   className?: string;
-  onLabelChange?: (label: string) => void;
 };
 
 const NeoSelectItem = React.forwardRef<HTMLDivElement, NeoSelectItemProps>(
-  ({ value, children, disabled, className, onLabelChange }, ref) => {
+  ({ value, children, disabled, className }, ref) => {
     const { value: selectedValue, onSelect } = useSelectContext();
     const isSelected = selectedValue === value;
-
-    // Update parent with label when selected
-    React.useEffect(() => {
-      if (isSelected && onLabelChange) {
-        onLabelChange(typeof children === "string" ? children : value);
-      }
-    }, [isSelected, children, value, onLabelChange]);
 
     return (
       <div
@@ -204,19 +236,28 @@ const NeoSelectItem = React.forwardRef<HTMLDivElement, NeoSelectItemProps>(
         role="option"
         aria-selected={isSelected}
         data-slot="neo-select-item"
+        tabIndex={disabled ? -1 : 0}
         onClick={() => !disabled && onSelect(value)}
+        onKeyDown={(event) => {
+          if (disabled) return;
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onSelect(value);
+          }
+        }}
         className={cn(
           "flex items-center justify-between px-4 py-2.5",
           "cursor-pointer transition-colors duration-150",
-          "hover:bg-neo-accent/10",
-          isSelected && "bg-neo-accent/20 text-neo-accent font-semibold",
+          "hover:bg-neo-accent/10 focus-visible:outline-none focus-visible:bg-neo-accent/10",
+          isSelected &&
+            "bg-fresh-extra/15 text-fresh-extra font-semibold ring-1 ring-inset ring-fresh-extra/40",
           disabled && "cursor-not-allowed opacity-50",
           className,
         )}
       >
         <span>{children}</span>
         {isSelected && (
-          <Check size={16} strokeWidth={3} className="text-neo-accent" />
+          <Check size={16} strokeWidth={3} className="text-fresh-extra" />
         )}
       </div>
     );

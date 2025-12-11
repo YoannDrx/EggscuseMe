@@ -33,24 +33,27 @@ export const EmailLayout = (
       <Head />
       <Body
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "#FDFBF7",
           fontFamily:
             "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+          margin: "0 auto",
+          padding: "20px 0",
         }}
       >
         <Container
           style={{
             margin: "0 auto",
-            backgroundSize: "contain",
-            backgroundPosition: "bottom",
-            backgroundRepeat: "no-repeat",
-            padding: "1.5rem",
+            backgroundColor: "#FFFFFF",
+            borderRadius: "16px",
+            border: "2px solid #1C1917",
+            boxShadow: "4px 4px 0px #1C1917",
+            padding: "32px",
           }}
         >
           <Tailwind>
             <table cellPadding={0} cellSpacing={0}>
               <tr>
-                <td className="pr-2">
+                <td className="pr-3">
                   <Img
                     src={`${baseUrl}${SiteConfig.appIcon}`}
                     width={32}
@@ -60,11 +63,13 @@ export const EmailLayout = (
                   />
                 </td>
                 <td>
-                  <Text className="text-xl font-bold">{SiteConfig.title}</Text>
+                  <Text className="text-xl font-extrabold tracking-tight text-[#1C1917]">
+                    {SiteConfig.title}
+                  </Text>
                 </td>
               </tr>
             </table>
-            <Hr className="mt-3 mb-6 border-gray-300" />
+            <Hr className="mt-6 mb-6 border-2 border-dashed border-[#1C1917]" />
           </Tailwind>
           {props.disableTailwind ? (
             props.children
@@ -72,28 +77,30 @@ export const EmailLayout = (
             <Tailwind>{props.children}</Tailwind>
           )}
           <Tailwind>
-            <Hr className="mt-12 mb-6 border-gray-300" />
+            <Hr className="mt-8 mb-6 border-2 border-dashed border-[#1C1917]" />
 
             <table cellPadding={0} cellSpacing={0}>
               <tr>
-                <td className="pr-2">
+                <td className="pr-3">
                   <Img
                     src={`${baseUrl}${SiteConfig.appIcon}`}
-                    width={32}
-                    height={32}
+                    width={24}
+                    height={24}
                     className="inline"
                     alt={`${SiteConfig.title}'s logo`}
                   />
                 </td>
                 <td>
-                  <Text className="text-xl">{SiteConfig.title}</Text>
+                  <Text className="text-lg font-bold text-[#1C1917]">
+                    {SiteConfig.title}
+                  </Text>
                 </td>
               </tr>
             </table>
-            <Text className="text-sm text-gray-500">
+            <Text className="text-sm text-[#57534E]">
               {SiteConfig.company.name}
             </Text>
-            <Text className="text-sm text-gray-500">
+            <Text className="text-sm text-[#57534E]">
               {SiteConfig.company.address}
             </Text>
           </Tailwind>

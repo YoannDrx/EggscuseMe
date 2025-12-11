@@ -1,9 +1,7 @@
-import { NeoButton } from "@/components/neo/neo-button";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
+import { MobileSettingsButton } from "@/components/eggscuseme/navigation/mobile-settings-button";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
-import { User } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
 import { Suspense } from "react";
 import { EggBoxGrid } from "./egg-box-grid";
 import { FridgeStatsCards } from "./fridge-stats-cards";
@@ -32,18 +30,11 @@ async function FridgePageContent() {
         showBack={false}
         mascot
         mascotMood="happy"
-        rightAction={
-          <NeoButton variant="ghost" size="icon" asChild>
-            <Link href="/fridge/settings/profile">
-              <User className="size-4" />
-              <span className="sr-only">{t("nav.profile")}</span>
-            </Link>
-          </NeoButton>
-        }
+        rightAction={<MobileSettingsButton isOwner={role === "OWNER"} />}
       />
 
       {/* Main Content */}
-      <main className="flex-1 px-[var(--space-page-x)] py-[var(--space-page-y)] sm:px-6">
+      <main className="flex-1 px-[var(--space-page-x)] pt-2 pb-[var(--space-page-y)] sm:px-6 sm:py-[var(--space-page-y)]">
         <div className="mx-auto max-w-7xl space-y-[var(--space-section)]">
           {/* Stats Cards - Horizontal scroll on mobile */}
           <Suspense fallback={<StatsCardsSkeleton />}>

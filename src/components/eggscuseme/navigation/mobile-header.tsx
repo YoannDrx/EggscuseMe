@@ -62,7 +62,7 @@ export function MobileHeader({
       className={cn(
         "sticky top-0 z-40 md:hidden",
         "h-[var(--header-height-mobile)]",
-        "flex items-center justify-between gap-3 px-4",
+        "flex items-center justify-between gap-2",
         "transition-colors duration-200",
         transparent
           ? "bg-transparent"
@@ -71,7 +71,7 @@ export function MobileHeader({
       )}
     >
       {/* Left section: Back button or Mascot */}
-      <div className="flex min-w-[44px] items-center gap-2">
+      <div className="flex min-w-[44px] items-center gap-2 pl-2">
         {showBack && (
           <motion.div
             initial={{ opacity: 0, x: -10 }}
@@ -129,7 +129,7 @@ export function MobileHeader({
       </div>
 
       {/* Right section: Action slot */}
-      <div className="flex min-w-[44px] items-center justify-end">
+      <div className="flex min-w-[44px] items-center justify-end pr-2">
         {rightAction && (
           <motion.div
             initial={{ opacity: 0, x: 10 }}

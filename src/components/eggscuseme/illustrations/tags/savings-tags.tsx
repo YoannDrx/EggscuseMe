@@ -407,5 +407,3 @@ export function SavingsSummary({
     </div>
   );
 }
-
-export default SavingsTag;

@@ -1,7 +1,7 @@
 import {
-  isPremiumSubscription,
-  getPremiumRequiredMessage,
+  getBrigadeRequiredMessage,
   getEggBoxLimitMessage,
+  isPaidSubscription,
 } from "@/lib/stripe/check-premium";
 import { SiteConfig } from "@/site-config";
 import type { UserSubscription } from "@/generated/prisma";
@@ -28,15 +28,15 @@ function createMockSubscription(
 }
 
 describe("plan-limits", () => {
-  describe("isPremiumSubscription", () => {
+  describe("isPaidSubscription", () => {
     describe("returns false for non-premium users", () => {
       it("should return false for null subscription", () => {
-        expect(isPremiumSubscription(null)).toBe(false);
+        expect(isPaidSubscription(null)).toBe(false);
       });
 
       it("should return false for free plan", () => {
         const subscription = createMockSubscription({ plan: "free" });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
 
       it("should return false for free plan even with active status", () => {
@@ -44,7 +44,7 @@ describe("plan-limits", () => {
           plan: "free",
           status: "active",
         });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
     });
 
@@ -54,7 +54,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "active",
         });
-        expect(isPremiumSubscription(subscription)).toBe(true);
+        expect(isPaidSubscription(subscription)).toBe(true);
       });
 
       it("should return true for trialing subscription", () => {
@@ -62,7 +62,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "trialing",
         });
-        expect(isPremiumSubscription(subscription)).toBe(true);
+        expect(isPaidSubscription(subscription)).toBe(true);
       });
 
       it("should return true for past_due subscription (grace period)", () => {
@@ -70,7 +70,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "past_due",
         });
-        expect(isPremiumSubscription(subscription)).toBe(true);
+        expect(isPaidSubscription(subscription)).toBe(true);
       });
     });
 
@@ -80,7 +80,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "canceled",
         });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
 
       it("should return false for unpaid subscription", () => {
@@ -88,7 +88,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "unpaid",
         });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
 
       it("should return false for null status", () => {
@@ -96,7 +96,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: null,
         });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
 
       it("should return false for incomplete subscription", () => {
@@ -104,7 +104,7 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "incomplete",
         });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
 
       it("should return false for incomplete_expired subscription", () => {
@@ -112,40 +112,40 @@ describe("plan-limits", () => {
           plan: "premium",
           status: "incomplete_expired",
         });
-        expect(isPremiumSubscription(subscription)).toBe(false);
+        expect(isPaidSubscription(subscription)).toBe(false);
       });
     });
   });
 
-  describe("getPremiumRequiredMessage", () => {
+  describe("getBrigadeRequiredMessage", () => {
     it("should return message with feature name", () => {
-      const message = getPremiumRequiredMessage("historique complet");
+      const message = getBrigadeRequiredMessage("historique complet");
       expect(message).toContain("historique complet");
-      expect(message).toContain("Premium");
+      expect(message).toContain("Brigade");
     });
 
     it("should return French message", () => {
-      const message = getPremiumRequiredMessage("notifications");
-      expect(message).toContain("nécessite un abonnement Premium");
+      const message = getBrigadeRequiredMessage("notifications");
+      expect(message).toContain("plan Brigade");
     });
   });
 
   describe("getEggBoxLimitMessage", () => {
     it("should return message with correct limit", () => {
       const message = getEggBoxLimitMessage();
-      expect(message).toContain(String(SiteConfig.freePlan.maxEggBoxes));
+      expect(message).toContain(String(SiteConfig.plans.solo.maxEggBoxes));
     });
 
-    it("should mention Premium upgrade", () => {
+    it("should mention Brigade upgrade", () => {
       const message = getEggBoxLimitMessage();
-      expect(message).toContain("Premium");
-      expect(message).toContain("illimitées");
+      expect(message).toContain("Solo");
+      expect(message).toContain("Brigade");
     });
   });
 
-  describe("SiteConfig.freePlan limits", () => {
+  describe("SiteConfig plan limits", () => {
     it("should have maxEggBoxes set to 2", () => {
-      expect(SiteConfig.freePlan.maxEggBoxes).toBe(2);
+      expect(SiteConfig.plans.solo.maxEggBoxes).toBe(2);
     });
 
     it("should have freshness thresholds correctly configured", () => {

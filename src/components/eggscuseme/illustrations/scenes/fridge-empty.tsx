@@ -187,5 +187,3 @@ export function IlluFridgeEmpty({
     </svg>
   );
 }
-
-export default IlluFridgeEmpty;

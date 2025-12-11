@@ -5,11 +5,11 @@ import {
   NeoBottomNavSpacer,
 } from "@/components/neo/neo-bottom-nav";
 import type { NeoBottomNavItem } from "@/components/neo/neo-bottom-nav";
-import { BarChart3, BookOpen, Menu, Refrigerator, Timer } from "lucide-react";
+import { BarChart3, BookOpen, Plus, Refrigerator, Timer } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { PlusMenuSheet } from "./plus-menu-sheet";
+import { QuickActionsSheet } from "./quick-actions-sheet";
 
 type BottomNavBarProps = {
   isOwner?: boolean;
@@ -18,7 +18,7 @@ type BottomNavBarProps = {
 export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
   const t = useTranslations("fridge.nav");
   const pathname = usePathname();
-  const [plusMenuOpen, setPlusMenuOpen] = useState(false);
+  const [quickActionsOpen, setQuickActionsOpen] = useState(false);
 
   // Get active item ID based on pathname
   const getActiveId = () => {
@@ -37,9 +37,17 @@ export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
     return "fridge";
   };
 
+  // Nav items with FAB in the center position
   const navItems: NeoBottomNavItem[] = [
     { id: "fridge", icon: Refrigerator, label: t("myFridge"), href: "/fridge" },
     { id: "timer", icon: Timer, label: t("timer"), href: "/fridge/timer" },
+    {
+      id: "fab",
+      icon: Plus,
+      label: "",
+      isFab: true,
+      onClick: () => setQuickActionsOpen(true),
+    },
     {
       id: "recipes",
       icon: BookOpen,
@@ -51,12 +59,6 @@ export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
       icon: BarChart3,
       label: t("statistics"),
       href: "/fridge/statistics",
-    },
-    {
-      id: "plus",
-      icon: Menu,
-      label: t("plus"),
-      onClick: () => setPlusMenuOpen(true),
     },
   ];
 
@@ -71,10 +73,10 @@ export function BottomNavBar({ isOwner = false }: BottomNavBarProps) {
         pillColor="bg-neo-accent"
       />
 
-      {/* Plus Menu Sheet */}
-      <PlusMenuSheet
-        open={plusMenuOpen}
-        onOpenChange={setPlusMenuOpen}
+      {/* Quick Actions Sheet */}
+      <QuickActionsSheet
+        open={quickActionsOpen}
+        onOpenChange={setQuickActionsOpen}
         isOwner={isOwner}
       />
 

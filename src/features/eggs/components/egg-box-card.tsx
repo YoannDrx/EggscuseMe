@@ -100,7 +100,7 @@ export function EggBoxCard({
             {formatDaysRemainingFr(freshness.daysRemaining)}
           </span>
           <NeoDropdown>
-            <NeoDropdownTrigger>
+            <NeoDropdownTrigger asChild>
               <button
                 type="button"
                 className="text-neo-text-muted hover:text-neo-text rounded p-1 transition-colors"

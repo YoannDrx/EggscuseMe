@@ -101,11 +101,13 @@ export default function ExpirationWarningEmail({
           <Section
             key={`fr-${index}`}
             style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "6px",
-              padding: "12px",
-              marginBottom: index < eggs.length - 1 ? "8px" : "0",
+              backgroundColor: "#FDFBF7",
+              border: "1px solid #1C1917",
               borderLeft: `4px solid ${getFreshnessColor(egg.daysLeft)}`,
+              boxShadow: "2px 2px 0px #1C1917",
+              borderRadius: "8px",
+              padding: "12px",
+              marginBottom: "12px",
             }}
           >
             <Text
@@ -201,11 +203,13 @@ export default function ExpirationWarningEmail({
           <Section
             key={`en-${index}`}
             style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "6px",
-              padding: "12px",
-              marginBottom: index < eggs.length - 1 ? "8px" : "0",
+              backgroundColor: "#FDFBF7",
+              border: "1px solid #1C1917",
               borderLeft: `4px solid ${getFreshnessColor(egg.daysLeft)}`,
+              boxShadow: "2px 2px 0px #1C1917",
+              borderRadius: "8px",
+              padding: "12px",
+              marginBottom: "12px",
             }}
           >
             <Text

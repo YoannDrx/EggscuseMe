@@ -15,18 +15,19 @@ import type { PropsWithChildren } from "react";
 import { EmailEggy, type EmailEggyMood } from "./email-eggy";
 
 /**
- * Email color tokens - matches the design system
+ * Email color tokens - matches the neo-soft-brutalist design system
  */
 export const EMAIL_COLORS = {
-  background: "#FDFBF7",
+  background: "#FDFBF7", // Eggshell
   card: "#FFFFFF",
-  primary: "#FFC800",
-  primaryForeground: "#2D2D2D",
-  text: "#2D2D2D",
-  textMuted: "#666666",
-  textLight: "#999999",
-  border: "#FFC800",
-  borderLight: "rgba(255, 200, 0, 0.3)",
+  primary: "#FFC800", // Yolk
+  primaryForeground: "#1C1917", // Stone 900
+  text: "#1C1917", // Stone 900
+  textMuted: "#57534E", // Stone 500
+  textLight: "#78716C", // Stone 400
+  border: "#1C1917", // Stone 900 (Thick borders)
+  borderLight: "#E7E5E4", // Stone 200
+  shadow: "#1C1917", // Hard shadow color
   // Freshness colors
   freshExtra: "#22C55E",
   fresh: "#EAB308",
@@ -57,10 +58,10 @@ type EggscuseMeEmailLayoutProps = PropsWithChildren<{
  * EggscuseMe branded email layout
  *
  * Features:
+ * - Neo-soft-brutalist design (thick borders, hard shadows)
  * - Consistent branding with golden egg theme
  * - Optional Eggy mascot in header
  * - Mobile-responsive design
- * - Follows design system tokens
  */
 export function EggscuseMeEmailLayout({
   children,
@@ -92,8 +93,9 @@ export function EggscuseMeEmailLayout({
               maxWidth: "500px",
               margin: "0 auto",
               backgroundColor: EMAIL_COLORS.card,
-              borderRadius: "12px",
-              border: `2px solid ${EMAIL_COLORS.border}`,
+              borderRadius: "16px", // Neo radius
+              border: `2px solid ${EMAIL_COLORS.border}`, // Neo border
+              boxShadow: `4px 4px 0px ${EMAIL_COLORS.shadow}`, // Neo hard shadow
               padding: "32px",
             }}
           >
@@ -110,7 +112,7 @@ export function EggscuseMeEmailLayout({
                 style={{ margin: "0 auto" }}
               >
                 <tr>
-                  <td style={{ paddingRight: "8px" }}>
+                  <td style={{ paddingRight: "12px" }}>
                     <Img
                       src={`${baseUrl}${SiteConfig.appIcon}`}
                       width={32}
@@ -122,10 +124,11 @@ export function EggscuseMeEmailLayout({
                   <td>
                     <Text
                       style={{
-                        fontSize: "20px",
-                        fontWeight: "bold",
+                        fontSize: "24px",
+                        fontWeight: "800",
                         color: EMAIL_COLORS.text,
                         margin: 0,
+                        letterSpacing: "-0.5px",
                       }}
                     >
                       {SiteConfig.title}
@@ -137,7 +140,9 @@ export function EggscuseMeEmailLayout({
 
             <Hr
               style={{
-                borderColor: EMAIL_COLORS.borderLight,
+                borderColor: EMAIL_COLORS.border,
+                borderWidth: "2px",
+                borderStyle: "dashed",
                 margin: "24px 0",
               }}
             />
@@ -147,8 +152,10 @@ export function EggscuseMeEmailLayout({
 
             <Hr
               style={{
-                borderColor: EMAIL_COLORS.borderLight,
-                margin: "24px 0",
+                borderColor: EMAIL_COLORS.border,
+                borderWidth: "2px",
+                borderStyle: "dashed",
+                margin: "32px 0 24px 0",
               }}
             />
 
@@ -158,8 +165,9 @@ export function EggscuseMeEmailLayout({
                 <Text
                   style={{
                     fontSize: "12px",
-                    color: EMAIL_COLORS.textLight,
+                    color: EMAIL_COLORS.textMuted,
                     marginBottom: "8px",
+                    fontWeight: "500",
                   }}
                 >
                   {footerText}
@@ -192,7 +200,7 @@ export function EggscuseMeEmailLayout({
 }
 
 /**
- * Email button component with EggscuseMe styling
+ * Email button component with EggscuseMe neo-brutalist styling
  */
 export function EmailButton({
   href,
@@ -208,12 +216,15 @@ export function EmailButton({
         display: "inline-block",
         backgroundColor: EMAIL_COLORS.primary,
         color: EMAIL_COLORS.primaryForeground,
-        padding: "12px 24px",
-        borderRadius: "8px",
-        fontWeight: "600",
+        padding: "14px 28px",
+        borderRadius: "9999px", // Pill shape
+        border: `2px solid ${EMAIL_COLORS.border}`,
+        boxShadow: `4px 4px 0px ${EMAIL_COLORS.shadow}`, // Hard shadow
+        fontWeight: "800",
         fontSize: "16px",
         textDecoration: "none",
         textAlign: "center",
+        transition: "transform 0.1s ease",
       }}
     >
       {children}
@@ -222,16 +233,18 @@ export function EmailButton({
 }
 
 /**
- * Info box component for emails
+ * Info box component for emails (Neo-brutalist card style)
  */
 export function EmailInfoBox({ children }: { children: React.ReactNode }) {
   return (
     <Section
       style={{
-        backgroundColor: `${EMAIL_COLORS.primary}1A`, // 10% opacity
-        borderRadius: "8px",
-        padding: "16px",
-        margin: "16px 0",
+        backgroundColor: "#FFFFFF",
+        borderRadius: "12px",
+        border: `2px solid ${EMAIL_COLORS.border}`,
+        boxShadow: `4px 4px 0px ${EMAIL_COLORS.shadow}`,
+        padding: "20px",
+        margin: "24px 0",
       }}
     >
       {children}
@@ -244,7 +257,7 @@ export function EmailInfoBox({ children }: { children: React.ReactNode }) {
  */
 export function EmailLanguageSeparator() {
   return (
-    <Section style={{ margin: "32px 0" }}>
+    <Section style={{ margin: "40px 0" }}>
       <table
         cellPadding={0}
         cellSpacing={0}
@@ -253,32 +266,38 @@ export function EmailLanguageSeparator() {
         <tr>
           <td
             style={{
-              borderBottom: `2px solid ${EMAIL_COLORS.borderLight}`,
-              width: "40%",
+              borderBottom: `2px solid ${EMAIL_COLORS.border}`,
+              width: "35%",
             }}
           />
           <td
             style={{
               textAlign: "center",
-              padding: "0 16px",
+              padding: "0 12px",
               whiteSpace: "nowrap",
             }}
           >
             <Text
               style={{
                 fontSize: "12px",
-                color: EMAIL_COLORS.textMuted,
+                color: EMAIL_COLORS.text,
                 margin: 0,
-                fontWeight: "600",
+                fontWeight: "800",
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                backgroundColor: EMAIL_COLORS.primary,
+                padding: "4px 8px",
+                borderRadius: "4px",
+                border: `2px solid ${EMAIL_COLORS.border}`,
               }}
             >
-              ENGLISH VERSION BELOW
+              English Version Below
             </Text>
           </td>
           <td
             style={{
-              borderBottom: `2px solid ${EMAIL_COLORS.borderLight}`,
-              width: "40%",
+              borderBottom: `2px solid ${EMAIL_COLORS.border}`,
+              width: "35%",
             }}
           />
         </tr>

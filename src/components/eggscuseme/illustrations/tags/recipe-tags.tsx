@@ -299,5 +299,3 @@ export function RecipeTag({
     </div>
   );
 }
-
-export default RecipeTag;

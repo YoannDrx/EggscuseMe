@@ -503,5 +503,3 @@ export function AchievementBadge({
     </svg>
   );
 }
-
-export default AchievementBadge;

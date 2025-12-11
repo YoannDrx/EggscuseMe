@@ -37,6 +37,8 @@ export type NeoBottomNavItem = {
   label: string;
   href?: string;
   onClick?: () => void;
+  /** Render as a floating action button (larger, elevated, accent color) */
+  isFab?: boolean;
 };
 
 // Root component
@@ -80,6 +82,41 @@ const NeoBottomNav = React.forwardRef<HTMLElement, NeoBottomNavProps>(
             const isActive = item.id === activeId;
             const Icon = item.icon;
 
+            // FAB (Floating Action Button) rendering
+            if (item.isFab) {
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    item.onClick?.();
+                    onItemClick?.(item);
+                  }}
+                  className={cn(
+                    "relative flex flex-col items-center justify-center",
+                    "outline-none",
+                    "-mt-6", // Elevate above the nav bar
+                  )}
+                >
+                  <motion.div
+                    whileTap={{ scale: 0.9 }}
+                    className={cn(
+                      "flex size-14 items-center justify-center rounded-full",
+                      "bg-neo-accent",
+                      "border-neo-border/30 border-[length:var(--border-neo)]",
+                      "shadow-[var(--shadow-neo-lg)]",
+                    )}
+                  >
+                    <Icon
+                      className="text-neo-accent-foreground size-7"
+                      strokeWidth={2.5}
+                    />
+                  </motion.div>
+                </button>
+              );
+            }
+
+            // Regular nav item rendering
             const itemContent = (
               <>
                 <motion.div

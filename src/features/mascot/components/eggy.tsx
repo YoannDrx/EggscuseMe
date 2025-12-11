@@ -100,5 +100,3 @@ export function Eggy({
       return <EggyHappy className={finalClass} {...props} />;
   }
 }
-
-export default Eggy;

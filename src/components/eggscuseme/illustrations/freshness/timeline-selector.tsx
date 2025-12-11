@@ -308,5 +308,3 @@ export function IlluTimelineSelector({
     </svg>
   );
 }
-
-export default IlluTimelineSelector;

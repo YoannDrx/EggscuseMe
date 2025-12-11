@@ -1,19 +1,42 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/*.{ts,tsx}",
+    "src/**/*.{ts,tsx}",
+    "emails/**/*.{ts,tsx}",
+    "scripts/**/*.{ts,tsx}",
+    "prisma/seed.ts",
+    "__tests__/**/*.{ts,tsx}",
+    "test/**/*.{ts,tsx}"
+  ],
+  "project": [
+    "app/**/*.{ts,tsx}",
+    "src/**/*.{ts,tsx}",
+    "emails/**/*.{ts,tsx}",
+    "scripts/**/*.{ts,tsx}",
+    "prisma/**/*",
+    "__tests__/**/*.{ts,tsx}",
+    "test/**/*.{ts,tsx}"
+  ],
   "ignore": [
     "src/components/ui/*",
     "*.config.js",
-    "playwright.config.ts",
     "src/lib/server-url.ts",
     "src/site-config.ts",
     "e2e/**",
     ".claude/**",
-    "prisma"
+    "prisma/schema/migrations/**"
   ],
+  "ignoreDependencies": [
+    "@prisma/client",
+    "tailwindcss-animate",
+    "tailwindcss",
+    "@next/eslint-plugin-next"
+  ],
+  "ignoreBinaries": ["stripe"],
   "paths": {
     "@/*": ["./src/*"],
     "@app/*": ["./app/*"],
     "@email/*": ["./emails/*"]
-  },
-  "entry": ["**/unauthorized.tsx", "**/sitemap.tsx", "src/components/**"]
+  }
 }

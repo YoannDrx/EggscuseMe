@@ -927,6 +927,23 @@
       "signOut": "Déconnexion",
       "guestNotice": "Vous êtes invité sur ce frigo"
     },
+    "quickActions": {
+      "title": "Actions rapides",
+      "addBox": {
+        "label": "Ajouter une boîte",
+        "hint": "Nouvelle boîte d'œufs à suivre",
+        "title": "Ajouter une boîte",
+        "description": "Ajoutez une nouvelle boîte d'œufs"
+      },
+      "consume": {
+        "label": "Consommer des œufs",
+        "hint": "Enregistrer une consommation",
+        "title": "Consommer des œufs",
+        "description": "Sélectionnez une boîte depuis votre frigo",
+        "selectFromFridge": "Rendez-vous sur votre frigo pour sélectionner une boîte"
+      },
+      "ownerOnlyHint": "Seul le propriétaire peut ajouter des boîtes"
+    },
     "settings": {
       "title": "Paramètres",
       "subtitle": "Gérez votre frigo et votre compte",

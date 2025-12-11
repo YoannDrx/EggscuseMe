@@ -252,5 +252,3 @@ export function IlluEggBoxOpen({
     </svg>
   );
 }
-
-export default IlluEggBoxOpen;

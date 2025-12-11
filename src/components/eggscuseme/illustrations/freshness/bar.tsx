@@ -189,5 +189,3 @@ export function IlluFreshnessBar({
     </svg>
   );
 }
-
-export default IlluFreshnessBar;

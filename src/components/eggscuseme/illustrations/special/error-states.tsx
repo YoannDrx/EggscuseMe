@@ -554,5 +554,3 @@ export function ErrorIllustration({
     </svg>
   );
 }
-
-export default ErrorIllustration;

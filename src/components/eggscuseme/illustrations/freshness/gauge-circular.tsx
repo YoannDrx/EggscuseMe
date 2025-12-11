@@ -219,5 +219,3 @@ export function IlluGaugeCircular({
     </svg>
   );
 }
-
-export default IlluGaugeCircular;

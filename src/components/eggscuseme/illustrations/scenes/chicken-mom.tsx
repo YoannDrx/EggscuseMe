@@ -248,5 +248,3 @@ export function IlluChickenMom({
     </svg>
   );
 }
-
-export default IlluChickenMom;

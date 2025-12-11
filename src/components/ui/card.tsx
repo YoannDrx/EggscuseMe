@@ -9,13 +9,6 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: "rounded-xl border shadow-sm",
-        // Sunny Side UI - Neubrutalism card
-        sunny:
-          "rounded-2xl border-[1.5px] border-foreground/15 shadow-[3px_3px_0px_var(--foreground,theme(colors.foreground))/0.08] hover:shadow-[4px_4px_0px_var(--foreground,theme(colors.foreground))/0.1] transition-shadow duration-200",
-        "sunny-solid":
-          "rounded-2xl border-[1.5px] border-foreground/20 shadow-[3px_3px_0px_var(--foreground,theme(colors.foreground))/0.12]",
-        "sunny-interactive":
-          "rounded-2xl border-[1.5px] border-foreground/15 shadow-[3px_3px_0px_var(--foreground,theme(colors.foreground))/0.08] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_var(--foreground,theme(colors.foreground))/0.08] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-100 cursor-pointer",
         ghost: "border-none shadow-none",
         outline: "rounded-xl border bg-transparent shadow-none",
       },

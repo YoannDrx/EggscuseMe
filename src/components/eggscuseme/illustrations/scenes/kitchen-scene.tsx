@@ -278,5 +278,3 @@ export function IlluKitchenScene({
     </svg>
   );
 }
-
-export default IlluKitchenScene;

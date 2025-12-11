@@ -200,9 +200,6 @@ export const hasPaidAccess = (planName: string | null | undefined): boolean => {
   return normalized === "brigade" || normalized === "chef";
 };
 
-// Alias for backward compatibility
-export const hasPremiumAccess = hasPaidAccess;
-
 // Helper pour vérifier si un utilisateur a le plan Chef
 export const hasChefAccess = (planName: string | null | undefined): boolean => {
   const normalized = normalizePlanName(planName);

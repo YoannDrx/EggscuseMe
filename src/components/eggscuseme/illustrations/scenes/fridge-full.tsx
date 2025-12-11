@@ -245,5 +245,3 @@ export function IlluFridgeFull({
     </svg>
   );
 }
-
-export default IlluFridgeFull;

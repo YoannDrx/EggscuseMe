@@ -100,14 +100,16 @@ export default function FridgeInvitationEmail({
           <Section
             key={index}
             style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "6px",
+              backgroundColor: "#FDFBF7",
+              border: "1px solid #1C1917",
+              boxShadow: "2px 2px 0px #1C1917",
+              borderRadius: "8px",
               padding: "12px",
-              marginBottom: index < benefitsFr.length - 1 ? "8px" : "0",
+              marginBottom: "12px",
             }}
           >
             <Text
-              style={{ fontSize: "14px", color: EMAIL_COLORS.text, margin: 0 }}
+              style={{ fontSize: "14px", color: EMAIL_COLORS.text, margin: 0, fontWeight: "500" }}
             >
               {benefit}
             </Text>
@@ -180,14 +182,16 @@ export default function FridgeInvitationEmail({
           <Section
             key={index}
             style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "6px",
+              backgroundColor: "#FDFBF7",
+              border: "1px solid #1C1917",
+              boxShadow: "2px 2px 0px #1C1917",
+              borderRadius: "8px",
               padding: "12px",
-              marginBottom: index < benefitsEn.length - 1 ? "8px" : "0",
+              marginBottom: "12px",
             }}
           >
             <Text
-              style={{ fontSize: "14px", color: EMAIL_COLORS.text, margin: 0 }}
+              style={{ fontSize: "14px", color: EMAIL_COLORS.text, margin: 0, fontWeight: "500" }}
             >
               {benefit}
             </Text>

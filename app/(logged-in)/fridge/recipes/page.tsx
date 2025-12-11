@@ -154,7 +154,7 @@ async function PersonalizedSuggestions() {
       )}
 
       {/* Mobile: 2 columns, scroll horizontally if needed */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
         {suggestions.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}

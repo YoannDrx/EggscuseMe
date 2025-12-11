@@ -728,5 +728,3 @@ export const StickerIcons = {
   Warning: IconWarningSticker,
   Error: IconErrorSticker,
 };
-
-export default StickerIcons;

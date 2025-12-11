@@ -211,5 +211,3 @@ export function FreshnessTagSet({
     </div>
   );
 }
-
-export default FreshnessTag;

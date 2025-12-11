@@ -40,9 +40,6 @@ export function isPaidSubscription(
   );
 }
 
-// Alias for backward compatibility
-export const isPremiumSubscription = isPaidSubscription;
-
 /**
  * Check if a subscription is Chef plan
  */
@@ -179,9 +176,6 @@ export function getBrigadeRequiredMessage(
     locale in upgradeMessages ? upgradeMessages[locale] : upgradeMessages.en;
   return copy.brigadeRequired(feature);
 }
-
-// Legacy alias
-export const getPremiumRequiredMessage = getBrigadeRequiredMessage;
 
 /**
  * Get error message for Chef feature access

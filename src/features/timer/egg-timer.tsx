@@ -328,7 +328,7 @@ export function EggTimer() {
               <NeoLabel className="text-sm font-semibold">
                 {t("yolkCooking")}
               </NeoLabel>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="flex flex-col gap-2 md:grid md:grid-cols-4 md:gap-2">
                 {YOLK_PREFERENCES.map((pref) => {
                   const colors = yolkColors[pref];
                   const isSelected = yolkPreference === pref;
@@ -338,8 +338,8 @@ export function EggTimer() {
                       type="button"
                       onClick={() => setYolkPreference(pref)}
                       className={cn(
-                        "relative flex flex-col items-center gap-1 rounded-xl p-3 transition-all",
-                        "border-2",
+                        "relative flex items-center gap-3 rounded-xl p-3 text-left transition-all",
+                        "border-2 md:flex-col md:items-center md:text-center",
                         isSelected
                           ? "border-fresh-extra bg-muted/50"
                           : "bg-muted/50 hover:bg-muted border-transparent",
@@ -349,7 +349,7 @@ export function EggTimer() {
                     >
                       {/* Egg yolk indicator with check inside when selected */}
                       <div
-                        className="border-foreground/10 relative flex size-8 items-center justify-center rounded-full border-2"
+                        className="border-foreground/10 relative flex size-10 items-center justify-center rounded-full border-2"
                         style={{
                           background: `radial-gradient(circle at 40% 40%, ${colors.yolkBg}, ${colors.yolkBg}80)`,
                         }}
@@ -361,22 +361,27 @@ export function EggTimer() {
                             transition={{ type: "spring", stiffness: 500 }}
                           >
                             <Check
-                              className="size-5 text-white drop-shadow-md"
+                              className="size-5 text-fresh-extra drop-shadow-md"
                               strokeWidth={3}
                             />
                           </motion.div>
                         )}
                       </div>
-                      <span
-                        className={cn(
-                          "text-xs font-medium",
-                          isSelected
-                            ? "text-foreground"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        {t(`yolkPreferences.${pref}`)}
-                      </span>
+                      <div className="flex flex-1 flex-col items-start justify-center md:items-center">
+                        <span
+                          className={cn(
+                            "text-sm font-semibold leading-tight",
+                            isSelected
+                              ? "text-foreground"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {t(`yolkPreferences.${pref}`)}
+                        </span>
+                        <span className="text-neo-text-muted mt-1 text-xs leading-snug md:hidden">
+                          {t(`yolkDescriptions.${pref}`)}
+                        </span>
+                      </div>
                     </motion.button>
                   );
                 })}
@@ -384,7 +389,7 @@ export function EggTimer() {
             </div>
 
             {/* Size and Temperature row */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <NeoLabel className="text-sm font-medium">{t("size")}</NeoLabel>
                 <NeoSelect

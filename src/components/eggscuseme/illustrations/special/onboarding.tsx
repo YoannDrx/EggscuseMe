@@ -477,5 +477,3 @@ export function OnboardingIllustration({
     </svg>
   );
 }
-
-export default OnboardingIllustration;
