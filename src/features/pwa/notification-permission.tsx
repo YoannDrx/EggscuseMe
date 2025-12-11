@@ -59,7 +59,7 @@ export function NotificationPermission() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         onClick={handleClose}
-        className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm"
       />
 
       {/* Modal */}
@@ -69,7 +69,7 @@ export function NotificationPermission() {
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
         className={cn(
-          "fixed top-1/2 left-1/2 z-[71] -translate-x-1/2 -translate-y-1/2",
+          "fixed top-1/2 left-1/2 z-[111] -translate-x-1/2 -translate-y-1/2",
           "w-[calc(100%-2rem)] max-w-sm",
           "bg-neo-card",
           "rounded-[var(--radius-neo-2xl)]",

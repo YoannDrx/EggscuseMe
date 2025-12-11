@@ -623,6 +623,10 @@
     "signIn": "Se connecter",
     "signUp": "S'inscrire",
     "signOut": "Se déconnecter",
+    "signOutTitle": "Déconnexion",
+    "signOutDescription": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "signingOut": "Déconnexion en cours...",
+    "cancel": "Annuler",
     "email": "Email",
     "password": "Mot de passe",
     "forgotPassword": "Mot de passe oublié ?",
@@ -981,7 +985,12 @@
       "dangerZone": "Zone danger",
       "plus": "Plus",
       "signOut": "Déconnexion",
-      "guestNotice": "Vous êtes invité sur ce frigo"
+      "guestNotice": "Vous êtes invité sur ce frigo",
+      "fridgeSection": "Mon Frigo",
+      "accountSection": "Mon Compte",
+      "preferencesSection": "Préférences",
+      "language": "Langue",
+      "theme": "Thème"
     },
     "quickActions": {
       "title": "Actions rapides",

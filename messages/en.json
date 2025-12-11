@@ -623,6 +623,10 @@
     "signIn": "Sign in",
     "signUp": "Sign up",
     "signOut": "Sign out",
+    "signOutTitle": "Sign Out",
+    "signOutDescription": "Are you sure you want to sign out?",
+    "signingOut": "Signing out...",
+    "cancel": "Cancel",
     "email": "Email",
     "password": "Password",
     "forgotPassword": "Forgot password?",
@@ -981,7 +985,12 @@
       "dangerZone": "Danger Zone",
       "plus": "More",
       "signOut": "Sign out",
-      "guestNotice": "You are a guest on this fridge"
+      "guestNotice": "You are a guest on this fridge",
+      "fridgeSection": "My Fridge",
+      "accountSection": "My Account",
+      "preferencesSection": "Preferences",
+      "language": "Language",
+      "theme": "Theme"
     },
     "quickActions": {
       "title": "Quick actions",
