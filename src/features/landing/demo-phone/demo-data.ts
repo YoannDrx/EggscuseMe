@@ -7,20 +7,43 @@ import type {
 
 // Create dates relative to today for realistic freshness display
 const today = new Date();
+const daysAgo = (days: number) => {
+  const date = new Date(today);
+  date.setDate(date.getDate() - days);
+  return date;
+};
 
 /**
  * Demo egg boxes matching the screenshots
- * One box per freshness status for demonstration
+ * Multiple boxes with different freshness levels for demonstration
  */
 export const DEMO_EGG_BOXES: DemoEggBox[] = [
   {
     id: "1",
-    name: `Boite du ${today.toLocaleDateString("fr-FR")}`,
-    source: null,
-    layingDate: today, // 0 days = extra-fresh
+    name: "Ferme des Music'Oeufs",
+    source: "Marche local",
+    layingDate: daysAgo(2), // 2 days = extra-fresh
     quantity: 6,
-    remaining: 6,
+    remaining: 4,
+    size: "L",
+  },
+  {
+    id: "2",
+    name: "Oeufs bio Carrefour",
+    source: "Supermarche",
+    layingDate: daysAgo(12), // 12 days = fresh
+    quantity: 10,
+    remaining: 7,
     size: "M",
+  },
+  {
+    id: "3",
+    name: "Poules de Mamie",
+    source: "Famille",
+    layingDate: daysAgo(24), // 24 days = cook thoroughly
+    quantity: 6,
+    remaining: 2,
+    size: "S",
   },
 ];
 
@@ -100,26 +123,26 @@ export const DEMO_RECIPES: DemoRecipe[] = [
  * Demo statistics matching the screenshots
  */
 export const DEMO_STATS: DemoStats = {
-  totalEggs: 6,
-  consumed: 0,
-  saved: 0,
-  savings: 0,
-  co2Saved: 0,
-  streak: 0,
+  totalEggs: 13, // 4 + 7 + 2 from egg boxes
+  consumed: 47,
+  saved: 12,
+  savings: 8.4,
+  co2Saved: 2.3,
+  streak: 14,
   weeklyData: [
-    { day: "L", value: 0 },
-    { day: "M", value: 0 },
-    { day: "M", value: 0 },
-    { day: "J", value: 0 },
-    { day: "V", value: 0 },
-    { day: "S", value: 0 },
-    { day: "D", value: 0 },
+    { day: "L", value: 2 },
+    { day: "M", value: 3 },
+    { day: "M", value: 1 },
+    { day: "J", value: 4 },
+    { day: "V", value: 2 },
+    { day: "S", value: 5 },
+    { day: "D", value: 3 },
   ],
   cookingTypes: [
-    { type: "Dur", percent: 0, color: "bg-amber-400" },
-    { type: "Mollet", percent: 0, color: "bg-orange-400" },
-    { type: "Plat", percent: 0, color: "bg-emerald-400" },
-    { type: "Autre", percent: 0, color: "bg-neutral-400" },
+    { type: "Dur", percent: 35, color: "bg-amber-400" },
+    { type: "Mollet", percent: 28, color: "bg-orange-400" },
+    { type: "Plat", percent: 22, color: "bg-emerald-400" },
+    { type: "Autre", percent: 15, color: "bg-neutral-400" },
   ],
 };
 
@@ -159,19 +182,19 @@ export const COOKING_OPTIONS: CookingOption[] = [
  */
 export const TAB_CONFIG = {
   fridge: {
-    title: "Vos boites d'oeufs",
-    subtitle: "1 boite active",
+    title: "Mon frigo",
+    subtitle: "3 boites actives",
   },
   timer: {
     title: "Minuteur de cuisson",
-    subtitle: "Choisissez votre cuisson",
+    subtitle: "Oeuf a la coque parfait",
   },
   recipes: {
     title: "Recettes",
-    subtitle: "28 recettes",
+    subtitle: "28 recettes disponibles",
   },
   stats: {
     title: "Statistiques",
-    subtitle: "Sur les 90 derniers jours",
+    subtitle: "90 derniers jours",
   },
 } as const;

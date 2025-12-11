@@ -706,7 +706,62 @@
     "privacy": "Confidentialité",
     "cookies": "Cookies",
     "allRightsReserved": "Tous droits réservés.",
-    "madeWithLove": "Fait avec amour à"
+    "tagline": "Va te faire cuire un œuf !"
+  },
+  "legal": {
+    "lastUpdated": "Dernière mise à jour",
+    "privacy": {
+      "title": "Politique de Confidentialité",
+      "intro": "La protection de vos données personnelles est au cœur de nos préoccupations.",
+      "dataCollected": {
+        "title": "Données collectées",
+        "content": "Nous collectons les données suivantes :\n- Données d'identification (Nom, Email) lors de l'inscription.\n- Données d'utilisation (Inventaire du frigo, historique de consommation).\n- Données techniques (Adresse IP, type de navigateur) à des fins de sécurité et de statistiques."
+      },
+      "dataUsage": {
+        "title": "Utilisation des données",
+        "content": "Vos données sont utilisées pour :\n- Fournir et gérer le Service.\n- Vous envoyer des notifications de fraîcheur (si activées).\n- Améliorer nos fonctionnalités via des statistiques anonymisées."
+      },
+      "dataSharing": {
+        "title": "Partage des données",
+        "content": "Nous ne vendons pas vos données personnelles. Elles peuvent être partagées avec des prestataires tiers uniquement pour le bon fonctionnement du service (hébergement, envoi d'emails)."
+      },
+      "yourRights": {
+        "title": "Vos droits",
+        "content": "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, et de suppression de vos données. Vous pouvez exercer ces droits directement dans les paramètres de votre compte ou en nous contactant."
+      },
+      "security": {
+        "title": "Sécurité",
+        "content": "Nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données contre tout accès non autorisé, perte ou altération."
+      }
+    },
+    "terms": {
+      "title": "Conditions Générales d'Utilisation",
+      "intro": "Bienvenue sur EggscuseMe. En utilisant notre application, vous acceptez les présentes Conditions Générales d'Utilisation.",
+      "purpose": {
+        "title": "Objet",
+        "content": "Les présentes CGU ont pour objet de définir les modalités de mise à disposition des services de l'application EggscuseMe, ci-après nommé \"le Service\", et les conditions d'utilisation du Service par l'Utilisateur."
+      },
+      "access": {
+        "title": "Accès au service",
+        "content": "Le Service est accessible gratuitement à tout Utilisateur disposant d'un accès à internet. Tous les coûts afférents à l'accès au Service, que ce soit les frais matériels, logiciels ou d'accès à internet sont exclusivement à la charge de l'utilisateur.\n\nCertaines fonctionnalités sont réservées aux abonnés Premium (Offres Brigade ou Chef)."
+      },
+      "personalData": {
+        "title": "Données personnelles",
+        "content": "EggscuseMe s'engage à ce que la collecte et le traitement de vos données, effectués à partir du site, soient conformes au règlement général sur la protection des données (RGPD). Pour plus d'informations, référez-vous à notre Politique de Confidentialité."
+      },
+      "intellectualProperty": {
+        "title": "Propriété intellectuelle",
+        "content": "Les marques, logos, signes ainsi que tout le contenu du site (textes, images, son...) font l'objet d'une protection par le Code de la propriété intellectuelle et plus particulièrement par le droit d'auteur."
+      },
+      "liability": {
+        "title": "Responsabilité",
+        "content": "Les informations communiquées sur l'application (notamment les dates de fraîcheur et conseils de cuisson) sont fournies à titre indicatif. L'utilisateur reste seul responsable de la vérification de la qualité des aliments qu'il consomme. EggscuseMe ne saurait être tenu responsable en cas de problème sanitaire lié à la consommation d'œufs."
+      },
+      "modifications": {
+        "title": "Modification des CGU",
+        "content": "EggscuseMe se réserve le droit de modifier les termes, conditions et mentions des présentes à tout moment. Il est ainsi conseillé à l'Utilisateur de consulter régulièrement la dernière version des CGU disponible sur le site."
+      }
+    }
   },
   "sharing": {
     "invite": "Inviter",

@@ -44,7 +44,7 @@ async function AuthSignInPage({
   const params = await searchParams;
   const callbackUrl = (params.callbackUrl as string) || "/fridge";
 
-  const providers = Object.keys(SocialProviders);
+  const providers = Object.keys(SocialProviders ?? {});
 
   return (
     <NeoCard

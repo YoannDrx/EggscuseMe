@@ -1,29 +1,22 @@
 import { ImageResponse } from "next/og";
 
-// Image metadata
-export const size = {
-  width: 32,
-  height: 32,
-};
-export const contentType = "image/png";
-
-// Image generation
-export default function Icon() {
+export async function GET() {
   return new ImageResponse(
     (
       <div
         style={{
-          background: "transparent",
+          background: "white",
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          borderRadius: "64px",
         }}
       >
         <svg
-          width="32"
-          height="32"
+          width="460"
+          height="460"
           viewBox="-20 0 160 130"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +110,8 @@ export default function Icon() {
       </div>
     ),
     {
-      ...size,
+      width: 512,
+      height: 512,
     },
   );
 }

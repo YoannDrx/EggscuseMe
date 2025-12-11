@@ -1,49 +1,101 @@
-import { Typography } from "@/components/nowts/typography";
+import { EggyChefMix } from "@/features/mascot/components/eggy-sticker-components";
 import { Layout, LayoutContent } from "@/features/page/layout";
 import { SiteConfig } from "@/site-config";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
-
-const markdown = `
-**Dernière mise à jour : 11 Décembre 2025**
-
-Bienvenue sur EggscuseMe. En utilisant notre application, vous acceptez les présentes Conditions Générales d'Utilisation.
-
-## 1. Objet
-Les présentes CGU ont pour objet de définir les modalités de mise à disposition des services de l'application EggscuseMe, ci-après nommé "le Service", et les conditions d'utilisation du Service par l'Utilisateur.
-
-## 2. Accès au service
-Le Service est accessible gratuitement à tout Utilisateur disposant d'un accès à internet. Tous les coûts afférents à l'accès au Service, que ce soit les frais matériels, logiciels ou d'accès à internet sont exclusivement à la charge de l'utilisateur.
-
-Certaines fonctionnalités sont réservées aux abonnés Premium (Offres Brigade ou Chef).
-
-## 3. Données personnelles
-EggscuseMe s'engage à ce que la collecte et le traitement de vos données, effectués à partir du site, soient conformes au règlement général sur la protection des données (RGPD). Pour plus d'informations, référez-vous à notre Politique de Confidentialité.
-
-## 4. Propriété intellectuelle
-Les marques, logos, signes ainsi que tout le contenu du site (textes, images, son...) font l'objet d'une protection par le Code de la propriété intellectuelle et plus particulièrement par le droit d'auteur.
-
-## 5. Responsabilité
-Les informations communiquées sur l'application (notamment les dates de fraîcheur et conseils de cuisson) sont fournies à titre indicatif. L'utilisateur reste seul responsable de la vérification de la qualité des aliments qu'il consomme. EggscuseMe ne saurait être tenu responsable en cas de problème sanitaire lié à la consommation d'œufs.
-
-## 6. Modification des CGU
-EggscuseMe se réserve le droit de modifier les termes, conditions et mentions des présentes à tout moment. Il est ainsi conseillé à l'Utilisateur de consulter régulièrement la dernière version des CGU disponible sur le site.
-`;
+import { getTranslations } from "next-intl/server";
+import {
+  FileText,
+  Globe,
+  UserCog,
+  Scale,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
 
 export const metadata: Metadata = {
-  title: `${SiteConfig.title} - CGU`,
-  description: "Conditions Générales d'Utilisation",
+  title: `${SiteConfig.title} - Terms of Service`,
+  description: "Terms of Service - Rules for using EggscuseMe",
 };
 
-export default function TermsPage() {
+const sections = [
+  { key: "purpose", icon: FileText },
+  { key: "access", icon: Globe },
+  { key: "personalData", icon: UserCog },
+  { key: "intellectualProperty", icon: Scale },
+  { key: "liability", icon: AlertTriangle },
+  { key: "modifications", icon: RefreshCw },
+] as const;
+
+export default async function TermsPage() {
+  const t = await getTranslations("legal.terms");
+  const tLegal = await getTranslations("legal");
+
   return (
-    <div>
-      <div className="bg-card flex w-full items-center justify-center p-8 lg:p-12">
-        <Typography variant="h1">Conditions Générales d'Utilisation</Typography>
+    <div className="bg-neo-bg min-h-screen">
+      {/* Header Section */}
+      <div
+        className={cn(
+          "border-neo-border bg-neo-card",
+          "border-b-[length:var(--border-neo-lg)]",
+          "shadow-[var(--shadow-neo-md)]",
+        )}
+      >
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 py-12 text-center">
+          <EggyChefMix className="size-20" />
+          <h1 className="font-heading text-neo-text text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
+          <p className="text-neo-text-muted text-lg">{t("intro")}</p>
+          <div
+            className={cn(
+              "border-neo-border bg-neo-accent/10 text-neo-accent",
+              "mt-2 inline-flex items-center gap-2",
+              "rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)]",
+              "px-4 py-2 text-sm font-bold",
+              "shadow-[var(--shadow-neo-sm)]",
+            )}
+          >
+            {tLegal("lastUpdated")}: 11 December 2025
+          </div>
+        </div>
       </div>
+
+      {/* Content Sections */}
       <Layout>
-        <LayoutContent className="typography m-auto mb-8 max-w-3xl">
-          <MDXRemote source={markdown} />
+        <LayoutContent className="m-auto mb-12 max-w-4xl py-8">
+          <div className="flex flex-col gap-6">
+            {sections.map(({ key, icon: Icon }, index) => (
+              <section
+                key={key}
+                className={cn(
+                  "border-neo-border bg-neo-card",
+                  "rounded-[var(--radius-neo-2xl)] border-[length:var(--border-neo)]",
+                  "p-6 shadow-[var(--shadow-neo-md)]",
+                  "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-lg)]",
+                )}
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <div
+                    className={cn(
+                      "border-neo-border bg-neo-accent/10",
+                      "flex size-10 items-center justify-center",
+                      "rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]",
+                      "shadow-[var(--shadow-neo-sm)]",
+                    )}
+                  >
+                    <Icon className="text-neo-accent size-5" />
+                  </div>
+                  <h2 className="font-heading text-neo-text text-xl font-bold">
+                    {index + 1}. {t(`${key}.title`)}
+                  </h2>
+                </div>
+                <p className="text-neo-text-muted leading-relaxed whitespace-pre-line">
+                  {t(`${key}.content`)}
+                </p>
+              </section>
+            ))}
+          </div>
         </LayoutContent>
       </Layout>
     </div>

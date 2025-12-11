@@ -10,8 +10,8 @@ import { DemoEggBoxCard } from "./demo-egg-box-card";
 const SUMMARY_CARDS = [
   {
     label: "ECONOMIES",
-    value: "0.00\u20AC",
-    sublabel: "economises environ",
+    value: "8.40\u20AC",
+    sublabel: "economises ce mois",
     icon: PiggyBank,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
@@ -60,7 +60,7 @@ export function DemoFridgeView() {
           <EggyChefMix className="size-12" />
           <div>
             <h3 className="text-neo-text font-bold">Vos boites d'oeufs</h3>
-            <p className="text-neo-text-muted text-xs">1 boite active</p>
+            <p className="text-neo-text-muted text-xs">3 boites actives</p>
           </div>
         </div>
         <motion.button

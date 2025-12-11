@@ -124,9 +124,9 @@ export function TimerIllustration({
     <svg
       width={parsedSize}
       height={parsedSize}
+      {...defaultProps}
       viewBox="0 0 160 180"
       className={className}
-      {...defaultProps}
       {...props}
     >
       <defs>

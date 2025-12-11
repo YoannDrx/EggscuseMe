@@ -706,7 +706,62 @@
     "privacy": "Privacy",
     "cookies": "Cookies",
     "allRightsReserved": "All rights reserved.",
-    "madeWithLove": "Made with love in"
+    "tagline": "Go fry an egg!"
+  },
+  "legal": {
+    "lastUpdated": "Last updated",
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "Protecting your personal data is at the heart of our concerns.",
+      "dataCollected": {
+        "title": "Data Collected",
+        "content": "We collect the following data:\n- Identification data (Name, Email) during registration.\n- Usage data (Fridge inventory, consumption history).\n- Technical data (IP address, browser type) for security and statistics purposes."
+      },
+      "dataUsage": {
+        "title": "How We Use Your Data",
+        "content": "Your data is used to:\n- Provide and manage the Service.\n- Send you freshness notifications (if enabled).\n- Improve our features through anonymized statistics."
+      },
+      "dataSharing": {
+        "title": "Data Sharing",
+        "content": "We do not sell your personal data. It may be shared with third-party providers only for the proper functioning of the service (hosting, email delivery)."
+      },
+      "yourRights": {
+        "title": "Your Rights",
+        "content": "In accordance with GDPR, you have the right to access, rectify, and delete your data. You can exercise these rights directly in your account settings or by contacting us."
+      },
+      "security": {
+        "title": "Security",
+        "content": "We implement all necessary technical and organizational measures to protect your data against unauthorized access, loss, or alteration."
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "intro": "Welcome to EggscuseMe. By using our application, you agree to these Terms of Service.",
+      "purpose": {
+        "title": "Purpose",
+        "content": "These Terms of Service define the terms and conditions for using the EggscuseMe application, hereinafter referred to as \"the Service\", and the conditions of use by the User."
+      },
+      "access": {
+        "title": "Access to the Service",
+        "content": "The Service is freely accessible to any User with internet access. All costs related to accessing the Service, whether hardware, software, or internet access fees, are solely the responsibility of the user.\n\nSome features are reserved for Premium subscribers (Brigade or Chef plans)."
+      },
+      "personalData": {
+        "title": "Personal Data",
+        "content": "EggscuseMe is committed to ensuring that the collection and processing of your data, carried out through the site, comply with the General Data Protection Regulation (GDPR). For more information, please refer to our Privacy Policy."
+      },
+      "intellectualProperty": {
+        "title": "Intellectual Property",
+        "content": "Trademarks, logos, signs, and all site content (texts, images, sounds...) are protected by intellectual property law and copyright in particular."
+      },
+      "liability": {
+        "title": "Liability",
+        "content": "Information provided on the application (including freshness dates and cooking advice) is for informational purposes only. The user remains solely responsible for verifying the quality of the food they consume. EggscuseMe cannot be held liable for any health issues related to egg consumption."
+      },
+      "modifications": {
+        "title": "Modifications to Terms",
+        "content": "EggscuseMe reserves the right to modify these terms and conditions at any time. Users are advised to regularly check the latest version of the Terms of Service available on the site."
+      }
+    }
   },
   "sharing": {
     "invite": "Invite",

@@ -1,5 +1,6 @@
 "use client";
 
+import { EggyChefMix } from "@/features/mascot/components/eggy-sticker-components";
 import { LogoSvg } from "@/components/svg/logo-svg";
 import { SiteConfig } from "@/site-config";
 import Link from "next/link";
@@ -7,13 +8,9 @@ import { Twitter, Github, Linkedin } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 const socialLinks = [
-  { icon: Twitter, href: "https://twitter.com/eggscuseme", label: "Twitter" },
-  { icon: Github, href: "https://github.com/eggscuseme", label: "GitHub" },
-  {
-    icon: Linkedin,
-    href: "https://linkedin.com/company/eggscuseme",
-    label: "LinkedIn",
-  },
+  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Github, href: "#", label: "GitHub" },
+  { icon: Linkedin, href: "#", label: "LinkedIn" },
 ];
 
 export function Footer() {
@@ -38,14 +35,15 @@ export function Footer() {
     ],
   };
   return (
-    <footer className="border-neo-border/30 bg-neo-bg border-t-[length:var(--border-neo)]">
+    <footer className="border-neo-border bg-neo-bg border-t-[length:var(--border-neo-lg)]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_2fr]">
           {/* Brand Column */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
+            <div className="border-neo-border bg-neo-card inline-flex w-fit items-center gap-3 rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)] px-4 py-2 shadow-[var(--shadow-neo-md)]">
+              <EggyChefMix className="size-12" />
               <LogoSvg size={28} />
-              <span className="text-neo-text text-lg font-bold">
+              <span className="font-heading text-neo-text text-xl font-bold tracking-tight">
                 {SiteConfig.title}
               </span>
             </div>
@@ -55,16 +53,15 @@ export function Footer() {
             {/* Social Links */}
             <div className="mt-4 flex gap-3">
               {socialLinks.map((social) => (
-                <a
+                <button
                   key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border-neo-border/30 bg-neo-card text-neo-text-muted hover:text-neo-text flex size-10 items-center justify-center rounded-full border-[length:var(--border-neo)] shadow-[var(--shadow-neo-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-md)] active:translate-y-[2px] active:shadow-none"
+                  type="button"
+                  className="border-neo-border bg-neo-card text-neo-text-muted hover:text-neo-accent flex size-10 cursor-not-allowed items-center justify-center rounded-full border-[length:var(--border-neo)] opacity-60 shadow-[var(--shadow-neo-sm)] transition-all duration-200"
                   aria-label={social.label}
+                  disabled
                 >
                   <social.icon className="size-4" />
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -81,7 +78,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-colors"
+                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-all duration-200 hover:translate-x-1"
                   >
                     {link.label}
                   </Link>
@@ -99,7 +96,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-colors"
+                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-all duration-200 hover:translate-x-1"
                   >
                     {link.label}
                   </Link>
@@ -117,7 +114,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-colors"
+                    className="text-neo-text-muted hover:text-neo-accent text-sm font-medium transition-all duration-200 hover:translate-x-1"
                   >
                     {link.label}
                   </Link>
@@ -128,13 +125,13 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-neo-border/20 mt-12 flex flex-col items-center justify-between gap-4 border-t-[length:var(--border-neo)] pt-8 sm:flex-row">
+        <div className="border-neo-border mt-12 flex flex-col items-center justify-between gap-4 border-t-[length:var(--border-neo)] pt-8 sm:flex-row">
           <p className="text-neo-text-muted text-xs">
             © {new Date().getFullYear()} {SiteConfig.company.name}.{" "}
             {t("allRightsReserved")}
           </p>
-          <p className="text-neo-text-muted text-xs">
-            {t("madeWithLove")} {SiteConfig.company.address.split(",")[0]}
+          <p className="border-neo-border bg-neo-accent/10 text-neo-accent rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)] px-4 py-2 text-sm font-bold shadow-[var(--shadow-neo-sm)]">
+            {t("tagline")}
           </p>
         </div>
       </div>

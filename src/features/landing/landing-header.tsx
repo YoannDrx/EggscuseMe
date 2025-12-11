@@ -4,6 +4,7 @@ import { LanguageToggle } from "@/components/nowts/language-toggle";
 import { ThemeSwitcher } from "@/components/nowts/theme-switcher";
 import { NeoButton } from "@/components/neo";
 import { LogoSvg } from "@/components/svg/logo-svg";
+import { EggyChefMix } from "@/features/mascot/components/eggy-sticker-components";
 import { SiteConfig } from "@/site-config";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
@@ -83,26 +84,15 @@ export function LandingHeader() {
       >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 lg:px-8">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <LogoSvg
-              size={28}
-              onClick={() => {
-                router.push("/");
-              }}
-              className="cursor-pointer"
-            />
-            <motion.p
-              style={{
-                scale: useTransform(
-                  scrollYBoundedProgressDelayed,
-                  [0, 1],
-                  [1, 0.9],
-                ),
-              }}
-              className="text-foreground flex origin-left items-center text-lg font-bold max-sm:hidden"
-            >
+          <div
+            className="flex cursor-pointer items-center gap-2"
+            onClick={() => router.push("/")}
+          >
+            <EggyChefMix className="size-9" />
+            <LogoSvg size={24} />
+            <span className="font-heading text-neo-text text-lg font-bold tracking-tight max-sm:hidden">
               {SiteConfig.title}
-            </motion.p>
+            </span>
           </div>
 
           {/* Desktop Navigation */}

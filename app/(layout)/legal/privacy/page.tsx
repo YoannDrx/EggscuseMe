@@ -1,50 +1,93 @@
-import { Typography } from "@/components/nowts/typography";
+import { EggyChefMix } from "@/features/mascot/components/eggy-sticker-components";
 import { Layout, LayoutContent } from "@/features/page/layout";
 import { SiteConfig } from "@/site-config";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
-
-const markdown = `
-**Dernière mise à jour : 11 Décembre 2025**
-
-La protection de vos données personnelles est au cœur de nos préoccupations.
-
-## 1. Données collectées
-Nous collectons les données suivantes :
-- Données d'identification (Nom, Email) lors de l'inscription.
-- Données d'utilisation (Inventaire du frigo, historique de consommation).
-- Données techniques (Adresse IP, type de navigateur) à des fins de sécurité et de statistiques.
-
-## 2. Utilisation des données
-Vos données sont utilisées pour :
-- Fournir et gérer le Service.
-- Vous envoyer des notifications de fraîcheur (si activées).
-- Améliorer nos fonctionnalités via des statistiques anonymisées.
-
-## 3. Partage des données
-Nous ne vendons pas vos données personnelles. Elles peuvent être partagées avec des prestataires tiers uniquement pour le bon fonctionnement du service (hébergement, envoi d'emails).
-
-## 4. Vos droits
-Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, et de suppression de vos données. Vous pouvez exercer ces droits directement dans les paramètres de votre compte ou en nous contactant.
-
-## 5. Sécurité
-Nous mettons en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données contre tout accès non autorisé, perte ou altération.
-`;
+import { getTranslations } from "next-intl/server";
+import { Shield, Database, Share2, UserCheck, Lock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: `${SiteConfig.title} - Confidentialité`,
-  description: "Politique de Confidentialité",
+  title: `${SiteConfig.title} - Privacy Policy`,
+  description: "Privacy Policy - How we handle your data",
 };
 
-export default function PrivacyPage() {
+const sections = [
+  { key: "dataCollected", icon: Database },
+  { key: "dataUsage", icon: UserCheck },
+  { key: "dataSharing", icon: Share2 },
+  { key: "yourRights", icon: Shield },
+  { key: "security", icon: Lock },
+] as const;
+
+export default async function PrivacyPage() {
+  const t = await getTranslations("legal.privacy");
+  const tLegal = await getTranslations("legal");
+
   return (
-    <div>
-      <div className="bg-card flex w-full items-center justify-center p-8 lg:p-12">
-        <Typography variant="h1">Politique de Confidentialité</Typography>
+    <div className="bg-neo-bg min-h-screen">
+      {/* Header Section */}
+      <div
+        className={cn(
+          "border-neo-border bg-neo-card",
+          "border-b-[length:var(--border-neo-lg)]",
+          "shadow-[var(--shadow-neo-md)]",
+        )}
+      >
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 px-4 py-12 text-center">
+          <EggyChefMix className="size-20" />
+          <h1 className="font-heading text-neo-text text-4xl font-bold tracking-tight">
+            {t("title")}
+          </h1>
+          <p className="text-neo-text-muted text-lg">{t("intro")}</p>
+          <div
+            className={cn(
+              "border-neo-border bg-neo-accent/10 text-neo-accent",
+              "mt-2 inline-flex items-center gap-2",
+              "rounded-[var(--radius-neo-xl)] border-[length:var(--border-neo)]",
+              "px-4 py-2 text-sm font-bold",
+              "shadow-[var(--shadow-neo-sm)]",
+            )}
+          >
+            {tLegal("lastUpdated")}: 11 December 2025
+          </div>
+        </div>
       </div>
+
+      {/* Content Sections */}
       <Layout>
-        <LayoutContent className="typography m-auto mb-8 max-w-3xl">
-          <MDXRemote source={markdown} />
+        <LayoutContent className="m-auto mb-12 max-w-4xl py-8">
+          <div className="flex flex-col gap-6">
+            {sections.map(({ key, icon: Icon }, index) => (
+              <section
+                key={key}
+                className={cn(
+                  "border-neo-border bg-neo-card",
+                  "rounded-[var(--radius-neo-2xl)] border-[length:var(--border-neo)]",
+                  "p-6 shadow-[var(--shadow-neo-md)]",
+                  "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-neo-lg)]",
+                )}
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <div
+                    className={cn(
+                      "border-neo-border bg-neo-accent/10",
+                      "flex size-10 items-center justify-center",
+                      "rounded-[var(--radius-neo-lg)] border-[length:var(--border-neo)]",
+                      "shadow-[var(--shadow-neo-sm)]",
+                    )}
+                  >
+                    <Icon className="text-neo-accent size-5" />
+                  </div>
+                  <h2 className="font-heading text-neo-text text-xl font-bold">
+                    {index + 1}. {t(`${key}.title`)}
+                  </h2>
+                </div>
+                <p className="text-neo-text-muted leading-relaxed whitespace-pre-line">
+                  {t(`${key}.content`)}
+                </p>
+              </section>
+            ))}
+          </div>
         </LayoutContent>
       </Layout>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Egg, PiggyBank, TrendingUp } from "lucide-react";
+import { Egg, Flame, PiggyBank, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 import { DEMO_STATS } from "../demo-data";
 
@@ -9,7 +9,7 @@ const STAT_CARDS = [
   {
     label: "Stock actuel",
     value: DEMO_STATS.totalEggs,
-    suffix: "",
+    suffix: "oeufs",
     icon: Egg,
     color: "text-neo-accent",
     bg: "bg-neo-accent/10",
@@ -17,18 +17,26 @@ const STAT_CARDS = [
   {
     label: "Consommes",
     value: DEMO_STATS.consumed,
-    suffix: "",
+    suffix: "oeufs",
     icon: TrendingUp,
     color: "text-fresh-extra",
     bg: "bg-fresh-extra/10",
   },
   {
     label: "Economies",
-    value: DEMO_STATS.savings,
+    value: DEMO_STATS.savings.toFixed(2),
     suffix: "EUR",
     icon: PiggyBank,
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
+  },
+  {
+    label: "Serie",
+    value: DEMO_STATS.streak,
+    suffix: "jours",
+    icon: Flame,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
   },
 ];
 
@@ -84,13 +92,36 @@ export function DemoStatsView() {
           "shadow-[var(--shadow-neo-sm)]",
         )}
       >
-        <h4 className="text-neo-text mb-4 text-sm font-bold">
-          Consommation quotidienne
-        </h4>
+        <h4 className="text-neo-text mb-4 text-sm font-bold">Cette semaine</h4>
 
-        {/* Empty state */}
-        <div className="flex h-24 items-center justify-center">
-          <p className="text-neo-text-muted text-sm">Aucune donnee</p>
+        {/* Bar Chart */}
+        <div className="flex h-24 items-end justify-between gap-2">
+          {DEMO_STATS.weeklyData.map((item, index) => {
+            const maxValue = Math.max(
+              ...DEMO_STATS.weeklyData.map((d) => d.value),
+            );
+            const heightPercent = (item.value / maxValue) * 100;
+            return (
+              <div
+                key={index}
+                className="flex flex-1 flex-col items-center gap-1"
+              >
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: `${heightPercent}%` }}
+                  transition={{ delay: 0.4 + index * 0.05, duration: 0.3 }}
+                  className={cn(
+                    "w-full rounded-t-sm",
+                    item.value > 0 ? "bg-neo-accent" : "bg-neo-bg",
+                  )}
+                  style={{ minHeight: item.value > 0 ? 8 : 4 }}
+                />
+                <span className="text-neo-text-muted text-[10px]">
+                  {item.day}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </motion.div>
     </div>

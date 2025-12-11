@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Egg, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import { DEMO_RECIPES } from "../demo-data";
+import { DEMO_RECIPES, DEMO_STATS } from "../demo-data";
 import { DemoRecipeCard } from "./demo-recipe-card";
 
 export function DemoRecipesView() {
@@ -27,7 +27,8 @@ export function DemoRecipesView() {
             "bg-neo-card text-neo-text-muted text-xs",
           )}
         >
-          <Egg className="size-3" />6 oeufs
+          <Egg className="size-3" />
+          {DEMO_STATS.totalEggs} oeufs
         </span>
       </motion.div>
 
