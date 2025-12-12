@@ -15,11 +15,13 @@ type ExpiringEggBox = {
   } | null;
 };
 
-type UserWithExpiringEggs = {
+export type UserWithExpiringEggs = {
   userId: string;
   userName: string;
   userEmail: string;
   notifyDaysBefore: number;
+  emailEnabled: boolean;
+  pushEnabled: boolean;
   eggs: ExpiringEggBox[];
 };
 
@@ -107,6 +109,8 @@ export async function getUsersWithExpiringEggs(): Promise<
         userName: pref.user.name || "Chef",
         userEmail: pref.user.email,
         notifyDaysBefore: pref.notifyDaysBefore,
+        emailEnabled: pref.emailEnabled,
+        pushEnabled: pref.pushEnabled,
         eggs: expiringEggs.sort((a, b) => a.daysRemaining - b.daysRemaining),
       });
     }

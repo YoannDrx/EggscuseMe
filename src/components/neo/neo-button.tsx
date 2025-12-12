@@ -114,6 +114,7 @@ const NeoButton = React.forwardRef<HTMLButtonElement, NeoButtonProps>(
       asChild = false,
       loading = false,
       disabled,
+      type: providedType,
       icon,
       children,
       ...props
@@ -142,7 +143,10 @@ const NeoButton = React.forwardRef<HTMLButtonElement, NeoButtonProps>(
     return (
       <Comp
         ref={ref}
-        {...(!asChild && { "data-slot": "neo-button" })}
+        {...(!asChild && {
+          "data-slot": "neo-button",
+          type: providedType ?? "button",
+        })}
         className={cn(
           neoButtonVariants({ variant, size: actualSize, rounded, className }),
         )}

@@ -1,0 +1,47 @@
+// Notification Log - Track all sent notifications for audit and debugging
+
+model NotificationLog {
+  id     String              @id @default(cuid())
+  userId String
+  user   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type   NotificationType
+  status NotificationStatus
+
+  // Content info
+  subject String? // Email subject or push title
+  channel NotificationChannel
+
+  // Error tracking
+  errorMessage String?
+
+  // Metadata (JSON for flexibility)
+  metadata Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("notification_log")
+}
+
+enum NotificationType {
+  EXPIRATION_WARNING // Eggs expiring soon
+  WELCOME // Welcome email
+  PASSWORD_RESET // Password reset
+  FRIDGE_INVITE // Fridge invitation
+  OTHER
+}
+
+enum NotificationStatus {
+  SENT // Successfully sent
+  FAILED // Failed to send
+  BOUNCED // Email bounced
+  SKIPPED // Skipped (user unsubscribed, etc.)
+}
+
+enum NotificationChannel {
+  EMAIL
+  PUSH
+  IN_APP
+}

@@ -1,6 +1,8 @@
 "use client";
 
 import { NeoSheet } from "@/components/neo/neo-sheet";
+import { dialogManager } from "@/features/dialog-manager/dialog-manager";
+import { AddEggBoxForm } from "@app/(logged-in)/fridge/add-egg-box-form";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { Package, UtensilsCrossed } from "lucide-react";
@@ -36,38 +38,32 @@ export function QuickActionsSheet({
 }: QuickActionsSheetProps) {
   const t = useTranslations("fridge.quickActions");
 
-  const handleAddBox = async () => {
+  const handleAddBox = () => {
     onOpenChange(false);
-    // Dynamic import to avoid circular dependencies
-    const { dialogManager } = await import(
-      "@/features/dialog-manager/dialog-manager"
-    );
-    const { AddEggBoxForm } = await import(
-      "@app/(logged-in)/fridge/add-egg-box-form"
-    );
-    dialogManager.custom({
-      title: t("addBox.title"),
-      description: t("addBox.description"),
-      children: <AddEggBoxForm />,
-    });
+    // Délai pour laisser le sheet se fermer avant d'ouvrir le dialog
+    // Évite le conflit de body scroll lock entre NeoSheet et AlertDialog
+    setTimeout(() => {
+      dialogManager.custom({
+        title: t("addBox.title"),
+        description: t("addBox.description"),
+        children: <AddEggBoxForm />,
+      });
+    }, 150);
   };
 
-  const handleConsumeEggs = async () => {
+  const handleConsumeEggs = () => {
     onOpenChange(false);
-    // Navigate to fridge page where user can select a box to consume from
-    // Or show a dialog to select which box
-    const { dialogManager } = await import(
-      "@/features/dialog-manager/dialog-manager"
-    );
-    dialogManager.custom({
-      title: t("consume.title"),
-      description: t("consume.description"),
-      children: (
-        <div className="text-neo-text-muted py-4 text-center text-sm">
-          {t("consume.selectFromFridge")}
-        </div>
-      ),
-    });
+    setTimeout(() => {
+      dialogManager.custom({
+        title: t("consume.title"),
+        description: t("consume.description"),
+        children: (
+          <div className="text-neo-text-muted py-4 text-center text-sm">
+            {t("consume.selectFromFridge")}
+          </div>
+        ),
+      });
+    }, 150);
   };
 
   const actions = [

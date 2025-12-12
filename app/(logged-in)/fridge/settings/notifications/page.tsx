@@ -21,7 +21,7 @@ import {
   getNotificationPreferencesAction,
   updateNotificationPreferencesAction,
 } from "@/features/notifications/notification.action";
-import { Bell, BellOff, Loader2, Save } from "lucide-react";
+import { Bell, BellOff, Loader2, Mail, Save, Smartphone } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -31,6 +31,8 @@ export default function NotificationsSettingsPage() {
   const t = useTranslations("fridge.settings.notificationsPage");
   const [notifyEnabled, setNotifyEnabled] = useState(true);
   const [notifyDaysBefore, setNotifyDaysBefore] = useState(2);
+  const [emailEnabled, setEmailEnabled] = useState(true);
+  const [pushEnabled, setPushEnabled] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
 
   const { execute: loadPrefs, isPending: isLoading } = useAction(
@@ -40,6 +42,8 @@ export default function NotificationsSettingsPage() {
         const prefs = data.data.preferences;
         setNotifyEnabled(prefs.notifyEnabled);
         setNotifyDaysBefore(prefs.notifyDaysBefore);
+        setEmailEnabled(prefs.emailEnabled);
+        setPushEnabled(prefs.pushEnabled);
       },
     },
   );
@@ -65,6 +69,8 @@ export default function NotificationsSettingsPage() {
     savePrefs({
       notifyEnabled,
       notifyDaysBefore,
+      emailEnabled,
+      pushEnabled,
     });
   };
 
@@ -117,6 +123,68 @@ export default function NotificationsSettingsPage() {
                 setHasChanges(true);
               }}
             />
+          </div>
+
+          {/* Channel toggles */}
+          <div
+            className={`space-y-4 ${!notifyEnabled ? "pointer-events-none opacity-50" : ""}`}
+          >
+            <div className="space-y-0.5">
+              <NeoLabel className="text-base font-medium">
+                {t("channelsLabel")}
+              </NeoLabel>
+              <p className="text-muted-foreground text-sm">
+                {t("channelsDescription")}
+              </p>
+            </div>
+
+            {/* Email toggle */}
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="flex items-center gap-3">
+                <Mail className="text-muted-foreground size-5" />
+                <div className="space-y-0.5">
+                  <NeoLabel htmlFor="email-enabled" className="font-medium">
+                    {t("emailLabel")}
+                  </NeoLabel>
+                  <p className="text-muted-foreground text-sm">
+                    {t("emailDescription")}
+                  </p>
+                </div>
+              </div>
+              <NeoSwitch
+                id="email-enabled"
+                checked={emailEnabled}
+                onCheckedChange={(checked) => {
+                  setEmailEnabled(checked);
+                  setHasChanges(true);
+                }}
+                disabled={!notifyEnabled}
+              />
+            </div>
+
+            {/* Push toggle */}
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="flex items-center gap-3">
+                <Smartphone className="text-muted-foreground size-5" />
+                <div className="space-y-0.5">
+                  <NeoLabel htmlFor="push-enabled" className="font-medium">
+                    {t("pushLabel")}
+                  </NeoLabel>
+                  <p className="text-muted-foreground text-sm">
+                    {t("pushDescription")}
+                  </p>
+                </div>
+              </div>
+              <NeoSwitch
+                id="push-enabled"
+                checked={pushEnabled}
+                onCheckedChange={(checked) => {
+                  setPushEnabled(checked);
+                  setHasChanges(true);
+                }}
+                disabled={!notifyEnabled}
+              />
+            </div>
           </div>
 
           {/* Days before select */}

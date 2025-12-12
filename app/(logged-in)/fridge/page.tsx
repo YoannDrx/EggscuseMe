@@ -20,6 +20,7 @@ async function FridgePageContent() {
   const fridge = result.data?.fridge;
   const role = result.data?.role ?? "GUEST";
   const eggBoxes = fridge?.eggBoxes ?? [];
+  const referenceTimestamp = Date.now();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -42,7 +43,11 @@ async function FridgePageContent() {
           </Suspense>
 
           {/* Egg Boxes Grid */}
-          <EggBoxGrid eggBoxes={eggBoxes} canModify={role === "OWNER"} />
+          <EggBoxGrid
+            eggBoxes={eggBoxes}
+            canModify={role === "OWNER"}
+            now={referenceTimestamp}
+          />
         </div>
       </main>
     </div>

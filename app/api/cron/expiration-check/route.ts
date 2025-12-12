@@ -1,7 +1,10 @@
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 import { route } from "@/lib/zod-route";
-import { sendExpirationEmails } from "@/features/notifications";
+import {
+  sendExpirationEmails,
+  sendExpirationPushNotifications,
+} from "@/features/notifications";
 import { NextResponse } from "next/server";
 
 /**
@@ -32,17 +35,31 @@ export const GET = route.handler(async (req) => {
 
   logger.info("[CRON] Starting expiration check");
 
-  const result = await sendExpirationEmails();
+  // Send both email and push notifications in parallel
+  const [emailResult, pushResult] = await Promise.all([
+    sendExpirationEmails(),
+    sendExpirationPushNotifications(),
+  ]);
 
   logger.info("[CRON] Expiration check complete", {
-    sent: result.sent,
-    errors: result.errors,
+    emailsSent: emailResult.sent,
+    emailErrors: emailResult.errors,
+    pushSent: pushResult.sent,
+    pushErrors: pushResult.errors,
+    pushCleaned: pushResult.cleaned,
   });
 
   return NextResponse.json({
     success: true,
-    emailsSent: result.sent,
-    errors: result.errors,
+    email: {
+      sent: emailResult.sent,
+      errors: emailResult.errors,
+    },
+    push: {
+      sent: pushResult.sent,
+      errors: pushResult.errors,
+      cleaned: pushResult.cleaned,
+    },
     timestamp: new Date().toISOString(),
   });
 });

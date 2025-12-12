@@ -45,6 +45,12 @@ model User {
   // Vision Scan Usage (rate limiting)
   visionScanUsage VisionScanUsage[]
 
+  // Email unsubscribe token (for RGPD compliance)
+  unsubscribeToken String? @unique
+
+  // Notification logs
+  notificationLogs NotificationLog[]
+
   @@unique([email])
   @@map("user")
 }

@@ -24,8 +24,11 @@ export type FreshnessInfo = {
  * - Day 22-28: Cook thoroughly (hard-boiled only)
  * - Day 29+: Expired (discard)
  */
-export function calculateFreshness(layingDate: Date): FreshnessInfo {
-  const now = new Date();
+export function calculateFreshness(
+  layingDate: Date,
+  referenceDate: Date = new Date(),
+): FreshnessInfo {
+  const now = referenceDate;
   const diffTime = now.getTime() - layingDate.getTime();
   const daysOld = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
@@ -103,9 +106,12 @@ export function getFreshnessBgClass(status: FreshnessStatus): string {
  * Calculate progress percentage for expiration
  * 0% = just laid, 100% = expired
  */
-export function calculateExpirationProgress(layingDate: Date): number {
+export function calculateExpirationProgress(
+  layingDate: Date,
+  referenceDate: Date = new Date(),
+): number {
   const { cookThoroughlyDays } = SiteConfig.freshness;
-  const now = new Date();
+  const now = referenceDate;
   const diffTime = now.getTime() - layingDate.getTime();
   const daysOld = diffTime / (1000 * 60 * 60 * 24);
 

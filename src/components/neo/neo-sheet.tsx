@@ -127,8 +127,7 @@ const NeoSheet = ({
         <div
           ref={constraintsRef}
           data-slot="neo-sheet-root"
-          className="fixed inset-0"
-          style={{ zIndex: 9999 }}
+          className="fixed inset-0 z-50"
         >
           {/* Backdrop */}
           <motion.div

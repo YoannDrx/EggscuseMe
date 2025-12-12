@@ -74,7 +74,7 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
     const [open, setOpen] = React.useState(false);
     const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-    const selectedContent = React.useMemo(async () => {
+    const selectedContent = React.useMemo(() => {
       const option = React.Children.toArray(children).find(
         (child): child is React.ReactElement<NeoSelectItemProps> =>
           React.isValidElement<NeoSelectItemProps>(child) &&
@@ -85,7 +85,7 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
         return option.props.children;
       }
       return undefined;
-    }, [children, value]) as React.ReactNode | null | undefined;
+    }, [children, value]);
 
     // Close on outside click
     React.useEffect(() => {
@@ -205,7 +205,7 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
                 )}
                 role="listbox"
               >
-                {React.Children.map(children, async (child) => child)}
+                {children}
               </motion.div>
             )}
           </AnimatePresence>

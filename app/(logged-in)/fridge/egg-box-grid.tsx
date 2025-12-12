@@ -17,34 +17,52 @@ import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useCallback, useMemo } from "react";
 import { AddEggBoxForm } from "./add-egg-box-form";
 import { ConsumeEggsForm } from "./consume-eggs-form";
 
 type EggBoxGridProps = {
   eggBoxes: EggBox[];
   canModify: boolean;
+  now?: number;
 };
 
-export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
+export function EggBoxGrid({ eggBoxes, canModify, now }: EggBoxGridProps) {
   const t = useTranslations("fridge.grid");
   const router = useRouter();
+  const referenceDate = useMemo(
+    () => new Date(now ?? Date.now()),
+    [now],
+  );
+  const getFreshness = useCallback(
+    (box: EggBox) => calculateFreshness(new Date(box.layingDate), referenceDate),
+    [referenceDate],
+  );
 
   // Sort by freshness priority (most urgent first)
-  const sortedBoxes = [...eggBoxes]
-    .filter((box) => box.remaining > 0)
-    .sort((a, b) => {
-      const freshnessA = calculateFreshness(a.layingDate);
-      const freshnessB = calculateFreshness(b.layingDate);
-      return freshnessA.daysRemaining - freshnessB.daysRemaining;
-    });
+  const sortedBoxes = useMemo(
+    () =>
+      [...eggBoxes]
+        .filter((box) => box.remaining > 0)
+        .sort((a, b) => {
+          const freshnessA = getFreshness(a);
+          const freshnessB = getFreshness(b);
+          return freshnessA.daysRemaining - freshnessB.daysRemaining;
+        }),
+    [eggBoxes, getFreshness],
+  );
 
   // Check for urgent boxes (need attention soon)
-  const urgentBoxes = sortedBoxes.filter((box) => {
-    const freshness = calculateFreshness(box.layingDate);
-    return (
-      freshness.status === "cook-thoroughly" || freshness.daysRemaining <= 5
-    );
-  });
+  const urgentBoxes = useMemo(
+    () =>
+      sortedBoxes.filter((box) => {
+        const freshness = getFreshness(box);
+        return (
+          freshness.status === "cook-thoroughly" || freshness.daysRemaining <= 5
+        );
+      }),
+    [sortedBoxes, getFreshness],
+  );
 
   const handleAddBox = () => {
     dialogManager.custom({
@@ -111,6 +129,7 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
         {canModify && (
           <div className="mt-6 space-y-3">
             <NeoButton
+              type="button"
               onClick={handleAddBox}
               variant="primary"
               rounded="full"
@@ -172,7 +191,12 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
           </p>
         </div>
         {canModify && (
-          <NeoButton onClick={handleAddBox} variant="outline" rounded="full">
+          <NeoButton
+            type="button"
+            onClick={handleAddBox}
+            variant="outline"
+            rounded="full"
+          >
             <Plus className="mr-2 size-4" />
             {t("header.add")}
           </NeoButton>
@@ -188,6 +212,7 @@ export function EggBoxGrid({ eggBoxes, canModify }: EggBoxGridProps) {
             index={index}
             onConsume={handleConsume}
             onDelete={canModify ? handleDelete : undefined}
+            referenceDate={referenceDate}
           />
         ))}
       </div>

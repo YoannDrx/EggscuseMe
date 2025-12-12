@@ -2,6 +2,8 @@ import { TailwindIndicator } from "@/components/utils/tailwind-indicator";
 import { FloatingLegalFooter } from "@/features/legal/floating-legal-footer";
 import { NextTopLoader } from "@/features/page/next-top-loader";
 import { ServerToaster } from "@/features/server-sonner/server-toaster";
+import { defaultLocale } from "@/i18n/config";
+import { LangSetter } from "@/features/i18n/lang-setter";
 import { getServerUrl } from "@/lib/server-url";
 import { cn } from "@/lib/utils";
 import { SiteConfig } from "@/site-config";
@@ -72,15 +74,9 @@ function LoadingFallback() {
   );
 }
 
-export default async function RootLayout({
-  children,
-  modal,
-}: LayoutProps<"/">) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-
+export default function RootLayout(props: LayoutProps<"/">) {
   return (
-    <html lang={locale} className="h-full" suppressHydrationWarning>
+    <html lang={defaultLocale} className="h-full" suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className={cn(
@@ -90,27 +86,41 @@ export default async function RootLayout({
           MonoFont.variable,
         )}
       >
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <NuqsAdapter>
-            <Providers>
-              <NextTopLoader
-                delay={100}
-                showSpinner={false}
-                color="hsl(var(--primary))"
-              />
-              <Suspense fallback={<LoadingFallback />}>
-                {children}
-                {modal}
-              </Suspense>
-              <TailwindIndicator />
-              <FloatingLegalFooter />
-              <Suspense>
-                <ServerToaster />
-              </Suspense>
-            </Providers>
-          </NuqsAdapter>
-        </NextIntlClientProvider>
+        <Suspense fallback={<LoadingFallback />}>
+          <LocaleAwareLayout {...props} />
+        </Suspense>
       </body>
     </html>
+  );
+}
+
+async function LocaleAwareLayout({ children, modal }: LayoutProps<"/">) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
+  return (
+    <>
+      <LangSetter locale={locale} />
+      <NextIntlClientProvider messages={messages} locale={locale}>
+        <NuqsAdapter>
+          <Providers>
+            <NextTopLoader
+              delay={100}
+              showSpinner={false}
+              color="hsl(var(--primary))"
+            />
+            <Suspense fallback={<LoadingFallback />}>
+              {children}
+              {modal}
+            </Suspense>
+            <TailwindIndicator />
+            <FloatingLegalFooter />
+            <Suspense>
+              <ServerToaster />
+            </Suspense>
+          </Providers>
+        </NuqsAdapter>
+      </NextIntlClientProvider>
+    </>
   );
 }
