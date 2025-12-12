@@ -1,5 +1,6 @@
 "use client";
 
+import type { EggSize } from "@/generated/prisma";
 import { useState } from "react";
 
 export type VisionScanResult = {
@@ -9,6 +10,8 @@ export type VisionScanResult = {
   confidence?: "high" | "medium" | "low";
   error?: string;
   remaining?: number;
+  quantity?: number | null;
+  size?: EggSize;
 };
 
 type ApiResponse = {
@@ -19,6 +22,8 @@ type ApiResponse = {
   error?: string;
   rawText?: string | null;
   remaining?: number;
+  quantity?: number | null;
+  size?: EggSize;
 };
 
 /**
@@ -119,6 +124,8 @@ export function useVisionScan() {
           ddm: data.ddm ? new Date(data.ddm) : undefined,
           confidence: data.confidence,
           remaining: data.remaining,
+          quantity: data.quantity,
+          size: data.size,
         };
       } else {
         return {

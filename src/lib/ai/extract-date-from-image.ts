@@ -27,12 +27,13 @@ function getCurrentYearContext(): string {
 /**
  * Prompt optimized for extracting expiration dates from French egg boxes
  */
-const EXTRACTION_PROMPT = `Tu es un assistant spécialisé dans l'extraction de dates sur les emballages alimentaires français.
+const EXTRACTION_PROMPT = `Tu es un assistant spécialisé dans l'extraction d'informations sur les emballages d'œufs français.
 
 ${getCurrentYearContext()}
 
-Analyse cette image d'un emballage d'œufs et extrait la date imprimée.
+Analyse cette image d'un emballage d'œufs et extrait les informations suivantes.
 
+## 1. DATE (obligatoire à chercher)
 Cherche spécifiquement :
 - "A consommer de préférence avant le" suivi d'une date
 - "A consommer jusqu'au" suivi d'une date
@@ -42,7 +43,7 @@ Cherche spécifiquement :
 - "Exp" ou "EXP" suivi d'une date
 - "Pondu le", "DOP" ou "Date de ponte" (c'est la date de ponte directement)
 
-RÈGLES IMPORTANTES:
+RÈGLES IMPORTANTES pour la date:
 1. En France, la DCR/DDM sur les œufs est généralement la date de ponte + 28 jours
 2. Si tu vois "Pondu le", "DOP" ou "Date de ponte", c'est la date de ponte (pas la DDM)
 3. Si l'année n'est pas visible (ex: "01/01" ou "DCR 27/12"), déduis l'année logiquement :
@@ -51,12 +52,29 @@ RÈGLES IMPORTANTES:
 
 IMPORTANT: Retourne TOUJOURS une date complète avec l'année (ex: "01/01/2025", pas "01/01/AAAA").
 
+## 2. QUANTITÉ D'ŒUFS
+Cherche le nombre d'œufs sur la boîte :
+- Souvent affiché en gros : "6 œufs", "10 œufs", "12 œufs", etc.
+- Peut être "6", "10", "12", "18", "24", "30"
+- Si tu ne trouves pas, retourne null
+
+## 3. TAILLE/CALIBRE DES ŒUFS
+Cherche la taille/calibre :
+- "S" ou "Petit" = "S"
+- "M" ou "Moyen" = "M"
+- "L" ou "Gros" = "L"
+- "XL" ou "Très gros" = "XL"
+- Parfois indiqué par le poids : 53-63g = M, 63-73g = L, >73g = XL
+- Si tu ne trouves pas, retourne null (le système utilisera "M" par défaut)
+
 Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks :
 {
   "found": true,
   "ddm": "01/01/2025",
   "confidence": "high",
-  "rawText": "DCR 01/01"
+  "rawText": "DCR 01/01",
+  "quantity": 6,
+  "size": "M"
 }
 
 OU si c'est une date de ponte directement :
@@ -65,7 +83,9 @@ OU si c'est une date de ponte directement :
   "ddm": null,
   "layingDate": "27/11/2024",
   "confidence": "high",
-  "rawText": "Pondu le 27/11"
+  "rawText": "Pondu le 27/11",
+  "quantity": 12,
+  "size": "L"
 }
 
 Si tu ne trouves pas de date lisible, réponds :
@@ -73,7 +93,9 @@ Si tu ne trouves pas de date lisible, réponds :
   "found": false,
   "ddm": null,
   "confidence": "low",
-  "rawText": null
+  "rawText": null,
+  "quantity": null,
+  "size": null
 }
 
 Niveaux de confiance :
@@ -82,7 +104,13 @@ Niveaux de confiance :
 - "low" : Date difficile à lire ou plusieurs dates possibles`;
 
 /**
- * Extended schema that also handles laying date
+ * Valid egg sizes
+ */
+const EggSizeSchema = z.enum(["S", "M", "L", "XL"]);
+export type EggSizeValue = z.infer<typeof EggSizeSchema>;
+
+/**
+ * Extended schema that also handles laying date, quantity and size
  */
 const ExtendedExtractionResultSchema = z.object({
   found: z.boolean(),
@@ -90,6 +118,8 @@ const ExtendedExtractionResultSchema = z.object({
   layingDate: z.string().nullable().optional(),
   confidence: z.enum(["high", "medium", "low"]),
   rawText: z.string().nullable(),
+  quantity: z.number().nullable().optional(),
+  size: EggSizeSchema.nullable().optional(),
 });
 
 export type ExtendedExtractionResult = z.infer<

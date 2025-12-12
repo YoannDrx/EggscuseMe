@@ -10,6 +10,7 @@ import {
   BarcodeScanner,
   DateVisionScanner,
   type ParsedEggInfo,
+  type VisionScanData,
 } from "@/features/scanner";
 import {
   Calculator,
@@ -70,10 +71,12 @@ export function AddEggBoxForm() {
     }, 1000);
   };
 
-  const handleVisionDateExtracted = (layingDate: Date, _ddm: Date | null) => {
+  const handleVisionDateExtracted = (data: VisionScanData) => {
     setFormData((prev) => ({
       ...prev,
-      layingDate: layingDate.toISOString().split("T")[0],
+      layingDate: data.layingDate.toISOString().split("T")[0],
+      quantity: data.quantity ?? prev.quantity,
+      size: data.size ?? prev.size,
     }));
     toast.success(tVision("success"));
   };
@@ -109,13 +112,13 @@ export function AddEggBoxForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {/* Scanner section */}
       {scanMode ? (
-        <div className="rounded-2xl border-2 border-neo-border bg-neo-card p-4 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+        <div className="border-neo-border bg-neo-card animate-in fade-in zoom-in-95 rounded-2xl border-2 p-4 shadow-sm duration-200">
           <div className="mb-3 flex items-center justify-between">
             <span className="text-neo-text flex items-center gap-2 font-bold">
               {scanMode === "barcode" ? (
-                <Scan className="size-5 text-primary" />
+                <Scan className="text-primary size-5" />
               ) : (
-                <Sparkles className="size-5 text-primary" />
+                <Sparkles className="text-primary size-5" />
               )}
               {scanMode === "barcode" ? t("scannerTitle") : tVision("scanDate")}
             </span>
@@ -124,7 +127,7 @@ export function AddEggBoxForm() {
               variant="ghost"
               size="sm"
               onClick={() => setScanMode(null)}
-              className="h-8 w-8 rounded-full p-0 hover:bg-neo-bg"
+              className="hover:bg-neo-bg h-8 w-8 rounded-full p-0"
             >
               <X className="size-4" />
             </NeoButton>
@@ -144,35 +147,37 @@ export function AddEggBoxForm() {
           <NeoButton
             type="button"
             variant="outline"
-            className="group relative h-auto flex-col gap-3 overflow-hidden border-2 bg-neo-bg/50 py-6 transition-all hover:border-primary hover:bg-primary/5"
+            className="group bg-neo-bg/50 hover:border-primary hover:bg-primary/5 relative h-auto flex-col gap-3 overflow-hidden border-2 py-6 transition-all"
             onClick={() => setScanMode("barcode")}
           >
-            <div className="flex size-12 items-center justify-center rounded-full bg-neo-card shadow-sm transition-transform group-hover:scale-110">
-              <Scan className="size-6 text-neo-text group-hover:text-primary" />
+            <div className="bg-neo-card flex size-12 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110">
+              <Scan className="text-neo-text group-hover:text-primary size-6" />
             </div>
             <div className="flex flex-col items-center gap-0.5">
-              <span className="text-sm font-bold text-neo-text group-hover:text-primary">
+              <span className="text-neo-text group-hover:text-primary text-sm font-bold">
                 {t("openScanner")}
               </span>
-              <span className="text-[10px] text-neo-text-muted">Code-barres</span>
+              <span className="text-neo-text-muted text-[10px]">
+                Code-barres
+              </span>
             </div>
           </NeoButton>
 
           <NeoButton
             type="button"
             variant="outline"
-            className="group relative h-auto flex-col gap-3 overflow-hidden border-2 bg-neo-bg/50 py-6 transition-all hover:border-primary hover:bg-primary/5"
+            className="group bg-neo-bg/50 hover:border-primary hover:bg-primary/5 relative h-auto flex-col gap-3 overflow-hidden border-2 py-6 transition-all"
             onClick={() => setScanMode("vision")}
           >
-            <div className="absolute -right-4 -top-4 size-16 rotate-12 rounded-full bg-gradient-to-br from-primary/10 to-transparent blur-xl transition-all group-hover:from-primary/20" />
-            <div className="flex size-12 items-center justify-center rounded-full bg-neo-card shadow-sm transition-transform group-hover:scale-110">
-              <Sparkles className="size-6 text-neo-text group-hover:text-primary" />
+            <div className="from-primary/10 group-hover:from-primary/20 absolute -top-4 -right-4 size-16 rotate-12 rounded-full bg-gradient-to-br to-transparent blur-xl transition-all" />
+            <div className="bg-neo-card flex size-12 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110">
+              <Sparkles className="text-neo-text group-hover:text-primary size-6" />
             </div>
             <div className="flex flex-col items-center gap-0.5">
-              <span className="text-sm font-bold text-neo-text group-hover:text-primary">
+              <span className="text-neo-text group-hover:text-primary text-sm font-bold">
                 {tVision("scanDate")}
               </span>
-              <span className="text-[10px] text-neo-text-muted">IA Vision</span>
+              <span className="text-neo-text-muted text-[10px]">IA Vision</span>
             </div>
           </NeoButton>
         </div>
@@ -246,7 +251,7 @@ export function AddEggBoxForm() {
             <div className="flex size-8 items-center justify-center rounded-full bg-amber-500/10">
               <ChefHat className="size-4 text-amber-500" />
             </div>
-            <span className="text-sm font-bold tracking-wide uppercase text-amber-600 dark:text-amber-500">
+            <span className="text-sm font-bold tracking-wide text-amber-600 uppercase dark:text-amber-500">
               {t("proMode.title")}
             </span>
           </div>

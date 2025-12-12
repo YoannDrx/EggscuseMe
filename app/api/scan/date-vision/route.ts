@@ -185,6 +185,8 @@ export const POST = authRoute
         confidence: result.confidence,
         rawText: result.rawText,
         remaining: remaining - 1,
+        quantity: result.quantity ?? null,
+        size: result.size ?? "M", // Default to Medium if not detected
       };
     }
 
@@ -228,5 +230,7 @@ export const POST = authRoute
       confidence: result.confidence,
       rawText: result.rawText,
       remaining: remaining - 1,
+      quantity: result.quantity ?? null,
+      size: result.size ?? "M", // Default to Medium if not detected
     };
   });
