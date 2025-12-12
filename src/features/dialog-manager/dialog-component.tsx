@@ -35,13 +35,14 @@ export function DialogComponent(props: { dialog: Dialog }) {
       : false;
 
   const handleAction = async () => {
+    if (dialog.type === "custom") return;
     await handleDialogAction(dialog.id, async () =>
       dialog.action.onClick?.(dialog.type === "input" ? inputValue : undefined),
     );
   };
 
   const handleCancel = async () => {
-    if (dialog.cancel?.onClick) {
+    if (dialog.type !== "custom" && dialog.cancel?.onClick) {
       await dialog.cancel.onClick();
     } else {
       useDialogStore.getState().removeDialog(dialog.id);
@@ -56,7 +57,11 @@ export function DialogComponent(props: { dialog: Dialog }) {
           open={true}
           onOpenChange={handleCancel}
           title={dialog.title}
-          description={typeof dialog.description === "string" ? dialog.description : undefined}
+          description={
+            typeof dialog.description === "string"
+              ? dialog.description
+              : undefined
+          }
         >
           {dialog.children}
         </NeoSheet>
@@ -68,7 +73,11 @@ export function DialogComponent(props: { dialog: Dialog }) {
         open={true}
         onOpenChange={handleCancel}
         title={dialog.title}
-        description={typeof dialog.description === "string" ? dialog.description : undefined}
+        description={
+          typeof dialog.description === "string"
+            ? dialog.description
+            : undefined
+        }
       >
         <div className="space-y-6 pt-4">
           {dialog.icon && (
@@ -76,14 +85,15 @@ export function DialogComponent(props: { dialog: Dialog }) {
               <dialog.icon className="size-6" />
             </div>
           )}
-          
+
           {typeof dialog.description !== "string" && dialog.description}
 
           {dialog.type === "confirm" && dialog.confirmText && (
             <div className="space-y-2">
               <Typography>
-                Type <Typography variant="code">{dialog.confirmText}</Typography>{" "}
-                to confirm this action.
+                Type{" "}
+                <Typography variant="code">{dialog.confirmText}</Typography> to
+                confirm this action.
               </Typography>
               <NeoInput
                 autoFocus

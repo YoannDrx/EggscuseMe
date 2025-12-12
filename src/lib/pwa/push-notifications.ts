@@ -1,5 +1,20 @@
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
+export class PushSubscriptionError extends Error {
+  constructor(
+    message: string,
+    public code:
+      | "NOT_SUPPORTED"
+      | "VAPID_MISSING"
+      | "SERVICE_WORKER_ERROR"
+      | "SUBSCRIPTION_ERROR"
+      | "SERVER_ERROR",
+  ) {
+    super(message);
+    this.name = "PushSubscriptionError";
+  }
+}
+
 function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -10,48 +25,59 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
   return uint8Array.buffer as ArrayBuffer;
 }
 
-export async function subscribeToPush(): Promise<PushSubscription | null> {
+export async function subscribeToPush(): Promise<PushSubscription> {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    return null;
+    throw new PushSubscriptionError(
+      "Les notifications push ne sont pas supportées par ce navigateur",
+      "NOT_SUPPORTED",
+    );
   }
 
   if (!VAPID_PUBLIC_KEY) {
-    return null;
+    throw new PushSubscriptionError(
+      "Configuration du serveur manquante",
+      "VAPID_MISSING",
+    );
   }
 
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      return null;
-    }
+  const registration = await navigator.serviceWorker.ready.catch(() => {
+    throw new PushSubscriptionError(
+      "Le service worker n'est pas disponible",
+      "SERVICE_WORKER_ERROR",
+    );
+  });
 
-    const registration = await navigator.serviceWorker.ready;
+  const existingSubscription = await registration.pushManager.getSubscription();
 
-    const existingSubscription =
-      await registration.pushManager.getSubscription();
-
-    const subscription =
-      existingSubscription ??
-      (await registration.pushManager.subscribe({
+  const subscription =
+    existingSubscription ??
+    (await registration.pushManager
+      .subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      })
+      .catch(() => {
+        throw new PushSubscriptionError(
+          "Impossible de s'abonner aux notifications",
+          "SUBSCRIPTION_ERROR",
+        );
       }));
 
-    // Envoyer au serveur
-    const response = await fetch("/api/push-subscription", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(subscription.toJSON()),
-    });
+  // Envoyer au serveur
+  const response = await fetch("/api/push-subscription", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(subscription.toJSON()),
+  });
 
-    if (!response.ok) {
-      return null;
-    }
-
-    return subscription;
-  } catch {
-    return null;
+  if (!response.ok) {
+    throw new PushSubscriptionError(
+      "Erreur lors de l'enregistrement sur le serveur",
+      "SERVER_ERROR",
+    );
   }
+
+  return subscription;
 }
 
 export async function unsubscribeFromPush(): Promise<boolean> {

@@ -74,7 +74,7 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
     const [open, setOpen] = React.useState(false);
     const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-    const selectedContent = React.useMemo(() => {
+    const selectedContent = React.useMemo((): React.ReactNode | undefined => {
       const option = React.Children.toArray(children).find(
         (child): child is React.ReactElement<NeoSelectItemProps> =>
           React.isValidElement<NeoSelectItemProps>(child) &&
@@ -166,7 +166,7 @@ const NeoSelect = React.forwardRef<HTMLDivElement, NeoSelectProps>(
               open
                 ? "border-neo-border -translate-y-0.5 shadow-[var(--shadow-neo-sm)]"
                 : "hover:border-neo-border",
-              "gap-3 focus-visible:ring-2 focus-visible:ring-neo-border/70 focus-visible:ring-offset-2 focus-visible:ring-offset-neo-card",
+              "focus-visible:ring-neo-border/70 focus-visible:ring-offset-neo-card gap-3 focus-visible:ring-2 focus-visible:ring-offset-2",
             )}
             title={
               typeof displayLabel === "string" ? displayLabel : placeholder
@@ -248,9 +248,9 @@ const NeoSelectItem = React.forwardRef<HTMLDivElement, NeoSelectItemProps>(
         className={cn(
           "flex items-center justify-between px-4 py-2.5",
           "cursor-pointer transition-colors duration-150",
-          "hover:bg-neo-accent/10 focus-visible:outline-none focus-visible:bg-neo-accent/10",
+          "hover:bg-neo-accent/10 focus-visible:bg-neo-accent/10 focus-visible:outline-none",
           isSelected &&
-            "bg-fresh-extra/15 text-fresh-extra font-semibold ring-1 ring-inset ring-fresh-extra/40",
+            "bg-fresh-extra/15 text-fresh-extra ring-fresh-extra/40 font-semibold ring-1 ring-inset",
           disabled && "cursor-not-allowed opacity-50",
           className,
         )}

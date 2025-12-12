@@ -2,11 +2,15 @@
 
 import { NeoButton } from "@/components/neo/neo-button";
 import { cn } from "@/lib/utils";
-import { subscribeToPush } from "@/lib/pwa/push-notifications";
+import {
+  subscribeToPush,
+  PushSubscriptionError,
+} from "@/lib/pwa/push-notifications";
 import { motion } from "motion/react";
 import { Bell, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { toast } from "sonner";
 
 export function NotificationPermission() {
   const [permission, setPermission] =
@@ -39,10 +43,23 @@ export function NotificationPermission() {
 
       if (result === "granted") {
         await subscribeToPush();
+        toast.success("Notifications activees avec succes !");
+        setShowCard(false);
+      } else if (result === "denied") {
+        toast.error(
+          "Vous avez refuse les notifications. Vous pouvez les activer dans les parametres de votre navigateur.",
+        );
+        setShowCard(false);
       }
+    } catch (error) {
+      if (error instanceof PushSubscriptionError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Une erreur est survenue lors de l'activation");
+      }
+      // Ne pas fermer la modal en cas d'erreur pour permettre de reessayer
     } finally {
       setIsLoading(false);
-      setShowCard(false);
     }
   };
 
