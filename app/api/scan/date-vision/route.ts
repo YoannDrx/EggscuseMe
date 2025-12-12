@@ -6,8 +6,42 @@ import { authRoute } from "@/lib/zod-route";
 import {
   extractDateFromImage,
   parseFrenchDate,
+  type DateType,
 } from "@/lib/ai/extract-date-from-image";
 import { calculateLayingDateFromDCR } from "@/features/scanner/lot-code-parser";
+
+/**
+ * Try to extract a date from rawText when the main date field fails to parse
+ * This handles cases where Gemini returns "01/01/AAAA" literally
+ *
+ * @param rawText - The raw text extracted from the image
+ * @param dateType - Type of date (dcr or laying) for year inference
+ */
+function extractDateFromRawText(
+  rawText: string | null,
+  dateType: DateType,
+): Date | null {
+  if (!rawText) return null;
+
+  // Try to find date patterns in the raw text
+  // Pattern: DD/MM, DD-MM, DD.MM (with optional year)
+  const datePatterns = [
+    /(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{4})/, // DD/MM/YYYY
+    /(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2})/, // DD/MM/YY
+    /(\d{1,2})[/\-.](\d{1,2})(?![/\-.\d])/, // DD/MM (no year)
+  ];
+
+  for (const pattern of datePatterns) {
+    const match = rawText.match(pattern);
+    if (match) {
+      const dateStr = match[0];
+      const parsed = parseFrenchDate(dateStr, dateType);
+      if (parsed) return parsed;
+    }
+  }
+
+  return null;
+}
 
 /**
  * Rate limit: 20 scans per day per user
@@ -101,8 +135,16 @@ export const POST = authRoute
       );
     }
 
+    // eslint-disable-next-line no-console
+    console.log("[Vision Scan] Starting scan for user:", ctx.user.id);
+    // eslint-disable-next-line no-console
+    console.log("[Vision Scan] Image size:", imageBuffer.length, "bytes");
+
     // Call Gemini Vision API
     const result = await extractDateFromImage(body.image, body.mimeType);
+
+    // eslint-disable-next-line no-console
+    console.log("[Vision Scan] Gemini result:", JSON.stringify(result));
 
     if (!result.found) {
       return {
@@ -115,7 +157,17 @@ export const POST = authRoute
 
     // Handle the case where we got a laying date directly
     if (result.layingDate) {
-      const layingDate = parseFrenchDate(result.layingDate);
+      let layingDate = parseFrenchDate(result.layingDate, "laying");
+
+      // Fallback: try to extract from rawText if parsing failed
+      if (!layingDate) {
+        // eslint-disable-next-line no-console
+        console.log(
+          "[Vision Scan] Failed to parse layingDate, trying rawText fallback",
+        );
+        layingDate = extractDateFromRawText(result.rawText, "laying");
+      }
+
       if (!layingDate) {
         return {
           success: false,
@@ -133,6 +185,8 @@ export const POST = authRoute
         confidence: result.confidence,
         rawText: result.rawText,
         remaining: remaining - 1,
+        quantity: result.quantity ?? null,
+        size: result.size ?? "M", // Default to Medium if not detected
       };
     }
 
@@ -146,8 +200,16 @@ export const POST = authRoute
       };
     }
 
-    // Parse the DDM date
-    const ddmDate = parseFrenchDate(result.ddm);
+    // Parse the DDM date (DCR = expiration, typically in near future)
+    let ddmDate = parseFrenchDate(result.ddm, "dcr");
+
+    // Fallback: try to extract from rawText if parsing failed
+    if (!ddmDate) {
+      // eslint-disable-next-line no-console
+      console.log("[Vision Scan] Failed to parse DDM, trying rawText fallback");
+      ddmDate = extractDateFromRawText(result.rawText, "dcr");
+    }
+
     if (!ddmDate) {
       return {
         success: false,
@@ -168,5 +230,7 @@ export const POST = authRoute
       confidence: result.confidence,
       rawText: result.rawText,
       remaining: remaining - 1,
+      quantity: result.quantity ?? null,
+      size: result.size ?? "M", // Default to Medium if not detected
     };
   });

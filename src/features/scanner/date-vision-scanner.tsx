@@ -3,6 +3,7 @@
 import { NeoButton } from "@/components/neo";
 import { cn } from "@/lib/utils";
 import { Eggy } from "@/features/mascot";
+import type { EggSize } from "@/generated/prisma";
 import {
   AlertCircle,
   Camera,
@@ -15,8 +16,15 @@ import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useVisionScan } from "./use-vision-scan";
 
+export type VisionScanData = {
+  layingDate: Date;
+  ddm: Date | null;
+  quantity?: number | null;
+  size?: EggSize;
+};
+
 type DateVisionScannerProps = {
-  onDateExtracted: (layingDate: Date, ddm: Date | null) => void;
+  onDateExtracted: (data: VisionScanData) => void;
   onClose?: () => void;
   className?: string;
 };
@@ -61,7 +69,12 @@ export function DateVisionScanner({
 
     if (result.success && result.layingDate) {
       setScanState("success");
-      onDateExtracted(result.layingDate, result.ddm ?? null);
+      onDateExtracted({
+        layingDate: result.layingDate,
+        ddm: result.ddm ?? null,
+        quantity: result.quantity,
+        size: result.size,
+      });
 
       // Auto close after success
       setTimeout(() => {

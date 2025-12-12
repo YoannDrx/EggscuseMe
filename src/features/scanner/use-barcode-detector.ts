@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { BarcodeDetector as BarcodeDetectorPolyfill } from "barcode-detector/pure";
 
 type BarcodeFormat = "ean_13" | "ean_8" | "code_128" | "code_39" | "qr_code";
 
@@ -42,6 +43,20 @@ declare global {
   }
 }
 
+/**
+ * Get the best available BarcodeDetector (native or polyfill)
+ * Native API is preferred when available as it's faster
+ */
+function getBarcodeDetectorClass(): BarcodeDetectorType | null {
+  // Check if native BarcodeDetector is available
+  if ("BarcodeDetector" in window && window.BarcodeDetector) {
+    return window.BarcodeDetector;
+  }
+
+  // Fall back to polyfill (works on Safari iOS and other browsers)
+  return BarcodeDetectorPolyfill as unknown as BarcodeDetectorType;
+}
+
 export function useBarcodeDetector(
   options: UseBarcodeDetectorOptions = {},
 ): UseBarcodeDetectorReturn {
@@ -65,17 +80,21 @@ export function useBarcodeDetector(
     NonNullable<typeof window.BarcodeDetector>
   > | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const detectorClassRef = useRef<BarcodeDetectorType | null>(null);
 
-  // Check if BarcodeDetector is supported
+  // Check if BarcodeDetector is supported (native or polyfill)
   useEffect(() => {
     const checkSupport = async () => {
-      if ("BarcodeDetector" in window && window.BarcodeDetector) {
+      const DetectorClass = getBarcodeDetectorClass();
+      detectorClassRef.current = DetectorClass;
+
+      if (DetectorClass) {
         try {
-          const supportedFormats =
-            await window.BarcodeDetector.getSupportedFormats?.();
+          const supportedFormats = await DetectorClass.getSupportedFormats?.();
           setIsSupported(supportedFormats ? supportedFormats.length > 0 : true);
         } catch {
-          setIsSupported(true); // Assume supported if getSupportedFormats fails
+          // Polyfill may not support getSupportedFormats, assume supported
+          setIsSupported(true);
         }
       } else {
         setIsSupported(false);
@@ -138,9 +157,10 @@ export function useBarcodeDetector(
         await videoRef.current.play();
       }
 
-      // Create detector
-      if (window.BarcodeDetector) {
-        detectorRef.current = new window.BarcodeDetector({
+      // Create detector (native or polyfill)
+      const DetectorClass = detectorClassRef.current;
+      if (DetectorClass) {
+        detectorRef.current = new DetectorClass({
           formats: formats as string[],
         });
       }
