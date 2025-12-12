@@ -20,27 +20,52 @@ import { calculateLayingDateFromDCR } from "@/features/scanner/lot-code-parser";
 function extractDateFromRawText(
   rawText: string | null,
   dateType: DateType,
+  referenceDate: Date,
 ): Date | null {
   if (!rawText) return null;
+
+  const normalizedText = rawText.replace(/[/\-.]\s*[A-Za-z]{2,4}\b/gu, "");
 
   // Try to find date patterns in the raw text
   // Pattern: DD/MM, DD-MM, DD.MM (with optional year)
   const datePatterns = [
     /(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{4})/, // DD/MM/YYYY
     /(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2})/, // DD/MM/YY
+    /(\d{1,2})[/\-.](\d{1,2})[/\-.]([A-Za-z]{2,4})/, // DD/MM/AAAA (placeholder)
     /(\d{1,2})[/\-.](\d{1,2})(?![/\-.\d])/, // DD/MM (no year)
   ];
 
   for (const pattern of datePatterns) {
-    const match = rawText.match(pattern);
+    const match = normalizedText.match(pattern);
     if (match) {
       const dateStr = match[0];
-      const parsed = parseFrenchDate(dateStr, dateType);
+      const parsed = parseFrenchDate(dateStr, dateType, referenceDate);
       if (parsed) return parsed;
     }
   }
 
   return null;
+}
+
+function inferDateTypeFromRawText(rawText: string): DateType {
+  const normalized = rawText.toLowerCase();
+
+  // Ponte / laying date keywords
+  if (
+    /\b(pondu|dop|date\s+de\s+ponte|d\.?\s*o\.?\s*p\.?)\b/gu.test(normalized)
+  ) {
+    return "laying";
+  }
+
+  // Expiration / DCR keywords
+  if (
+    /\b(dcr|ddm|dlc|exp|a\s+consommer|consommer)\b/gu.test(normalized)
+  ) {
+    return "dcr";
+  }
+
+  // Default: most egg boxes show DCR/DDM
+  return "dcr";
 }
 
 /**
@@ -56,7 +81,27 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const RequestSchema = z.object({
   image: z.string().min(100, "Image data is required"),
   mimeType: z.enum(["image/jpeg", "image/png", "image/webp"]),
+  clientNowIso: z.string().optional(),
+  clientTimezoneOffsetMinutes: z.number().int().optional(),
 });
+
+type RequestBody = z.infer<typeof RequestSchema>;
+
+function getReferenceDateFromClient(body: RequestBody): Date {
+  const base = body.clientNowIso ? new Date(body.clientNowIso) : new Date();
+  const referenceInstant = Number.isFinite(base.getTime()) ? base : new Date();
+
+  const offset = body.clientTimezoneOffsetMinutes;
+  if (
+    typeof offset === "number" &&
+    Number.isFinite(offset) &&
+    Math.abs(offset) <= 14 * 60
+  ) {
+    return new Date(referenceInstant.getTime() - offset * 60 * 1000);
+  }
+
+  return referenceInstant;
+}
 
 /**
  * Check and increment vision scan usage for rate limiting
@@ -108,6 +153,8 @@ async function getRemainingScanCount(userId: string): Promise<number> {
 export const POST = authRoute
   .body(RequestSchema)
   .handler(async (_req, { body, ctx }) => {
+    const referenceDate = getReferenceDateFromClient(body);
+
     // Check rate limit
     const remaining = await getRemainingScanCount(ctx.user.id);
     if (remaining <= 0) {
@@ -141,12 +188,68 @@ export const POST = authRoute
     console.log("[Vision Scan] Image size:", imageBuffer.length, "bytes");
 
     // Call Gemini Vision API
-    const result = await extractDateFromImage(body.image, body.mimeType);
+    const result = await extractDateFromImage(
+      body.image,
+      body.mimeType,
+      referenceDate,
+    );
 
     // eslint-disable-next-line no-console
     console.log("[Vision Scan] Gemini result:", JSON.stringify(result));
 
     if (!result.found) {
+      const inferredType = result.rawText
+        ? inferDateTypeFromRawText(result.rawText)
+        : "dcr";
+
+      const primary = extractDateFromRawText(
+        result.rawText,
+        inferredType,
+        referenceDate,
+      );
+      const fallback = extractDateFromRawText(
+        result.rawText,
+        inferredType === "dcr" ? "laying" : "dcr",
+        referenceDate,
+      );
+
+      const salvagedDate = primary ?? fallback;
+      const salvagedType: DateType | null = primary
+        ? inferredType
+        : salvagedDate
+          ? inferredType === "dcr"
+            ? "laying"
+            : "dcr"
+          : null;
+
+      if (salvagedDate && salvagedType) {
+        if (salvagedType === "laying") {
+          return {
+            success: true,
+            layingDate: salvagedDate.toISOString(),
+            ddm: null,
+            confidence: "low",
+            rawText: result.rawText,
+            remaining: remaining - 1,
+            quantity: result.quantity ?? null,
+            size: result.size ?? "M",
+          };
+        }
+
+        const layingDate = calculateLayingDateFromDCR(salvagedDate);
+
+        return {
+          success: true,
+          ddm: salvagedDate.toISOString(),
+          layingDate: layingDate.toISOString(),
+          confidence: "low",
+          rawText: result.rawText,
+          remaining: remaining - 1,
+          quantity: result.quantity ?? null,
+          size: result.size ?? "M",
+        };
+      }
+
       return {
         success: false,
         error: "no_date_found",
@@ -157,7 +260,11 @@ export const POST = authRoute
 
     // Handle the case where we got a laying date directly
     if (result.layingDate) {
-      let layingDate = parseFrenchDate(result.layingDate, "laying");
+      let layingDate = parseFrenchDate(
+        result.layingDate,
+        "laying",
+        referenceDate,
+      );
 
       // Fallback: try to extract from rawText if parsing failed
       if (!layingDate) {
@@ -165,7 +272,11 @@ export const POST = authRoute
         console.log(
           "[Vision Scan] Failed to parse layingDate, trying rawText fallback",
         );
-        layingDate = extractDateFromRawText(result.rawText, "laying");
+        layingDate = extractDateFromRawText(
+          result.rawText,
+          "laying",
+          referenceDate,
+        );
       }
 
       if (!layingDate) {
@@ -201,13 +312,13 @@ export const POST = authRoute
     }
 
     // Parse the DDM date (DCR = expiration, typically in near future)
-    let ddmDate = parseFrenchDate(result.ddm, "dcr");
+    let ddmDate = parseFrenchDate(result.ddm, "dcr", referenceDate);
 
     // Fallback: try to extract from rawText if parsing failed
     if (!ddmDate) {
       // eslint-disable-next-line no-console
       console.log("[Vision Scan] Failed to parse DDM, trying rawText fallback");
-      ddmDate = extractDateFromRawText(result.rawText, "dcr");
+      ddmDate = extractDateFromRawText(result.rawText, "dcr", referenceDate);
     }
 
     if (!ddmDate) {

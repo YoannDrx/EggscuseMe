@@ -97,8 +97,7 @@ export function parseJulianDate(code: string): Date | null {
     year = year < 50 ? 2000 + year : 1900 + year;
 
     if (dayOfYear >= 1 && dayOfYear <= 366) {
-      const date = new Date(year, 0, dayOfYear);
-      return date;
+      return new Date(Date.UTC(year, 0, dayOfYear));
     }
   }
 
@@ -108,8 +107,7 @@ export function parseJulianDate(code: string): Date | null {
     const year = parseInt(code.substring(3, 7), 10);
 
     if (dayOfYear >= 1 && dayOfYear <= 366 && year >= 2000 && year <= 2100) {
-      const date = new Date(year, 0, dayOfYear);
-      return date;
+      return new Date(Date.UTC(year, 0, dayOfYear));
     }
   }
 
@@ -129,7 +127,7 @@ export function parseEuropeanDate(code: string): Date | null {
     year = year < 50 ? 2000 + year : 1900 + year;
 
     if (day >= 1 && day <= 31 && month >= 0 && month <= 11) {
-      return new Date(year, month, day);
+      return new Date(Date.UTC(year, month, day));
     }
   }
 
@@ -147,7 +145,7 @@ export function parseEuropeanDate(code: string): Date | null {
       year >= 2000 &&
       year <= 2100
     ) {
-      return new Date(year, month, day);
+      return new Date(Date.UTC(year, month, day));
     }
   }
 
@@ -160,7 +158,7 @@ export function parseEuropeanDate(code: string): Date | null {
  */
 export function calculateLayingDateFromDCR(dcr: Date): Date {
   const layingDate = new Date(dcr);
-  layingDate.setDate(layingDate.getDate() - 28);
+  layingDate.setUTCDate(layingDate.getUTCDate() - 28);
   return layingDate;
 }
 

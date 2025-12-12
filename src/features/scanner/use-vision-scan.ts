@@ -93,7 +93,12 @@ export function useVisionScan() {
       const response = await fetch("/api/scan/date-vision", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64, mimeType }),
+        body: JSON.stringify({
+          image: base64,
+          mimeType,
+          clientNowIso: new Date().toISOString(),
+          clientTimezoneOffsetMinutes: new Date().getTimezoneOffset(),
+        }),
       });
 
       if (!response.ok) {
