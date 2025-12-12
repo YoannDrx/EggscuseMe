@@ -77,7 +77,9 @@ model UserPreferences {
   defaultEggSize   EggSize        @default(M)
   preferredYolk    YolkPreference @default(RUNNY)
   notifyDaysBefore Int            @default(2) // Notify X days before expiration
-  notifyEnabled    Boolean        @default(true)
+  notifyEnabled    Boolean        @default(true) // Master toggle (deprecated, kept for compatibility)
+  emailEnabled     Boolean        @default(true) // Email notifications
+  pushEnabled      Boolean        @default(true) // Push notifications
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

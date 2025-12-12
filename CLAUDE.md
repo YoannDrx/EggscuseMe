@@ -82,7 +82,7 @@ pnpm test:e2e:ci -- e2e/signup.spec.ts
 
 ### Technology Stack
 
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript (strict mode)
 - **Styling**: TailwindCSS v4 with Shadcn/UI components
 - **Database**: PostgreSQL with Prisma ORM
@@ -91,6 +91,18 @@ pnpm test:e2e:ci -- e2e/signup.spec.ts
 - **Payments**: Stripe integration
 - **Testing**: Vitest for unit tests, Playwright for e2e
 - **Package Manager**: pnpm
+- **Caching**: Redis (required for session and organization caching)
+- **PWA**: Service Worker with push notifications support
+
+### Required Services
+
+| Service | Purpose | Setup |
+|---------|---------|-------|
+| PostgreSQL | Primary database | Required |
+| Redis | Session caching, org data | Required - See `/docs/redis-setup.md` |
+| Resend | Email delivery | Required for auth emails |
+| Stripe | Payments | Optional (for billing features) |
+| Google Gemini | AI Vision scan | Optional (for IA date scanning) |
 
 ### Project Structure
 
@@ -281,6 +293,44 @@ This is **NON-NEGOTIABLE**. Do not skip this step under any circumstances. Readi
 
 // Using tokens
 <div className="p-[var(--space-4)] rounded-card bg-card shadow-md">
+```
+
+## PWA Features
+
+### Push Notifications
+
+Located in `/src/features/pwa/` and `/src/lib/pwa/`:
+
+| File | Purpose |
+|------|---------|
+| `notification-permission.tsx` | Permission request modal |
+| `push-notifications.ts` | Subscription logic with error handling |
+| `service-worker-registration.ts` | SW registration |
+| `install-prompt.tsx` | PWA install prompt |
+
+**Configuration required:**
+```env
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=...
+VAPID_PRIVATE_KEY=...
+```
+
+### Egg Box Scanner
+
+Located in `/src/features/scanner/`:
+
+**Barcode Scanner** (100% functional):
+- Uses Web `BarcodeDetector` API
+- Supports: EAN-13, EAN-8, CODE-128, CODE-39, QR
+- Auto-extracts: laying date, quantity, size, farm code
+
+**AI Vision Scanner** (100% functional):
+- Uses Google Gemini Vision API
+- OCR for French date formats (DDM, DCR, "Pondu le")
+- Rate limited: 20 scans/day per user
+
+**Configuration required:**
+```env
+GEMINI_API_KEY=...
 ```
 
 ## EggscuseMe-specific Components

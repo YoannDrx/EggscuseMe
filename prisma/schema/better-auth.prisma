@@ -39,6 +39,18 @@ model User {
   adminLogs       AdminLog[] @relation("AdminLogs") // Logs created by this admin
   adminLogTargets AdminLog[] @relation("AdminLogTargets") // Logs targeting this user
 
+  // PWA Push Notifications
+  pushSubscriptions PushSubscription[]
+
+  // Vision Scan Usage (rate limiting)
+  visionScanUsage VisionScanUsage[]
+
+  // Email unsubscribe token (for RGPD compliance)
+  unsubscribeToken String? @unique
+
+  // Notification logs
+  notificationLogs NotificationLog[]
+
   @@unique([email])
   @@map("user")
 }

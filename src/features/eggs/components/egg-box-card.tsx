@@ -11,6 +11,7 @@ import type { EggBox } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
 import { ChefHat, MoreHorizontal, Trash2, Utensils } from "lucide-react";
 import { motion } from "motion/react";
+import { useMemo } from "react";
 import {
   calculateExpirationProgress,
   calculateFreshness,
@@ -24,6 +25,7 @@ type EggBoxCardProps = {
   onDelete?: (eggBox: EggBox) => void;
   className?: string;
   index?: number;
+  referenceDate?: Date;
 };
 
 const sizeLabels: Record<string, string> = {
@@ -53,15 +55,28 @@ const freshnessConfig = {
   },
 };
 
+const LAYING_DATE_FORMATTER = new Intl.DateTimeFormat("fr-FR", {
+  timeZone: "UTC",
+});
+
 export function EggBoxCard({
   eggBox,
   onConsume,
   onDelete,
   className,
   index = 0,
+  referenceDate,
 }: EggBoxCardProps) {
-  const freshness = calculateFreshness(eggBox.layingDate);
-  const progress = calculateExpirationProgress(eggBox.layingDate);
+  const layingDate = useMemo(
+    () => new Date(eggBox.layingDate),
+    [eggBox.layingDate],
+  );
+  const freshness = calculateFreshness(layingDate, referenceDate);
+  const progress = calculateExpirationProgress(layingDate, referenceDate);
+  const formattedLayingDate = useMemo(
+    () => LAYING_DATE_FORMATTER.format(layingDate),
+    [layingDate],
+  );
   const config = freshnessConfig[freshness.status];
 
   // Get suggested cooking method based on freshness
@@ -133,7 +148,7 @@ export function EggBoxCard({
       <div className="mb-2">
         <h3 className="text-neo-text truncate font-semibold">
           {eggBox.name ??
-            `Boite du ${eggBox.layingDate.toLocaleDateString("fr-FR")}`}
+            `Boite du ${formattedLayingDate}`}
         </h3>
         {eggBox.source && (
           <p className="text-neo-text-muted text-xs">{eggBox.source}</p>

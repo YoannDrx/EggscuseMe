@@ -19,6 +19,7 @@ type ExpirationWarningEmailProps = {
   userName: string;
   eggs: ExpiringEgg[];
   fridgeName: string;
+  unsubscribeUrl?: string;
 };
 
 function getFreshnessColor(daysLeft: number): string {
@@ -46,6 +47,7 @@ export default function ExpirationWarningEmail({
     { name: "Marche bio", daysLeft: 3, quantity: 6 },
   ],
   fridgeName = "Mon Frigo",
+  unsubscribeUrl,
 }: ExpirationWarningEmailProps) {
   let baseUrl = getServerUrl();
 
@@ -54,6 +56,7 @@ export default function ExpirationWarningEmail({
   }
 
   const fridgeUrl = `${baseUrl}/fridge`;
+  const settingsUrl = `${baseUrl}/fridge/settings/notifications`;
   const totalEggs = eggs.reduce((sum, egg) => sum + egg.quantity, 0);
 
   return (
@@ -159,6 +162,27 @@ export default function ExpirationWarningEmail({
         }}
       >
         Vous recevez cet email car les notifications sont activees.
+        {unsubscribeUrl ? (
+          <>
+            {" "}
+            <a
+              href={unsubscribeUrl}
+              style={{
+                color: EMAIL_COLORS.textLight,
+                textDecoration: "underline",
+              }}
+            >
+              Se desabonner
+            </a>
+            {" | "}
+          </>
+        ) : null}
+        <a
+          href={settingsUrl}
+          style={{ color: EMAIL_COLORS.textLight, textDecoration: "underline" }}
+        >
+          Gerer mes preferences
+        </a>
       </Text>
 
       {/* ==================== SEPARATOR ==================== */}
@@ -261,6 +285,30 @@ export default function ExpirationWarningEmail({
         }}
       >
         You received this email because notifications are enabled.
+        {unsubscribeUrl ? (
+          <>
+            {" "}
+            <a
+              href={unsubscribeUrl}
+              style={{
+                color: EMAIL_COLORS.textLight,
+                textDecoration: "underline",
+              }}
+            >
+              Unsubscribe
+            </a>
+            {" | "}
+          </>
+        ) : null}
+        <a
+          href={settingsUrl}
+          style={{
+            color: EMAIL_COLORS.textLight,
+            textDecoration: "underline",
+          }}
+        >
+          Manage preferences
+        </a>
       </Text>
     </EggscuseMeEmailLayout>
   );

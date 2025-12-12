@@ -2,6 +2,8 @@ export {
   getNotificationPreferencesAction,
   updateNotificationPreferencesAction,
   sendExpirationEmails,
+  sendExpirationPushNotifications,
+  logNotification,
 } from "./notification.action";
 
 export {
