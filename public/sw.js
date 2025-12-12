@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = "eggscuseme-v1";
-const STATIC_CACHE_NAME = "eggscuseme-static-v1";
-const DYNAMIC_CACHE_NAME = "eggscuseme-dynamic-v1";
+const CACHE_NAME = "eggscuseme-v2";
+const STATIC_CACHE_NAME = "eggscuseme-static-v2";
+const DYNAMIC_CACHE_NAME = "eggscuseme-dynamic-v2";
 
 // Assets à pré-cacher
 const STATIC_ASSETS = [
@@ -81,14 +81,22 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Assets statiques (images, fonts, CSS, JS) - Cache First
-  if (
-    request.destination === "image" ||
-    request.destination === "font" ||
-    request.destination === "style" ||
-    request.destination === "script"
-  ) {
+  // Assets Next.js (_next/static) - Network First pour éviter les problèmes de cache
+  // Les hashes changent à chaque build, donc on veut toujours la dernière version
+  if (url.pathname.startsWith("/_next/")) {
+    event.respondWith(networkFirst(request, DYNAMIC_CACHE_NAME));
+    return;
+  }
+
+  // Images et fonts - Cache First (ces fichiers changent rarement)
+  if (request.destination === "image" || request.destination === "font") {
     event.respondWith(cacheFirst(request, STATIC_CACHE_NAME));
+    return;
+  }
+
+  // CSS et JS hors Next.js - Network First pour éviter désynchronisation
+  if (request.destination === "style" || request.destination === "script") {
+    event.respondWith(networkFirst(request, DYNAMIC_CACHE_NAME));
     return;
   }
 
