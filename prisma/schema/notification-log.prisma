@@ -1,9 +1,9 @@
 // Notification Log - Track all sent notifications for audit and debugging
 
 model NotificationLog {
-  id     String              @id @default(cuid())
+  id     String             @id @default(cuid())
   userId String
-  user   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   type   NotificationType
   status NotificationStatus
 
