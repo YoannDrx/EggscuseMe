@@ -11,7 +11,18 @@ import {
   DateVisionScanner,
   type ParsedEggInfo,
 } from "@/features/scanner";
-import { ChefHat, Scan, Sparkles, X } from "lucide-react";
+import {
+  Calculator,
+  Calendar,
+  ChefHat,
+  Factory,
+  FileText,
+  MapPin,
+  Scan,
+  Sparkles,
+  Tag,
+  X,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -95,136 +106,147 @@ export function AddEggBoxForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {/* Scanner section */}
-      {scanMode === "barcode" && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-neo-text text-base font-bold">
-              {t("scannerTitle")}
+      {scanMode ? (
+        <div className="rounded-2xl border-2 border-neo-border bg-neo-card p-4 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-neo-text flex items-center gap-2 font-bold">
+              {scanMode === "barcode" ? (
+                <Scan className="size-5 text-primary" />
+              ) : (
+                <Sparkles className="size-5 text-primary" />
+              )}
+              {scanMode === "barcode" ? t("scannerTitle") : tVision("scanDate")}
             </span>
             <NeoButton
               type="button"
               variant="ghost"
               size="sm"
               onClick={() => setScanMode(null)}
+              className="h-8 w-8 rounded-full p-0 hover:bg-neo-bg"
             >
-              <X className="mr-1 size-4" />
-              {t("closeScanner")}
+              <X className="size-4" />
             </NeoButton>
           </div>
-          <BarcodeScanner onScan={handleBarcodeScan} />
+          {scanMode === "barcode" ? (
+            <BarcodeScanner onScan={handleBarcodeScan} />
+          ) : (
+            <DateVisionScanner
+              onDateExtracted={handleVisionDateExtracted}
+              onClose={() => setScanMode(null)}
+            />
+          )}
         </div>
-      )}
-
-      {scanMode === "vision" && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-neo-text text-base font-bold">
-              {tVision("scanDate")}
-            </span>
-            <NeoButton
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setScanMode(null)}
-            >
-              <X className="mr-1 size-4" />
-              {t("closeScanner")}
-            </NeoButton>
-          </div>
-          <DateVisionScanner
-            onDateExtracted={handleVisionDateExtracted}
-            onClose={() => setScanMode(null)}
-          />
-        </div>
-      )}
-
-      {/* Scanner buttons - show when no scanner is active */}
-      {scanMode === null && (
-        <div className="flex gap-2">
+      ) : (
+        /* Scanner Selection Buttons */
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <NeoButton
             type="button"
             variant="outline"
-            className="flex-1"
+            className="group relative h-auto flex-col gap-3 overflow-hidden border-2 bg-neo-bg/50 py-6 transition-all hover:border-primary hover:bg-primary/5"
             onClick={() => setScanMode("barcode")}
           >
-            <Scan className="mr-2 size-4" />
-            {t("openScanner")}
+            <div className="flex size-12 items-center justify-center rounded-full bg-neo-card shadow-sm transition-transform group-hover:scale-110">
+              <Scan className="size-6 text-neo-text group-hover:text-primary" />
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-sm font-bold text-neo-text group-hover:text-primary">
+                {t("openScanner")}
+              </span>
+              <span className="text-[10px] text-neo-text-muted">Code-barres</span>
+            </div>
           </NeoButton>
+
           <NeoButton
             type="button"
             variant="outline"
-            className="flex-1"
+            className="group relative h-auto flex-col gap-3 overflow-hidden border-2 bg-neo-bg/50 py-6 transition-all hover:border-primary hover:bg-primary/5"
             onClick={() => setScanMode("vision")}
           >
-            <Sparkles className="mr-2 size-4" />
-            {tVision("scanDate")}
+            <div className="absolute -right-4 -top-4 size-16 rotate-12 rounded-full bg-gradient-to-br from-primary/10 to-transparent blur-xl transition-all group-hover:from-primary/20" />
+            <div className="flex size-12 items-center justify-center rounded-full bg-neo-card shadow-sm transition-transform group-hover:scale-110">
+              <Sparkles className="size-6 text-neo-text group-hover:text-primary" />
+            </div>
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-sm font-bold text-neo-text group-hover:text-primary">
+                {tVision("scanDate")}
+              </span>
+              <span className="text-[10px] text-neo-text-muted">IA Vision</span>
+            </div>
           </NeoButton>
         </div>
       )}
 
-      <NeoInput
-        id="name"
-        label={t("nameLabel")}
-        placeholder={t("namePlaceholder")}
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-      />
-
-      <NeoInput
-        id="layingDate"
-        label={t("layingDate")}
-        type="date"
-        required
-        value={formData.layingDate}
-        onChange={(e) =>
-          setFormData({ ...formData, layingDate: e.target.value })
-        }
-      />
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4">
         <NeoInput
-          id="quantity"
-          label={t("quantity")}
-          type="number"
-          min={1}
-          max={100}
-          required
-          value={formData.quantity}
-          onChange={(e) =>
-            setFormData({ ...formData, quantity: parseInt(e.target.value) })
-          }
+          id="name"
+          label={t("nameLabel")}
+          placeholder={t("namePlaceholder")}
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          icon={<Tag />}
         />
 
-        <NeoSelect
-          label={t("size")}
-          value={formData.size}
-          onValueChange={(value: string) =>
-            setFormData({ ...formData, size: value as EggSize })
+        <NeoInput
+          id="layingDate"
+          label={t("layingDate")}
+          type="date"
+          required
+          value={formData.layingDate}
+          onChange={(e) =>
+            setFormData({ ...formData, layingDate: e.target.value })
           }
-        >
-          <NeoSelectItem value="S">{t("sizeOptions.S")}</NeoSelectItem>
-          <NeoSelectItem value="M">{t("sizeOptions.M")}</NeoSelectItem>
-          <NeoSelectItem value="L">{t("sizeOptions.L")}</NeoSelectItem>
-          <NeoSelectItem value="XL">{t("sizeOptions.XL")}</NeoSelectItem>
-        </NeoSelect>
-      </div>
+          icon={<Calendar />}
+        />
 
-      <NeoInput
-        id="source"
-        label={t("source")}
-        placeholder={t("sourcePlaceholder")}
-        value={formData.source}
-        onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-      />
+        <div className="grid grid-cols-2 gap-4">
+          <NeoInput
+            id="quantity"
+            label={t("quantity")}
+            type="number"
+            min={1}
+            max={100}
+            required
+            value={formData.quantity}
+            onChange={(e) =>
+              setFormData({ ...formData, quantity: parseInt(e.target.value) })
+            }
+            icon={<Calculator />}
+          />
+
+          <NeoSelect
+            label={t("size")}
+            value={formData.size}
+            onValueChange={(value: string) =>
+              setFormData({ ...formData, size: value as EggSize })
+            }
+          >
+            <NeoSelectItem value="S">{t("sizeOptions.S")}</NeoSelectItem>
+            <NeoSelectItem value="M">{t("sizeOptions.M")}</NeoSelectItem>
+            <NeoSelectItem value="L">{t("sizeOptions.L")}</NeoSelectItem>
+            <NeoSelectItem value="XL">{t("sizeOptions.XL")}</NeoSelectItem>
+          </NeoSelect>
+        </div>
+
+        <NeoInput
+          id="source"
+          label={t("source")}
+          placeholder={t("sourcePlaceholder")}
+          value={formData.source}
+          onChange={(e) => setFormData({ ...formData, source: e.target.value })}
+          icon={<MapPin />}
+        />
+      </div>
 
       {/* Pro mode fields - Chef plan only */}
       {isChef && (
-        <div className="space-y-4 rounded-lg border-2 border-amber-500/30 bg-amber-500/5 p-4">
+        <div className="space-y-4 rounded-xl border-2 border-dashed border-amber-500/20 bg-amber-500/5 p-4 transition-all hover:border-amber-500/30">
           <div className="flex items-center gap-2">
-            <ChefHat className="size-5 text-amber-500" />
-            <span className="text-sm font-semibold text-amber-500">
+            <div className="flex size-8 items-center justify-center rounded-full bg-amber-500/10">
+              <ChefHat className="size-4 text-amber-500" />
+            </div>
+            <span className="text-sm font-bold tracking-wide uppercase text-amber-600 dark:text-amber-500">
               {t("proMode.title")}
             </span>
           </div>
@@ -237,6 +259,7 @@ export function AddEggBoxForm() {
               onChange={(e) =>
                 setFormData({ ...formData, lotNumber: e.target.value })
               }
+              icon={<FileText />}
             />
             <NeoInput
               id="producerCode"
@@ -246,20 +269,27 @@ export function AddEggBoxForm() {
               onChange={(e) =>
                 setFormData({ ...formData, producerCode: e.target.value })
               }
+              icon={<Factory />}
             />
           </div>
         </div>
       )}
 
-      <div className="flex justify-end gap-2 pt-4">
+      <div className="flex justify-end gap-3 pt-2">
         <NeoButton
           type="button"
           variant="outline"
           onClick={() => dialogManager.closeAll()}
+          className="w-full sm:w-auto"
         >
           {t("cancel")}
         </NeoButton>
-        <NeoButton type="submit" variant="primary" disabled={isPending}>
+        <NeoButton
+          type="submit"
+          variant="primary"
+          disabled={isPending}
+          className="w-full sm:w-auto"
+        >
           {isPending ? t("saving") : t("save")}
         </NeoButton>
       </div>
