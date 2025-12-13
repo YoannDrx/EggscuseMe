@@ -325,28 +325,6 @@ NEXT_PUBLIC_VAPID_PUBLIC_KEY=...
 VAPID_PRIVATE_KEY=...
 ```
 
-### Egg Box Scanner
-
-Located in `/src/features/scanner/`:
-
-**Barcode Scanner** (100% functional):
-
-- Uses Web `BarcodeDetector` API
-- Supports: EAN-13, EAN-8, CODE-128, CODE-39, QR
-- Auto-extracts: laying date, quantity, size, farm code
-
-**AI Vision Scanner** (100% functional):
-
-- Uses Google Gemini Vision API
-- OCR for French date formats (DDM, DCR, "Pondu le")
-- Rate limited: 20 scans/day per user
-
-**Configuration required:**
-
-```env
-GEMINI_API_KEY=...
-```
-
 ## EggscuseMe-specific Components
 
 ### Core Components (to create in `/src/features/eggs/`)

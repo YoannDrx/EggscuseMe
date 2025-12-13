@@ -12,7 +12,7 @@ import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { deleteEggBoxAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
 import type { EggBox } from "@/generated/prisma";
-import { Plus, Scan } from "lucide-react";
+import { Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -136,18 +136,6 @@ export function EggBoxGrid({ eggBoxes, canModify, now }: EggBoxGridProps) {
               <IconPlusSticker className="mr-2 size-5" />
               {t("empty.addFirstBox")}
             </NeoButton>
-            <p className="text-neo-text-muted text-xs">
-              {t("empty.orUse")}{" "}
-              <button
-                type="button"
-                className="text-neo-accent hover:text-neo-accent/80 inline-flex items-center gap-1 underline transition-colors"
-                onClick={handleAddBox}
-              >
-                <Scan className="size-3" />
-                {t("empty.scanner")}
-              </button>{" "}
-              {t("empty.forQuickAdd")}
-            </p>
           </div>
         )}
       </motion.div>
