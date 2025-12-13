@@ -47,6 +47,32 @@ function mapOcrConfidence(confidence: number): "high" | "medium" | "low" {
   return "low";
 }
 
+function getUtcDayTimestamp(date: Date): number {
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+
+function diffDaysUtc(from: Date, to: Date): number {
+  const ms = getUtcDayTimestamp(to) - getUtcDayTimestamp(from);
+  return Math.round(ms / (1000 * 60 * 60 * 24));
+}
+
+function isDatePlausible(params: {
+  date: Date;
+  dateType: "dcr" | "laying";
+  referenceDate: Date;
+}): boolean {
+  const diffDays = diffDaysUtc(params.referenceDate, params.date);
+
+  // We only use this as a sanity check to avoid obvious OCR hallucinations.
+  // - DCR should be near-future (or slightly expired) relative to scan time.
+  // - Laying date should be recent past.
+  if (params.dateType === "dcr") {
+    return diffDays >= -14 && diffDays <= 90;
+  }
+
+  return diffDays >= -90 && diffDays <= 7;
+}
+
 /**
  * Convert a File to base64 string (without the data: prefix)
  */
@@ -85,6 +111,8 @@ export function useVisionScan() {
   const scanImage = async (file: File): Promise<VisionScanResult> => {
     setIsScanning(true);
 
+    let ocrCandidate: VisionScanResult | null = null;
+
     try {
       // Validate file type
       const validTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -105,6 +133,8 @@ export function useVisionScan() {
       }
 
       // 1) Try local OCR first (free, stable, privacy-friendly).
+      // If OCR is low-confidence or implausible, keep it as a candidate but
+      // still try Vision to reduce wrong dates.
       try {
         const ocr = await recognizeTextFromEggBoxImage(file);
         const ocrText = ocr.text.trim();
@@ -130,9 +160,17 @@ export function useVisionScan() {
               const quantity = extractEggQuantityFromText(ocrText);
               const size = extractEggSizeFromText(ocrText) as EggSize | null;
               const confidence = mapOcrConfidence(ocr.confidence);
+              const plausible = isDatePlausible({
+                date: parsed,
+                dateType: candidate.dateType,
+                referenceDate,
+              });
+
+              const isStrongOcr = ocr.confidence >= 65 && plausible;
+              const shouldKeepAsFallback = plausible;
 
               if (candidate.dateType === "laying") {
-                return {
+                const result: VisionScanResult = {
                   success: true,
                   layingDate: parsed,
                   ddm: undefined,
@@ -140,17 +178,21 @@ export function useVisionScan() {
                   quantity,
                   size: size ?? undefined,
                 };
+                if (isStrongOcr) return result;
+                if (shouldKeepAsFallback) ocrCandidate = result;
+              } else {
+                const layingDate = calculateLayingDateFromDCR(parsed);
+                const result: VisionScanResult = {
+                  success: true,
+                  layingDate,
+                  ddm: parsed,
+                  confidence,
+                  quantity,
+                  size: size ?? undefined,
+                };
+                if (isStrongOcr) return result;
+                if (shouldKeepAsFallback) ocrCandidate = result;
               }
-
-              const layingDate = calculateLayingDateFromDCR(parsed);
-              return {
-                success: true,
-                layingDate,
-                ddm: parsed,
-                confidence,
-                quantity,
-                size: size ?? undefined,
-              };
             }
           }
         }
@@ -211,6 +253,7 @@ export function useVisionScan() {
           size: data.size,
         };
       } else {
+        if (ocrCandidate) return ocrCandidate;
         return {
           success: false,
           error: data.error ?? "unknown_error",
@@ -218,9 +261,18 @@ export function useVisionScan() {
         };
       }
     } catch {
+      if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.log("[Vision] network error, returning OCR candidate if any");
+      }
       return {
-        success: false,
-        error: "network_error",
+        success: ocrCandidate?.success ?? false,
+        layingDate: ocrCandidate?.layingDate,
+        ddm: ocrCandidate?.ddm,
+        confidence: ocrCandidate?.confidence,
+        error: ocrCandidate ? undefined : "network_error",
+        quantity: ocrCandidate?.quantity,
+        size: ocrCandidate?.size,
       };
     } finally {
       setIsScanning(false);

@@ -13,14 +13,21 @@ export const gemini = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 /**
  * Get the Gemini Vision model for image analysis
- * Uses gemini-2.0-flash-exp for optimal speed/cost balance
+ * Defaults to gemini-2.0-flash-exp (speed/cost balance)
+ * Override with GEMINI_VISION_MODEL if needed (e.g. gemini-2.0-pro).
  */
 export function getVisionModel() {
   if (!gemini) {
     throw new Error("Gemini API key is not configured");
   }
 
+  const model = process.env.GEMINI_VISION_MODEL ?? "gemini-2.0-flash-exp";
+
   return gemini.getGenerativeModel({
-    model: "gemini-2.0-flash-exp",
+    model,
+    generationConfig: {
+      // We want deterministic extraction, not creativity.
+      temperature: 0,
+    },
   });
 }

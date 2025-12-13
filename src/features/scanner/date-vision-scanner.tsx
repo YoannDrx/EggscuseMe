@@ -12,7 +12,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useVisionScan } from "./use-vision-scan";
 
@@ -21,12 +21,14 @@ export type VisionScanData = {
   ddm: Date | null;
   quantity?: number | null;
   size?: EggSize;
+  imageFile?: File;
 };
 
 type DateVisionScannerProps = {
   onDateExtracted: (data: VisionScanData) => void;
   onClose?: () => void;
   className?: string;
+  autoOpen?: boolean;
 };
 
 type ScanState = "idle" | "preview" | "scanning" | "success" | "error";
@@ -35,6 +37,7 @@ export function DateVisionScanner({
   onDateExtracted,
   onClose,
   className,
+  autoOpen = false,
 }: DateVisionScannerProps) {
   const t = useTranslations("scanner.vision");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +51,16 @@ export function DateVisionScanner({
   const handleCapture = () => {
     inputRef.current?.click();
   };
+
+  const didAutoOpen = useRef(false);
+  useEffect(() => {
+    if (!autoOpen) return;
+    if (didAutoOpen.current) return;
+    if (scanState !== "idle") return;
+
+    didAutoOpen.current = true;
+    handleCapture();
+  }, [autoOpen, scanState]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -74,6 +87,7 @@ export function DateVisionScanner({
         ddm: result.ddm ?? null,
         quantity: result.quantity,
         size: result.size,
+        imageFile: file,
       });
 
       // Auto close after success

@@ -105,6 +105,17 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {eggBox.scanImageUrl && (
+        <div className="border-neo-border/20 overflow-hidden rounded-[var(--radius-neo-2xl)] border">
+          <img
+            src={eggBox.scanImageUrl}
+            alt=""
+            className="h-40 w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      )}
+
       <div className="space-y-2">
         <NeoInput
           id="quantity"

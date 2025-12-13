@@ -3,6 +3,7 @@
 import { NeoSheet } from "@/components/neo/neo-sheet";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { AddEggBoxForm } from "@app/(logged-in)/fridge/add-egg-box-form";
+import { ConsumeEggsQuickSelect } from "@app/(logged-in)/fridge/consume-eggs-quick-select";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { Package, UtensilsCrossed } from "lucide-react";
@@ -57,11 +58,7 @@ export function QuickActionsSheet({
       dialogManager.custom({
         title: t("consume.title"),
         description: t("consume.description"),
-        children: (
-          <div className="text-neo-text-muted py-4 text-center text-sm">
-            {t("consume.selectFromFridge")}
-          </div>
-        ),
+        children: <ConsumeEggsQuickSelect />,
       });
     }, 150);
   };

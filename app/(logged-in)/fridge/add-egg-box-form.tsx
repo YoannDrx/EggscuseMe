@@ -6,7 +6,9 @@ import { NeoSelect, NeoSelectItem } from "@/components/neo/neo-select";
 import type { EggSize } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { createEggBoxAction } from "@/features/fridge/fridge.action";
+import { uploadImageAction } from "@/features/images/upload-image.action";
 import { DateVisionScanner, type VisionScanData } from "@/features/scanner";
+import { resolveActionResult } from "@/lib/actions/actions-utils";
 import {
   Calculator,
   Calendar,
@@ -24,6 +26,36 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useCurrentFridge } from "./use-current-fridge";
 
+async function compressImageForUpload(file: File): Promise<File> {
+  if (typeof window === "undefined") return file;
+  if (!file.type.startsWith("image/")) return file;
+
+  const bitmap = await createImageBitmap(file);
+  const maxDim = 1600;
+  const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return file;
+
+  ctx.drawImage(bitmap, 0, 0, width, height);
+
+  const blob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((b) => resolve(b), "image/jpeg", 0.82);
+  });
+
+  if (!blob) return file;
+
+  return new File([blob], file.name.replace(/\.[^.]+$/u, ".jpg"), {
+    type: "image/jpeg",
+  });
+}
+
 export function AddEggBoxForm() {
   const t = useTranslations("fridge.addBoxForm");
   const tVision = useTranslations("scanner.vision");
@@ -35,10 +67,11 @@ export function AddEggBoxForm() {
 
   const [formData, setFormData] = useState({
     name: "",
-    layingDate: new Date().toISOString().split("T")[0],
-    quantity: 6,
+    layingDate: "",
+    quantity: "",
     size: "M" as EggSize,
     source: "",
+    scanImageFile: null as File | null,
     // Pro mode fields (Chef only)
     lotNumber: "",
     producerCode: "",
@@ -48,8 +81,10 @@ export function AddEggBoxForm() {
     setFormData((prev) => ({
       ...prev,
       layingDate: data.layingDate.toISOString().split("T")[0],
-      quantity: data.quantity ?? prev.quantity,
+      quantity:
+        typeof data.quantity === "number" ? String(data.quantity) : prev.quantity,
       size: data.size ?? prev.size,
+      scanImageFile: data.imageFile ?? prev.scanImageFile,
     }));
     toast.success(tVision("success"));
   };
@@ -58,12 +93,38 @@ export function AddEggBoxForm() {
     e.preventDefault();
 
     startTransition(async () => {
+      const quantity = Number.parseInt(formData.quantity, 10);
+      if (!Number.isFinite(quantity) || quantity <= 0) {
+        toast.error(t("addError"));
+        return;
+      }
+
+      let scanImageUrl: string | undefined;
+      if (formData.scanImageFile) {
+        try {
+          const file = await compressImageForUpload(formData.scanImageFile);
+          const uploadFormData = new FormData();
+          uploadFormData.set("files", file);
+          scanImageUrl = await resolveActionResult(
+            uploadImageAction({ formData: uploadFormData }),
+          );
+        } catch (error) {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : t("addError"),
+          );
+          return;
+        }
+      }
+
       const result = await createEggBoxAction({
         name: formData.name || undefined,
         layingDate: new Date(formData.layingDate),
-        quantity: formData.quantity,
+        quantity,
         size: formData.size,
         source: formData.source || undefined,
+        scanImageUrl,
         // Pro mode fields (Chef only)
         lotNumber:
           isChef && formData.lotNumber ? formData.lotNumber : undefined,
@@ -104,6 +165,7 @@ export function AddEggBoxForm() {
           <DateVisionScanner
             onDateExtracted={handleVisionDateExtracted}
             onClose={() => setIsVisionScannerOpen(false)}
+            autoOpen={true}
           />
         </div>
       ) : (
@@ -160,7 +222,7 @@ export function AddEggBoxForm() {
             required
             value={formData.quantity}
             onChange={(e) =>
-              setFormData({ ...formData, quantity: parseInt(e.target.value) })
+              setFormData({ ...formData, quantity: e.target.value })
             }
             icon={<Calculator />}
           />

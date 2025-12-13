@@ -46,6 +46,14 @@ describe("vision-scan parsing", () => {
 
       expect(isoDate(parsed)).toBe("2026-01-01");
     });
+
+    it("rejects invalid day/month values (no JS Date overflow)", () => {
+      const reference = new Date("2025-12-12T12:00:00+01:00");
+
+      expect(parseFrenchDate("2/55", "dcr", reference)).toBeNull();
+      expect(parseFrenchDate("66/02", "dcr", reference)).toBeNull();
+      expect(parseFrenchDate("31/11", "dcr", reference)).toBeNull();
+    });
   });
 
   describe("laying date calculation from DCR", () => {

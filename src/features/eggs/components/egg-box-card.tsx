@@ -107,6 +107,17 @@ export function EggBoxCard({
         className,
       )}
     >
+      {eggBox.scanImageUrl && (
+        <div className="border-neo-border/20 mb-3 overflow-hidden rounded-[var(--radius-neo-xl)] border">
+          <img
+            src={eggBox.scanImageUrl}
+            alt=""
+            className="h-24 w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+      )}
+
       {/* Header Row */}
       <div className="mb-3 flex items-center justify-between">
         <FreshnessTag status={config.tagStatus} size="sm" />

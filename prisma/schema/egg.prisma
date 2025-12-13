@@ -9,6 +9,7 @@ model EggBox {
   size       EggSize  @default(M)
   source     String? // "Carrefour", "Fermier local", etc.
   barcode    String? // Barcode if scanned
+  scanImageUrl String? // Optional photo captured during scan
 
   // Pro mode fields (Chef plan only)
   lotNumber    String? // Batch/lot number for traceability

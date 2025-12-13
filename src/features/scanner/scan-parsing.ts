@@ -1,5 +1,24 @@
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
+const OCR_DIGIT_CHAR_MAP: Record<string, string> = {
+  O: "0",
+  o: "0",
+  I: "1",
+  l: "1",
+  "|": "1",
+  Z: "2",
+  z: "2",
+  S: "5",
+  s: "5",
+  B: "8",
+  b: "8",
+  G: "6",
+  g: "6",
+  q: "9",
+};
+
+const COMMON_EGG_QUANTITIES = new Set([6, 10, 12, 18, 24, 30]);
+
 /**
  * Type of date being parsed - affects year inference logic
  * - 'dcr': Date de Consommation Recommandée (expiration) - typically in near future
@@ -20,7 +39,10 @@ export function inferDateTypeFromText(rawText: string): DateType {
   }
 
   // Expiration / DCR keywords
-  if (/\b(dcr|ddm|dlc|exp|a\s+consommer|consommer)\b/gu.test(normalized)) {
+  // Some boxes/stickers can be misread by OCR (DCR -> OCR)
+  if (
+    /\b(dcr|ocr|ddm|dlc|exp|a\s+consommer|consommer)\b/gu.test(normalized)
+  ) {
     return "dcr";
   }
 
@@ -30,7 +52,16 @@ export function inferDateTypeFromText(rawText: string): DateType {
 
 function normalizeDateToken(token: string): string {
   // Removes spaces around separators: "01 / 01" -> "01/01"
-  return token.replace(/\s*([/\-.])\s*/gu, "$1").trim();
+  const cleaned = token
+    .replace(/[|\\]/gu, "/")
+    .replace(/\s*([/\-.])\s*/gu, "$1")
+    .trim();
+
+  // Fix common OCR confusions for digits in date tokens.
+  // Safe here because this only runs on date-like tokens (not the whole text).
+  return cleaned.replace(/[OIl|ZzSsBbGgq]/gu, (char) => {
+    return OCR_DIGIT_CHAR_MAP[char] ?? char;
+  });
 }
 
 /**
@@ -42,8 +73,10 @@ export function extractDateCandidateFromText(
 ): { dateText: string; dateType: DateType } | null {
   const normalized = rawText.replace(/\s+/gu, " ");
 
+  // Be tolerant to OCR errors where digits are confused with letters (e.g. "O1/OI").
+  const d = "[0-9OIl|ZzSsBbGgq]";
   const dateToken =
-    "(\\d{1,2}\\s*[/\\-.]\\s*\\d{1,2}(?:\\s*[/\\-.]\\s*(?:\\d{2,4}|[A-Za-z]{2,4}))?)";
+    `(${d}{1,2}\\s*[/\\-.|\\\\]\\s*${d}{1,2}(?:\\s*[/\\-.|\\\\]\\s*(?:${d}{2,4}|[A-Za-z]{2,4}))?)`;
 
   const layingKeyword = new RegExp(
     `\\b(?:pondu(?:\\s+le)?|dop|date\\s+de\\s+ponte)\\b[^\\d]{0,20}${dateToken}`,
@@ -55,7 +88,7 @@ export function extractDateCandidateFromText(
   }
 
   const dcrKeyword = new RegExp(
-    `\\b(?:dcr|ddm|dlc|exp|a\\s+consommer\\s+(?:de\\s+pr[ée]f[ée]rence\\s+avant\\s+le)?|a\\s+consommer\\s+jusqu['’]?au|consommer\\s+avant)\\b[^\\d]{0,20}${dateToken}`,
+    `\\b(?:dcr|ocr|ddm|dlc|exp|a\\s+consommer\\s+(?:de\\s+pr[ée]f[ée]rence\\s+avant\\s+le)?|a\\s+consommer\\s+jusqu['’]?au|consommer\\s+avant)\\b[^\\d]{0,20}${dateToken}`,
     "iu",
   );
   const dcrMatch = normalized.match(dcrKeyword);
@@ -77,29 +110,37 @@ export function extractEggQuantityFromText(text: string | null): number | null {
   if (!text) return null;
   const normalized = text.replace(/\s+/gu, " ").toLowerCase();
 
+  const parseQuantity = (value: string): number | null => {
+    const cleaned = value.replace(/[OIl|ZzSsBbGgq]/gu, (char) => {
+      return OCR_DIGIT_CHAR_MAP[char] ?? char;
+    });
+    const parsed = Number.parseInt(cleaned, 10);
+    return COMMON_EGG_QUANTITIES.has(parsed) ? parsed : null;
+  };
+
   // Prefer explicit "X œufs" patterns
   const explicitMatch = normalized.match(
-    /\b(6|10|12|18|24|30)\s*(?:œufs|oeufs|œuf|oeuf)\b/u,
+    /\b([0-9oilzsbgq]{1,3})\s*(?:œufs|oeufs|œuf|oeuf)\b/u,
   );
   if (explicitMatch) {
-    return Number.parseInt(explicitMatch[1], 10);
+    return parseQuantity(explicitMatch[1]);
   }
 
   // "boîte de X", "pack de X", "x X"
   const packagingMatch = normalized.match(
-    /\b(?:bo[iî]te|pack|x)\s*(?:de\s*)?(6|10|12|18|24|30)\b/u,
+    /\b(?:bo[iî]te|pack|x|×)\s*(?:de\s*)?([0-9oilzsbgq]{1,3})\b/u,
   );
   if (packagingMatch) {
-    return Number.parseInt(packagingMatch[1], 10);
+    return parseQuantity(packagingMatch[1]);
   }
 
   // As a last resort, accept a standalone common quantity
   // Avoid matching date fragments like "27/12" or "2025-12-27".
   const fallbackMatch = normalized.match(
-    /(?<![/\-.])\b(6|10|12|18|24|30)\b(?![/\-.])/u,
+    /(?<![/\-.])\b([0-9oilzsbgq]{1,3})\b(?![/\-.])/u,
   );
   if (fallbackMatch) {
-    return Number.parseInt(fallbackMatch[1], 10);
+    return parseQuantity(fallbackMatch[1]);
   }
 
   return null;
@@ -142,8 +183,8 @@ function extractDateToken(input: string): string | null {
   if (iso) return iso;
 
   const dmy =
-    input.match(/\b\d{1,2}[/\-.]\d{1,2}(?:[/\-.]\d{2,4})?\b/u)?.[0] ??
-    input.match(/\b\d{1,2}\s*[/\-.]\s*\d{1,2}(?:\s*[/\-.]\s*\d{2,4})?\b/u)?.[0];
+    input.match(/\b[0-9OIl|ZzSsBbGgq]{1,2}[/\-.|\\][0-9OIl|ZzSsBbGgq]{1,2}(?:[/\-.|\\][0-9OIl|ZzSsBbGgq]{2,4})?\b/u)?.[0] ??
+    input.match(/\b[0-9OIl|ZzSsBbGgq]{1,2}\s*[/\-.|\\]\s*[0-9OIl|ZzSsBbGgq]{1,2}(?:\s*[/\-.|\\]\s*[0-9OIl|ZzSsBbGgq]{2,4})?\b/u)?.[0];
   if (dmy) return normalizeDateToken(dmy);
 
   // Handles "01/01/AAAA" or similar placeholders by keeping only DD/MM.
@@ -176,6 +217,26 @@ function getUtcDayTimestamp(date: Date): number {
 
 function utcDateFromParts(year: number, month: number, day: number): Date {
   return new Date(Date.UTC(year, month - 1, day));
+}
+
+function isValidDateParts(year: number, month: number, day: number): boolean {
+  if (
+    !Number.isFinite(year) ||
+    !Number.isFinite(month) ||
+    !Number.isFinite(day)
+  ) {
+    return false;
+  }
+
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+
+  const date = utcDateFromParts(year, month, day);
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
 }
 
 /**
@@ -285,6 +346,7 @@ export function parseFrenchDate(
     const dayNum = Number(day);
     const monthNum = Number(month);
     const yearNum = Number(year);
+    if (!isValidDateParts(yearNum, monthNum, dayNum)) return null;
 
     const correctedYear = validateAndCorrectYear(
       dayNum,
@@ -293,6 +355,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(correctedYear, monthNum, dayNum)) return null;
 
     const date = utcDateFromParts(correctedYear, monthNum, dayNum);
     if (!Number.isNaN(date.getTime())) {
@@ -308,6 +371,7 @@ export function parseFrenchDate(
     const dayNum = Number(day);
     const monthNum = Number(month);
     const baseYear = 2000 + Number(yearShort);
+    if (!isValidDateParts(baseYear, monthNum, dayNum)) return null;
 
     const baseTs = Date.UTC(baseYear, monthNum - 1, dayNum);
     const diffDays = Math.round(
@@ -324,6 +388,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(year, monthNum, dayNum)) return null;
     const date = utcDateFromParts(year, monthNum, dayNum);
     if (!Number.isNaN(date.getTime())) {
       return date;
@@ -342,6 +407,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(year, monthNum, dayNum)) return null;
     const date = utcDateFromParts(year, monthNum, dayNum);
 
     if (!Number.isNaN(date.getTime())) {
@@ -352,6 +418,7 @@ export function parseFrenchDate(
   const compactMatch = cleaned.match(/^(\d{2})(\d{2})(\d{4})$/);
   if (compactMatch) {
     const [, day, month, year] = compactMatch;
+    if (!isValidDateParts(Number(year), Number(month), Number(day))) return null;
     const date = utcDateFromParts(Number(year), Number(month), Number(day));
     if (!Number.isNaN(date.getTime())) {
       return date;
@@ -364,6 +431,7 @@ export function parseFrenchDate(
     const dayNum = Number(day);
     const monthNum = Number(month);
     const baseYear = 2000 + Number(yearShort);
+    if (!isValidDateParts(baseYear, monthNum, dayNum)) return null;
 
     const baseTs = Date.UTC(baseYear, monthNum - 1, dayNum);
     const diffDays = Math.round(
@@ -380,6 +448,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(year, monthNum, dayNum)) return null;
     const date = utcDateFromParts(year, monthNum, dayNum);
     if (!Number.isNaN(date.getTime())) {
       return date;
@@ -389,6 +458,7 @@ export function parseFrenchDate(
   const isoMatch = cleaned.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (isoMatch) {
     const [, year, month, day] = isoMatch;
+    if (!isValidDateParts(Number(year), Number(month), Number(day))) return null;
     const date = utcDateFromParts(Number(year), Number(month), Number(day));
     if (!Number.isNaN(date.getTime())) {
       return date;

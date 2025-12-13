@@ -97,18 +97,28 @@ const NeoSheet = ({
 
   const handleDragEnd = (
     _: never,
-    info: { offset: { y: number; x: number }; velocity: { y: number } },
+    info: {
+      offset: { y: number; x: number };
+      velocity: { y: number; x: number };
+    },
   ) => {
-    const threshold = 80;
-    const velocityThreshold = 300;
+    const threshold = 140;
+    const velocityThreshold = 800;
     const offset = isVertical ? info.offset.y : info.offset.x;
-    const velocity = info.velocity.y;
+    const velocity = isVertical ? info.velocity.y : info.velocity.x;
+
+    const shouldCloseFromBottomFlick =
+      side === "bottom" &&
+      velocity > velocityThreshold &&
+      offset > threshold / 2;
+    const shouldCloseFromTopFlick =
+      side === "top" && velocity < -velocityThreshold && offset < -threshold / 2;
 
     const shouldClose =
       (side === "bottom" &&
-        (offset > threshold || velocity > velocityThreshold)) ||
+        (offset > threshold || shouldCloseFromBottomFlick)) ||
       (side === "top" &&
-        (offset < -threshold || velocity < -velocityThreshold)) ||
+        (offset < -threshold || shouldCloseFromTopFlick)) ||
       (side === "right" && offset > threshold) ||
       (side === "left" && offset < -threshold);
 
@@ -149,6 +159,7 @@ const NeoSheet = ({
             transition={IOS_SPRING}
             drag={draggable && !isFullscreen && isVertical ? "y" : false}
             dragControls={dragControls}
+            dragListener={!showHandle}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.35 }}
             dragMomentum={false}

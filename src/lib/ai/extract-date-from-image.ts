@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getVisionModel } from "./gemini-client";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
+const OPENAI_CHAT_COMPLETIONS_URL = "https://api.openai.com/v1/chat/completions";
 
 /**
  * Schema for the AI extraction result
@@ -300,6 +301,20 @@ export async function extractDateFromImage(
   referenceDate: Date = new Date(),
 ): Promise<ExtendedExtractionResult> {
   try {
+    const provider = (process.env.VISION_PROVIDER ?? "gemini").toLowerCase();
+    if (provider === "openai") {
+      try {
+        return await extractDateFromImageWithOpenAI(
+          base64Image,
+          mimeType,
+          referenceDate,
+        );
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log("[Vision] OpenAI failed, falling back to Gemini:", error);
+      }
+    }
+
     const model = getVisionModel();
 
     const result = await model.generateContent([
@@ -383,6 +398,114 @@ export async function extractDateFromImage(
   }
 }
 
+async function extractDateFromImageWithOpenAI(
+  base64Image: string,
+  mimeType: "image/jpeg" | "image/png" | "image/webp",
+  referenceDate: Date,
+): Promise<ExtendedExtractionResult> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY is not configured");
+  }
+
+  const model = process.env.OPENAI_VISION_MODEL ?? "gpt-4o-mini";
+  const prompt = buildExtractionPrompt(referenceDate);
+  const dataUrl = `data:${mimeType};base64,${base64Image}`;
+
+  const response = await fetch(OPENAI_CHAT_COMPLETIONS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: prompt },
+            { type: "image_url", image_url: { url: dataUrl } },
+          ],
+        },
+      ],
+    }),
+  });
+
+  const rawText = await response.text();
+  if (!response.ok) {
+    throw new Error(
+      `OpenAI API error (${response.status}): ${rawText.slice(0, 400)}`,
+    );
+  }
+
+  let content: string | null = null;
+  try {
+    const json = JSON.parse(rawText) as {
+      choices?: { message?: { content?: string | null } }[];
+    };
+    content = json.choices?.[0]?.message?.content ?? null;
+  } catch {
+    content = rawText;
+  }
+
+  if (!content) {
+    return {
+      found: false,
+      ddm: null,
+      layingDate: null,
+      confidence: "low",
+      rawText: null,
+      quantity: null,
+      size: null,
+    };
+  }
+
+  const extractedJson = extractFirstJsonObject(content);
+  if (!extractedJson) {
+    return {
+      found: false,
+      ddm: null,
+      layingDate: null,
+      confidence: "low",
+      rawText: content,
+      quantity: extractEggQuantityFromText(content),
+      size: extractEggSizeFromText(content),
+    };
+  }
+
+  try {
+    const parsed = JSON.parse(extractedJson);
+    const normalized = ExtendedExtractionResultSchema.parse(parsed);
+
+    const combinedText = [normalized.rawText, content].filter(Boolean).join("\n");
+    const quantity = normalized.quantity ?? extractEggQuantityFromText(combinedText);
+    const size = normalized.size ?? extractEggSizeFromText(combinedText);
+    const hasDate = Boolean(normalized.ddm ?? normalized.layingDate);
+
+    return {
+      ...normalized,
+      found: normalized.found || hasDate,
+      rawText: normalized.rawText ?? content,
+      quantity,
+      size,
+    };
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log("[Vision] OpenAI parse error:", error);
+    return {
+      found: false,
+      ddm: null,
+      layingDate: null,
+      confidence: "low",
+      rawText: content,
+      quantity: extractEggQuantityFromText(content),
+      size: extractEggSizeFromText(content),
+    };
+  }
+}
+
 function extractFirstJsonObject(text: string): string | null {
   const start = text.indexOf("{");
   if (start === -1) return null;
@@ -448,6 +571,26 @@ function getUtcDayTimestamp(date: Date): number {
 
 function utcDateFromParts(year: number, month: number, day: number): Date {
   return new Date(Date.UTC(year, month - 1, day));
+}
+
+function isValidDateParts(year: number, month: number, day: number): boolean {
+  if (
+    !Number.isFinite(year) ||
+    !Number.isFinite(month) ||
+    !Number.isFinite(day)
+  ) {
+    return false;
+  }
+
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+
+  const date = utcDateFromParts(year, month, day);
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
 }
 
 /**
@@ -598,6 +741,7 @@ export function parseFrenchDate(
     const dayNum = Number(day);
     const monthNum = Number(month);
     const yearNum = Number(year);
+    if (!isValidDateParts(yearNum, monthNum, dayNum)) return null;
 
     // Validate and potentially correct the year
     const correctedYear = validateAndCorrectYear(
@@ -607,6 +751,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(correctedYear, monthNum, dayNum)) return null;
 
     const date = utcDateFromParts(correctedYear, monthNum, dayNum);
     if (!isNaN(date.getTime())) {
@@ -624,6 +769,7 @@ export function parseFrenchDate(
     const dayNum = Number(day);
     const monthNum = Number(month);
     const baseYear = 2000 + Number(yearShort);
+    if (!isValidDateParts(baseYear, monthNum, dayNum)) return null;
 
     // Check if the base year makes sense, otherwise use inference
     const baseTs = Date.UTC(baseYear, monthNum - 1, dayNum);
@@ -643,6 +789,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(year, monthNum, dayNum)) return null;
     const date = utcDateFromParts(year, monthNum, dayNum);
     if (!isNaN(date.getTime())) {
       return date;
@@ -662,6 +809,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(year, monthNum, dayNum)) return null;
     const date = utcDateFromParts(year, monthNum, dayNum);
 
     if (!isNaN(date.getTime())) {
@@ -673,6 +821,7 @@ export function parseFrenchDate(
   const compactMatch = cleaned.match(/^(\d{2})(\d{2})(\d{4})$/);
   if (compactMatch) {
     const [, day, month, year] = compactMatch;
+    if (!isValidDateParts(Number(year), Number(month), Number(day))) return null;
     const date = utcDateFromParts(Number(year), Number(month), Number(day));
     if (!isNaN(date.getTime())) {
       return date;
@@ -686,6 +835,7 @@ export function parseFrenchDate(
     const dayNum = Number(day);
     const monthNum = Number(month);
     const baseYear = 2000 + Number(yearShort);
+    if (!isValidDateParts(baseYear, monthNum, dayNum)) return null;
 
     const baseTs = Date.UTC(baseYear, monthNum - 1, dayNum);
     const diffDays = Math.round(
@@ -702,6 +852,7 @@ export function parseFrenchDate(
       dateType,
       referenceDate,
     );
+    if (!isValidDateParts(year, monthNum, dayNum)) return null;
     const date = utcDateFromParts(year, monthNum, dayNum);
     if (!isNaN(date.getTime())) {
       return date;
@@ -712,6 +863,7 @@ export function parseFrenchDate(
   const isoMatch = cleaned.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (isoMatch) {
     const [, year, month, day] = isoMatch;
+    if (!isValidDateParts(Number(year), Number(month), Number(day))) return null;
     const date = utcDateFromParts(Number(year), Number(month), Number(day));
     if (!isNaN(date.getTime())) {
       return date;
