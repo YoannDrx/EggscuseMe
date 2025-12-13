@@ -118,7 +118,7 @@ export function CookingSelector({
               "focus-visible:ring-neo-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
               isSelected
                 ? "bg-neo-card border-neo-accent shadow-[var(--shadow-neo-md)]"
-                : "bg-neo-bg/50 border-transparent hover:bg-neo-bg",
+                : "bg-neo-bg/50 hover:bg-neo-bg border-transparent",
               disabled && "pointer-events-none opacity-50",
             )}
             whileHover={{ scale: disabled ? 1 : 1.02, y: -2 }}
@@ -140,7 +140,9 @@ export function CookingSelector({
               <span
                 className={cn(
                   "mt-1 text-xs font-medium",
-                  isSelected ? "text-neo-accent-foreground" : "text-neo-text-muted/70",
+                  isSelected
+                    ? "text-neo-accent-foreground"
+                    : "text-neo-text-muted/70",
                 )}
               >
                 {Math.floor(option.time / 60)} min

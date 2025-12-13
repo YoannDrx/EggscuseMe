@@ -30,12 +30,10 @@ type EggBoxGridProps = {
 export function EggBoxGrid({ eggBoxes, canModify, now }: EggBoxGridProps) {
   const t = useTranslations("fridge.grid");
   const router = useRouter();
-  const referenceDate = useMemo(
-    () => new Date(now ?? Date.now()),
-    [now],
-  );
+  const referenceDate = useMemo(() => new Date(now ?? Date.now()), [now]);
   const getFreshness = useCallback(
-    (box: EggBox) => calculateFreshness(new Date(box.layingDate), referenceDate),
+    (box: EggBox) =>
+      calculateFreshness(new Date(box.layingDate), referenceDate),
     [referenceDate],
   );
 

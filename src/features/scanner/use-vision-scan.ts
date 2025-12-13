@@ -2,6 +2,14 @@
 
 import type { EggSize } from "@/generated/prisma";
 import { useState } from "react";
+import { calculateLayingDateFromDCR } from "./lot-code-parser";
+import {
+  extractDateCandidateFromText,
+  extractEggQuantityFromText,
+  extractEggSizeFromText,
+  parseFrenchDate,
+} from "./scan-parsing";
+import { recognizeTextFromEggBoxImage } from "./ocr";
 
 export type VisionScanResult = {
   success: boolean;
@@ -25,6 +33,19 @@ type ApiResponse = {
   quantity?: number | null;
   size?: EggSize;
 };
+
+function getLocalScanReferenceDate(): Date {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 12),
+  );
+}
+
+function mapOcrConfidence(confidence: number): "high" | "medium" | "low" {
+  if (confidence >= 80) return "high";
+  if (confidence >= 55) return "medium";
+  return "low";
+}
 
 /**
  * Convert a File to base64 string (without the data: prefix)
@@ -81,6 +102,63 @@ export function useVisionScan() {
           success: false,
           error: "file_too_large",
         };
+      }
+
+      // 1) Try local OCR first (free, stable, privacy-friendly).
+      try {
+        const ocr = await recognizeTextFromEggBoxImage(file);
+        const ocrText = ocr.text.trim();
+
+        if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line no-console
+          console.log("[OCR] confidence:", ocr.confidence);
+          // eslint-disable-next-line no-console
+          console.log("[OCR] text:\n", ocrText);
+        }
+
+        if (ocrText.length > 0) {
+          const candidate = extractDateCandidateFromText(ocrText);
+          if (candidate) {
+            const referenceDate = getLocalScanReferenceDate();
+            const parsed = parseFrenchDate(
+              candidate.dateText,
+              candidate.dateType,
+              referenceDate,
+            );
+
+            if (parsed) {
+              const quantity = extractEggQuantityFromText(ocrText);
+              const size = extractEggSizeFromText(ocrText) as EggSize | null;
+              const confidence = mapOcrConfidence(ocr.confidence);
+
+              if (candidate.dateType === "laying") {
+                return {
+                  success: true,
+                  layingDate: parsed,
+                  ddm: undefined,
+                  confidence,
+                  quantity,
+                  size: size ?? undefined,
+                };
+              }
+
+              const layingDate = calculateLayingDateFromDCR(parsed);
+              return {
+                success: true,
+                layingDate,
+                ddm: parsed,
+                confidence,
+                quantity,
+                size: size ?? undefined,
+              };
+            }
+          }
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line no-console
+          console.log("[OCR] failed, falling back to Gemini:", error);
+        }
       }
 
       // Convert to base64

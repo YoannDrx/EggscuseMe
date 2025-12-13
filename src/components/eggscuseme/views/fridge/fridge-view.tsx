@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from "motion/react";
 import { Info, Plus, Refrigerator, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Eggy } from "@/features/mascot/components/eggy";

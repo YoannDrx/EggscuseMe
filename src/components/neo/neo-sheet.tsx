@@ -196,7 +196,7 @@ const NeoSheet = ({
                 className={cn(
                   "absolute top-2.5 right-3 z-50",
                   "flex size-8 items-center justify-center rounded-full",
-                  "bg-white/10 text-neo-text-muted",
+                  "text-neo-text-muted bg-white/10",
                   "transition-all duration-150",
                   "active:scale-90 active:bg-white/20",
                 )}

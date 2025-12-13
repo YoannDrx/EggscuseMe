@@ -617,14 +617,7 @@ export const EggyTimerHold = ({ className = "w-32 h-32" }) => (
               strokeWidth="2"
               strokeLinecap="round"
             />
-            <rect
-              x="-4"
-              y="-18"
-              width="8"
-              height="4"
-              rx="1"
-              fill="#000"
-            />
+            <rect x="-4" y="-18" width="8" height="4" rx="1" fill="#000" />
             <rect
               x="-6"
               y="-22"

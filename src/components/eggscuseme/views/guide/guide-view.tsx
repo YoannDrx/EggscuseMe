@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import { ChevronRight, Clock, Info } from "lucide-react";
 import { useState } from "react";
 import { Eggy } from "@/features/mascot/components/eggy";

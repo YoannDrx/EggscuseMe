@@ -224,10 +224,7 @@ export function parseAnyCode(code: string): ParsedEggInfo {
 /**
  * Format parsed info for display
  */
-export function formatParsedInfo(
-  info: ParsedEggInfo,
-  locale = "en",
-): string[] {
+export function formatParsedInfo(info: ParsedEggInfo, locale = "en"): string[] {
   const lines: string[] = [];
   const isFr = locale.startsWith("fr");
 
@@ -254,9 +251,7 @@ export function formatParsedInfo(
   if (info.quantity) {
     const label = isFr ? "Quantité" : "Quantity";
     const eggsLabel =
-      info.quantity > 1
-        ? isFr ? "œufs" : "eggs"
-        : isFr ? "œuf" : "egg";
+      info.quantity > 1 ? (isFr ? "œufs" : "eggs") : isFr ? "œuf" : "egg";
     lines.push(`${label}: ${info.quantity} ${eggsLabel}`);
   }
 

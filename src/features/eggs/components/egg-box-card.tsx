@@ -147,8 +147,7 @@ export function EggBoxCard({
       {/* Name Row */}
       <div className="mb-2">
         <h3 className="text-neo-text truncate font-semibold">
-          {eggBox.name ??
-            `Boite du ${formattedLayingDate}`}
+          {eggBox.name ?? `Boite du ${formattedLayingDate}`}
         </h3>
         {eggBox.source && (
           <p className="text-neo-text-muted text-xs">{eggBox.source}</p>

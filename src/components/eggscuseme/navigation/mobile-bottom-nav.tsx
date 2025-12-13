@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import { BarChart3, BookOpen, Plus, Refrigerator, Timer } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";

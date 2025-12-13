@@ -104,7 +104,12 @@ export default function EmailVerificationEmail({
             }}
           >
             <Text
-              style={{ fontSize: "14px", color: EMAIL_COLORS.text, margin: 0, fontWeight: "500" }}
+              style={{
+                fontSize: "14px",
+                color: EMAIL_COLORS.text,
+                margin: 0,
+                fontWeight: "500",
+              }}
             >
               {benefit}
             </Text>
@@ -180,7 +185,12 @@ export default function EmailVerificationEmail({
             }}
           >
             <Text
-              style={{ fontSize: "14px", color: EMAIL_COLORS.text, margin: 0, fontWeight: "500" }}
+              style={{
+                fontSize: "14px",
+                color: EMAIL_COLORS.text,
+                margin: 0,
+                fontWeight: "500",
+              }}
             >
               {benefit}
             </Text>

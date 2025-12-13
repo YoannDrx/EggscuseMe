@@ -22,7 +22,7 @@ self.addEventListener("install", (event) => {
       return cache.addAll(STATIC_ASSETS).catch((err) => {
         console.warn("Some assets failed to cache:", err);
       });
-    })
+    }),
   );
   // Activer immédiatement
   self.skipWaiting();
@@ -41,9 +41,9 @@ self.addEventListener("activate", (event) => {
               name !== DYNAMIC_CACHE_NAME
             );
           })
-          .map((name) => caches.delete(name))
+          .map((name) => caches.delete(name)),
       );
-    })
+    }),
   );
   // Prendre le contrôle immédiatement
   self.clients.claim();
@@ -212,16 +212,18 @@ self.addEventListener("notificationclick", (event) => {
   }
 
   event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
-      // Chercher une fenêtre existante
-      for (const client of clients) {
-        if (client.url.includes(url) && "focus" in client) {
-          return client.focus();
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        // Chercher une fenêtre existante
+        for (const client of clients) {
+          if (client.url.includes(url) && "focus" in client) {
+            return client.focus();
+          }
         }
-      }
-      // Ouvrir une nouvelle fenêtre
-      return self.clients.openWindow(url);
-    })
+        // Ouvrir une nouvelle fenêtre
+        return self.clients.openWindow(url);
+      }),
   );
 });
 

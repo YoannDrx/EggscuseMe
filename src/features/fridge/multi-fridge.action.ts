@@ -77,8 +77,9 @@ export const createFridgeAction = authAction
     // Check if user has Chef plan
     if (!hasChefAccess(subscription?.plan)) {
       throw new ActionError(
-        `${t("limitReached") 
-          } Multi-frigos est une fonctionnalité Chef uniquement.`,
+        `${t(
+          "limitReached",
+        )} Multi-frigos est une fonctionnalité Chef uniquement.`,
       );
     }
 

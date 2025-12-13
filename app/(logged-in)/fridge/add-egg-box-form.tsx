@@ -6,12 +6,7 @@ import { NeoSelect, NeoSelectItem } from "@/components/neo/neo-select";
 import type { EggSize } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { createEggBoxAction } from "@/features/fridge/fridge.action";
-import {
-  BarcodeScanner,
-  DateVisionScanner,
-  type ParsedEggInfo,
-  type VisionScanData,
-} from "@/features/scanner";
+import { DateVisionScanner, type VisionScanData } from "@/features/scanner";
 import {
   Calculator,
   Calendar,
@@ -19,7 +14,6 @@ import {
   Factory,
   FileText,
   MapPin,
-  Scan,
   Sparkles,
   Tag,
   X,
@@ -30,14 +24,12 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useCurrentFridge } from "./use-current-fridge";
 
-type ScanMode = "barcode" | "vision" | null;
-
 export function AddEggBoxForm() {
   const t = useTranslations("fridge.addBoxForm");
   const tVision = useTranslations("scanner.vision");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [scanMode, setScanMode] = useState<ScanMode>(null);
+  const [isVisionScannerOpen, setIsVisionScannerOpen] = useState(false);
   const fridgeStore = useCurrentFridge();
   const isChef = fridgeStore?.isChef ?? false;
 
@@ -51,25 +43,6 @@ export function AddEggBoxForm() {
     lotNumber: "",
     producerCode: "",
   });
-
-  const handleBarcodeScan = (info: ParsedEggInfo) => {
-    // Auto-fill form with scanned data
-    setFormData((prev) => ({
-      ...prev,
-      layingDate: info.layingDate
-        ? info.layingDate.toISOString().split("T")[0]
-        : prev.layingDate,
-      quantity: info.quantity ?? prev.quantity,
-      size: info.size ?? prev.size,
-      source: info.farmCode ?? info.countryCode ?? prev.source,
-    }));
-
-    // Close scanner after successful scan
-    setTimeout(() => {
-      setScanMode(null);
-      toast.success(t("scanSuccess"));
-    }, 1000);
-  };
 
   const handleVisionDateExtracted = (data: VisionScanData) => {
     setFormData((prev) => ({
@@ -111,63 +84,35 @@ export function AddEggBoxForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {/* Scanner section */}
-      {scanMode ? (
+      {isVisionScannerOpen ? (
         <div className="border-neo-border bg-neo-card animate-in fade-in zoom-in-95 rounded-2xl border-2 p-4 shadow-sm duration-200">
           <div className="mb-3 flex items-center justify-between">
             <span className="text-neo-text flex items-center gap-2 font-bold">
-              {scanMode === "barcode" ? (
-                <Scan className="text-primary size-5" />
-              ) : (
-                <Sparkles className="text-primary size-5" />
-              )}
-              {scanMode === "barcode" ? t("scannerTitle") : tVision("scanDate")}
+              <Sparkles className="text-primary size-5" />
+              {tVision("scanDate")}
             </span>
             <NeoButton
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setScanMode(null)}
+              onClick={() => setIsVisionScannerOpen(false)}
               className="hover:bg-neo-bg h-8 w-8 rounded-full p-0"
             >
               <X className="size-4" />
             </NeoButton>
           </div>
-          {scanMode === "barcode" ? (
-            <BarcodeScanner onScan={handleBarcodeScan} />
-          ) : (
-            <DateVisionScanner
-              onDateExtracted={handleVisionDateExtracted}
-              onClose={() => setScanMode(null)}
-            />
-          )}
+          <DateVisionScanner
+            onDateExtracted={handleVisionDateExtracted}
+            onClose={() => setIsVisionScannerOpen(false)}
+          />
         </div>
       ) : (
-        /* Scanner Selection Buttons */
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3">
           <NeoButton
             type="button"
             variant="outline"
             className="group bg-neo-bg/50 hover:border-primary hover:bg-primary/5 relative h-auto flex-col gap-3 overflow-hidden border-2 py-6 transition-all"
-            onClick={() => setScanMode("barcode")}
-          >
-            <div className="bg-neo-card flex size-12 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110">
-              <Scan className="text-neo-text group-hover:text-primary size-6" />
-            </div>
-            <div className="flex flex-col items-center gap-0.5">
-              <span className="text-neo-text group-hover:text-primary text-sm font-bold">
-                {t("openScanner")}
-              </span>
-              <span className="text-neo-text-muted text-[10px]">
-                Code-barres
-              </span>
-            </div>
-          </NeoButton>
-
-          <NeoButton
-            type="button"
-            variant="outline"
-            className="group bg-neo-bg/50 hover:border-primary hover:bg-primary/5 relative h-auto flex-col gap-3 overflow-hidden border-2 py-6 transition-all"
-            onClick={() => setScanMode("vision")}
+            onClick={() => setIsVisionScannerOpen(true)}
           >
             <div className="from-primary/10 group-hover:from-primary/20 absolute -top-4 -right-4 size-16 rotate-12 rounded-full bg-gradient-to-br to-transparent blur-xl transition-all" />
             <div className="bg-neo-card flex size-12 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110">

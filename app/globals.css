@@ -148,7 +148,7 @@
   /* Glass morphism */
   --glass-bg: oklch(0.99 0.008 85 / 0.8);
   --glass-bg-dark: oklch(0.18 0.02 60 / 0.85);
-  --glass-border: oklch(0.90 0.02 85 / 0.5);
+  --glass-border: oklch(0.9 0.02 85 / 0.5);
   --glass-border-dark: oklch(0.32 0.02 60 / 0.5);
 
   /* Radius mobile */
@@ -164,43 +164,43 @@
    * ============================================ */
 
   /* Sticker stroke & fill */
-  --sticker-stroke: #1C1917;
+  --sticker-stroke: #1c1917;
   --sticker-stroke-width: 2px;
-  --sticker-fill-egg: #FDFBF7;
-  --sticker-fill-white: #FFFFFF;
+  --sticker-fill-egg: #fdfbf7;
+  --sticker-fill-white: #ffffff;
   --sticker-shadow: drop-shadow(0 2px 4px rgb(0 0 0 / 0.1));
   --sticker-shadow-lg: drop-shadow(0 4px 8px rgb(0 0 0 / 0.15));
 
   /* Illustration brand colors */
-  --illu-brand: #FBBF24;
-  --illu-brand-dark: #D97706;
+  --illu-brand: #fbbf24;
+  --illu-brand-dark: #d97706;
   --illu-fresh-extra: var(--fresh-extra);
   --illu-fresh: var(--fresh);
   --illu-fresh-cook: var(--fresh-cook);
-  --illu-expired: #EF4444;
+  --illu-expired: #ef4444;
 
   /* Accessory & scene colors */
-  --illu-wood: #92400E;
-  --illu-wood-light: #B45309;
-  --illu-metal: #6B7280;
-  --illu-metal-light: #9CA3AF;
-  --illu-plastic: #3B82F6;
-  --illu-glass: #E0F2FE;
-  --illu-fridge: #F1F5F9;
-  --illu-fridge-dark: #CBD5E1;
+  --illu-wood: #92400e;
+  --illu-wood-light: #b45309;
+  --illu-metal: #6b7280;
+  --illu-metal-light: #9ca3af;
+  --illu-plastic: #3b82f6;
+  --illu-glass: #e0f2fe;
+  --illu-fridge: #f1f5f9;
+  --illu-fridge-dark: #cbd5e1;
 
   /* Blush & expression colors */
-  --illu-blush: #FFB6C1;
-  --illu-tear: #87CEEB;
-  --illu-sweat: #87CEEB;
-  --illu-sparkle: #FCD34D;
+  --illu-blush: #ffb6c1;
+  --illu-tear: #87ceeb;
+  --illu-sweat: #87ceeb;
+  --illu-sparkle: #fcd34d;
 
   /* Party/confetti colors */
-  --illu-confetti-1: #FBBF24;
-  --illu-confetti-2: #34D399;
-  --illu-confetti-3: #F472B6;
-  --illu-confetti-4: #60A5FA;
-  --illu-confetti-5: #A78BFA;
+  --illu-confetti-1: #fbbf24;
+  --illu-confetti-2: #34d399;
+  --illu-confetti-3: #f472b6;
+  --illu-confetti-4: #60a5fa;
+  --illu-confetti-5: #a78bfa;
 
   /* Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
@@ -241,7 +241,8 @@
 
   /* Mascot Animations */
   @keyframes bounce-subtle {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -250,7 +251,8 @@
   }
 
   @keyframes wobble {
-    0%, 100% {
+    0%,
+    100% {
       transform: rotate(0deg);
     }
     25% {
@@ -262,7 +264,8 @@
   }
 
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -298,7 +301,8 @@
    * ============================================ */
 
   @keyframes bounce-excited {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0) scale(1);
     }
     25% {
@@ -327,7 +331,8 @@
   }
 
   @keyframes wave-hand {
-    0%, 100% {
+    0%,
+    100% {
       transform: rotate(0deg);
     }
     20% {
@@ -359,7 +364,8 @@
   }
 
   @keyframes shine-crown {
-    0%, 100% {
+    0%,
+    100% {
       filter: brightness(1) drop-shadow(0 0 0px oklch(0.85 0.18 85));
     }
     50% {
@@ -368,7 +374,8 @@
   }
 
   @keyframes glow-pulse {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 10px var(--fresh-extra);
       filter: brightness(1);
     }
@@ -394,19 +401,28 @@
   }
 
   @keyframes shake-alert {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateX(0);
     }
-    10%, 30%, 50%, 70%, 90% {
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
       transform: translateX(-4px);
     }
-    20%, 40%, 60%, 80% {
+    20%,
+    40%,
+    60%,
+    80% {
       transform: translateX(4px);
     }
   }
 
   @keyframes thinking-dots {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.3;
     }
     50% {
@@ -494,7 +510,8 @@
   }
 
   @keyframes float-cape {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0) rotate(-2deg);
     }
     25% {
@@ -509,7 +526,8 @@
   }
 
   @keyframes magnify-pulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1) rotate(0deg);
     }
     25% {
@@ -569,36 +587,71 @@
 
   /* Neo keyframes */
   @keyframes neo-press {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(4px, 4px); }
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(4px, 4px);
+    }
   }
 
   @keyframes neo-bounce-in {
-    0% { transform: scale(0.9); opacity: 0; }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   @keyframes neo-slide-up {
-    from { transform: translateY(100%) rotate(5deg); }
-    to { transform: translateY(0) rotate(0); }
+    from {
+      transform: translateY(100%) rotate(5deg);
+    }
+    to {
+      transform: translateY(0) rotate(0);
+    }
   }
 
   @keyframes neo-wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-3deg); }
-    75% { transform: rotate(3deg); }
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-3deg);
+    }
+    75% {
+      transform: rotate(3deg);
+    }
   }
 
   @keyframes neo-pop {
-    0% { transform: scale(0.8); opacity: 0; }
-    60% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   @keyframes neo-check-draw {
-    from { stroke-dashoffset: 24; }
-    to { stroke-dashoffset: 0; }
+    from {
+      stroke-dashoffset: 24;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
   }
 }
 
@@ -610,50 +663,50 @@
    * ============================================ */
 
   /* Base Colors - Eggshell & Pepper */
-  --background: oklch(0.99 0.008 85);            /* #FDFBF7 - Eggshell, warm off-white */
-  --foreground: oklch(0.25 0.02 270);            /* #2D2D2D - Pepper, soft black */
-  --card: oklch(1 0 0);                          /* Pure white for cards */
+  --background: oklch(0.99 0.008 85); /* #FDFBF7 - Eggshell, warm off-white */
+  --foreground: oklch(0.25 0.02 270); /* #2D2D2D - Pepper, soft black */
+  --card: oklch(1 0 0); /* Pure white for cards */
   --card-foreground: oklch(0.25 0.02 270);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.02 270);
 
   /* Primary - Yolk Yellow */
-  --primary: oklch(0.85 0.18 85);                /* #FFC800 - Rich egg yolk */
-  --primary-foreground: oklch(0.20 0.02 60);     /* Dark text on yellow */
+  --primary: oklch(0.85 0.18 85); /* #FFC800 - Rich egg yolk */
+  --primary-foreground: oklch(0.2 0.02 60); /* Dark text on yellow */
 
   /* Secondary & Muted */
-  --secondary: oklch(0.97 0.01 85);              /* Light cream */
+  --secondary: oklch(0.97 0.01 85); /* Light cream */
   --secondary-foreground: oklch(0.35 0.02 60);
-  --muted: oklch(0.96 0.008 85);                 /* Subtle cream */
-  --muted-foreground: oklch(0.50 0.02 60);
+  --muted: oklch(0.96 0.008 85); /* Subtle cream */
+  --muted-foreground: oklch(0.5 0.02 60);
 
   /* Accent - Warm amber */
-  --accent: oklch(0.90 0.08 75);                 /* Warm amber accent */
-  --accent-foreground: oklch(0.30 0.04 60);
+  --accent: oklch(0.9 0.08 75); /* Warm amber accent */
+  --accent-foreground: oklch(0.3 0.04 60);
 
   /* Destructive */
-  --destructive: oklch(0.60 0.20 25);            /* Tomato red */
+  --destructive: oklch(0.6 0.2 25); /* Tomato red */
   --destructive-foreground: oklch(0.98 0.01 25);
 
   /* Borders & Inputs */
-  --border: oklch(0.90 0.02 85);                 /* Warm border */
-  --input: oklch(0.90 0.02 85);
-  --ring: oklch(0.85 0.18 85);                   /* Yolk yellow ring */
+  --border: oklch(0.9 0.02 85); /* Warm border */
+  --input: oklch(0.9 0.02 85);
+  --ring: oklch(0.85 0.18 85); /* Yolk yellow ring */
 
   /* Charts - Culinary palette */
-  --chart-1: oklch(0.70 0.18 145);               /* Mint green */
-  --chart-2: oklch(0.85 0.18 85);                /* Yolk yellow */
-  --chart-3: oklch(0.70 0.16 55);                /* Apricot */
-  --chart-4: oklch(0.65 0.14 25);                /* Tomato */
-  --chart-5: oklch(0.60 0.12 180);               /* Teal */
+  --chart-1: oklch(0.7 0.18 145); /* Mint green */
+  --chart-2: oklch(0.85 0.18 85); /* Yolk yellow */
+  --chart-3: oklch(0.7 0.16 55); /* Apricot */
+  --chart-4: oklch(0.65 0.14 25); /* Tomato */
+  --chart-5: oklch(0.6 0.12 180); /* Teal */
 
   /* Sidebar - Cream tones */
-  --sidebar: oklch(0.98 0.008 85);               /* Light eggshell */
+  --sidebar: oklch(0.98 0.008 85); /* Light eggshell */
   --sidebar-foreground: oklch(0.25 0.02 270);
-  --sidebar-primary: oklch(0.85 0.18 85);        /* Yolk yellow */
-  --sidebar-primary-foreground: oklch(0.20 0.02 60);
+  --sidebar-primary: oklch(0.85 0.18 85); /* Yolk yellow */
+  --sidebar-primary-foreground: oklch(0.2 0.02 60);
   --sidebar-accent: oklch(0.92 0.06 75);
-  --sidebar-accent-foreground: oklch(0.30 0.04 60);
+  --sidebar-accent-foreground: oklch(0.3 0.04 60);
   --sidebar-border: oklch(0.92 0.02 85);
   --sidebar-ring: oklch(0.85 0.18 85);
 
@@ -664,10 +717,10 @@
   --font-mono: JetBrains Mono, monospace;
 
   /* Radius - Super rounded for Neubrutalism */
-  --radius: 0.75rem;                             /* Base radius increased */
+  --radius: 0.75rem; /* Base radius increased */
   --radius-soft: 1rem;
-  --radius-card: 1.5rem;                         /* Extra rounded cards */
-  --radius-button: 9999px;                       /* Pill buttons */
+  --radius-card: 1.5rem; /* Extra rounded cards */
+  --radius-button: 9999px; /* Pill buttons */
 
   /* Neubrutalism Soft - Shadows & Borders */
   --border-width: 1.5px;
@@ -698,48 +751,48 @@
   --spacing: 0.25rem;
 
   /* NOWTS - Status Colors */
-  --success: oklch(0.65 0.18 145);               /* Mint green */
+  --success: oklch(0.65 0.18 145); /* Mint green */
   --success-foreground: oklch(0.98 0.01 145);
-  --warning: oklch(0.70 0.16 55);                /* Apricot orange */
-  --warning-foreground: oklch(0.20 0.02 55);
-  --info: oklch(0.65 0.15 240);                  /* Sky blue */
+  --warning: oklch(0.7 0.16 55); /* Apricot orange */
+  --warning-foreground: oklch(0.2 0.02 55);
+  --info: oklch(0.65 0.15 240); /* Sky blue */
   --info-foreground: oklch(0.98 0.01 240);
 
   /* ============================================
    * EggscuseMe Freshness Colors (Light Mode)
    * Culinary-inspired, appetizing tones
    * ============================================ */
-  --fresh-extra: oklch(0.72 0.18 155);           /* Mint green - Extra-fresh */
-  --fresh-extra-foreground: oklch(0.20 0.04 155);
-  --fresh: oklch(0.88 0.14 95);                  /* Butter yellow - Fresh */
+  --fresh-extra: oklch(0.72 0.18 155); /* Mint green - Extra-fresh */
+  --fresh-extra-foreground: oklch(0.2 0.04 155);
+  --fresh: oklch(0.88 0.14 95); /* Butter yellow - Fresh */
   --fresh-foreground: oklch(0.25 0.04 60);
-  --fresh-cook: oklch(0.72 0.16 50);             /* Apricot orange - Cook thoroughly */
-  --fresh-cook-foreground: oklch(0.20 0.04 50);
-  --expired: oklch(0.65 0.16 25);                /* Tomato red - Expired */
+  --fresh-cook: oklch(0.72 0.16 50); /* Apricot orange - Cook thoroughly */
+  --fresh-cook-foreground: oklch(0.2 0.04 50);
+  --expired: oklch(0.65 0.16 25); /* Tomato red - Expired */
   --expired-foreground: oklch(0.98 0.01 25);
 
   /* ============================================
    * Mobile Navigation Colors (Light Mode)
    * ============================================ */
-  --nav-bg: oklch(0.99 0.008 85 / 0.95);         /* Glass eggshell */
-  --nav-border: oklch(0.90 0.02 85);
-  --nav-active: oklch(0.85 0.18 85);             /* Primary yolk */
-  --nav-active-foreground: oklch(0.20 0.02 60);
-  --nav-inactive: oklch(0.50 0.02 60);
+  --nav-bg: oklch(0.99 0.008 85 / 0.95); /* Glass eggshell */
+  --nav-border: oklch(0.9 0.02 85);
+  --nav-active: oklch(0.85 0.18 85); /* Primary yolk */
+  --nav-active-foreground: oklch(0.2 0.02 60);
+  --nav-inactive: oklch(0.5 0.02 60);
 
   /* ============================================
    * NEO-SOFT-BRUTALISME Colors (Light Mode)
    * Palette: Amber/Stone - Warm & Playful
    * ============================================ */
-  --neo-bg: oklch(0.97 0.015 70);                /* Orange-50 warm cream */
-  --neo-card: oklch(1 0 0);                       /* Pure white */
-  --neo-text: oklch(0.15 0.02 60);               /* Stone-900 dark */
-  --neo-text-muted: oklch(0.45 0.02 60);         /* Stone-500 */
-  --neo-border: oklch(0.15 0.02 60);             /* Stone-900 for borders */
-  --neo-shadow-color: oklch(0.12 0.02 60);       /* Stone-950 for shadows */
-  --neo-accent: oklch(0.82 0.17 85);             /* Amber-400 */
+  --neo-bg: oklch(0.97 0.015 70); /* Orange-50 warm cream */
+  --neo-card: oklch(1 0 0); /* Pure white */
+  --neo-text: oklch(0.15 0.02 60); /* Stone-900 dark */
+  --neo-text-muted: oklch(0.45 0.02 60); /* Stone-500 */
+  --neo-border: oklch(0.15 0.02 60); /* Stone-900 for borders */
+  --neo-shadow-color: oklch(0.12 0.02 60); /* Stone-950 for shadows */
+  --neo-accent: oklch(0.82 0.17 85); /* Amber-400 */
   --neo-accent-foreground: oklch(0.15 0.02 60); /* Dark text on amber */
-  --neo-input: oklch(1 0 0);                     /* White input */
+  --neo-input: oklch(1 0 0); /* White input */
 }
 
 .dark {
@@ -749,29 +802,29 @@
    * ============================================ */
 
   /* Base Colors - Dark with warm undertones */
-  --background: oklch(0.18 0.02 60);             /* Warm dark brown */
-  --foreground: oklch(0.95 0.008 85);            /* Cream white */
-  --card: oklch(0.22 0.02 60);                   /* Slightly lighter for cards */
+  --background: oklch(0.18 0.02 60); /* Warm dark brown */
+  --foreground: oklch(0.95 0.008 85); /* Cream white */
+  --card: oklch(0.22 0.02 60); /* Slightly lighter for cards */
   --card-foreground: oklch(0.95 0.008 85);
   --popover: oklch(0.22 0.02 60);
   --popover-foreground: oklch(0.95 0.008 85);
 
   /* Primary - Yolk Yellow (slightly more vibrant for dark mode) */
-  --primary: oklch(0.88 0.18 85);                /* Brighter yolk */
+  --primary: oklch(0.88 0.18 85); /* Brighter yolk */
   --primary-foreground: oklch(0.15 0.02 60);
 
   /* Secondary & Muted */
   --secondary: oklch(0.25 0.02 60);
-  --secondary-foreground: oklch(0.90 0.008 85);
+  --secondary-foreground: oklch(0.9 0.008 85);
   --muted: oklch(0.22 0.02 60);
-  --muted-foreground: oklch(0.70 0.02 85);
+  --muted-foreground: oklch(0.7 0.02 85);
 
   /* Accent */
-  --accent: oklch(0.40 0.10 75);                 /* Warm amber */
+  --accent: oklch(0.4 0.1 75); /* Warm amber */
   --accent-foreground: oklch(0.95 0.008 85);
 
   /* Destructive */
-  --destructive: oklch(0.65 0.20 25);
+  --destructive: oklch(0.65 0.2 25);
   --destructive-foreground: oklch(0.98 0.01 25);
 
   /* Borders & Inputs */
@@ -783,17 +836,17 @@
   --chart-1: oklch(0.75 0.18 155);
   --chart-2: oklch(0.88 0.18 85);
   --chart-3: oklch(0.75 0.16 50);
-  --chart-4: oklch(0.70 0.16 25);
+  --chart-4: oklch(0.7 0.16 25);
   --chart-5: oklch(0.65 0.14 180);
 
   /* Sidebar */
-  --sidebar: oklch(0.20 0.02 60);
+  --sidebar: oklch(0.2 0.02 60);
   --sidebar-foreground: oklch(0.95 0.008 85);
   --sidebar-primary: oklch(0.88 0.18 85);
   --sidebar-primary-foreground: oklch(0.15 0.02 60);
   --sidebar-accent: oklch(0.35 0.08 75);
   --sidebar-accent-foreground: oklch(0.95 0.008 85);
-  --sidebar-border: oklch(0.30 0.02 60);
+  --sidebar-border: oklch(0.3 0.02 60);
   --sidebar-ring: oklch(0.88 0.18 85);
 
   /* Typography */
@@ -810,9 +863,9 @@
 
   /* Neubrutalism Soft - Lighter shadows for dark mode */
   --border-width: 1.5px;
-  --shadow-hard: 3px 3px 0px oklch(0.10 0.02 60 / 0.3);
-  --shadow-hard-hover: 1px 1px 0px oklch(0.10 0.02 60 / 0.3);
-  --shadow-hard-lg: 5px 5px 0px oklch(0.10 0.02 60 / 0.3);
+  --shadow-hard: 3px 3px 0px oklch(0.1 0.02 60 / 0.3);
+  --shadow-hard-hover: 1px 1px 0px oklch(0.1 0.02 60 / 0.3);
+  --shadow-hard-lg: 5px 5px 0px oklch(0.1 0.02 60 / 0.3);
 
   /* Mobile shadows (dark mode) */
   --shadow-fab: 0 4px 14px rgba(0, 0, 0, 0.4);
@@ -841,32 +894,32 @@
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.4);
 
   /* NOWTS - Status Colors (more vibrant for dark mode) */
-  --success: oklch(0.70 0.18 155);
+  --success: oklch(0.7 0.18 155);
   --success-foreground: oklch(0.15 0.04 155);
   --warning: oklch(0.75 0.16 50);
   --warning-foreground: oklch(0.15 0.02 50);
-  --info: oklch(0.70 0.15 240);
+  --info: oklch(0.7 0.15 240);
   --info-foreground: oklch(0.15 0.02 240);
 
   /* ============================================
    * EggscuseMe Freshness Colors (Dark Mode)
    * More vibrant for better visibility
    * ============================================ */
-  --fresh-extra: oklch(0.75 0.18 155);           /* Vibrant mint - Extra-fresh */
+  --fresh-extra: oklch(0.75 0.18 155); /* Vibrant mint - Extra-fresh */
   --fresh-extra-foreground: oklch(0.15 0.04 155);
-  --fresh: oklch(0.90 0.14 95);                  /* Bright butter - Fresh */
+  --fresh: oklch(0.9 0.14 95); /* Bright butter - Fresh */
   --fresh-foreground: oklch(0.15 0.04 60);
-  --fresh-cook: oklch(0.75 0.16 50);             /* Bright apricot - Cook thoroughly */
+  --fresh-cook: oklch(0.75 0.16 50); /* Bright apricot - Cook thoroughly */
   --fresh-cook-foreground: oklch(0.15 0.04 50);
-  --expired: oklch(0.70 0.18 25);                /* Bright tomato - Expired */
+  --expired: oklch(0.7 0.18 25); /* Bright tomato - Expired */
   --expired-foreground: oklch(0.98 0.01 25);
 
   /* ============================================
    * Mobile Navigation Colors (Dark Mode)
    * ============================================ */
-  --nav-bg: oklch(0.18 0.02 60 / 0.95);          /* Glass dark */
+  --nav-bg: oklch(0.18 0.02 60 / 0.95); /* Glass dark */
   --nav-border: oklch(0.32 0.02 60);
-  --nav-active: oklch(0.88 0.18 85);             /* Bright yolk */
+  --nav-active: oklch(0.88 0.18 85); /* Bright yolk */
   --nav-active-foreground: oklch(0.15 0.02 60);
   --nav-inactive: oklch(0.55 0.02 85);
 
@@ -874,15 +927,15 @@
    * NEO-SOFT-BRUTALISME Colors (Dark Mode)
    * Palette: Amber/Stone - Contrast & Depth
    * ============================================ */
-  --neo-bg: oklch(0.12 0.02 60);                 /* Stone-950 deep dark */
-  --neo-card: oklch(0.18 0.02 60);               /* Stone-900 */
-  --neo-text: oklch(0.95 0.008 85);              /* Stone-100 cream */
-  --neo-text-muted: oklch(0.55 0.02 60);         /* Stone-400 */
-  --neo-border: oklch(0.40 0.02 60);             /* Stone-700 visible */
-  --neo-shadow-color: oklch(0 0 0);              /* Pure black shadows */
-  --neo-accent: oklch(0.82 0.17 85);             /* Amber-400 */
+  --neo-bg: oklch(0.12 0.02 60); /* Stone-950 deep dark */
+  --neo-card: oklch(0.18 0.02 60); /* Stone-900 */
+  --neo-text: oklch(0.95 0.008 85); /* Stone-100 cream */
+  --neo-text-muted: oklch(0.55 0.02 60); /* Stone-400 */
+  --neo-border: oklch(0.4 0.02 60); /* Stone-700 visible */
+  --neo-shadow-color: oklch(0 0 0); /* Pure black shadows */
+  --neo-accent: oklch(0.82 0.17 85); /* Amber-400 */
   --neo-accent-foreground: oklch(0.15 0.02 60); /* Dark text on amber */
-  --neo-input: oklch(0.12 0.02 60);              /* Dark input */
+  --neo-input: oklch(0.12 0.02 60); /* Dark input */
 }
 
 /* ============================================
@@ -901,24 +954,24 @@
   --neo-card: oklch(0.18 0.02 60);
   --neo-text: oklch(0.95 0.008 85);
   --neo-text-muted: oklch(0.55 0.02 60);
-  --neo-border: oklch(0.40 0.02 60);
+  --neo-border: oklch(0.4 0.02 60);
   --neo-shadow-color: oklch(0 0 0);
   --neo-accent: oklch(0.82 0.17 85);
   --neo-accent-foreground: oklch(0.15 0.02 60);
   --neo-input: oklch(0.12 0.02 60);
   --fresh-extra: oklch(0.75 0.18 155);
   --fresh-extra-foreground: oklch(0.15 0.04 155);
-  --fresh: oklch(0.90 0.14 95);
+  --fresh: oklch(0.9 0.14 95);
   --fresh-foreground: oklch(0.15 0.04 60);
   --fresh-cook: oklch(0.75 0.16 50);
   --fresh-cook-foreground: oklch(0.15 0.04 50);
-  --expired: oklch(0.70 0.18 25);
+  --expired: oklch(0.7 0.18 25);
   --expired-foreground: oklch(0.98 0.01 25);
   --border: oklch(0.32 0.02 60);
   --border-width: 1.5px;
-  --shadow-hard: 3px 3px 0px oklch(0.10 0.02 60 / 0.3);
-  --shadow-hard-hover: 1px 1px 0px oklch(0.10 0.02 60 / 0.3);
-  --shadow-hard-lg: 5px 5px 0px oklch(0.10 0.02 60 / 0.3);
+  --shadow-hard: 3px 3px 0px oklch(0.1 0.02 60 / 0.3);
+  --shadow-hard-hover: 1px 1px 0px oklch(0.1 0.02 60 / 0.3);
+  --shadow-hard-lg: 5px 5px 0px oklch(0.1 0.02 60 / 0.3);
 }
 
 /* When site is in dark mode -> phone shows light theme */
@@ -937,14 +990,14 @@
   --neo-accent-foreground: oklch(0.15 0.02 60);
   --neo-input: oklch(1 0 0);
   --fresh-extra: oklch(0.72 0.18 155);
-  --fresh-extra-foreground: oklch(0.20 0.04 155);
+  --fresh-extra-foreground: oklch(0.2 0.04 155);
   --fresh: oklch(0.88 0.14 95);
   --fresh-foreground: oklch(0.25 0.04 60);
   --fresh-cook: oklch(0.72 0.16 50);
-  --fresh-cook-foreground: oklch(0.20 0.04 50);
+  --fresh-cook-foreground: oklch(0.2 0.04 50);
   --expired: oklch(0.65 0.16 25);
   --expired-foreground: oklch(0.98 0.01 25);
-  --border: oklch(0.90 0.02 85);
+  --border: oklch(0.9 0.02 85);
   --border-width: 2px;
   --shadow-hard: 4px 4px 0px var(--neo-shadow-color);
   --shadow-hard-hover: 2px 2px 0px var(--neo-shadow-color);
@@ -1266,7 +1319,11 @@
   --glow-amber-hover: 0 0 30px oklch(0.83 0.16 85 / 0.5);
 
   /* Gradients */
-  --gradient-cta: linear-gradient(to right, oklch(0.83 0.16 85), oklch(0.72 0.17 50));
+  --gradient-cta: linear-gradient(
+    to right,
+    oklch(0.83 0.16 85),
+    oklch(0.72 0.17 50)
+  );
 }
 
 /* Landing page specific classes */
@@ -1293,7 +1350,8 @@
 }
 
 @keyframes float-slow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -1307,7 +1365,8 @@
 }
 
 @keyframes badge-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) rotate(-2deg);
   }
   50% {
@@ -1318,7 +1377,9 @@
 /* Glow button effect */
 .glow-button {
   box-shadow: var(--glow-amber);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
 }
 
 .glow-button:hover {
@@ -1334,7 +1395,9 @@
 
 /* Bento grid item hover */
 .bento-item {
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .bento-item:hover {
@@ -1348,10 +1411,18 @@
   opacity: 0;
 }
 
-.stagger-item:nth-child(1) { animation-delay: 0.1s; }
-.stagger-item:nth-child(2) { animation-delay: 0.2s; }
-.stagger-item:nth-child(3) { animation-delay: 0.3s; }
-.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.stagger-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.stagger-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.stagger-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.stagger-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
 
 /* Other styles */
 

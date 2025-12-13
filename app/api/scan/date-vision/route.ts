@@ -3,11 +3,12 @@ import { z } from "zod";
 import { ZodRouteError } from "@/lib/errors/zod-route-error";
 import { prisma } from "@/lib/prisma";
 import { authRoute } from "@/lib/zod-route";
+import { extractDateFromImage } from "@/lib/ai/extract-date-from-image";
 import {
-  extractDateFromImage,
+  inferDateTypeFromText,
   parseFrenchDate,
   type DateType,
-} from "@/lib/ai/extract-date-from-image";
+} from "@/features/scanner/scan-parsing";
 import { calculateLayingDateFromDCR } from "@/features/scanner/lot-code-parser";
 
 /**
@@ -45,27 +46,6 @@ function extractDateFromRawText(
   }
 
   return null;
-}
-
-function inferDateTypeFromRawText(rawText: string): DateType {
-  const normalized = rawText.toLowerCase();
-
-  // Ponte / laying date keywords
-  if (
-    /\b(pondu|dop|date\s+de\s+ponte|d\.?\s*o\.?\s*p\.?)\b/gu.test(normalized)
-  ) {
-    return "laying";
-  }
-
-  // Expiration / DCR keywords
-  if (
-    /\b(dcr|ddm|dlc|exp|a\s+consommer|consommer)\b/gu.test(normalized)
-  ) {
-    return "dcr";
-  }
-
-  // Default: most egg boxes show DCR/DDM
-  return "dcr";
 }
 
 /**
@@ -199,7 +179,7 @@ export const POST = authRoute
 
     if (!result.found) {
       const inferredType = result.rawText
-        ? inferDateTypeFromRawText(result.rawText)
+        ? inferDateTypeFromText(result.rawText)
         : "dcr";
 
       const primary = extractDateFromRawText(

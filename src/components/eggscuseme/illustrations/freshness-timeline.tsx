@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 import { Eggy, type EggyMood } from "@/features/mascot/components/eggy";
 
 type FreshnessLevel = {

@@ -354,7 +354,7 @@ export function EggTimer() {
                             transition={{ type: "spring", stiffness: 500 }}
                           >
                             <Check
-                              className="size-5 text-fresh-extra drop-shadow-md"
+                              className="text-fresh-extra size-5 drop-shadow-md"
                               strokeWidth={3}
                             />
                           </motion.div>
@@ -363,7 +363,7 @@ export function EggTimer() {
                       <div className="flex flex-1 flex-col items-start justify-center md:items-center">
                         <span
                           className={cn(
-                            "text-sm font-semibold leading-tight",
+                            "text-sm leading-tight font-semibold",
                             isSelected
                               ? "text-foreground"
                               : "text-muted-foreground",

@@ -53,7 +53,7 @@ export function useBackNavigation(): BackNavigationResult {
     // Calculate parent by removing last segment
     const segments = pathname.split("/").filter(Boolean);
     const calculatedParent =
-      segments.length > 1 ? `/${  segments.slice(0, -1).join("/")}` : "/fridge";
+      segments.length > 1 ? `/${segments.slice(0, -1).join("/")}` : "/fridge";
 
     // Handle dynamic routes (e.g., /fridge/recipes/[id])
     const isDynamicChild =
@@ -66,7 +66,7 @@ export function useBackNavigation(): BackNavigationResult {
       parent = explicitParent;
     } else if (isDynamicChild) {
       // For dynamic routes like /fridge/recipes/123, go back to /fridge/recipes
-      parent = `/${  segments.slice(0, 2).join("/")}`;
+      parent = `/${segments.slice(0, 2).join("/")}`;
     } else {
       parent = calculatedParent;
     }
@@ -107,10 +107,10 @@ export function getBackHref(pathname: string): string {
 
   // Handle dynamic routes
   if (segments.length > 2 && segments[0] === "fridge") {
-    return `/${  segments.slice(0, 2).join("/")}`;
+    return `/${segments.slice(0, 2).join("/")}`;
   }
 
   return segments.length > 1
-    ? `/${  segments.slice(0, -1).join("/")}`
+    ? `/${segments.slice(0, -1).join("/")}`
     : "/fridge";
 }

@@ -17,7 +17,9 @@ type SidebarContextValue = {
   setMobileOpen: (open: boolean) => void;
 };
 
-export const SidebarContext = React.createContext<SidebarContextValue | null>(null);
+export const SidebarContext = React.createContext<SidebarContextValue | null>(
+  null,
+);
 
 function useSidebarContext() {
   const context = React.useContext(SidebarContext);
@@ -181,7 +183,7 @@ const NeoSidebar = React.forwardRef<HTMLElement, NeoSidebarProps>(
         style={{ width: expanded ? expandedWidth : collapsedWidth }}
         className={cn(
           neoSidebarVariants({ variant, className }),
-          "md:sticky md:top-0 md:self-start md:shadow-[var(--shadow-neo-xl)] md:mb-4 md:max-h-[calc(100vh-20px)] md:min-h-[calc(100vh-20px)] md:overflow-hidden md:border-r-transparent",
+          "md:sticky md:top-0 md:mb-4 md:max-h-[calc(100vh-20px)] md:min-h-[calc(100vh-20px)] md:self-start md:overflow-hidden md:border-r-transparent md:shadow-[var(--shadow-neo-xl)]",
         )}
         {...props}
       >
@@ -418,7 +420,7 @@ const NeoSidebarInset = React.forwardRef<
   <div
     ref={ref}
     data-slot="neo-sidebar-inset"
-    className={cn("flex-1 overflow-auto min-h-0", className)}
+    className={cn("min-h-0 flex-1 overflow-auto", className)}
     {...props}
   />
 ));

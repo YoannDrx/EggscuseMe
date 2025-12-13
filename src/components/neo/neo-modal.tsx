@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 import * as React from "react";
 

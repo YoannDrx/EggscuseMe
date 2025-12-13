@@ -6,7 +6,7 @@ import {
   useMotionValue,
   useTransform,
   type PanInfo,
-} from 'motion/react';
+} from "motion/react";
 import { Trash2 } from "lucide-react";
 import { useCallback, type ReactNode } from "react";
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   extractEggQuantityFromText,
   parseFrenchDate,
-} from "@/lib/ai/extract-date-from-image";
+} from "@/features/scanner/scan-parsing";
 import { calculateLayingDateFromDCR } from "@/features/scanner/lot-code-parser";
 
 function isoDate(date: Date | null): string | null {
@@ -70,4 +70,3 @@ describe("vision-scan parsing", () => {
     });
   });
 });
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 
 export type EggyMood = "happy" | "chef" | "timer" | "sad";
 

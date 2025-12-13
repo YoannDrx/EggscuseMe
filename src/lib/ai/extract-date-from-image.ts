@@ -169,7 +169,9 @@ export function extractEggQuantityFromText(text: string | null): number | null {
   return null;
 }
 
-export function extractEggSizeFromText(text: string | null): EggSizeValue | null {
+export function extractEggSizeFromText(
+  text: string | null,
+): EggSizeValue | null {
   if (!text) return null;
   const normalized = text.replace(/\s+/g, " ").toUpperCase();
 
@@ -256,7 +258,8 @@ function coerceDateString(value: unknown): string | null {
   const str = coerceNullableString(value);
   if (!str) return null;
 
-  const token = extractDateToken(str) ?? extractDateToken(str.replace(/\s+/g, " "));
+  const token =
+    extractDateToken(str) ?? extractDateToken(str.replace(/\s+/g, " "));
   if (!token) return str;
 
   return token;
@@ -270,7 +273,10 @@ const ExtendedExtractionResultSchema = z
     found: z.preprocess(coerceFound, z.boolean()),
     ddm: z.preprocess(coerceDateString, z.string().nullable()),
     layingDate: z.preprocess(coerceDateString, z.string().nullable()),
-    confidence: z.preprocess(coerceConfidence, z.enum(["high", "medium", "low"])),
+    confidence: z.preprocess(
+      coerceConfidence,
+      z.enum(["high", "medium", "low"]),
+    ),
     rawText: z.preprocess(coerceNullableString, z.string().nullable()),
     quantity: z.preprocess(coerceQuantity, z.number().int().nullable()),
     size: z.preprocess(coerceEggSize, EggSizeSchema.nullable()),
@@ -332,7 +338,9 @@ export async function extractDateFromImage(
       console.log("[Vision] Parsed result:", JSON.stringify(parsed));
       const normalized = ExtendedExtractionResultSchema.parse(parsed);
 
-      const combinedText = [normalized.rawText, text].filter(Boolean).join("\n");
+      const combinedText = [normalized.rawText, text]
+        .filter(Boolean)
+        .join("\n");
 
       const quantity =
         normalized.quantity ?? extractEggQuantityFromText(combinedText);
@@ -398,14 +406,14 @@ function extractFirstJsonObject(text: string): string | null {
         continue;
       }
 
-      if (char === "\"") {
+      if (char === '"') {
         inString = false;
       }
 
       continue;
     }
 
-    if (char === "\"") {
+    if (char === '"') {
       inString = true;
       continue;
     }

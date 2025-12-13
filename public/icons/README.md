@@ -4,17 +4,17 @@ Les icônes PWA doivent être générées à partir du fichier source `/public/i
 
 ## Icônes nécessaires
 
-| Fichier | Taille | Usage |
-|---------|--------|-------|
-| `icon-192x192.png` | 192x192 | Android standard |
-| `icon-512x512.png` | 512x512 | Android large |
+| Fichier                 | Taille  | Usage                               |
+| ----------------------- | ------- | ----------------------------------- |
+| `icon-192x192.png`      | 192x192 | Android standard                    |
+| `icon-512x512.png`      | 512x512 | Android large                       |
 | `icon-maskable-192.png` | 192x192 | Android maskable (avec padding 10%) |
-| `icon-maskable-512.png` | 512x512 | Android maskable large |
-| `apple-touch-icon.png` | 180x180 | iOS |
-| `badge-72x72.png` | 72x72 | Notification badge |
-| `shortcut-fridge.png` | 96x96 | Raccourci Frigo |
-| `shortcut-timer.png` | 96x96 | Raccourci Timer |
-| `shortcut-add.png` | 96x96 | Raccourci Ajouter |
+| `icon-maskable-512.png` | 512x512 | Android maskable large              |
+| `apple-touch-icon.png`  | 180x180 | iOS                                 |
+| `badge-72x72.png`       | 72x72   | Notification badge                  |
+| `shortcut-fridge.png`   | 96x96   | Raccourci Frigo                     |
+| `shortcut-timer.png`    | 96x96   | Raccourci Timer                     |
+| `shortcut-add.png`      | 96x96   | Raccourci Ajouter                   |
 
 ## Génération avec ImageMagick
 

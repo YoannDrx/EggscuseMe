@@ -21,7 +21,7 @@ export function NeoImage({
           "shadow-[var(--shadow-neo-lg)]",
         )}
       >
-        { }
+        {}
         <img
           src={src}
           alt={alt ?? ""}

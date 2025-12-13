@@ -60,7 +60,7 @@ type EggscuseDB = {
     key: string;
     value: CachedSession;
   };
-} & DBSchema
+} & DBSchema;
 
 const DB_NAME = "eggscuseme-offline";
 const DB_VERSION = 1;

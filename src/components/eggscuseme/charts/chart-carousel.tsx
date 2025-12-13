@@ -6,7 +6,7 @@ import {
   useMotionValue,
   useTransform,
   type PanInfo,
-} from 'motion/react';
+} from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useState, type ReactNode } from "react";
 
