@@ -31,29 +31,45 @@ export function PhoneMockup({
       style={enableParallax ? { y, rotateY: rotate } : undefined}
       className={cn("perspective-1000 relative", className)}
     >
-      {/* iPhone Frame - Black */}
-      <div className="phone-shadow relative h-[600px] w-[290px] rounded-[3rem] border-[12px] border-black bg-black">
-        {/* Dynamic Island / Notch */}
-        <div className="absolute top-2 left-1/2 z-20 h-[28px] w-[100px] -translate-x-1/2 rounded-full bg-black" />
+      {/* iPhone Frame (from portfolio-yoann) */}
+      <div className="origin-top scale-75">
+        <div className="relative mx-auto w-[375px]">
+          {/* Device Shadow */}
+          <div className="absolute inset-0 translate-y-8 scale-95 rounded-[50px] bg-gradient-to-b from-black/20 to-black/40 blur-3xl" />
 
-        {/* Side Buttons - Left */}
-        <div className="absolute top-[80px] -left-[15px] h-[28px] w-[3px] rounded-l-sm bg-neutral-800" />
-        <div className="absolute top-[130px] -left-[15px] h-[50px] w-[3px] rounded-l-sm bg-neutral-800" />
-        <div className="absolute top-[190px] -left-[15px] h-[50px] w-[3px] rounded-l-sm bg-neutral-800" />
+          {/* Device Frame */}
+          <div className="shadow-device relative rounded-[50px] bg-device-bg p-2.5">
+            {/* Inner Bezel */}
+            <div className="relative rounded-[42px] bg-device-bezel p-[2px]">
+              {/* Screen Container */}
+              <div className="relative overflow-hidden rounded-[40px] bg-background">
+                {/* Dynamic Island */}
+                <div className="absolute top-0 left-1/2 z-50 -translate-x-1/2">
+                  <div className="bg-device-notch mt-2.5 flex h-[30px] w-[110px] items-center justify-center gap-3 rounded-full">
+                    {/* Camera */}
+                    <div className="h-2.5 w-2.5 rounded-full bg-zinc-800 ring-1 ring-zinc-700">
+                      <div className="ml-0.5 mt-0.5 h-1 w-1 rounded-full bg-blue-400/30" />
+                    </div>
+                  </div>
+                </div>
 
-        {/* Side Button - Right */}
-        <div className="absolute top-[140px] -right-[15px] h-[70px] w-[3px] rounded-r-sm bg-neutral-800" />
+                {/* Screen Content */}
+                <div className="h-[800px] overflow-hidden">{children}</div>
 
-        {/* Screen Content */}
-        <div className="relative h-full w-full overflow-hidden rounded-[2.25rem] bg-[#0C0A09]">
-          {children}
+                {/* Home Indicator */}
+                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2">
+                  <div className="h-[4px] w-[120px] rounded-full bg-foreground/20" />
+                </div>
+              </div>
+            </div>
+
+            {/* Side Buttons */}
+            <div className="bg-device-bezel absolute top-[140px] left-[-2px] h-[28px] w-[3px] rounded-l-sm" />
+            <div className="bg-device-bezel absolute top-[180px] left-[-2px] h-[28px] w-[3px] rounded-l-sm" />
+            <div className="bg-device-bezel absolute top-[100px] left-[-2px] h-[16px] w-[3px] rounded-l-sm" />
+            <div className="bg-device-bezel absolute top-[160px] right-[-2px] h-[42px] w-[3px] rounded-r-sm" />
+          </div>
         </div>
-
-        {/* Home Indicator */}
-        <div className="absolute bottom-2 left-1/2 h-[5px] w-[120px] -translate-x-1/2 rounded-full bg-neutral-700" />
-
-        {/* Screen Reflection */}
-        <div className="pointer-events-none absolute inset-0 rounded-[2.25rem] bg-gradient-to-br from-white/5 to-transparent" />
       </div>
     </motion.div>
   );

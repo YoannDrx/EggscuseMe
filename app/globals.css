@@ -553,6 +553,12 @@
   --color-neo-accent-foreground: var(--neo-accent-foreground);
   --color-neo-input: var(--neo-input);
 
+  /* Device mockup (landing) */
+  --color-device-bg: var(--device-bg);
+  --color-device-bezel: var(--device-bezel);
+  --color-device-notch: var(--device-notch);
+  --shadow-device: var(--device-shadow);
+
   /* Neo radius tokens */
   --radius-neo-sm: 0.75rem;
   --radius-neo-md: 1rem;
@@ -793,6 +799,16 @@
   --neo-accent: oklch(0.82 0.17 85); /* Amber-400 */
   --neo-accent-foreground: oklch(0.15 0.02 60); /* Dark text on amber */
   --neo-input: oklch(1 0 0); /* White input */
+
+  /* ============================================
+   * Device Mockup (Landing)
+   * ============================================ */
+  --device-bg: oklch(0.12 0.01 270);
+  --device-bezel: oklch(0.25 0.01 270);
+  --device-notch: oklch(0.1 0 0);
+  --device-shadow:
+    0 50px 100px -20px hsl(0 0% 0% / 0.3), 0 30px 60px -30px
+      hsl(0 0% 0% / 0.4);
 }
 
 .dark {
@@ -1338,10 +1354,8 @@
 }
 
 /* Phone mockup shadows */
-.phone-shadow {
-  box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+.shadow-device {
+  box-shadow: var(--device-shadow);
 }
 
 /* Floating animation */
