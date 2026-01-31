@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useResponsiveScale } from "@/hooks/use-responsive-scale";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import type { ReactNode } from "react";
@@ -25,8 +26,8 @@ export function PhoneMockup({
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
   const rotate = useTransform(scrollYProgress, [0, 1], [5, -5]);
 
-  // iPhone 14 Pro-ish dimensions (kept local so we don't import extra token systems)
-  const scale = 0.95;
+  // iPhone 14 Pro-ish dimensions with responsive scaling
+  const scale = useResponsiveScale();
   const width = Math.round(393 * scale);
   const height = Math.round(852 * scale);
 
@@ -44,7 +45,10 @@ export function PhoneMockup({
       className={cn("perspective-1000 relative", className)}
     >
       {/* iPhone Frame (from portfolio-yoann) */}
-      <div className="relative mx-auto" style={{ width }}>
+      <div
+        className="relative mx-auto max-h-[70vh] lg:max-h-none"
+        style={{ width }}
+      >
         {/* Device Shadow */}
         <div
           className="absolute inset-0 translate-y-8 scale-95 bg-gradient-to-b from-black/20 to-black/40 blur-3xl"
@@ -53,17 +57,17 @@ export function PhoneMockup({
 
         {/* Device Frame */}
         <div
-          className="shadow-device relative bg-device-bg p-2.5"
+          className="shadow-device bg-device-bg relative p-2.5"
           style={{ borderRadius: frameRadius }}
         >
           {/* Inner Bezel */}
           <div
-            className="relative bg-device-bezel p-[2px]"
+            className="bg-device-bezel relative p-[2px]"
             style={{ borderRadius: bezelRadius }}
           >
             {/* Screen Container */}
             <div
-              className="relative overflow-hidden bg-background"
+              className="bg-background relative overflow-hidden"
               style={{ borderRadius: screenRadius }}
             >
               {/* Dynamic Island */}
@@ -74,7 +78,7 @@ export function PhoneMockup({
                 >
                   {/* Camera */}
                   <div className="h-2.5 w-2.5 rounded-full bg-zinc-800 ring-1 ring-zinc-700">
-                    <div className="ml-0.5 mt-0.5 h-1 w-1 rounded-full bg-blue-400/30" />
+                    <div className="mt-0.5 ml-0.5 h-1 w-1 rounded-full bg-blue-400/30" />
                   </div>
                 </div>
               </div>
@@ -86,7 +90,7 @@ export function PhoneMockup({
 
               {/* Home Indicator */}
               <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2">
-                <div className="h-[4px] w-[120px] rounded-full bg-foreground/20" />
+                <div className="bg-foreground/20 h-[4px] w-[120px] rounded-full" />
               </div>
             </div>
           </div>

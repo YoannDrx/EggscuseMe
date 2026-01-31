@@ -21,14 +21,14 @@ export function HeroSection({ className }: HeroSectionProps) {
   return (
     <section
       className={cn(
-        "bg-neo-bg relative min-h-screen overflow-hidden pt-24",
+        "bg-neo-bg relative min-h-screen overflow-hidden pt-12 lg:pt-24",
         className,
       )}
     >
       {/* Background Gradient Blobs - Removed per user request */}
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-8">
+        <div className="grid items-center gap-6 md:gap-8 lg:grid-cols-2 lg:gap-8">
           {/* Left Column - Content */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {/* Badge */}
