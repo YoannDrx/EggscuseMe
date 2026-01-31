@@ -1,5 +1,4 @@
 import { TailwindIndicator } from "@/components/utils/tailwind-indicator";
-import { FloatingLegalFooter } from "@/features/legal/floating-legal-footer";
 import { NextTopLoader } from "@/features/page/next-top-loader";
 import { ServerToaster } from "@/features/server-sonner/server-toaster";
 import { defaultLocale } from "@/i18n/config";
@@ -114,7 +113,6 @@ async function LocaleAwareLayout({ children, modal }: LayoutProps<"/">) {
               {modal}
             </Suspense>
             <TailwindIndicator />
-            <FloatingLegalFooter />
             <Suspense>
               <ServerToaster />
             </Suspense>

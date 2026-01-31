@@ -6,6 +6,7 @@ import { GradientCTA } from "@/features/landing/cta/gradient-cta";
 import { FAQSection } from "@/features/landing/faq-section";
 import { Pricing } from "@/features/plans/pricing-section";
 import { Footer } from "@/features/layout/footer";
+import { NewsletterSection } from "@/features/newsletter/newsletter-section";
 import { getTranslations } from "next-intl/server";
 
 export default async function HomePage() {
@@ -45,6 +46,9 @@ export default async function HomePage() {
 
       {/* Final CTA */}
       <GradientCTA />
+
+      {/* Newsletter */}
+      <NewsletterSection />
 
       {/* Footer */}
       <Footer />

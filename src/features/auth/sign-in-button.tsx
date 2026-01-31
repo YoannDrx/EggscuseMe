@@ -22,7 +22,7 @@ export const SignInButton = () => {
   const callbackUrl = href === "/" ? "/fridge" : href;
 
   return (
-    <NeoButton asChild size="sm" variant="outline">
+    <NeoButton asChild variant="outline" className="h-10 px-5 text-sm">
       <Link href={`/auth/signin?callbackUrl=${callbackUrl}`}>Sign in</Link>
     </NeoButton>
   );
@@ -39,12 +39,12 @@ export const LoggedInButton = ({
 }) => {
   return (
     <UserDropdown>
-      <button className="group size-9 rounded-full">
+      <button className="group size-10 rounded-full">
         <NeoAvatar
           src={user.image ?? undefined}
           alt={user.name ?? "User"}
           fallback={user.email?.slice(0, 1).toUpperCase() ?? "U"}
-          size="sm"
+          size="md"
           className="size-full group-active:scale-95"
         />
       </button>

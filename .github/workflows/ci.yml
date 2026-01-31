@@ -237,10 +237,12 @@ jobs:
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: stub
       STRIPE_SECRET_KEY: stub
       STRIPE_WEBHOOK_SECRET: stub
-      STRIPE_PRO_PLAN_ID: stub
-      STRIPE_PRO_YEARLY_PLAN_ID: stub
-      STRIPE_ULTRA_PLAN_ID: stub
-      STRIPE_ULTRA_YEARLY_PLAN_ID: stub
+      STRIPE_BRIGADE_PLAN_ID: stub
+      STRIPE_BRIGADE_YEARLY_PLAN_ID: stub
+      STRIPE_PREMIUM_PLAN_ID: stub
+      STRIPE_PREMIUM_YEARLY_PLAN_ID: stub
+      STRIPE_CHEF_PLAN_ID: stub
+      STRIPE_CHEF_YEARLY_PLAN_ID: stub
 
     steps:
       - name: Checkout code
