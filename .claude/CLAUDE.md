@@ -1,80 +1,17 @@
 # CLAUDE.md
 
----
-
-## ⚡ AUTO-START grepai (à faire automatiquement)
-
-**Dès que tu commences à travailler sur ce projet, lance cette commande en background :**
-
-```bash
-~/.local/bin/grepai watch &
-```
-
-> Lance cette commande UNE SEULE FOIS au début de la session. Ne la relance pas à chaque question.
-
----
-
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ---
 
-## grepai - Recherche sémantique de code (100% local et gratuit)
+## grepai - OBLIGATOIRE
 
-**grepai est l'outil principal pour explorer ce codebase.** Il utilise des embeddings locaux (Ollama) pour la recherche sémantique.
+**Tu DOIS utiliser grepai (via MCP) pour TOUTE recherche de code.**
 
-### Prérequis
+- ❌ INTERDIT : Grep, Glob, grep, find, rg
+- ✅ OBLIGATOIRE : `mcp__grepai__grepai_search`
 
-- Ollama doit tourner : `brew services start ollama`
-- Modèle d'embedding : `ollama pull nomic-embed-text`
-
-### Lancer le watch (à faire à chaque ouverture du projet)
-
-```bash
-cd ~/Projets/EggscuseMe
-~/.local/bin/grepai watch
-```
-
-> Garde ce terminal ouvert : il surveille les modifications en temps réel.
-
-### Commande de recherche
-
-```bash
-~/.local/bin/grepai search "ta question en langage naturel"
-```
-
-### Commandes disponibles
-
-| Commande | Description |
-|----------|-------------|
-| `grepai search "<query>"` | Recherche sémantique dans le code |
-| `grepai trace callers "<function>"` | Voir qui appelle une fonction |
-| `grepai trace callees "<function>"` | Voir ce qu'une fonction appelle |
-| `grepai watch` | Indexation en temps réel |
-
-### Stratégie pour requêtes complexes
-
-Lance plusieurs grepai en parallèle plutôt qu'une seule requête surchargée :
-
-```bash
-~/.local/bin/grepai search "comment fonctionne le calcul de fraîcheur des oeufs"
-~/.local/bin/grepai search "comment sont gérées les notifications de péremption"
-~/.local/bin/grepai search "comment fonctionne le système d'organisations pour le partage"
-```
-
-### Règles
-
-- **OBLIGATOIRE** : Utilise grepai pour TOUTE recherche de code. N'utilise JAMAIS grep, Grep tool, ou Glob.
-- **Langage naturel** : Parle à grepai comme à un collègue
-  - ❌ `"egg freshness calculation date"` (mots-clés)
-  - ✅ `"Comment est calculée la fraîcheur des oeufs à partir de la date de ponte ?"` (question naturelle)
-
----
-
-## Subagents (Task tool)
-
-**Les subagents n'héritent PAS des instructions de ce fichier.**
-
-Quand tu lances un subagent, copie-colle cette section grepai dans le prompt du subagent.
+Voir `~/.claude/CLAUDE.md` pour les instructions complètes.
 
 ---
 
