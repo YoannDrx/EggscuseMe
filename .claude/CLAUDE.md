@@ -1,85 +1,17 @@
 # CLAUDE.md
 
----
-
-## ⚡ AUTO-START mgrep (à faire automatiquement)
-
-**Dès que tu commences à travailler sur ce projet, lance cette commande en background :**
-
-```bash
-mgrep watch --store "EggscuseMe" &
-```
-
-> Lance cette commande UNE SEULE FOIS au début de la session. Ne la relance pas à chaque question.
-
----
-
-
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ---
 
-## mgrep - Assistant de recherche de code
+## grepai - OBLIGATOIRE
 
-**mgrep est l'outil principal pour explorer ce codebase.** Il retourne une réponse en langage naturel + les sources pertinentes.
+**Tu DOIS utiliser les commandes CLI grepai pour TOUTE recherche de code.**
 
-### Store : `EggscuseMe`
+- ❌ INTERDIT : Grep, Glob, grep, find, rg
+- ✅ OBLIGATOIRE : `grepai search "query"` via Bash
 
-### Lancer le watch (à faire à chaque ouverture du projet)
-
-```bash
-cd ~/Projets/EggscuseMe
-mgrep watch --store "EggscuseMe"
-```
-
-> Garde ce terminal ouvert : il surveille les modifications en temps réel.
-
-### Commande de recherche
-
-```bash
-mgrep "ta question en langage naturel" --store "EggscuseMe" -a -m <nombre>
-```
-
-### Paramètres
-
-| Paramètre | Description |
-|-----------|-------------|
-| `--store "EggscuseMe"` | **Obligatoire** - le store indexé du projet |
-| `-a` | Active la réponse en langage naturel |
-| `-m <n>` | Nombre de résultats (minimum 10) |
-
-### Ajuster `-m` selon la complexité
-
-| Type de requête | `-m` recommandé |
-|-----------------|-----------------|
-| Question simple (1-2 fichiers) | 10 |
-| Question moyenne (flow, feature) | 20-30 |
-| Question complexe (debug, architecture) | 30-50 |
-
-### Stratégie pour requêtes complexes
-
-Lance plusieurs mgrep en parallèle plutôt qu'une seule requête surchargée :
-
-```bash
-mgrep "comment fonctionne le calcul de fraîcheur des oeufs" --store "EggscuseMe" -a -m 20
-mgrep "comment sont gérées les notifications de péremption" --store "EggscuseMe" -a -m 20
-mgrep "comment fonctionne le système d'organisations pour le partage" --store "EggscuseMe" -a -m 20
-```
-
-### Règles
-
-- **OBLIGATOIRE** : Utilise mgrep pour TOUTE recherche de code. N'utilise JAMAIS grep, Grep tool, ou Glob.
-- **Langage naturel** : Parle à mgrep comme à un collègue
-  - ❌ `"egg freshness calculation date"` (mots-clés)
-  - ✅ `"Comment est calculée la fraîcheur des oeufs à partir de la date de ponte ?"` (question naturelle)
-
----
-
-## Subagents (Task tool)
-
-**Les subagents n'héritent PAS des instructions de ce fichier.**
-
-Quand tu lances un subagent, copie-colle cette section mgrep dans le prompt du subagent.
+Voir `~/.claude/CLAUDE.md` pour les instructions complètes.
 
 ---
 

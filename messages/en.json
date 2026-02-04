@@ -694,6 +694,17 @@
     "plansAndSubscriptions": "Plans and subscriptions",
     "tipsAndTricks": "Tips and tricks"
   },
+  "newsletter": {
+    "title": "Stay informed",
+    "subtitle": "Subscribe to receive our updates and be notified when the mobile app launches.",
+    "placeholder": "Your email",
+    "submit": "Subscribe",
+    "submitting": "Subscribing...",
+    "success": "Thank you! You're subscribed.",
+    "alreadySubscribed": "You're already subscribed!",
+    "error": "An error occurred",
+    "comingSoon": "Coming soon on mobile!"
+  },
   "footer": {
     "description": "The #1 app for tracking your eggs' freshness and reducing food waste. Simple, effective, free.",
     "product": "Product",

@@ -694,6 +694,17 @@
     "plansAndSubscriptions": "Plans et abonnements",
     "tipsAndTricks": "Conseils et astuces"
   },
+  "newsletter": {
+    "title": "Restez informé",
+    "subtitle": "Inscrivez-vous pour recevoir nos actualités et être prévenu du lancement de l'app mobile.",
+    "placeholder": "Votre email",
+    "submit": "S'inscrire",
+    "submitting": "Inscription...",
+    "success": "Merci ! Vous êtes inscrit.",
+    "alreadySubscribed": "Vous êtes déjà inscrit !",
+    "error": "Une erreur est survenue",
+    "comingSoon": "Prochainement sur mobile !"
+  },
   "footer": {
     "description": "L'application #1 pour suivre la fraîcheur de vos œufs et réduire le gaspillage alimentaire. Simple, efficace, gratuit.",
     "product": "Produit",

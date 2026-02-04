@@ -42,3 +42,4 @@ src/generated
 /ci-artifacts
 
 .playwright-mcp
+.grepai/

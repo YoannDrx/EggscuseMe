@@ -3,10 +3,10 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return null;
   }
 
-  // Ne pas enregistrer en développement (optionnel)
-  // if (process.env.NODE_ENV === "development") {
-  //   return null;
-  // }
+  // Ne pas enregistrer en développement
+  if (process.env.NODE_ENV === "development") {
+    return null;
+  }
 
   try {
     const registration = await navigator.serviceWorker.register("/sw.js", {
