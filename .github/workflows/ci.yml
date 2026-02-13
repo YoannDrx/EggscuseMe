@@ -230,8 +230,8 @@ jobs:
       PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
       NODE_ENV: production
       PORT: 3000
-      NEXT_PUBLIC_EMAIL_CONTACT: contact@nowts.app
-      EMAIL_FROM: "NowTS <contact@nowts.app>"
+      NEXT_PUBLIC_EMAIL_CONTACT: hello@eggscuseme.app
+      EMAIL_FROM: "EggscuseMe <noreply@do-not-reply.app>"
       NEXT_PUBLIC_POSTHOG_KEY: ci-placeholder
       NEXT_PUBLIC_POSTHOG_HOST: https://app.posthog.com
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: stub

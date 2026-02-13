@@ -90,8 +90,8 @@ export const sendEmail = async (params: SendEmailParams) => {
 
   const result = await mailAdapter.send({
     ...params,
-    // Use EMAIL_FROM env var, or Resend's onboarding address (no domain verification needed)
-    from: params.from ?? env.EMAIL_FROM ?? "EggscuseMe <onboarding@resend.dev>",
+    from:
+      params.from ?? env.EMAIL_FROM ?? "EggscuseMe <noreply@do-not-reply.app>",
     html,
   });
 

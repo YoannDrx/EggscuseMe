@@ -28,7 +28,7 @@ export const SiteConfig = {
     name: "EggscuseMe Team",
   },
   support: {
-    email: "contact@eggscuseme.app",
+    email: "hello@eggscuseme.app",
   },
   features: {
     /**
