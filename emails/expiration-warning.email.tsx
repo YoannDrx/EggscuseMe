@@ -29,13 +29,13 @@ function getFreshnessColor(daysLeft: number): string {
 }
 
 function getDaysLeftTextFr(daysLeft: number): string {
-  if (daysLeft === 0) return "Expire aujourd'hui";
+  if (daysLeft === 0) return "DCR aujourd'hui";
   if (daysLeft === 1) return "1 jour restant";
   return `${daysLeft} jours restants`;
 }
 
 function getDaysLeftTextEn(daysLeft: number): string {
-  if (daysLeft === 0) return "Expires today";
+  if (daysLeft === 0) return "Best-before today";
   if (daysLeft === 1) return "1 day left";
   return `${daysLeft} days left`;
 }
@@ -62,7 +62,7 @@ export default function ExpirationWarningEmail({
   return (
     <EggscuseMeEmailLayout eggyMood="chef">
       <Preview>
-        {`${totalEggs} oeufs vont expirer / ${totalEggs} eggs expiring soon - ${fridgeName}`}
+        {`${totalEggs} œufs arrivent à DCR / ${totalEggs} eggs near best-before date - ${fridgeName}`}
       </Preview>
 
       {/* ==================== FRENCH VERSION ==================== */}
@@ -75,7 +75,7 @@ export default function ExpirationWarningEmail({
           margin: "0 0 24px 0",
         }}
       >
-        Alerte Fraicheur
+        Alerte fraîcheur
       </Heading>
 
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
@@ -83,8 +83,8 @@ export default function ExpirationWarningEmail({
       </Text>
 
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
-        Certains oeufs de votre frigo <strong>{fridgeName}</strong> arrivent
-        bientot a expiration. Il est temps de les cuisiner !
+        Certains œufs de votre frigo <strong>{fridgeName}</strong> arrivent
+        bientôt à leur DCR. Il est temps de les cuisiner !
       </Text>
 
       <EmailInfoBox>
@@ -97,7 +97,7 @@ export default function ExpirationWarningEmail({
             margin: "0 0 12px 0",
           }}
         >
-          Oeufs a consommer rapidement :
+          Œufs à consommer rapidement :
         </Heading>
 
         {eggs.map((egg, index) => (
@@ -121,7 +121,7 @@ export default function ExpirationWarningEmail({
                 margin: "0 0 4px 0",
               }}
             >
-              {egg.name || "Boite d'oeufs"}
+              {egg.name || "Boîte d'œufs"}
             </Text>
             <Text
               style={{
@@ -130,7 +130,7 @@ export default function ExpirationWarningEmail({
                 margin: 0,
               }}
             >
-              {egg.quantity} oeufs restants •{" "}
+              {egg.quantity} œufs restants •{" "}
               <strong style={{ color: getFreshnessColor(egg.daysLeft) }}>
                 {getDaysLeftTextFr(egg.daysLeft)}
               </strong>
@@ -146,8 +146,8 @@ export default function ExpirationWarningEmail({
           fontStyle: "italic",
         }}
       >
-        Idees de recettes : oeufs durs, quiche, omelette, ou patisserie sont
-        parfaits pour utiliser des oeufs proches de l&apos;expiration !
+        Idées de recettes : œufs durs, quiche, omelette ou pâtisserie sont
+        parfaits pour utiliser des œufs proches de leur DCR !
       </Text>
 
       <Section style={{ textAlign: "center", margin: "24px 0" }}>
@@ -161,7 +161,7 @@ export default function ExpirationWarningEmail({
           textAlign: "center",
         }}
       >
-        Vous recevez cet email car les notifications sont activees.
+        Vous recevez cet email car les notifications sont activées.
         {unsubscribeUrl ? (
           <>
             {" "}
@@ -172,7 +172,7 @@ export default function ExpirationWarningEmail({
                 textDecoration: "underline",
               }}
             >
-              Se desabonner
+              Se désabonner
             </a>
             {" | "}
           </>
@@ -181,7 +181,7 @@ export default function ExpirationWarningEmail({
           href={settingsUrl}
           style={{ color: EMAIL_COLORS.textLight, textDecoration: "underline" }}
         >
-          Gerer mes preferences
+          Gérer mes préférences
         </a>
       </Text>
 
@@ -206,8 +206,8 @@ export default function ExpirationWarningEmail({
       </Text>
 
       <Text style={{ fontSize: "16px", color: EMAIL_COLORS.text }}>
-        Some eggs in your fridge <strong>{fridgeName}</strong> are about to
-        expire. Time to cook them!
+        Some eggs in your fridge <strong>{fridgeName}</strong> are close to
+        their best-before date. Time to cook them!
       </Text>
 
       <EmailInfoBox>
@@ -270,7 +270,7 @@ export default function ExpirationWarningEmail({
         }}
       >
         Recipe ideas: hard-boiled eggs, quiche, omelette, or pastries are
-        perfect for using eggs close to expiration!
+        perfect for using eggs close to their best-before date!
       </Text>
 
       <Section style={{ textAlign: "center", margin: "24px 0" }}>

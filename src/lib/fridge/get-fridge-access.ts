@@ -55,7 +55,7 @@ export async function getFridgeAccess(
       : { ownerId: user.id, isDefault: true },
     include: {
       eggBoxes: {
-        orderBy: { layingDate: "asc" },
+        orderBy: { dcrDate: "asc" },
       },
       members: {
         include: {
@@ -86,7 +86,7 @@ export async function getFridgeAccess(
       where: { ownerId: user.id },
       include: {
         eggBoxes: {
-          orderBy: { layingDate: "asc" },
+          orderBy: { dcrDate: "asc" },
         },
         members: {
           include: {
@@ -119,7 +119,7 @@ export async function getFridgeAccess(
       fridge: {
         include: {
           eggBoxes: {
-            orderBy: { layingDate: "asc" },
+            orderBy: { dcrDate: "asc" },
           },
           members: {
             include: {

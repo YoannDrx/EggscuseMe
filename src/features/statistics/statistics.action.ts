@@ -3,9 +3,13 @@
 import { prisma } from "@/lib/prisma";
 import { authAction } from "@/lib/actions/safe-actions";
 import { getFridgeAccess } from "@/lib/fridge/get-fridge-access";
-import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
+import { calculateEggBoxFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { z } from "zod";
 import { getTranslations } from "next-intl/server";
+
+function csvCell(value: string): string {
+  return `"${value.replaceAll('"', '""')}"`;
+}
 
 /**
  * Get statistics data for the current user's fridge
@@ -78,7 +82,7 @@ export const getStatisticsAction = authAction.action(
     };
 
     for (const c of consumptions) {
-      const freshness = calculateFreshness(c.eggBox.layingDate);
+      const freshness = calculateEggBoxFreshness(c.eggBox, c.createdAt);
       freshnessAtConsumption[freshness.status] += c.quantity;
     }
 
@@ -97,7 +101,7 @@ export const getStatisticsAction = authAction.action(
     };
 
     for (const box of eggBoxes) {
-      const freshness = calculateFreshness(box.layingDate);
+      const freshness = calculateEggBoxFreshness(box);
       currentFreshness[freshness.status] += box.remaining;
     }
 
@@ -106,7 +110,7 @@ export const getStatisticsAction = authAction.action(
     if (totalEggs > 0) {
       let totalDaysRemaining = 0;
       for (const box of eggBoxes) {
-        const freshness = calculateFreshness(box.layingDate);
+        const freshness = calculateEggBoxFreshness(box);
         totalDaysRemaining += freshness.daysRemaining * box.remaining;
       }
       avgFreshnessScore = Math.round(totalDaysRemaining / totalEggs);
@@ -199,9 +203,10 @@ export const exportConsumptionCSVAction = authAction.action(
       c.notes ?? "",
     ]);
 
-    const csv = [headers.join(","), ...rows.map((row) => row.join(","))].join(
-      "\n",
-    );
+    const csv = [
+      headers.map(csvCell).join(","),
+      ...rows.map((row) => row.map(csvCell).join(",")),
+    ].join("\n");
 
     return { csv };
   },

@@ -1,7 +1,5 @@
-import { dayjs } from "@/lib/dayjs";
 import { prisma } from "@/lib/prisma";
-
-const EXPIRATION_DAYS = 28; // Eggs expire 28 days after laying
+import { differenceInCalendarDays, startOfDay } from "date-fns";
 
 type ExpiringEggBox = {
   id: string;
@@ -9,6 +7,7 @@ type ExpiringEggBox = {
   remaining: number;
   daysRemaining: number;
   layingDate: Date;
+  dcrDate: Date;
   fridge: {
     id: string;
     name: string;
@@ -47,64 +46,71 @@ export async function getUsersWithExpiringEggs(): Promise<
     },
   });
 
-  // Get all egg boxes for these users in a single query
-  const userIds = usersWithPrefs.map((p) => p.userId);
-  const allEggBoxes = await prisma.eggBox.findMany({
-    where: {
-      userId: { in: userIds },
-      remaining: { gt: 0 },
-    },
-    include: {
-      fridge: {
-        select: {
-          id: true,
-          name: true,
+  const today = startOfDay(new Date());
+
+  const results = await Promise.all(
+    usersWithPrefs.map(async (pref): Promise<UserWithExpiringEggs | null> => {
+      if (!pref.user.email) return null;
+
+      const [ownedFridges, memberships] = await Promise.all([
+        prisma.fridge.findMany({
+          where: { ownerId: pref.userId },
+          select: { id: true },
+        }),
+        prisma.fridgeMember.findMany({
+          where: { userId: pref.userId },
+          select: { fridgeId: true },
+        }),
+      ]);
+
+      const fridgeIds = [
+        ...ownedFridges.map((fridge) => fridge.id),
+        ...memberships.map((membership) => membership.fridgeId),
+      ];
+
+      if (fridgeIds.length === 0) return null;
+
+      const eggBoxes = await prisma.eggBox.findMany({
+        where: {
+          fridgeId: { in: fridgeIds },
+          remaining: { gt: 0 },
         },
-      },
-    },
-  });
+        include: {
+          fridge: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
 
-  // Group egg boxes by user
-  const eggBoxesByUser = new Map<string, typeof allEggBoxes>();
-  for (const box of allEggBoxes) {
-    const userBoxes = eggBoxesByUser.get(box.userId);
-    if (userBoxes) {
-      userBoxes.push(box);
-    } else {
-      eggBoxesByUser.set(box.userId, [box]);
-    }
-  }
+      const expiringEggs = eggBoxes
+        .map((box): ExpiringEggBox | null => {
+          const daysRemaining = differenceInCalendarDays(
+            startOfDay(box.dcrDate),
+            today,
+          );
 
-  const results: UserWithExpiringEggs[] = [];
+          if (daysRemaining < 0 || daysRemaining > pref.notifyDaysBefore) {
+            return null;
+          }
 
-  for (const pref of usersWithPrefs) {
-    if (!pref.user.email) continue;
+          return {
+            id: box.id,
+            name: box.name,
+            remaining: box.remaining,
+            daysRemaining,
+            layingDate: box.layingDate,
+            dcrDate: box.dcrDate,
+            fridge: box.fridge,
+          };
+        })
+        .filter((egg): egg is ExpiringEggBox => egg !== null);
 
-    const eggBoxes = eggBoxesByUser.get(pref.userId) ?? [];
+      if (expiringEggs.length === 0) return null;
 
-    // Filter boxes that are expiring within the user's notification threshold
-    const expiringEggs: ExpiringEggBox[] = [];
-
-    for (const box of eggBoxes) {
-      const expirationDate = dayjs(box.layingDate).add(EXPIRATION_DAYS, "day");
-      const daysRemaining = expirationDate.diff(dayjs(), "day");
-
-      // Include if expiring within threshold and not already expired
-      if (daysRemaining >= 0 && daysRemaining <= pref.notifyDaysBefore) {
-        expiringEggs.push({
-          id: box.id,
-          name: box.name,
-          remaining: box.remaining,
-          daysRemaining,
-          layingDate: box.layingDate,
-          fridge: box.fridge,
-        });
-      }
-    }
-
-    // Only include users who have expiring eggs
-    if (expiringEggs.length > 0) {
-      results.push({
+      return {
         userId: pref.userId,
         userName: pref.user.name || "Chef",
         userEmail: pref.user.email,
@@ -112,11 +118,13 @@ export async function getUsersWithExpiringEggs(): Promise<
         emailEnabled: pref.emailEnabled,
         pushEnabled: pref.pushEnabled,
         eggs: expiringEggs.sort((a, b) => a.daysRemaining - b.daysRemaining),
-      });
-    }
-  }
+      };
+    }),
+  );
 
-  return results;
+  return results.filter(
+    (result): result is UserWithExpiringEggs => result !== null,
+  );
 }
 
 /**

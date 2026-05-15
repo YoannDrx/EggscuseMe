@@ -9,19 +9,30 @@ import {
 } from "@/components/neo/neo-dropdown";
 import type { EggBox } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
-import { ChefHat, MoreHorizontal, Trash2, Utensils } from "lucide-react";
+import {
+  BookOpen,
+  ChefHat,
+  MoreHorizontal,
+  Pencil,
+  Timer,
+  Trash2,
+  Utensils,
+} from "lucide-react";
 import { motion } from "motion/react";
+import Link from "next/link";
 import { useMemo } from "react";
 import {
-  calculateExpirationProgress,
-  calculateFreshness,
+  calculateEggBoxFreshness,
+  calculateExpirationProgressFromDcrDate,
   formatDaysRemainingFr,
   getFreshnessDescriptionFr,
+  resolveEggBoxDcrDate,
 } from "../lib/freshness-calculator";
 
 type EggBoxCardProps = {
   eggBox: EggBox;
   onConsume?: (eggBox: EggBox) => void;
+  onEdit?: (eggBox: EggBox) => void;
   onDelete?: (eggBox: EggBox) => void;
   className?: string;
   index?: number;
@@ -32,7 +43,7 @@ const sizeLabels: Record<string, string> = {
   S: "Petits",
   M: "Moyens",
   L: "Gros",
-  XL: "Tres gros",
+  XL: "Très gros",
 };
 
 // Freshness color mappings using design system tokens
@@ -55,29 +66,30 @@ const freshnessConfig = {
   },
 };
 
-const LAYING_DATE_FORMATTER = new Intl.DateTimeFormat("fr-FR", {
-  timeZone: "UTC",
-});
+const DCR_DATE_FORMATTER = new Intl.DateTimeFormat("fr-FR");
 
 export function EggBoxCard({
   eggBox,
   onConsume,
+  onEdit,
   onDelete,
   className,
   index = 0,
   referenceDate,
 }: EggBoxCardProps) {
-  const layingDate = useMemo(
-    () => new Date(eggBox.layingDate),
-    [eggBox.layingDate],
+  const dcrDate = useMemo(() => resolveEggBoxDcrDate(eggBox), [eggBox]);
+  const freshness = calculateEggBoxFreshness(eggBox, referenceDate);
+  const progress = calculateExpirationProgressFromDcrDate(
+    dcrDate,
+    referenceDate,
   );
-  const freshness = calculateFreshness(layingDate, referenceDate);
-  const progress = calculateExpirationProgress(layingDate, referenceDate);
-  const formattedLayingDate = useMemo(
-    () => LAYING_DATE_FORMATTER.format(layingDate),
-    [layingDate],
+  const formattedDcrDate = useMemo(
+    () => DCR_DATE_FORMATTER.format(dcrDate),
+    [dcrDate],
   );
   const config = freshnessConfig[freshness.status];
+  const recipeFreshness =
+    freshness.status === "expired" ? "cook-thoroughly" : freshness.status;
 
   // Get suggested cooking method based on freshness
   const getSuggestedUse = () => {
@@ -87,11 +99,11 @@ export function EggBoxCard({
       case "fresh":
         return "Omelette, au plat";
       case "cook-thoroughly":
-        return "Oeuf dur uniquement";
+        return "Œuf dur uniquement";
       case "expired":
-        return "A jeter";
+        return "À jeter";
       default:
-        return "Cuisson recommandee";
+        return "Cuisson recommandée";
     }
   };
 
@@ -130,6 +142,12 @@ export function EggBoxCard({
                   Consommer
                 </NeoDropdownItem>
               )}
+              {onEdit && (
+                <NeoDropdownItem onClick={() => onEdit(eggBox)}>
+                  <Pencil className="mr-2 size-4" />
+                  Modifier
+                </NeoDropdownItem>
+              )}
               {onDelete && (
                 <NeoDropdownItem
                   variant="destructive"
@@ -147,7 +165,7 @@ export function EggBoxCard({
       {/* Name Row */}
       <div className="mb-2">
         <h3 className="text-neo-text truncate font-semibold">
-          {eggBox.name ?? `Boite du ${formattedLayingDate}`}
+          {eggBox.name ?? `Boîte DCR ${formattedDcrDate}`}
         </h3>
         {eggBox.source && (
           <p className="text-neo-text-muted text-xs">{eggBox.source}</p>
@@ -180,9 +198,25 @@ export function EggBoxCard({
           {sizeLabels[eggBox.size] ?? eggBox.size}
         </span>
         <span className="text-neo-text-muted text-xs">
-          {freshness.daysOld} jour{freshness.daysOld > 1 ? "s" : ""} depuis
-          ponte
+          DCR {formattedDcrDate}
         </span>
+      </div>
+
+      <div className="mb-4 grid grid-cols-2 gap-2">
+        <Link
+          href={`/fridge/recipes?freshness=${recipeFreshness}`}
+          className="border-neo-border bg-neo-card hover:bg-neo-accent/10 flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition-colors"
+        >
+          <BookOpen className="size-3.5" />
+          Recettes
+        </Link>
+        <Link
+          href="/fridge/timer"
+          className="border-neo-border bg-neo-card hover:bg-neo-accent/10 flex items-center justify-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition-colors"
+        >
+          <Timer className="size-3.5" />
+          Minuteur
+        </Link>
       </div>
 
       {/* Pro Mode Info (if available) */}

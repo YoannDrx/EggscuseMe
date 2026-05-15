@@ -1,29 +1,37 @@
 import { prisma } from "@/lib/prisma";
+import { getFridgeAccess } from "@/lib/fridge/get-fridge-access";
 import { authRoute } from "@/lib/zod-route";
-import { startOfDay, subDays } from "date-fns";
+import { addDays, differenceInCalendarDays, startOfDay } from "date-fns";
 
 export const GET = authRoute.handler(async (_req, { ctx }) => {
-  const today = startOfDay(new Date());
+  const access = await getFridgeAccess(ctx.user);
+  if (!access) {
+    return {
+      expiringCount: 0,
+      totalEggsExpiring: 0,
+      boxes: [],
+    };
+  }
 
-  // Œufs pondus il y a 22-28 jours (zone orange/rouge - à consommer rapidement)
-  const warningLayingDate = subDays(today, 22);
-  const expiredLayingDate = subDays(today, 29);
+  const today = startOfDay(new Date());
+  const warningDcrDate = addDays(today, 6);
 
   const expiringBoxes = await prisma.eggBox.findMany({
     where: {
-      userId: ctx.user.id,
+      fridgeId: access.fridge.id,
       remaining: { gt: 0 },
-      layingDate: {
-        lte: warningLayingDate,
-        gt: expiredLayingDate,
+      dcrDate: {
+        gte: today,
+        lte: warningDcrDate,
       },
     },
     select: {
       id: true,
       name: true,
       remaining: true,
-      layingDate: true,
+      dcrDate: true,
     },
+    orderBy: { dcrDate: "asc" },
   });
 
   const totalEggsExpiring = expiringBoxes.reduce(
@@ -38,7 +46,8 @@ export const GET = authRoute.handler(async (_req, { ctx }) => {
       id: box.id,
       name: box.name,
       remaining: box.remaining,
-      layingDate: box.layingDate.toISOString(),
+      dcrDate: box.dcrDate.toISOString(),
+      daysRemaining: differenceInCalendarDays(startOfDay(box.dcrDate), today),
     })),
   };
 });

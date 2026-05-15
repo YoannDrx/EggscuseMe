@@ -72,6 +72,9 @@ async function main() {
       const quantity = faker.helpers.arrayElement([6, 10, 12, 30]);
       const remaining = faker.number.int({ min: 0, max: quantity });
       const daysAgo = faker.number.int({ min: 0, max: 25 });
+      const layingDate = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+      const dcrDate = new Date(layingDate);
+      dcrDate.setDate(dcrDate.getDate() + 28);
 
       eggBoxPromises.push(
         prisma.eggBox.create({
@@ -84,7 +87,8 @@ async function main() {
               "Label Rouge",
               null,
             ]),
-            layingDate: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000),
+            layingDate,
+            dcrDate,
             quantity,
             remaining,
             size: faker.helpers.arrayElement(["S", "M", "L", "XL"]),

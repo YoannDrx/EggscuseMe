@@ -1,5 +1,11 @@
 import { SiteConfig } from "@/site-config";
 import type { CookingType } from "@/generated/prisma";
+import {
+  addDays,
+  differenceInCalendarDays,
+  startOfDay,
+  subDays,
+} from "date-fns";
 
 export type FreshnessStatus =
   | "extra-fresh"
@@ -15,8 +21,40 @@ export type FreshnessInfo = {
   description: string;
 };
 
+type EggBoxFreshnessSource = {
+  layingDate: Date;
+  dcrDate?: Date | null;
+};
+
+function normalizeCalendarDate(date: Date): Date {
+  return startOfDay(date);
+}
+
+export function getDcrDateFromLayingDate(layingDate: Date): Date {
+  return addDays(
+    normalizeCalendarDate(layingDate),
+    SiteConfig.freshness.cookThoroughlyDays,
+  );
+}
+
+export function getLayingDateFromDcrDate(dcrDate: Date): Date {
+  return subDays(
+    normalizeCalendarDate(dcrDate),
+    SiteConfig.freshness.cookThoroughlyDays,
+  );
+}
+
+export function resolveEggBoxDcrDate(eggBox: EggBoxFreshnessSource): Date {
+  if (eggBox.dcrDate) {
+    return normalizeCalendarDate(new Date(eggBox.dcrDate));
+  }
+
+  return getDcrDateFromLayingDate(new Date(eggBox.layingDate));
+}
+
 /**
- * Calculate the freshness status of an egg based on its laying date
+ * Calculate the freshness status of an egg based on its DCR
+ * (Date de Consommation Recommandée).
  *
  * Freshness rules:
  * - Day 0-9: Extra-fresh (soft-boiled, poached, raw)
@@ -24,22 +62,24 @@ export type FreshnessInfo = {
  * - Day 22-28: Cook thoroughly (hard-boiled only)
  * - Day 29+: Expired (discard)
  */
-export function calculateFreshness(
-  layingDate: Date,
+export function calculateFreshnessFromDcrDate(
+  dcrDate: Date,
   referenceDate: Date = new Date(),
 ): FreshnessInfo {
-  const now = referenceDate;
-  const diffTime = now.getTime() - layingDate.getTime();
-  const daysOld = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
   const { extraFreshDays, freshDays, cookThoroughlyDays } =
     SiteConfig.freshness;
+  const rawDaysRemaining = differenceInCalendarDays(
+    normalizeCalendarDate(dcrDate),
+    normalizeCalendarDate(referenceDate),
+  );
+  const daysOld = cookThoroughlyDays - rawDaysRemaining;
+  const daysRemaining = Math.max(0, rawDaysRemaining);
 
   if (daysOld <= extraFreshDays) {
     return {
       status: "extra-fresh",
       daysOld,
-      daysRemaining: cookThoroughlyDays - daysOld,
+      daysRemaining,
       recommendations: ["SOFT_BOILED", "POACHED", "RAW"],
       description: "Perfect for soft-boiled, poached, or raw preparations",
     };
@@ -49,7 +89,7 @@ export function calculateFreshness(
     return {
       status: "fresh",
       daysOld,
-      daysRemaining: cookThoroughlyDays - daysOld,
+      daysRemaining,
       recommendations: ["FRIED", "SCRAMBLED", "OMELETTE", "BAKING"],
       description: "Ideal for fried eggs, omelettes, or baking",
     };
@@ -59,7 +99,7 @@ export function calculateFreshness(
     return {
       status: "cook-thoroughly",
       daysOld,
-      daysRemaining: cookThoroughlyDays - daysOld,
+      daysRemaining,
       recommendations: ["HARD_BOILED"],
       description: "Only consume well-cooked (hard-boiled)",
     };
@@ -72,6 +112,29 @@ export function calculateFreshness(
     recommendations: [],
     description: "Expired - do not consume",
   };
+}
+
+/**
+ * Legacy compatibility wrapper. Prefer calculateFreshnessFromDcrDate for new code.
+ */
+export function calculateFreshness(
+  layingDate: Date,
+  referenceDate: Date = new Date(),
+): FreshnessInfo {
+  return calculateFreshnessFromDcrDate(
+    getDcrDateFromLayingDate(layingDate),
+    referenceDate,
+  );
+}
+
+export function calculateEggBoxFreshness(
+  eggBox: EggBoxFreshnessSource,
+  referenceDate: Date = new Date(),
+): FreshnessInfo {
+  return calculateFreshnessFromDcrDate(
+    resolveEggBoxDcrDate(eggBox),
+    referenceDate,
+  );
 }
 
 /**
@@ -110,10 +173,22 @@ export function calculateExpirationProgress(
   layingDate: Date,
   referenceDate: Date = new Date(),
 ): number {
+  return calculateExpirationProgressFromDcrDate(
+    getDcrDateFromLayingDate(layingDate),
+    referenceDate,
+  );
+}
+
+export function calculateExpirationProgressFromDcrDate(
+  dcrDate: Date,
+  referenceDate: Date = new Date(),
+): number {
   const { cookThoroughlyDays } = SiteConfig.freshness;
-  const now = referenceDate;
-  const diffTime = now.getTime() - layingDate.getTime();
-  const daysOld = diffTime / (1000 * 60 * 60 * 24);
+  const daysRemaining = differenceInCalendarDays(
+    normalizeCalendarDate(dcrDate),
+    normalizeCalendarDate(referenceDate),
+  );
+  const daysOld = cookThoroughlyDays - daysRemaining;
 
   const progress = (daysOld / cookThoroughlyDays) * 100;
   return Math.min(100, Math.max(0, progress));

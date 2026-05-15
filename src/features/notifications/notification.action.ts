@@ -83,6 +83,7 @@ type ExpiringEgg = {
   remaining: number;
   daysRemaining: number;
   layingDate: Date;
+  dcrDate: Date;
   fridge: {
     id: string;
     name: string;
@@ -145,7 +146,12 @@ export async function sendExpirationEmails(): Promise<{
   );
 
   // Build all email send promises
-  const emailPromises: Promise<{ error: Error | null }>[] = [];
+  const emailJobs: {
+    userId: string;
+    subject: string;
+    fridgeName: string;
+    promise: Promise<{ error: Error | null }>;
+  }[] = [];
 
   for (const userData of usersWithEmailEnabled) {
     // Get unsubscribe token from map
@@ -167,26 +173,53 @@ export async function sendExpirationEmails(): Promise<{
         unsubscribeUrl,
       };
 
-      emailPromises.push(
-        sendEmail({
+      const subject = t("subject", { count: fridgeData.eggs.length });
+      emailJobs.push({
+        userId: userData.userId,
+        subject,
+        fridgeName: fridgeData.fridgeName,
+        promise: sendEmail({
           to: userData.userEmail,
-          subject: t("subject", { count: fridgeData.eggs.length }),
+          subject,
           html: ExpirationWarningEmail(emailData),
         }),
-      );
+      });
     }
   }
 
   // Send all emails in parallel
-  const results = await Promise.allSettled(emailPromises);
+  const results = await Promise.allSettled(
+    emailJobs.map(async (job) => job.promise),
+  );
+  const logPromises: Promise<void>[] = [];
 
-  for (const result of results) {
+  for (const [index, result] of results.entries()) {
+    const job = emailJobs[index];
+    const isSuccess = result.status === "fulfilled" && !result.value.error;
+
+    logPromises.push(
+      logNotification({
+        userId: job.userId,
+        type: "EXPIRATION_WARNING",
+        channel: "EMAIL",
+        status: isSuccess ? "SENT" : "FAILED",
+        subject: job.subject,
+        errorMessage:
+          result.status === "rejected"
+            ? String(result.reason)
+            : (result.value.error?.message ?? undefined),
+        metadata: { fridgeName: job.fridgeName },
+      }),
+    );
+
     if (result.status === "fulfilled" && !result.value.error) {
       sent++;
     } else {
       errors++;
     }
   }
+
+  await Promise.all(logPromises);
 
   return { sent, errors };
 }
@@ -232,11 +265,14 @@ export async function sendExpirationPushNotifications(): Promise<{
   }
 
   // Build all push notification promises
-  const pushPromises: Promise<{
-    success: boolean;
-    subscriptionId?: string;
-    shouldDelete?: boolean;
-  }>[] = [];
+  const pushJobs: {
+    userId: string;
+    promise: Promise<{
+      success: boolean;
+      subscriptionId?: string;
+      shouldDelete?: boolean;
+    }>;
+  }[] = [];
 
   for (const userData of usersWithPushEnabled) {
     const userSubscriptions = subscriptionsByUser.get(userData.userId) ?? [];
@@ -250,11 +286,11 @@ export async function sendExpirationPushNotifications(): Promise<{
 
     // Build notification payload
     const payload = {
-      title: `${totalEggs} oeufs expirent bientot`,
+      title: `${totalEggs} œufs arrivent à DCR`,
       body:
         mostUrgent.daysRemaining === 0
-          ? `${mostUrgent.name ?? "Une boite"} expire aujourd'hui !`
-          : `${mostUrgent.name ?? "Une boite"} expire dans ${mostUrgent.daysRemaining} jour${mostUrgent.daysRemaining > 1 ? "s" : ""}`,
+          ? `${mostUrgent.name ?? "Une boîte"} atteint sa DCR aujourd'hui !`
+          : `${mostUrgent.name ?? "Une boîte"} atteint sa DCR dans ${mostUrgent.daysRemaining} jour${mostUrgent.daysRemaining > 1 ? "s" : ""}`,
       tag: "expiration-warning",
       url: "/fridge",
       requireInteraction: mostUrgent.daysRemaining <= 1,
@@ -266,8 +302,9 @@ export async function sendExpirationPushNotifications(): Promise<{
 
     // Send to all user's devices
     for (const sub of userSubscriptions) {
-      pushPromises.push(
-        sendPushNotification(
+      pushJobs.push({
+        userId: userData.userId,
+        promise: sendPushNotification(
           {
             endpoint: sub.endpoint,
             p256dh: sub.p256dh,
@@ -285,17 +322,34 @@ export async function sendExpirationPushNotifications(): Promise<{
             subscriptionId: sub.id,
             shouldDelete: true,
           })),
-      );
+      });
     }
   }
 
   // Send all notifications in parallel
-  const results = await Promise.allSettled(pushPromises);
+  const results = await Promise.allSettled(
+    pushJobs.map(async (job) => job.promise),
+  );
 
   // Collect subscriptions to delete (410 errors = invalid subscription)
   const subscriptionsToDelete: string[] = [];
+  const logPromises: Promise<void>[] = [];
 
-  for (const result of results) {
+  for (const [index, result] of results.entries()) {
+    const job = pushJobs[index];
+    const isSuccess = result.status === "fulfilled" && result.value.success;
+
+    logPromises.push(
+      logNotification({
+        userId: job.userId,
+        type: "EXPIRATION_WARNING",
+        channel: "PUSH",
+        status: isSuccess ? "SENT" : "FAILED",
+        errorMessage:
+          result.status === "rejected" ? String(result.reason) : undefined,
+      }),
+    );
+
     if (result.status === "fulfilled") {
       if (result.value.success) {
         sent++;
@@ -309,6 +363,8 @@ export async function sendExpirationPushNotifications(): Promise<{
       errors++;
     }
   }
+
+  await Promise.all(logPromises);
 
   // Clean up invalid subscriptions
   if (subscriptionsToDelete.length > 0) {

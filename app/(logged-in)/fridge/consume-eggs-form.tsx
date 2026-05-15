@@ -6,7 +6,11 @@ import { NeoSelect, NeoSelectItem } from "@/components/neo/neo-select";
 import { NeoTextarea } from "@/components/neo/neo-textarea";
 import type { CookingType, EggBox } from "@/generated/prisma";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
-import { consumeEggsAction } from "@/features/fridge/fridge.action";
+import { calculateEggBoxFreshness } from "@/features/eggs/lib/freshness-calculator";
+import {
+  consumeEggsAction,
+  undoConsumptionAction,
+} from "@/features/fridge/fridge.action";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -28,6 +32,22 @@ const cookingTypes: CookingType[] = [
   "OTHER",
 ];
 
+function getSuggestedCookingType(eggBox: EggBox): CookingType {
+  const freshness = calculateEggBoxFreshness(eggBox);
+
+  switch (freshness.status) {
+    case "extra-fresh":
+      return "SOFT_BOILED";
+    case "fresh":
+      return "OMELETTE";
+    case "cook-thoroughly":
+    case "expired":
+      return "HARD_BOILED";
+    default:
+      return "FRIED";
+  }
+}
+
 export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
   const locale = useLocale();
   const tCooking = useTranslations("cooking");
@@ -35,9 +55,12 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
   const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState({
     quantity: 1,
-    cookingType: "FRIED" as CookingType,
+    cookingType: getSuggestedCookingType(eggBox),
     notes: "",
   });
+  const quickQuantities = Array.from(new Set([1, 2, eggBox.remaining])).filter(
+    (quantity) => quantity > 0 && quantity <= eggBox.remaining,
+  );
 
   const copy =
     locale === "fr"
@@ -54,6 +77,11 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
           cancel: "Annuler",
           save: "Enregistrer",
           saving: "Enregistrement...",
+          undo: "Annuler",
+          undoSuccess: "Consommation annulée",
+          undoError: "Impossible d'annuler la consommation",
+          quickQuantity: "Quantité rapide",
+          all: "Tout",
         }
       : {
           success: (quantity: number) =>
@@ -68,6 +96,11 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
           cancel: "Cancel",
           save: "Save",
           saving: "Saving...",
+          undo: "Undo",
+          undoSuccess: "Consumption undone",
+          undoError: "Unable to undo consumption",
+          quickQuantity: "Quick quantity",
+          all: "All",
         };
 
   const cookingTypeLabels: Record<CookingType, string> = {
@@ -94,7 +127,23 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
       });
 
       if (result.data?.consumption) {
-        toast.success(copy.success(formData.quantity));
+        const consumptionId = result.data.consumption.id;
+        toast.success(copy.success(formData.quantity), {
+          action: {
+            label: copy.undo,
+            onClick: async () => {
+              const undoResult = await undoConsumptionAction({
+                consumptionId,
+              });
+              if (undoResult.data?.success) {
+                toast.success(copy.undoSuccess);
+                router.refresh();
+              } else {
+                toast.error(undoResult.serverError ?? copy.undoError);
+              }
+            },
+          },
+        });
         dialogManager.closeAll();
         router.refresh();
       } else {
@@ -116,12 +165,30 @@ export function ConsumeEggsForm({ eggBox }: ConsumeEggsFormProps) {
           required
           value={formData.quantity}
           onChange={(e) =>
-            setFormData({ ...formData, quantity: parseInt(e.target.value) })
+            setFormData({
+              ...formData,
+              quantity: Number.parseInt(e.target.value, 10),
+            })
           }
         />
         <p className="text-neo-text-muted text-sm">
           {copy.remaining(eggBox.remaining)}
         </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-neo-text-muted text-xs">
+            {copy.quickQuantity}
+          </span>
+          {quickQuantities.map((quantity) => (
+            <button
+              key={quantity}
+              type="button"
+              onClick={() => setFormData({ ...formData, quantity })}
+              className="border-neo-border bg-neo-card hover:bg-neo-accent/10 rounded-full border px-3 py-1 text-xs font-medium transition-colors"
+            >
+              {quantity === eggBox.remaining ? copy.all : quantity}
+            </button>
+          ))}
+        </div>
       </div>
 
       <NeoSelect

@@ -8,7 +8,7 @@ import {
 } from "@/components/eggscuseme/illustrations";
 import { dialogManager } from "@/features/dialog-manager/dialog-manager";
 import { EggBoxCard } from "@/features/eggs/components/egg-box-card";
-import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
+import { calculateEggBoxFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { deleteEggBoxAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
 import type { EggBox } from "@/generated/prisma";
@@ -32,8 +32,7 @@ export function EggBoxGrid({ eggBoxes, canModify, now }: EggBoxGridProps) {
   const router = useRouter();
   const referenceDate = useMemo(() => new Date(now ?? Date.now()), [now]);
   const getFreshness = useCallback(
-    (box: EggBox) =>
-      calculateFreshness(new Date(box.layingDate), referenceDate),
+    (box: EggBox) => calculateEggBoxFreshness(box, referenceDate),
     [referenceDate],
   );
 
@@ -77,6 +76,21 @@ export function EggBoxGrid({ eggBoxes, canModify, now }: EggBoxGridProps) {
         name: eggBox.name ?? t("thisBox"),
       }),
       children: <ConsumeEggsForm eggBox={eggBox} />,
+    });
+  };
+
+  const handleEdit = (eggBox: EggBox) => {
+    if (!canModify) {
+      toast.error(t("edit.ownerOnly"));
+      return;
+    }
+
+    dialogManager.custom({
+      title: t("edit.title"),
+      description: t("edit.description", {
+        name: eggBox.name ?? t("thisBox"),
+      }),
+      children: <AddEggBoxForm eggBox={eggBox} />,
     });
   };
 
@@ -197,6 +211,7 @@ export function EggBoxGrid({ eggBoxes, canModify, now }: EggBoxGridProps) {
             eggBox={eggBox}
             index={index}
             onConsume={handleConsume}
+            onEdit={canModify ? handleEdit : undefined}
             onDelete={canModify ? handleDelete : undefined}
             referenceDate={referenceDate}
           />

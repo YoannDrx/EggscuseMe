@@ -25,7 +25,8 @@ export const CookingTypeSchema = z.enum([
  */
 export const CreateEggBoxSchema = z.object({
   name: z.string().max(100).optional(),
-  layingDate: z.coerce.date(),
+  dcrDate: z.coerce.date(),
+  layingDate: z.coerce.date().optional(),
   quantity: z.number().int().min(1).max(100).default(6),
   size: z.enum(["S", "M", "L", "XL"]).default("M"),
   source: z.string().max(100).optional(),
@@ -41,6 +42,8 @@ export const CreateEggBoxSchema = z.object({
 export const UpdateEggBoxSchema = z.object({
   id: z.string(),
   name: z.string().max(100).optional(),
+  dcrDate: z.coerce.date().optional(),
+  layingDate: z.coerce.date().optional(),
   quantity: z.number().int().min(1).max(100).optional(),
   remaining: z.number().int().min(0).max(100).optional(),
   size: z.enum(["S", "M", "L", "XL"]).optional(),
@@ -79,6 +82,13 @@ export const ConsumeEggsSchema = z.object({
 });
 
 /**
+ * Schema for undoing a consumption entry
+ */
+export const UndoConsumptionSchema = z.object({
+  consumptionId: z.string(),
+});
+
+/**
  * Schema for creating a share link
  */
 export const CreateShareLinkSchema = z.object({
@@ -110,6 +120,7 @@ export const DeactivateShareLinkSchema = z.object({
 export type CreateEggBoxInput = z.infer<typeof CreateEggBoxSchema>;
 export type UpdateEggBoxInput = z.infer<typeof UpdateEggBoxSchema>;
 export type ConsumeEggsInput = z.infer<typeof ConsumeEggsSchema>;
+export type UndoConsumptionInput = z.infer<typeof UndoConsumptionSchema>;
 export type CreateShareLinkInput = z.infer<typeof CreateShareLinkSchema>;
 export type AcceptShareLinkInput = z.infer<typeof AcceptShareLinkSchema>;
 

@@ -6,6 +6,8 @@ import {
   canModifyFridge,
   getOrCreateFridge,
 } from "@/lib/fridge/get-fridge-access";
+import { getLayingDateFromDcrDate } from "@/features/eggs/lib/freshness-calculator";
+import { isPaidSubscription } from "@/lib/stripe/check-premium";
 import { prisma } from "@/lib/prisma";
 import { SiteConfig } from "@/site-config";
 import { revalidatePath } from "next/cache";
@@ -14,6 +16,7 @@ import {
   ConsumeEggsSchema,
   CreateEggBoxSchema,
   DeleteEggBoxSchema,
+  UndoConsumptionSchema,
   UpdateEggBoxSchema,
 } from "./fridge.schema";
 
@@ -29,7 +32,7 @@ export const getMyFridgeAction = authAction.action(
       fridge,
       role,
       subscription,
-      isPremium: subscription !== null && subscription.plan !== "free",
+      isPremium: isPaidSubscription(subscription),
     };
   },
 );
@@ -50,7 +53,7 @@ export const createEggBoxAction = authAction
     }
 
     // Check plan limits
-    const isPremium = subscription !== null && subscription.plan !== "free";
+    const isPremium = isPaidSubscription(subscription);
     const limit = isPremium ? Infinity : SiteConfig.freePlan.maxEggBoxes;
 
     const existingBoxes = await prisma.eggBox.count({
@@ -66,7 +69,8 @@ export const createEggBoxAction = authAction
     const eggBox = await prisma.eggBox.create({
       data: {
         name: data.name,
-        layingDate: data.layingDate,
+        layingDate: data.layingDate ?? getLayingDateFromDcrDate(data.dcrDate),
+        dcrDate: data.dcrDate,
         quantity: data.quantity,
         remaining: data.quantity,
         size: data.size,
@@ -109,10 +113,22 @@ export const updateEggBoxAction = authAction
       throw new ActionError(t("notFound"));
     }
 
+    const nextQuantity = data.quantity ?? existingBox.quantity;
+    const nextRemaining = data.remaining ?? existingBox.remaining;
+
+    if (nextRemaining > nextQuantity) {
+      throw new ActionError(t("remainingGreaterThanQuantity"));
+    }
+
+    const dcrDate = data.dcrDate;
     const eggBox = await prisma.eggBox.update({
       where: { id: data.id },
       data: {
         name: data.name,
+        dcrDate,
+        layingDate:
+          data.layingDate ??
+          (dcrDate ? getLayingDateFromDcrDate(dcrDate) : undefined),
         quantity: data.quantity,
         remaining: data.remaining,
         size: data.size,
@@ -123,6 +139,8 @@ export const updateEggBoxAction = authAction
     });
 
     revalidatePath("/fridge");
+    revalidatePath("/fridge/history");
+    revalidatePath("/fridge/statistics");
     return { eggBox };
   });
 
@@ -167,30 +185,38 @@ export const deleteEggBoxAction = authAction
 export const consumeEggsAction = authAction
   .inputSchema(ConsumeEggsSchema)
   .action(async ({ parsedInput: data, ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
     const { fridge } = await getOrCreateFridge(user);
 
-    // Verify box belongs to this fridge
-    const eggBox = await prisma.eggBox.findFirst({
-      where: {
-        id: data.eggBoxId,
-        fridgeId: fridge.id,
-      },
-    });
+    const consumption = await prisma.$transaction(async (tx) => {
+      const updated = await tx.eggBox.updateMany({
+        where: {
+          id: data.eggBoxId,
+          fridgeId: fridge.id,
+          remaining: { gte: data.quantity },
+        },
+        data: {
+          remaining: { decrement: data.quantity },
+        },
+      });
 
-    if (!eggBox) {
-      throw new ActionError(
-        (await getTranslations("errors.fridge"))("notFound"),
-      );
-    }
+      if (updated.count === 0) {
+        const currentBox = await tx.eggBox.findFirst({
+          where: {
+            id: data.eggBoxId,
+            fridgeId: fridge.id,
+          },
+          select: { remaining: true },
+        });
 
-    if (eggBox.remaining < data.quantity) {
-      const t = await getTranslations("errors.fridge");
-      throw new ActionError(t("notEnough", { count: eggBox.remaining }));
-    }
+        if (!currentBox) {
+          throw new ActionError(t("notFound"));
+        }
 
-    // Create consumption record and update remaining count
-    const [consumption] = await prisma.$transaction([
-      prisma.eggConsumption.create({
+        throw new ActionError(t("notEnough", { count: currentBox.remaining }));
+      }
+
+      return tx.eggConsumption.create({
         data: {
           eggBoxId: data.eggBoxId,
           quantity: data.quantity,
@@ -199,17 +225,66 @@ export const consumeEggsAction = authAction
           notes: data.notes,
           userId: user.id,
         },
+      });
+    });
+
+    revalidatePath("/fridge");
+    revalidatePath("/fridge/history");
+    revalidatePath("/fridge/statistics");
+    return { consumption };
+  });
+
+/**
+ * Undo a consumption entry and put the eggs back in the box.
+ * Owners can undo any entry in the current fridge.
+ * Guests can only undo their own entries.
+ */
+export const undoConsumptionAction = authAction
+  .inputSchema(UndoConsumptionSchema)
+  .action(async ({ parsedInput: { consumptionId }, ctx: { user } }) => {
+    const t = await getTranslations("errors.fridge");
+    const { fridge, role } = await getOrCreateFridge(user);
+
+    const consumption = await prisma.eggConsumption.findFirst({
+      where: {
+        id: consumptionId,
+        ...(role === "GUEST" ? { userId: user.id } : {}),
+        eggBox: { fridgeId: fridge.id },
+      },
+      include: {
+        eggBox: {
+          select: {
+            id: true,
+            quantity: true,
+            remaining: true,
+          },
+        },
+      },
+    });
+
+    if (!consumption) {
+      throw new ActionError(t("notFound"));
+    }
+
+    await prisma.$transaction([
+      prisma.eggConsumption.delete({
+        where: { id: consumption.id },
       }),
       prisma.eggBox.update({
-        where: { id: data.eggBoxId },
+        where: { id: consumption.eggBoxId },
         data: {
-          remaining: eggBox.remaining - data.quantity,
+          remaining: Math.min(
+            consumption.eggBox.quantity,
+            consumption.eggBox.remaining + consumption.quantity,
+          ),
         },
       }),
     ]);
 
     revalidatePath("/fridge");
-    return { consumption };
+    revalidatePath("/fridge/history");
+    revalidatePath("/fridge/statistics");
+    return { success: true };
   });
 
 /**

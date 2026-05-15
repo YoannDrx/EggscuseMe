@@ -26,7 +26,15 @@ export const GET = route.handler(async (req) => {
   const cronSecret = env.CRON_SECRET;
 
   // In production, require CRON_SECRET
-  if (env.NODE_ENV === "production" && cronSecret) {
+  if (env.NODE_ENV === "production") {
+    if (!cronSecret) {
+      logger.error("[CRON] CRON_SECRET is required in production");
+      return NextResponse.json(
+        { error: "Server misconfigured" },
+        { status: 500 },
+      );
+    }
+
     if (authHeader !== `Bearer ${cronSecret}`) {
       logger.warn("[CRON] Unauthorized expiration check attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

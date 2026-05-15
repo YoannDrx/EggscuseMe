@@ -43,20 +43,6 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "maskable",
       },
     ],
-    screenshots: [
-      {
-        src: "/screenshots/fridge.png",
-        sizes: "1080x1920",
-        type: "image/png",
-        form_factor: "narrow",
-      },
-      {
-        src: "/screenshots/timer.png",
-        sizes: "1080x1920",
-        type: "image/png",
-        form_factor: "narrow",
-      },
-    ],
     shortcuts: [
       {
         name: "Mon Frigo",
@@ -67,13 +53,13 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "Minuteur",
         short_name: "Timer",
-        url: "/timer",
+        url: "/fridge/timer",
         icons: [{ src: "/icons/shortcut-timer.png", sizes: "96x96" }],
       },
       {
         name: "Ajouter des œufs",
         short_name: "Ajouter",
-        url: "/fridge/add",
+        url: "/fridge",
         icons: [{ src: "/icons/shortcut-add.png", sizes: "96x96" }],
       },
     ],

@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
 import {
   getRecipeDescription,
@@ -101,6 +102,17 @@ export function RecipeCard({
           className,
         )}
       >
+        {!compact && (
+          <div className="relative aspect-[4/3] overflow-hidden rounded-t-[calc(var(--radius-neo-2xl)-2px)]">
+            <Image
+              src={recipe.image}
+              alt={name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+        )}
         <NeoCardHeader className={cn("pb-2", compact && "py-3")}>
           <div className="flex items-start justify-between gap-2">
             <NeoCardTitle

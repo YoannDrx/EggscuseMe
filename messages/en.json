@@ -275,7 +275,7 @@
     "title": "Egg box",
     "name": "Box name",
     "namePlaceholder": "E.g., Market box",
-    "layingDate": "Laying date",
+    "layingDate": "Best-before date",
     "layingDateHelp": "The date when the eggs were laid",
     "purchaseDate": "Purchase date",
     "quantity": "Quantity",
@@ -399,7 +399,7 @@
       "title": "3 simple steps",
       "step1": {
         "title": "Add your eggs",
-        "description": "Scan or enter the laying date of your boxes"
+        "description": "Scan or enter the best-before date printed on your boxes"
       },
       "step2": {
         "title": "Track freshness",
@@ -498,7 +498,7 @@
       },
       "q2": {
         "question": "What's the difference between 'use by' and 'best before'?",
-        "answer": "The recommended consumption date is typically 28 days after laying. The date on boxes is often shorter as a precaution from distributors. EggscuseMe uses the actual laying date for accurate tracking."
+        "answer": "The best-before date is the date users can actually read on the box. EggscuseMe uses it as the source date and derives freshness from the remaining days."
       },
       "q3": {
         "question": "Can I eat raw eggs?",
@@ -540,7 +540,7 @@
       },
       "quickScan": {
         "title": "Quick Scan",
-        "description": "Scan the barcode to add a box in an instant. Automatic laying date."
+        "description": "Scan the box to add it in an instant. Automatic best-before date."
       },
       "familySharing": {
         "title": "Family Sharing",
@@ -557,7 +557,7 @@
       "titleHighlight": "no excuse",
       "step1": {
         "title": "Scan or Enter",
-        "description": "Add your egg boxes by scanning the code or entering the laying date."
+        "description": "Add your egg boxes by scanning the box or entering the best-before date."
       },
       "step2": {
         "title": "Let the magic happen",
@@ -666,7 +666,8 @@
       "ownerOnlyExport": "Only the fridge owner can export data.",
       "ownerCannotLeave": "Owners cannot leave their fridge. Delete your account to remove it.",
       "renameRequired": "A fridge name is required.",
-      "renameTooLong": "The name is too long (50 characters max)."
+      "renameTooLong": "The name is too long (50 characters max).",
+      "remainingGreaterThanQuantity": "The number of remaining eggs cannot exceed the initial quantity."
     },
     "sharing": {
       "noFridgeToShare": "You don't have a fridge to share.",
@@ -952,6 +953,11 @@
         "title": "Consume eggs",
         "description": "Record eggs consumed from \"{name}\""
       },
+      "edit": {
+        "title": "Edit box",
+        "description": "Update \"{name}\"",
+        "ownerOnly": "Only the owner can edit boxes"
+      },
       "delete": {
         "title": "Delete this box?",
         "description": "Are you sure you want to delete \"{name}\"? This action is irreversible.",
@@ -1078,6 +1084,11 @@
         "emailDescription": "Receive a daily email",
         "pushLabel": "Push notifications",
         "pushDescription": "Notifications on your device",
+        "pushDeviceCta": "Enable on this device",
+        "pushSubscribed": "Push notifications enabled on this device",
+        "pushSubscribeError": "Unable to enable push notifications",
+        "pushUnsupported": "Push notifications are not supported by this browser",
+        "pushDenied": "Allow notifications in your browser to receive them",
         "daysLabel": "Notification timing",
         "daysDescription": "How many days before expiration",
         "previewOn": "Notifications are enabled",
@@ -1192,8 +1203,11 @@
       "closeScanner": "Close",
       "nameLabel": "Name (optional)",
       "namePlaceholder": "e.g. Market eggs",
-      "layingDate": "Laying date",
+      "dcrDate": "Best-before date",
+      "dcrHint": "Enter the date printed on the egg box.",
+      "quantityPresets": "Common packs",
       "quantity": "Quantity",
+      "remaining": "Eggs remaining",
       "size": "Size",
       "sizeOptions": {
         "S": "Small (S)",
@@ -1213,9 +1227,15 @@
       "cancel": "Cancel",
       "save": "Add",
       "saving": "Adding...",
+      "editSave": "Save",
+      "editSaving": "Saving...",
       "scanSuccess": "Code scanned successfully!",
       "addSuccess": "Egg box added",
-      "addError": "Failed to add egg box"
+      "addError": "Failed to add egg box",
+      "editSuccess": "Egg box updated",
+      "editError": "Failed to update egg box",
+      "dateError": "Enter a valid best-before date",
+      "remainingError": "Eggs remaining must be between 0 and the total quantity"
     },
     "invite": {
       "invalidTitle": "Invalid invitation",
@@ -1248,8 +1268,15 @@
       "scanDate": "Scan date with AI",
       "scanning": "Analyzing...",
       "helpText": "Take a photo of the date on the packaging",
-      "helpTextDetail": "Frame the best-before date or laying date printed on the box",
+      "helpTextDetail": "Frame the best-before date printed on the box",
       "success": "Date extracted!",
+      "detected": "Date detected",
+      "detectedTitle": "Date detected",
+      "detectedDescription": "{date} via {provider}",
+      "providerOpenai": "OpenAI",
+      "providerGoogle": "Google",
+      "useDate": "Use this date",
+      "applied": "Best-before date applied",
       "done": "Done",
       "retry": "Retry",
       "cancel": "Cancel",
@@ -1259,6 +1286,8 @@
       "errorRateLimit": "Daily limit reached (20 scans/day). Try again tomorrow.",
       "errorFileTooLarge": "The image is too large. Maximum 5 MB.",
       "errorInvalidFileType": "Unsupported image format. Use JPEG, PNG, or WebP.",
+      "errorNotConfigured": "AI scanning is not configured.",
+      "errorProviderFailed": "AI scanning failed. Try again with a clearer photo.",
       "errorNetwork": "Connection error. Check your internet connection.",
       "errorUnknown": "An unexpected error occurred. Please try again."
     }
@@ -1266,7 +1295,7 @@
   "notifications": {
     "email": {
       "boxNameFallback": "Egg box",
-      "subject": "Freshness alert - {count} box(es) expiring soon",
+      "subject": "Freshness alert - {count} box(es) near best-before date",
       "bodyTitle": "Freshness alert"
     }
   },
@@ -1331,7 +1360,7 @@
           },
           {
             "question": "How do you calculate freshness?",
-            "answer": "We use the laying date you provide. An egg is extra-fresh up to 9 days, fresh up to 21 days, and should be cooked thoroughly between 22 and 28 days."
+            "answer": "We use the best-before date printed on the box and derive the remaining days from it. Eggs are extra-fresh up to 9 days after laying, fresh up to 21 days, and should be cooked thoroughly between 22 and 28 days."
           }
         ]
       },

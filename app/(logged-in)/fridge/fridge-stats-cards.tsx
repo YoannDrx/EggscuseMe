@@ -1,6 +1,6 @@
 import { NeoStatCard } from "@/components/neo/neo-stat-card";
 import {
-  calculateFreshness,
+  calculateEggBoxFreshness,
   type FreshnessStatus,
 } from "@/features/eggs/lib/freshness-calculator";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
@@ -29,7 +29,7 @@ export async function FridgeStatsCards() {
   };
 
   for (const box of eggBoxes) {
-    const freshness = calculateFreshness(box.layingDate);
+    const freshness = calculateEggBoxFreshness(box);
     freshnessCounts[freshness.status] += box.remaining;
   }
 

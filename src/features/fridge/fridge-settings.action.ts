@@ -7,6 +7,7 @@ import {
   getOrCreateFridge,
 } from "@/lib/fridge/get-fridge-access";
 import { prisma } from "@/lib/prisma";
+import { isPaidSubscription } from "@/lib/stripe/check-premium";
 import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -171,12 +172,15 @@ export const exportFridgeDataAction = authAction.action(
       exportDate: new Date().toISOString(),
       eggBoxes: eggBoxes.map((box) => ({
         name: box.name,
+        dcrDate: box.dcrDate,
         layingDate: box.layingDate,
         quantity: box.quantity,
         remaining: box.remaining,
         size: box.size,
         source: box.source,
         barcode: box.barcode,
+        lotNumber: box.lotNumber,
+        producerCode: box.producerCode,
         createdAt: box.createdAt,
         consumptions: box.consumptions.map((c) => ({
           quantity: c.quantity,
@@ -225,7 +229,7 @@ export const getFridgeSettingsAction = authAction.action(
       },
       role,
       isOwner: role === "OWNER",
-      isPremium: subscription?.plan !== "free",
+      isPremium: isPaidSubscription(subscription),
       stats: {
         eggBoxCount,
         consumptionCount,

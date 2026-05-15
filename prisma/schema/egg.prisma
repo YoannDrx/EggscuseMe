@@ -3,7 +3,8 @@
 model EggBox {
   id         String   @id @default(nanoid(11))
   name       String? // Custom name like "Boîte du marché"
-  layingDate DateTime // Date when eggs were laid
+  layingDate DateTime // Legacy/derived laying date, kept for rollout compatibility
+  dcrDate    DateTime // Date de consommation recommandée shown on the egg box
   quantity   Int      @default(6) // Initial quantity
   remaining  Int      @default(6) // Remaining eggs
   size       EggSize  @default(M)
@@ -28,6 +29,7 @@ model EggBox {
 
   @@index([userId])
   @@index([fridgeId])
+  @@index([dcrDate])
   @@map("egg_box")
 }
 
@@ -53,7 +55,9 @@ model EggConsumption {
   createdAt DateTime @default(now())
 
   @@index([eggBoxId])
+  @@index([eggBoxId, createdAt])
   @@index([userId])
+  @@index([createdAt])
   @@map("egg_consumption")
 }
 

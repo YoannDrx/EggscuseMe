@@ -275,7 +275,7 @@
     "title": "Boîte d'œufs",
     "name": "Nom de la boîte",
     "namePlaceholder": "Ex: Boîte du marché",
-    "layingDate": "Date de ponte",
+    "layingDate": "DCR",
     "layingDateHelp": "La date à laquelle les œufs ont été pondus",
     "purchaseDate": "Date d'achat",
     "quantity": "Quantité",
@@ -399,7 +399,7 @@
       "title": "La méthode EggscuseMe",
       "step1": {
         "title": "Remplissez",
-        "description": "Scannez votre boîte. Nous enregistrons la date de ponte réelle pour une précision absolue."
+        "description": "Scannez votre boîte ou saisissez la DCR imprimée sur l'emballage."
       },
       "step2": {
         "title": "Consultez",
@@ -493,7 +493,7 @@
     "faq": {
       "title": "Questions Gourmandes",
       "q1": {
-        "question": "Pourquoi la date de ponte est-elle si importante ?",
+        "question": "Pourquoi la DCR est-elle importante ?",
         "answer": "C'est la seule donnée fiable. Contrairement à la DCR, elle nous permet de calculer l'âge exact de l'œuf et de vous dire s'il est encore 'Extra-Frais' (pour les coques) ou simplement 'Frais'."
       },
       "q2": {
@@ -540,7 +540,7 @@
       },
       "quickScan": {
         "title": "Ajout Éclair",
-        "description": "Scannez, c'est enregistré. La date de ponte est calculée automatiquement."
+        "description": "Scannez, c'est enregistré. La DCR est extraite automatiquement."
       },
       "familySharing": {
         "title": "Brigade Familiale",
@@ -666,7 +666,8 @@
       "ownerOnlyExport": "Seul le propriétaire peut exporter les données.",
       "ownerCannotLeave": "Les propriétaires ne peuvent pas quitter leur frigo. Supprimez votre compte pour supprimer le frigo.",
       "renameRequired": "Le nom du frigo est requis.",
-      "renameTooLong": "Le nom est trop long (50 caractères max)."
+      "renameTooLong": "Le nom est trop long (50 caractères max).",
+      "remainingGreaterThanQuantity": "Le nombre d'oeufs restants ne peut pas dépasser la quantité initiale."
     },
     "sharing": {
       "noFridgeToShare": "Vous n'avez pas de frigo à partager.",
@@ -952,6 +953,11 @@
         "title": "Consommer des œufs",
         "description": "Enregistrer les œufs consommés de \"{name}\""
       },
+      "edit": {
+        "title": "Modifier la boîte",
+        "description": "Mettre à jour \"{name}\"",
+        "ownerOnly": "Seul le propriétaire peut modifier les boîtes"
+      },
       "delete": {
         "title": "Supprimer cette boîte ?",
         "description": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
@@ -1052,7 +1058,7 @@
       },
       "fridges": {
         "title": "Mes frigos",
-        "description": "Gerez vos espaces de stockage (Chef)"
+        "description": "Gérez vos espaces de stockage (Chef)"
       },
       "danger": {
         "title": "Zone de danger",
@@ -1078,6 +1084,11 @@
         "emailDescription": "Recevez un email quotidien",
         "pushLabel": "Notifications push",
         "pushDescription": "Notifications sur votre appareil",
+        "pushDeviceCta": "Activer sur cet appareil",
+        "pushSubscribed": "Notifications push activées sur cet appareil",
+        "pushSubscribeError": "Impossible d'activer les notifications push",
+        "pushUnsupported": "Les notifications push ne sont pas supportées par ce navigateur",
+        "pushDenied": "Autorisez les notifications dans votre navigateur pour les recevoir",
         "daysLabel": "Délai de notification",
         "daysDescription": "Combien de jours avant l'expiration",
         "previewOn": "Les notifications sont activées",
@@ -1192,8 +1203,11 @@
       "closeScanner": "Fermer",
       "nameLabel": "Nom (optionnel)",
       "namePlaceholder": "ex: Boîte du marché",
-      "layingDate": "Date de ponte",
+      "dcrDate": "Date de consommation recommandée (DCR)",
+      "dcrHint": "Renseignez la date imprimée sur la boîte, souvent après « à consommer de préférence avant ».",
+      "quantityPresets": "Formats courants",
       "quantity": "Quantité",
+      "remaining": "Œufs restants",
       "size": "Taille",
       "sizeOptions": {
         "S": "Petit (S)",
@@ -1213,13 +1227,19 @@
       "cancel": "Annuler",
       "save": "Ajouter",
       "saving": "Ajout...",
+      "editSave": "Enregistrer",
+      "editSaving": "Enregistrement...",
       "scanSuccess": "Code scanné avec succès !",
       "addSuccess": "Boîte ajoutée avec succès",
-      "addError": "Échec de l'ajout de la boîte"
+      "addError": "Échec de l'ajout de la boîte",
+      "editSuccess": "Boîte mise à jour",
+      "editError": "Échec de la mise à jour",
+      "dateError": "Renseignez une DCR valide",
+      "remainingError": "Le nombre d'œufs restants doit être compris entre 0 et la quantité totale"
     },
     "invite": {
       "invalidTitle": "Invitation invalide",
-      "invalidDescription": "Cette invitation n'existe pas ou a expiré. Demandez au proprietaire du frigo de vous envoyer une nouvelle invitation.",
+      "invalidDescription": "Cette invitation n'existe pas ou a expiré. Demandez au propriétaire du frigo de vous envoyer une nouvelle invitation.",
       "backToFridge": "Retour à mon frigo",
       "joinTitle": "Rejoindre un frigo",
       "inviteText": "vous invite à rejoindre son frigo",
@@ -1248,8 +1268,15 @@
       "scanDate": "Scanner la date avec l'IA",
       "scanning": "Analyse en cours...",
       "helpText": "Prenez une photo de la date sur l'emballage",
-      "helpTextDetail": "Cadrez la DDM ou la date de ponte imprimée sur la boîte",
+      "helpTextDetail": "Cadrez la DCR ou la date « à consommer de préférence avant » imprimée sur la boîte",
       "success": "Date extraite !",
+      "detected": "Date détectée",
+      "detectedTitle": "Date détectée",
+      "detectedDescription": "{date} via {provider}",
+      "providerOpenai": "OpenAI",
+      "providerGoogle": "Google",
+      "useDate": "Utiliser cette date",
+      "applied": "DCR appliquée",
       "done": "Terminé",
       "retry": "Réessayer",
       "cancel": "Annuler",
@@ -1259,14 +1286,16 @@
       "errorRateLimit": "Limite quotidienne atteinte (20 scans/jour). Réessayez demain.",
       "errorFileTooLarge": "L'image est trop volumineuse. Maximum 5 Mo.",
       "errorInvalidFileType": "Format d'image non supporté. Utilisez JPEG, PNG ou WebP.",
+      "errorNotConfigured": "Le scan IA n'est pas configuré.",
+      "errorProviderFailed": "Le scan IA a échoué. Réessayez avec une photo plus nette.",
       "errorNetwork": "Erreur de connexion. Vérifiez votre connexion internet.",
       "errorUnknown": "Une erreur inattendue s'est produite. Réessayez."
     }
   },
   "notifications": {
     "email": {
-      "boxNameFallback": "Boîte d'oeufs",
-      "subject": "Alerte fraîcheur - {count} boîte(s) bientôt périmée(s)",
+      "boxNameFallback": "Boîte d'œufs",
+      "subject": "Alerte fraîcheur - DCR proche pour {count} boîte(s)",
       "bodyTitle": "Alerte fraîcheur"
     }
   },
@@ -1331,7 +1360,7 @@
           },
           {
             "question": "Comment calculez-vous la fraîcheur ?",
-            "answer": "Nous utilisons la date de ponte que vous indiquez. Un œuf est extra-frais jusqu'à 9 jours, frais jusqu'à 21 jours, et à cuire entre 22 et 28 jours."
+            "answer": "Nous utilisons la DCR indiquée sur la boîte et en déduisons les jours restants. Un œuf est extra-frais jusqu'à 9 jours après ponte, frais jusqu'à 21 jours, et à cuire entre 22 et 28 jours."
           }
         ]
       },

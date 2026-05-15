@@ -1,8 +1,11 @@
 import {
   calculateFreshness,
+  calculateFreshnessFromDcrDate,
   calculateExpirationProgress,
   formatDaysRemaining,
   formatDaysRemainingFr,
+  getDcrDateFromLayingDate,
+  getLayingDateFromDcrDate,
   getFreshnessBgClass,
   getFreshnessColorClass,
   getFreshnessDescriptionFr,
@@ -10,10 +13,18 @@ import {
 } from "@/features/eggs/lib/freshness-calculator";
 import { describe, expect, it } from "vitest";
 
+const REFERENCE_DATE = new Date("2026-05-13T12:00:00.000Z");
+
 // Helper to create a date X days ago
 function daysAgo(days: number): Date {
-  const date = new Date();
+  const date = new Date(REFERENCE_DATE);
   date.setDate(date.getDate() - days);
+  return date;
+}
+
+function daysFromNow(days: number): Date {
+  const date = new Date(REFERENCE_DATE);
+  date.setDate(date.getDate() + days);
   return date;
 }
 
@@ -21,7 +32,7 @@ describe("freshness-calculator", () => {
   describe("calculateFreshness", () => {
     describe("extra-fresh status (days 0-9)", () => {
       it("should return extra-fresh for eggs laid today", () => {
-        const result = calculateFreshness(daysAgo(0));
+        const result = calculateFreshness(daysAgo(0), REFERENCE_DATE);
 
         expect(result.status).toBe("extra-fresh");
         expect(result.daysOld).toBe(0);
@@ -34,7 +45,7 @@ describe("freshness-calculator", () => {
       });
 
       it("should return extra-fresh for eggs laid 5 days ago", () => {
-        const result = calculateFreshness(daysAgo(5));
+        const result = calculateFreshness(daysAgo(5), REFERENCE_DATE);
 
         expect(result.status).toBe("extra-fresh");
         expect(result.daysOld).toBe(5);
@@ -42,7 +53,7 @@ describe("freshness-calculator", () => {
       });
 
       it("should return extra-fresh for eggs laid 9 days ago (boundary)", () => {
-        const result = calculateFreshness(daysAgo(9));
+        const result = calculateFreshness(daysAgo(9), REFERENCE_DATE);
 
         expect(result.status).toBe("extra-fresh");
         expect(result.daysOld).toBe(9);
@@ -52,7 +63,7 @@ describe("freshness-calculator", () => {
 
     describe("fresh status (days 10-21)", () => {
       it("should return fresh for eggs laid 10 days ago", () => {
-        const result = calculateFreshness(daysAgo(10));
+        const result = calculateFreshness(daysAgo(10), REFERENCE_DATE);
 
         expect(result.status).toBe("fresh");
         expect(result.daysOld).toBe(10);
@@ -65,7 +76,7 @@ describe("freshness-calculator", () => {
       });
 
       it("should return fresh for eggs laid 15 days ago", () => {
-        const result = calculateFreshness(daysAgo(15));
+        const result = calculateFreshness(daysAgo(15), REFERENCE_DATE);
 
         expect(result.status).toBe("fresh");
         expect(result.daysOld).toBe(15);
@@ -73,7 +84,7 @@ describe("freshness-calculator", () => {
       });
 
       it("should return fresh for eggs laid 21 days ago (boundary)", () => {
-        const result = calculateFreshness(daysAgo(21));
+        const result = calculateFreshness(daysAgo(21), REFERENCE_DATE);
 
         expect(result.status).toBe("fresh");
         expect(result.daysOld).toBe(21);
@@ -83,7 +94,7 @@ describe("freshness-calculator", () => {
 
     describe("cook-thoroughly status (days 22-28)", () => {
       it("should return cook-thoroughly for eggs laid 22 days ago", () => {
-        const result = calculateFreshness(daysAgo(22));
+        const result = calculateFreshness(daysAgo(22), REFERENCE_DATE);
 
         expect(result.status).toBe("cook-thoroughly");
         expect(result.daysOld).toBe(22);
@@ -91,7 +102,7 @@ describe("freshness-calculator", () => {
       });
 
       it("should return cook-thoroughly for eggs laid 25 days ago", () => {
-        const result = calculateFreshness(daysAgo(25));
+        const result = calculateFreshness(daysAgo(25), REFERENCE_DATE);
 
         expect(result.status).toBe("cook-thoroughly");
         expect(result.daysOld).toBe(25);
@@ -99,7 +110,7 @@ describe("freshness-calculator", () => {
       });
 
       it("should return cook-thoroughly for eggs laid 28 days ago (boundary)", () => {
-        const result = calculateFreshness(daysAgo(28));
+        const result = calculateFreshness(daysAgo(28), REFERENCE_DATE);
 
         expect(result.status).toBe("cook-thoroughly");
         expect(result.daysOld).toBe(28);
@@ -109,7 +120,7 @@ describe("freshness-calculator", () => {
 
     describe("expired status (days 29+)", () => {
       it("should return expired for eggs laid 29 days ago", () => {
-        const result = calculateFreshness(daysAgo(29));
+        const result = calculateFreshness(daysAgo(29), REFERENCE_DATE);
 
         expect(result.status).toBe("expired");
         expect(result.daysOld).toBe(29);
@@ -118,11 +129,36 @@ describe("freshness-calculator", () => {
       });
 
       it("should return expired for eggs laid 60 days ago", () => {
-        const result = calculateFreshness(daysAgo(60));
+        const result = calculateFreshness(daysAgo(60), REFERENCE_DATE);
 
         expect(result.status).toBe("expired");
         expect(result.daysOld).toBe(60);
         expect(result.daysRemaining).toBe(0);
+      });
+    });
+
+    describe("DCR source date", () => {
+      it("should calculate days remaining from the DCR date", () => {
+        const result = calculateFreshnessFromDcrDate(
+          daysFromNow(3),
+          REFERENCE_DATE,
+        );
+
+        expect(result.status).toBe("cook-thoroughly");
+        expect(result.daysRemaining).toBe(3);
+        expect(result.daysOld).toBe(25);
+      });
+
+      it("should convert between laying date and DCR date", () => {
+        const layingDate = daysAgo(0);
+        const dcrDate = getDcrDateFromLayingDate(layingDate);
+
+        expect(
+          calculateFreshnessFromDcrDate(dcrDate, layingDate).daysRemaining,
+        ).toBe(28);
+        expect(getLayingDateFromDcrDate(dcrDate).toDateString()).toBe(
+          layingDate.toDateString(),
+        );
       });
     });
   });
@@ -164,30 +200,31 @@ describe("freshness-calculator", () => {
 
   describe("calculateExpirationProgress", () => {
     it("should return 0% for eggs laid today", () => {
-      const progress = calculateExpirationProgress(daysAgo(0));
+      const progress = calculateExpirationProgress(daysAgo(0), REFERENCE_DATE);
       expect(progress).toBeCloseTo(0, 0);
     });
 
     it("should return ~50% for eggs laid 14 days ago", () => {
-      const progress = calculateExpirationProgress(daysAgo(14));
+      const progress = calculateExpirationProgress(daysAgo(14), REFERENCE_DATE);
       expect(progress).toBeCloseTo(50, 0);
     });
 
     it("should return 100% for eggs laid 28 days ago", () => {
-      const progress = calculateExpirationProgress(daysAgo(28));
+      const progress = calculateExpirationProgress(daysAgo(28), REFERENCE_DATE);
       expect(progress).toBeCloseTo(100, 0);
     });
 
     it("should cap at 100% for expired eggs", () => {
-      const progress = calculateExpirationProgress(daysAgo(50));
+      const progress = calculateExpirationProgress(daysAgo(50), REFERENCE_DATE);
       expect(progress).toBe(100);
     });
 
     it("should not go below 0%", () => {
       // Future date (egg from the future)
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 5);
-      const progress = calculateExpirationProgress(futureDate);
+      const progress = calculateExpirationProgress(
+        daysFromNow(5),
+        REFERENCE_DATE,
+      );
       expect(progress).toBe(0);
     });
   });

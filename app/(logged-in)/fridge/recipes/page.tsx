@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { NeoCard, NeoCardContent } from "@/components/neo/neo-card";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
-import { hasChefAccess } from "@/lib/auth/stripe/auth-plans";
-import { calculateFreshness } from "@/features/eggs/lib/freshness-calculator";
+import { isChefSubscription } from "@/lib/stripe/check-premium";
+import { calculateEggBoxFreshness } from "@/features/eggs/lib/freshness-calculator";
 import { getMyFridgeAction } from "@/features/fridge/fridge.action";
 import { Eggy } from "@/features/mascot";
 import { getRecipeSuggestions, RecipeCard, RECIPES } from "@/features/recipes";
@@ -17,7 +17,7 @@ export default async function RecipesPage() {
 
   // Get user's subscription to check if they have Chef access
   const result = await getMyFridgeAction();
-  const isChef = hasChefAccess(result.data?.subscription?.plan);
+  const isChef = isChefSubscription(result.data?.subscription ?? null);
 
   // Count recipes available to this user
   const availableRecipesCount = isChef
@@ -105,7 +105,7 @@ async function PersonalizedSuggestions() {
 
   // Calculate freshness for each box
   const eggBoxesWithFreshness = eggBoxes.map((box) => {
-    const { status, daysRemaining } = calculateFreshness(box.layingDate);
+    const { status, daysRemaining } = calculateEggBoxFreshness(box);
     return {
       id: box.id,
       name: box.name,
