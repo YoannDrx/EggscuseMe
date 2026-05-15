@@ -155,7 +155,7 @@ export default function DangerZonePage() {
     mutationFn: async () => {
       return unwrapSafePromise(
         authClient.deleteUser({
-          callbackURL: "/goodbye",
+          callbackURL: "/auth/goodbye",
         }),
       );
     },

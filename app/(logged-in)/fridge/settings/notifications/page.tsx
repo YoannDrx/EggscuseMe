@@ -21,6 +21,12 @@ import {
   getNotificationPreferencesAction,
   updateNotificationPreferencesAction,
 } from "@/features/notifications/notification.action";
+import {
+  getNotificationPermission,
+  isPushSupported,
+  PushSubscriptionError,
+  subscribeToPush,
+} from "@/lib/pwa/push-notifications";
 import { Bell, BellOff, Loader2, Mail, Save, Smartphone } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useState } from "react";
@@ -34,6 +40,9 @@ export default function NotificationsSettingsPage() {
   const [emailEnabled, setEmailEnabled] = useState(true);
   const [pushEnabled, setPushEnabled] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
+  const [pushPermission, setPushPermission] =
+    useState<NotificationPermission | null>(null);
+  const [isPushSubscribing, setIsPushSubscribing] = useState(false);
 
   const { execute: loadPrefs, isPending: isLoading } = useAction(
     getNotificationPreferencesAction,
@@ -65,6 +74,10 @@ export default function NotificationsSettingsPage() {
     loadPrefs();
   }, [loadPrefs]);
 
+  useEffect(() => {
+    setPushPermission(getNotificationPermission());
+  }, []);
+
   const handleSave = () => {
     savePrefs({
       notifyEnabled,
@@ -72,6 +85,35 @@ export default function NotificationsSettingsPage() {
       emailEnabled,
       pushEnabled,
     });
+  };
+
+  const handleEnablePushOnDevice = async () => {
+    if (!isPushSupported()) {
+      toast.error(t("pushUnsupported"));
+      return;
+    }
+
+    setIsPushSubscribing(true);
+    try {
+      const permission = await Notification.requestPermission();
+      setPushPermission(permission);
+
+      if (permission !== "granted") {
+        toast.error(t("pushDenied"));
+        return;
+      }
+
+      await subscribeToPush();
+      toast.success(t("pushSubscribed"));
+    } catch (error) {
+      if (error instanceof PushSubscriptionError) {
+        toast.error(error.message);
+      } else {
+        toast.error(t("pushSubscribeError"));
+      }
+    } finally {
+      setIsPushSubscribing(false);
+    }
   };
 
   if (isLoading) {
@@ -173,6 +215,21 @@ export default function NotificationsSettingsPage() {
                   <p className="text-muted-foreground text-sm">
                     {t("pushDescription")}
                   </p>
+                  {pushPermission !== "granted" && pushEnabled && (
+                    <NeoButton
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={handleEnablePushOnDevice}
+                      disabled={isPushSubscribing || !notifyEnabled}
+                    >
+                      {isPushSubscribing && (
+                        <Loader2 className="mr-2 size-4 animate-spin" />
+                      )}
+                      {t("pushDeviceCta")}
+                    </NeoButton>
+                  )}
                 </div>
               </div>
               <NeoSwitch

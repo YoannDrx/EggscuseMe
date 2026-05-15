@@ -7,6 +7,7 @@ import {
 
 import type { PropsWithChildren } from "react";
 import { FridgeBreadcrumb } from "./fridge-breadcrumb";
+import { FridgeSwitcher } from "./fridge-switcher";
 import { FridgeSidebar } from "./fridge-sidebar";
 
 type FridgeNavigationProps = PropsWithChildren<{
@@ -39,6 +40,9 @@ export function FridgeNavigation({ children, role }: FridgeNavigationProps) {
               </svg>
             </NeoSidebarTrigger>
             <FridgeBreadcrumb />
+            <div className="ml-auto">
+              <FridgeSwitcher />
+            </div>
           </div>
         </header>
 

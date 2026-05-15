@@ -11,8 +11,10 @@ import { Bell, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { useLocale } from "next-intl";
 
 export function NotificationPermission() {
+  const locale = useLocale();
   const [permission, setPermission] =
     useState<NotificationPermission>("default");
   const [showCard, setShowCard] = useState(false);
@@ -26,14 +28,51 @@ export function NotificationPermission() {
   useEffect(() => {
     if ("Notification" in window) {
       setPermission(Notification.permission);
-
-      // Montrer après quelques interactions (1 minute)
-      if (Notification.permission === "default") {
-        const timer = setTimeout(() => setShowCard(true), 60000);
-        return () => clearTimeout(timer);
-      }
     }
+
+    const handleShowPermission = () => {
+      if ("Notification" in window && Notification.permission === "default") {
+        setShowCard(true);
+      }
+    };
+
+    window.addEventListener(
+      "eggscuseme:show-notification-permission",
+      handleShowPermission,
+    );
+    return () =>
+      window.removeEventListener(
+        "eggscuseme:show-notification-permission",
+        handleShowPermission,
+      );
   }, []);
+
+  const copy =
+    locale === "fr"
+      ? {
+          title: "Activer les notifications",
+          description:
+            "Soyez alerté quand vos œufs approchent de leur DCR pour éviter le gaspillage.",
+          enable: "Activer les notifications",
+          enabling: "Activation...",
+          later: "Plus tard",
+          success: "Notifications activées avec succès !",
+          denied:
+            "Vous avez refusé les notifications. Vous pouvez les activer dans les paramètres de votre navigateur.",
+          error: "Une erreur est survenue lors de l'activation",
+        }
+      : {
+          title: "Enable notifications",
+          description:
+            "Get alerted when your eggs approach their best-before date to avoid waste.",
+          enable: "Enable notifications",
+          enabling: "Enabling...",
+          later: "Later",
+          success: "Notifications enabled successfully!",
+          denied:
+            "You denied notifications. You can enable them in your browser settings.",
+          error: "An error occurred while enabling notifications",
+        };
 
   const handleEnable = async () => {
     setIsLoading(true);
@@ -43,19 +82,17 @@ export function NotificationPermission() {
 
       if (result === "granted") {
         await subscribeToPush();
-        toast.success("Notifications activees avec succes !");
+        toast.success(copy.success);
         setShowCard(false);
       } else if (result === "denied") {
-        toast.error(
-          "Vous avez refuse les notifications. Vous pouvez les activer dans les parametres de votre navigateur.",
-        );
+        toast.error(copy.denied);
         setShowCard(false);
       }
     } catch (error) {
       if (error instanceof PushSubscriptionError) {
         toast.error(error.message);
       } else {
-        toast.error("Une erreur est survenue lors de l'activation");
+        toast.error(copy.error);
       }
       // Ne pas fermer la modal en cas d'erreur pour permettre de reessayer
     } finally {
@@ -123,11 +160,10 @@ export function NotificationPermission() {
           {/* Text */}
           <div className="mb-6 text-center">
             <h2 className="text-neo-text mb-2 text-xl font-bold">
-              Activer les notifications
+              {copy.title}
             </h2>
             <p className="text-neo-text-muted text-sm">
-              Soyez alerté quand vos oeufs arrivent à expiration pour éviter le
-              gaspillage.
+              {copy.description}
             </p>
           </div>
 
@@ -138,10 +174,10 @@ export function NotificationPermission() {
               disabled={isLoading}
               className="w-full"
             >
-              {isLoading ? "Activation..." : "Activer les notifications"}
+              {isLoading ? copy.enabling : copy.enable}
             </NeoButton>
             <NeoButton variant="ghost" onClick={handleClose} className="w-full">
-              Plus tard
+              {copy.later}
             </NeoButton>
           </div>
         </div>

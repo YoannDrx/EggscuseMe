@@ -67,6 +67,13 @@ type Member = {
   };
 };
 
+type FridgeOwner = {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+};
+
 export default function SharingPage() {
   const locale = useLocale();
   const copy =
@@ -153,6 +160,7 @@ export default function SharingPage() {
   const [isPending, startTransition] = useTransition();
   const [shareLinks, setShareLinks] = useState<ShareLink[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
+  const [owner, setOwner] = useState<FridgeOwner | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showQrFor, setShowQrFor] = useState<string | null>(null);
 
@@ -171,6 +179,9 @@ export default function SharingPage() {
       }
       if (membersResult.data?.members) {
         setMembers(membersResult.data.members);
+      }
+      if (membersResult.data?.owner) {
+        setOwner(membersResult.data.owner);
       }
       setIsLoading(false);
     }
@@ -277,7 +288,7 @@ export default function SharingPage() {
   }
 
   const guests = members.filter((m) => m.role === "GUEST");
-  const owner = members.find((m) => m.role === "OWNER");
+  const memberCount = guests.length + (owner ? 1 : 0);
   const activeLinks = shareLinks.filter((l) => l.isActive);
 
   return (
@@ -455,7 +466,7 @@ export default function SharingPage() {
         <NeoCardHeader>
           <NeoCardTitle className="font-heading flex items-center gap-2">
             <Users className="size-5" />
-            {copy.membersTitle(members.length)}
+            {copy.membersTitle(memberCount)}
           </NeoCardTitle>
           <NeoCardDescription>{copy.membersDesc}</NeoCardDescription>
         </NeoCardHeader>
@@ -476,14 +487,14 @@ export default function SharingPage() {
                 <div className="flex items-center gap-3 rounded-lg p-2">
                   <Avatar>
                     <AvatarFallback>
-                      {owner.user.name.charAt(0).toUpperCase()}
+                      {owner.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
-                    {owner.user.image && <AvatarImage src={owner.user.image} />}
+                    {owner.image && <AvatarImage src={owner.image} />}
                   </Avatar>
                   <div className="flex-1">
-                    <p className="font-medium">{owner.user.name}</p>
+                    <p className="font-medium">{owner.name}</p>
                     <p className="text-muted-foreground text-sm">
-                      {owner.user.email}
+                      {owner.email}
                     </p>
                   </div>
                   <NeoBadge variant="secondary">{copy.ownerBadge}</NeoBadge>

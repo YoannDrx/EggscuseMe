@@ -1,10 +1,10 @@
 "use server";
 
 import { authAction } from "@/lib/actions/safe-actions";
-import { hasChefAccess } from "@/lib/auth/stripe/auth-plans";
 import { ActionError } from "@/lib/errors/action-error";
 import { getOrCreateFridge } from "@/lib/fridge/get-fridge-access";
 import { prisma } from "@/lib/prisma";
+import { isChefSubscription } from "@/lib/stripe/check-premium";
 import { SiteConfig } from "@/site-config";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
@@ -43,7 +43,7 @@ const SwitchFridgeSchema = z.object({
 export const getMyFridgesAction = authAction.action(
   async ({ ctx: { user } }) => {
     const { subscription } = await getOrCreateFridge(user);
-    const isChef = hasChefAccess(subscription?.plan);
+    const isChef = isChefSubscription(subscription);
 
     const fridges = await prisma.fridge.findMany({
       where: { ownerId: user.id },
@@ -75,7 +75,7 @@ export const createFridgeAction = authAction
     const { subscription } = await getOrCreateFridge(user);
 
     // Check if user has Chef plan
-    if (!hasChefAccess(subscription?.plan)) {
+    if (!isChefSubscription(subscription)) {
       throw new ActionError(
         `${t(
           "limitReached",

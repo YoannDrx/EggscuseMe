@@ -44,8 +44,6 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
   const isInitialized = useRef(false);
 
   const plan = normalizePlanName(fridge.subscription?.plan);
-  const isPremium = hasPaidAccess(fridge.subscription?.plan);
-  const isChef = hasChefAccess(fridge.subscription?.plan);
 
   // Extract subscription info for trial/cancellation display
   const subscription = fridge.subscription;
@@ -54,6 +52,14 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
   const periodEnd = subscription?.periodEnd ?? null;
   const cancelAtPeriodEnd = subscription?.cancelAtPeriodEnd ?? false;
   const isTrialing = subscriptionStatus === "trialing";
+  const hasUsableSubscription =
+    subscriptionStatus === "active" ||
+    subscriptionStatus === "trialing" ||
+    subscriptionStatus === "past_due";
+  const isPremium =
+    hasPaidAccess(fridge.subscription?.plan) && hasUsableSubscription;
+  const isChef =
+    hasChefAccess(fridge.subscription?.plan) && hasUsableSubscription;
 
   // Set initial state synchronously on first render (before effects)
   // This ensures children have access to the store immediately
