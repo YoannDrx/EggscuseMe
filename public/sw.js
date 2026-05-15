@@ -8,10 +8,9 @@ const DYNAMIC_CACHE_NAME = "eggscuseme-dynamic-v2";
 const STATIC_ASSETS = [
   "/",
   "/fridge",
-  "/timer",
+  "/fridge/timer",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
-  "/sounds/timer-done.mp3",
 ];
 
 // Installation du Service Worker
@@ -75,9 +74,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // API Fridge - Stale While Revalidate
+  // API Fridge - Network First to avoid stale authenticated inventory
   if (url.pathname.startsWith("/api/fridge")) {
-    event.respondWith(staleWhileRevalidate(request, DYNAMIC_CACHE_NAME));
+    event.respondWith(networkFirst(request, DYNAMIC_CACHE_NAME));
     return;
   }
 
@@ -159,23 +158,6 @@ async function networkFirst(request, cacheName) {
   }
 }
 
-// Stratégie Stale While Revalidate
-async function staleWhileRevalidate(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
-
-  const fetchPromise = fetch(request)
-    .then((response) => {
-      if (response.ok) {
-        cache.put(request, response.clone());
-      }
-      return response;
-    })
-    .catch(() => null);
-
-  return cached || fetchPromise;
-}
-
 // Gestion des notifications push
 self.addEventListener("push", (event) => {
   let data = { title: "EggscuseMe", body: "", tag: "default", url: "/" };
@@ -227,16 +209,6 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
-// Background Sync
-self.addEventListener("sync", (event) => {
-  if (event.tag === "sync-egg-consumption") {
-    event.waitUntil(syncFromIndexedDB("egg-consumption"));
-  }
-  if (event.tag === "sync-egg-box-changes") {
-    event.waitUntil(syncFromIndexedDB("egg-box-changes"));
-  }
-});
-
 // Periodic Background Sync (Chrome 80+)
 self.addEventListener("periodicsync", (event) => {
   if (event.tag === "check-expiring-eggs") {
@@ -266,12 +238,6 @@ self.addEventListener("message", (event) => {
     self.skipWaiting();
   }
 });
-
-// Fonction helper pour sync depuis IndexedDB
-async function syncFromIndexedDB(storeName) {
-  // Cette fonction sera implémentée côté client via IndexedDB
-  console.log(`Syncing ${storeName}...`);
-}
 
 // Vérification des œufs expirant en arrière-plan
 async function checkExpiringEggsInBackground() {

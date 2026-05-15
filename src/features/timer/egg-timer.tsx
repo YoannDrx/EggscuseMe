@@ -11,6 +11,7 @@ import { NeoLabel } from "@/components/neo";
 import { NeoSelect, NeoSelectItem } from "@/components/neo";
 import { TimerIllustration } from "@/components/eggscuseme/illustrations";
 import type { EggSize } from "@/generated/prisma";
+import { sendMessageToServiceWorker } from "@/lib/pwa/service-worker-registration";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { Check, Pause, Play, RotateCcw, Volume2 } from "lucide-react";
@@ -27,6 +28,38 @@ import { CircularProgress } from "./circular-progress";
 const SIZES: EggSize[] = ["S", "M", "L", "XL"];
 const TEMPERATURES: EggTemperature[] = ["fridge", "room"];
 const YOLK_PREFERENCES: YolkPreference[] = ["runny", "soft", "medium", "hard"];
+
+function playTimerDoneSound() {
+  const audioContext =
+    (window as unknown as { AudioContext?: typeof AudioContext }).AudioContext ??
+    (
+      window as unknown as {
+        webkitAudioContext?: typeof AudioContext;
+      }
+    ).webkitAudioContext;
+
+  if (!audioContext) return;
+
+  const context = new audioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(880, now);
+  oscillator.frequency.setValueAtTime(660, now + 0.22);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.18, now + 0.03);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.75);
+  oscillator.onended = () => {
+    void context.close();
+  };
+}
 
 // Color configuration based on yolk preference
 // Using oklch colors that match the CSS variables for SVG compatibility
@@ -76,7 +109,6 @@ export function EggTimer() {
   const [isDone, setIsDone] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentColor = yolkColors[yolkPreference];
@@ -99,12 +131,11 @@ export function EggTimer() {
           if (prev <= 1) {
             setIsRunning(false);
             setIsDone(true);
-            // Play sound
-            if (audioRef.current) {
-              audioRef.current.play().catch(() => {
-                // Audio play failed, likely due to autoplay policy
-              });
-            }
+            playTimerDoneSound();
+            sendMessageToServiceWorker({
+              type: "TIMER_COMPLETE",
+              message: t("done"),
+            });
             return 0;
           }
           return prev - 1;
@@ -117,7 +148,7 @@ export function EggTimer() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, timeRemaining]);
+  }, [isRunning, timeRemaining, t]);
 
   const handleStart = useCallback(() => {
     if (timeRemaining > 0) {
@@ -417,11 +448,6 @@ export function EggTimer() {
             </div>
           </motion.div>
         )}
-
-        {/* Audio element for notification */}
-        <audio ref={audioRef} preload="auto">
-          <source src="/sounds/timer-done.mp3" type="audio/mpeg" />
-        </audio>
       </NeoCardContent>
     </NeoCard>
   );

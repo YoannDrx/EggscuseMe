@@ -1,7 +1,6 @@
 "use client";
 
 import { registerServiceWorker } from "@/lib/pwa/service-worker-registration";
-import { setupOnlineListener } from "@/lib/pwa/offline-sync";
 import { registerPeriodicSync } from "@/lib/pwa/periodic-sync";
 import { useEffect } from "react";
 import { InstallPrompt } from "./install-prompt";
@@ -18,9 +17,6 @@ export function PWAProvider() {
         void registerPeriodicSync();
       }
     });
-
-    // Configurer l'écouteur pour la reconnexion
-    setupOnlineListener();
   }, []);
 
   return (

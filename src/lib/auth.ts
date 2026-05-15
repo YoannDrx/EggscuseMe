@@ -40,6 +40,16 @@ if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
 // In CI, we run on http://localhost with NODE_ENV=production
 // Secure cookies don't work on HTTP, so we disable them in CI
 const useSecureCookies = env.CI ? false : env.NODE_ENV === "production";
+const trustedOrigins =
+  env.NODE_ENV === "production"
+    ? [getServerUrl()]
+    : Array.from(
+        new Set([
+          getServerUrl(),
+          "http://localhost:3000",
+          "http://127.0.0.1:3000",
+        ]),
+      );
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -58,7 +68,7 @@ export const auth = betterAuth({
     // Disable rate limiting in CI
     enabled: env.CI ? false : undefined,
   },
-  trustedOrigins: ["*"],
+  trustedOrigins,
   databaseHooks: {
     user: {
       create: {

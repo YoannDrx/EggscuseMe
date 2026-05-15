@@ -1,4 +1,5 @@
 import { createZodRoute } from "next-zod-route";
+import { unstable_rethrow } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getUser } from "./auth/auth-user";
 import { ApplicationError } from "./errors/application-error";
@@ -24,6 +25,8 @@ import { logger } from "./logger";
  */
 export const route = createZodRoute({
   handleServerError: (e: Error) => {
+    unstable_rethrow(e);
+
     if (e instanceof ZodRouteError) {
       logger.debug("[DEV] - ZodRouteError", e);
       return NextResponse.json(
