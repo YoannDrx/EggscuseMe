@@ -13,6 +13,12 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: z.string().optional(),
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
+    OPENAI_API_KEY: z.string().optional(),
+    OPENAI_VISION_MODEL: z.string().optional(),
+    GOOGLE_GENERATIVE_AI_API_KEY: z.string().optional(),
+    GOOGLE_VISION_MODEL: z.string().optional(),
+    AI_SCAN_PROVIDER: z.enum(["auto", "openai", "google"]).optional(),
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),
     RESEND_AUDIENCE_ID: z.string().optional(),
     EMAIL_FROM: z.string().optional(),
@@ -27,10 +33,12 @@ export const env = createEnv({
    * `experimental__runtimeEnv` as well.
    */
   client: {
+    NEXT_PUBLIC_BASE_URL: z.string().url().optional(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
     NEXT_PUBLIC_EMAIL_CONTACT: z.string().optional(),
   },
   experimental__runtimeEnv: {
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_EMAIL_CONTACT: process.env.NEXT_PUBLIC_EMAIL_CONTACT,

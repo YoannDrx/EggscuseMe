@@ -31,7 +31,8 @@
     "@prisma/client",
     "tailwindcss-animate",
     "tailwindcss",
-    "@next/eslint-plugin-next"
+    "@next/eslint-plugin-next",
+    "shiki"
   ],
   "ignoreBinaries": ["stripe"],
   "paths": {

@@ -2,7 +2,7 @@
 
 **Stop throwing away your eggs. Cook them perfectly.**
 
-EggscuseMe is a web application that helps you manage the freshness of your eggs, avoid food waste, and cook eggs optimally based on their laying date.
+EggscuseMe is a web application that helps you manage the freshness of your eggs, avoid food waste, and cook eggs optimally based on the recommended consumption date (DCR / best-before date) printed on the box.
 
 ## The Problem
 
@@ -16,7 +16,7 @@ Every year, millions of eggs are thrown away due to confusion about expiration d
 
 EggscuseMe provides:
 
-- **Virtual Fridge**: Track all your egg boxes with color-coded freshness indicators
+- **Virtual Fridge**: Track all your egg boxes from their DCR with color-coded freshness indicators
 - **Smart Recommendations**: Know exactly what to cook based on egg freshness
 - **Intelligent Timer**: Get perfect cooking times adjusted for egg size and temperature
 - **Anti-Waste Stats**: See how much money and eggs you've saved
@@ -32,11 +32,11 @@ EggscuseMe provides:
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript (strict mode)
 - **Styling**: TailwindCSS v4 with custom Design System
 - **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: Better Auth with organization support
+- **Authentication**: Better Auth with shared fridge access
 - **Payments**: Stripe (Freemium model)
 - **i18n**: next-intl (French + English)
 - **Testing**: Vitest + Playwright
@@ -45,7 +45,7 @@ EggscuseMe provides:
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - pnpm
 - PostgreSQL
 - Redis
@@ -84,12 +84,22 @@ REDIS_URL="redis://localhost:6379"
 
 # Authentication
 BETTER_AUTH_SECRET="your-secret"
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+CRON_SECRET="a-long-random-secret"
 GITHUB_CLIENT_ID="your-github-id"
 GITHUB_CLIENT_SECRET="your-github-secret"
+
+# AI scan (OpenAI is used first when AI_SCAN_PROVIDER=auto)
+AI_SCAN_PROVIDER="auto"
+OPENAI_API_KEY="your-openai-api-key"
+OPENAI_VISION_MODEL="gpt-5-mini"
+GOOGLE_GENERATIVE_AI_API_KEY="your-gemini-api-key"
+GOOGLE_VISION_MODEL="gemini-1.5-flash"
 
 # Email
 RESEND_API_KEY="your-resend-key"
 EMAIL_FROM="contact@eggscuseme.app"
+BLOB_READ_WRITE_TOKEN="vercel-blob-token"
 
 # Payments
 STRIPE_SECRET_KEY="sk_test_..."
@@ -110,13 +120,13 @@ pnpm test:e2e:ci  # Run e2e tests
 
 ## Features
 
-### Free Plan
+### Solo Plan
 
 - Track up to 2 egg boxes
 - Basic timer
 - Freshness recommendations
 
-### Premium Plan (2.99/month)
+### Brigade / Chef Plans
 
 - Unlimited egg boxes
 - Full consumption history
@@ -124,6 +134,7 @@ pnpm test:e2e:ci  # Run e2e tests
 - Push notifications
 - Exclusive recipes
 - Data export
+- Multi-fridge and traceability features on Chef
 
 ## Contributing
 
