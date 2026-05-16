@@ -6,7 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { NeoCard } from "@/components/neo/neo-card";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
-import { Calendar, Egg, Star, UtensilsCrossed } from "lucide-react";
+import {
+  Calendar,
+  Egg,
+  RotateCcw,
+  Star,
+  UtensilsCrossed,
+  User,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 export type HistoryItem = {
@@ -17,6 +24,8 @@ export type HistoryItem = {
   cookingType: string;
   rating?: number | null;
   notes?: string | null;
+  userName?: string | null;
+  canUndo?: boolean;
 };
 
 const COOKING_TYPE_OPTIONS = {
@@ -45,8 +54,8 @@ const COOKING_TYPE_COLORS: Record<string, string> = {
 
 export type HistoryCardProps = {
   item: HistoryItem;
-  /** Callback when delete action is triggered */
-  onDelete?: () => void;
+  /** Callback when undo action is triggered */
+  onUndo?: () => void;
   /** Animation delay for staggered entry */
   delay?: number;
   /** Additional CSS classes */
@@ -61,7 +70,7 @@ export type HistoryCardProps = {
  */
 export function HistoryCard({
   item,
-  onDelete,
+  onUndo,
   delay = 0,
   className,
 }: HistoryCardProps) {
@@ -87,7 +96,19 @@ export function HistoryCard({
   const quantityLabel = tHistory("eggCount", { count: item.quantity });
 
   return (
-    <SwipeableRow onDelete={onDelete} className={className}>
+    <SwipeableRow
+      rightAction={
+        item.canUndo && onUndo
+          ? {
+              icon: <RotateCcw className="size-5" />,
+              label: tHistory("undo"),
+              bgColor: "bg-neo-accent",
+              onAction: onUndo,
+            }
+          : undefined
+      }
+      className={className}
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -112,6 +133,13 @@ export function HistoryCard({
 
           {/* Box name */}
           <p className="text-neo-text font-medium">{item.eggBoxName}</p>
+
+          {item.userName && (
+            <div className="text-neo-text-muted flex items-center gap-2 text-xs">
+              <User className="size-3.5" />
+              <span>{item.userName}</span>
+            </div>
+          )}
 
           {/* Footer: Cooking type + Rating */}
           <div className="flex items-center justify-between">

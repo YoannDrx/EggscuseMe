@@ -31,6 +31,7 @@ import {
   type HistoryItem,
 } from "@/features/statistics/components/history-card";
 import { Eggy } from "@/features/mascot";
+import { undoConsumptionAction } from "@/features/fridge/fridge.action";
 import { getConsumptionHistoryAction } from "@/features/statistics/statistics.action";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -39,11 +40,14 @@ import {
   Filter,
   History,
   Loader2,
+  RotateCcw,
   Star,
+  User,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "sonner";
 
 const COOKING_TYPE_OPTIONS = {
   SOFT_BOILED: "softBoiled",
@@ -76,7 +80,11 @@ export default function HistoryPage() {
   const tCooking = useTranslations("cooking");
   const [page, setPage] = useState(1);
   const [cookingTypeFilter, setCookingTypeFilter] = useState<string>("");
+  const [eggBoxFilter, setEggBoxFilter] = useState<string>("");
+  const [consumerFilter, setConsumerFilter] = useState<string>("");
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [undoingId, setUndoingId] = useState<string | null>(null);
+  const [isUndoPending, startUndoTransition] = useTransition();
 
   const {
     execute: loadHistory,
@@ -89,13 +97,17 @@ export default function HistoryPage() {
       page,
       limit: 20,
       cookingType: cookingTypeFilter || undefined,
+      eggBoxId: eggBoxFilter || undefined,
+      userId: consumerFilter || undefined,
     });
-  }, [loadHistory, page, cookingTypeFilter]);
+  }, [loadHistory, page, cookingTypeFilter, eggBoxFilter, consumerFilter]);
 
   const data = result.data;
   const history = data?.history ?? [];
   const totalPages = data?.pages ?? 0;
   const total = data?.total ?? 0;
+  const eggBoxes = data?.eggBoxes ?? [];
+  const consumers = data?.consumers ?? [];
 
   const pageContainer =
     "mx-auto w-full max-w-5xl md:max-w-6xl lg:max-w-6xl xl:max-w-7xl";
@@ -109,7 +121,39 @@ export default function HistoryPage() {
     cookingType: item.cookingType,
     rating: item.rating,
     notes: item.notes,
+    userName: item.userName,
+    canUndo: item.canUndo,
   }));
+
+  const refreshHistory = () => {
+    loadHistory({
+      page,
+      limit: 20,
+      cookingType: cookingTypeFilter || undefined,
+      eggBoxId: eggBoxFilter || undefined,
+      userId: consumerFilter || undefined,
+    });
+  };
+
+  const handleUndoConsumption = (consumptionId: string) => {
+    setUndoingId(consumptionId);
+    startUndoTransition(async () => {
+      const result = await undoConsumptionAction({ consumptionId });
+
+      if (result.data?.success) {
+        toast.success(t("undoSuccess"));
+        if (history.length === 1 && page > 1) {
+          setPage((currentPage) => Math.max(1, currentPage - 1));
+        } else {
+          refreshHistory();
+        }
+      } else {
+        toast.error(result.serverError ?? t("undoError"));
+      }
+
+      setUndoingId(null);
+    });
+  };
 
   // Filter content for mobile modal
   const filterContent = (
@@ -123,7 +167,6 @@ export default function HistoryPage() {
           onValueChange={(value) => {
             setCookingTypeFilter(value === "all" ? "" : value);
             setPage(1);
-            setFilterModalOpen(false);
           }}
         >
           <SelectTrigger>
@@ -139,6 +182,65 @@ export default function HistoryPage() {
           </SelectContent>
         </Select>
       </div>
+
+      <div>
+        <label className="text-neo-text-muted mb-2 block text-sm font-medium">
+          {t("boxFilter")}
+        </label>
+        <Select
+          value={eggBoxFilter || "all"}
+          onValueChange={(value) => {
+            setEggBoxFilter(value === "all" ? "" : value);
+            setPage(1);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={t("allBoxes")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("allBoxes")}</SelectItem>
+            {eggBoxes.map((box) => (
+              <SelectItem key={box.id} value={box.id}>
+                {box.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <label className="text-neo-text-muted mb-2 block text-sm font-medium">
+          {t("consumerFilter")}
+        </label>
+        <Select
+          value={consumerFilter || "all"}
+          onValueChange={(value) => {
+            setConsumerFilter(value === "all" ? "" : value);
+            setPage(1);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={t("allConsumers")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("allConsumers")}</SelectItem>
+            {consumers.map((consumer) => (
+              <SelectItem key={consumer.id} value={consumer.id}>
+                {consumer.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <NeoButton
+        type="button"
+        variant="primary"
+        className="w-full"
+        onClick={() => setFilterModalOpen(false)}
+      >
+        {t("applyFilters")}
+      </NeoButton>
     </div>
   );
 
@@ -158,7 +260,7 @@ export default function HistoryPage() {
             onClick={() => setFilterModalOpen(true)}
           >
             <Filter className="size-4" />
-            {cookingTypeFilter && (
+            {(cookingTypeFilter || eggBoxFilter || consumerFilter) && (
               <span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" />
             )}
           </NeoButton>
@@ -210,6 +312,56 @@ export default function HistoryPage() {
                 </Select>
               </div>
 
+              <div className="min-w-[220px]">
+                <label className="text-neo-text-muted mb-2 block text-sm">
+                  {t("boxFilter")}
+                </label>
+                <Select
+                  value={eggBoxFilter || "all"}
+                  onValueChange={(value) => {
+                    setEggBoxFilter(value === "all" ? "" : value);
+                    setPage(1);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("allBoxes")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t("allBoxes")}</SelectItem>
+                    {eggBoxes.map((box) => (
+                      <SelectItem key={box.id} value={box.id}>
+                        {box.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="min-w-[220px]">
+                <label className="text-neo-text-muted mb-2 block text-sm">
+                  {t("consumerFilter")}
+                </label>
+                <Select
+                  value={consumerFilter || "all"}
+                  onValueChange={(value) => {
+                    setConsumerFilter(value === "all" ? "" : value);
+                    setPage(1);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("allConsumers")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t("allConsumers")}</SelectItem>
+                    {consumers.map((consumer) => (
+                      <SelectItem key={consumer.id} value={consumer.id}>
+                        {consumer.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {total > 0 && (
                 <div className="flex items-end">
                   <Badge variant="secondary">
@@ -245,6 +397,11 @@ export default function HistoryPage() {
                       key={item.id}
                       item={item}
                       delay={index * 0.05}
+                      onUndo={
+                        item.canUndo
+                          ? () => handleUndoConsumption(item.id)
+                          : undefined
+                      }
                     />
                   ))}
                 </div>
@@ -262,6 +419,10 @@ export default function HistoryPage() {
                             <TableHead>{t("type")}</TableHead>
                             <TableHead>{t("rating")}</TableHead>
                             <TableHead>{t("comment")}</TableHead>
+                            <TableHead>{t("consumer")}</TableHead>
+                            <TableHead className="text-right">
+                              {t("actions")}
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -314,6 +475,38 @@ export default function HistoryPage() {
                               </TableCell>
                               <TableCell className="max-w-[200px] truncate">
                                 {item.notes ?? (
+                                  <span className="text-neo-text-muted">-</span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <div className="text-neo-text-muted flex items-center gap-2 text-sm">
+                                  <User className="size-4" />
+                                  <span>{item.userName}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {item.canUndo ? (
+                                  <NeoButton
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    disabled={
+                                      isUndoPending && undoingId === item.id
+                                    }
+                                    onClick={() =>
+                                      handleUndoConsumption(item.id)
+                                    }
+                                  >
+                                    {isUndoPending && undoingId === item.id ? (
+                                      <Loader2 className="size-4 animate-spin" />
+                                    ) : (
+                                      <RotateCcw className="size-4" />
+                                    )}
+                                    <span className="sr-only">
+                                      {t("undo")}
+                                    </span>
+                                  </NeoButton>
+                                ) : (
                                   <span className="text-neo-text-muted">-</span>
                                 )}
                               </TableCell>

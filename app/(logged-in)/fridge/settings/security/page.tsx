@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  NeoButton,
   NeoCard,
   NeoCardContent,
   NeoCardDescription,
@@ -11,13 +12,33 @@ import { Eggy } from "@/features/mascot";
 import { Form, useForm } from "@/features/form/tanstack-form";
 import { authClient, useSession } from "@/lib/auth-client";
 import { unwrapSafePromise } from "@/lib/promises";
-import { useMutation } from "@tanstack/react-query";
-import { ChevronLeft, KeyRound, Mail } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  ChevronLeft,
+  Clock,
+  KeyRound,
+  Laptop,
+  Loader2,
+  LogOut,
+  Mail,
+  ShieldCheck,
+  Smartphone,
+} from "lucide-react";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
+
+type ActiveSession = {
+  id: string;
+  token: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  expiresAt: Date | string;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+};
 
 export default function SecurityPage() {
   const locale = useLocale();
@@ -49,6 +70,26 @@ export default function SecurityPage() {
             "Email de vérification envoyé. Vérifiez votre boîte de réception.",
           verifyEmail: "Vérifier l'email",
           backToSettings: "Retour aux paramètres",
+          sessions: "Sessions actives",
+          sessionsDesc:
+            "Consultez les appareils connectés et révoquez les accès que vous ne reconnaissez pas.",
+          currentSession: "Session actuelle",
+          otherSession: "Autre session",
+          lastActive: "Dernière activité",
+          expiresAt: "Expire le",
+          ipAddress: "IP",
+          unknownDevice: "Appareil inconnu",
+          unknownIp: "IP inconnue",
+          revokeSession: "Déconnecter",
+          revokeOtherSessions: "Déconnecter les autres sessions",
+          loadingSessions: "Chargement des sessions...",
+          noSessions: "Aucune session active trouvée",
+          sessionRevoked: "Session déconnectée",
+          otherSessionsRevoked: "Autres sessions déconnectées",
+          sessionsError: "Impossible de charger les sessions",
+          desktopDevice: "Ordinateur",
+          mobileDevice: "Mobile",
+          tabletDevice: "Tablette",
         }
       : {
           title: "Security",
@@ -74,6 +115,26 @@ export default function SecurityPage() {
           toastEmail: "Verification email sent. Check your inbox.",
           verifyEmail: "Verify email",
           backToSettings: "Back to settings",
+          sessions: "Active sessions",
+          sessionsDesc:
+            "Review connected devices and revoke access you don't recognize.",
+          currentSession: "Current session",
+          otherSession: "Other session",
+          lastActive: "Last active",
+          expiresAt: "Expires",
+          ipAddress: "IP",
+          unknownDevice: "Unknown device",
+          unknownIp: "Unknown IP",
+          revokeSession: "Sign out",
+          revokeOtherSessions: "Sign out other sessions",
+          loadingSessions: "Loading sessions...",
+          noSessions: "No active sessions found",
+          sessionRevoked: "Session signed out",
+          otherSessionsRevoked: "Other sessions signed out",
+          sessionsError: "Unable to load sessions",
+          desktopDevice: "Desktop",
+          mobileDevice: "Mobile",
+          tabletDevice: "Tablet",
         };
 
   const ChangePasswordFormSchema = z
@@ -102,6 +163,16 @@ export default function SecurityPage() {
   type ChangeEmailFormType = z.infer<typeof ChangeEmailFormSchema>;
   const router = useRouter();
   const session = useSession();
+  const currentSessionToken = session.data?.session.token;
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  const sessionsQuery = useQuery({
+    queryKey: ["auth", "sessions"],
+    queryFn: async () => unwrapSafePromise(authClient.listSessions()),
+  });
 
   // Password mutation
   const changePasswordMutation = useMutation({
@@ -141,6 +212,32 @@ export default function SecurityPage() {
     },
   });
 
+  const revokeSessionMutation = useMutation({
+    mutationFn: async (token: string) => {
+      return unwrapSafePromise(authClient.revokeSession({ token }));
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: async () => {
+      toast.success(copy.sessionRevoked);
+      await sessionsQuery.refetch();
+    },
+  });
+
+  const revokeOtherSessionsMutation = useMutation({
+    mutationFn: async () => {
+      return unwrapSafePromise(authClient.revokeOtherSessions());
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: async () => {
+      toast.success(copy.otherSessionsRevoked);
+      await sessionsQuery.refetch();
+    },
+  });
+
   const passwordForm = useForm({
     schema: ChangePasswordFormSchema,
     defaultValues: {
@@ -163,6 +260,16 @@ export default function SecurityPage() {
       await changeEmailMutation.mutateAsync(values);
     },
   });
+
+  const activeSessions = (sessionsQuery.data ?? [])
+    .map((activeSession) => activeSession as ActiveSession)
+    .sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
+  const otherSessionsCount = activeSessions.filter(
+    (activeSession) => activeSession.token !== currentSessionToken,
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -246,6 +353,121 @@ export default function SecurityPage() {
         </Form>
       </NeoCard>
 
+      {/* Active Sessions */}
+      <NeoCard variant="elevated">
+        <NeoCardHeader className="gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <NeoCardTitle className="flex items-center gap-2">
+              <ShieldCheck className="size-5" />
+              {copy.sessions}
+            </NeoCardTitle>
+            <NeoCardDescription>{copy.sessionsDesc}</NeoCardDescription>
+          </div>
+          <NeoButton
+            type="button"
+            variant="outline"
+            size="sm"
+            loading={revokeOtherSessionsMutation.isPending}
+            disabled={otherSessionsCount === 0}
+            onClick={() => revokeOtherSessionsMutation.mutate()}
+          >
+            <LogOut className="size-4" />
+            {copy.revokeOtherSessions}
+          </NeoButton>
+        </NeoCardHeader>
+        <NeoCardContent className="space-y-3">
+          {sessionsQuery.isPending && (
+            <div className="text-neo-text-muted flex items-center gap-2 rounded-lg border p-4 text-sm">
+              <Loader2 className="size-4 animate-spin" />
+              {copy.loadingSessions}
+            </div>
+          )}
+
+          {sessionsQuery.isError && (
+            <div className="text-destructive rounded-lg border p-4 text-sm">
+              {copy.sessionsError}
+            </div>
+          )}
+
+          {!sessionsQuery.isPending &&
+            !sessionsQuery.isError &&
+            activeSessions.length === 0 && (
+              <div className="text-neo-text-muted rounded-lg border p-4 text-sm">
+                {copy.noSessions}
+              </div>
+            )}
+
+          {activeSessions.map((activeSession) => {
+            const device = getDeviceDetails(activeSession.userAgent, copy);
+            const isCurrentSession =
+              activeSession.token === currentSessionToken;
+            const isRevoking =
+              revokeSessionMutation.isPending &&
+              revokeSessionMutation.variables === activeSession.token;
+
+            return (
+              <div
+                key={activeSession.id}
+                className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0 space-y-2">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-full">
+                      <device.Icon className="size-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-medium">{device.label}</p>
+                        <span className="rounded-full border px-2 py-0.5 text-xs">
+                          {isCurrentSession
+                            ? copy.currentSession
+                            : copy.otherSession}
+                        </span>
+                      </div>
+                      {activeSession.userAgent && (
+                        <p className="text-neo-text-muted max-w-xl truncate text-xs">
+                          {activeSession.userAgent}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-neo-text-muted flex flex-wrap gap-x-4 gap-y-1 text-xs">
+                    <span className="flex items-center gap-1">
+                      <Clock className="size-3.5" />
+                      {copy.lastActive}:{" "}
+                      {formatSessionDate(activeSession.updatedAt, dateFormatter)}
+                    </span>
+                    <span>
+                      {copy.expiresAt}:{" "}
+                      {formatSessionDate(activeSession.expiresAt, dateFormatter)}
+                    </span>
+                    <span>
+                      {copy.ipAddress}:{" "}
+                      {activeSession.ipAddress ?? copy.unknownIp}
+                    </span>
+                  </div>
+                </div>
+
+                <NeoButton
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  loading={isRevoking}
+                  disabled={isCurrentSession}
+                  onClick={() =>
+                    revokeSessionMutation.mutate(activeSession.token)
+                  }
+                >
+                  <LogOut className="size-4" />
+                  {copy.revokeSession}
+                </NeoButton>
+              </div>
+            );
+          })}
+        </NeoCardContent>
+      </NeoCard>
+
       {/* Change Email */}
       <NeoCard variant="elevated">
         <NeoCardHeader>
@@ -279,4 +501,35 @@ export default function SecurityPage() {
       </NeoCard>
     </div>
   );
+}
+
+function getDeviceDetails(
+  userAgent: string | null | undefined,
+  copy: {
+    desktopDevice: string;
+    mobileDevice: string;
+    tabletDevice: string;
+    unknownDevice: string;
+  },
+) {
+  if (!userAgent) {
+    return { label: copy.unknownDevice, Icon: Laptop };
+  }
+
+  if (/ipad|tablet/i.test(userAgent)) {
+    return { label: copy.tabletDevice, Icon: Smartphone };
+  }
+
+  if (/android|iphone|mobile/i.test(userAgent)) {
+    return { label: copy.mobileDevice, Icon: Smartphone };
+  }
+
+  return { label: copy.desktopDevice, Icon: Laptop };
+}
+
+function formatSessionDate(
+  value: Date | string,
+  formatter: Intl.DateTimeFormat,
+) {
+  return formatter.format(new Date(value));
 }

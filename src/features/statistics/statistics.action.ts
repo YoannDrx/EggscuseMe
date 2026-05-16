@@ -219,23 +219,52 @@ const getHistorySchema = z.object({
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(20),
   cookingType: z.string().optional(),
+  eggBoxId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export const getConsumptionHistoryAction = authAction
   .schema(getHistorySchema)
   .action(
-    async ({ ctx: { user }, parsedInput: { page, limit, cookingType } }) => {
+    async ({
+      ctx: { user },
+      parsedInput: { page, limit, cookingType, eggBoxId, userId },
+    }) => {
       const access = await getFridgeAccess(user);
 
       if (!access) {
-        return { history: [], total: 0, pages: 0 };
+        return {
+          history: [],
+          total: 0,
+          pages: 0,
+          eggBoxes: [],
+          consumers: [],
+        };
       }
+
+      const consumerMap = new Map<string, { id: string; name: string }>();
+      consumerMap.set(access.fridge.owner.id, {
+        id: access.fridge.owner.id,
+        name: access.fridge.owner.name,
+      });
+      for (const member of access.fridge.members) {
+        consumerMap.set(member.user.id, {
+          id: member.user.id,
+          name: member.user.name,
+        });
+      }
+      consumerMap.set(user.id, {
+        id: user.id,
+        name: user.name,
+      });
 
       const where = {
         eggBox: {
           fridgeId: access.fridge.id,
         },
         ...(cookingType ? { cookingType: cookingType as never } : {}),
+        ...(eggBoxId ? { eggBoxId } : {}),
+        ...(userId ? { userId } : {}),
       };
 
       const [consumptions, total] = await Promise.all([
@@ -246,6 +275,12 @@ export const getConsumptionHistoryAction = authAction
           take: limit,
           include: {
             eggBox: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         }),
         prisma.eggConsumption.count({ where }),
@@ -259,12 +294,20 @@ export const getConsumptionHistoryAction = authAction
         rating: c.rating,
         notes: c.notes,
         eggBoxName: c.eggBox.name ?? "Sans nom",
+        userId: c.userId,
+        userName: c.user.name,
+        canUndo: access.role === "OWNER" || c.userId === user.id,
       }));
 
       return {
         history,
         total,
         pages: Math.ceil(total / limit),
+        eggBoxes: access.fridge.eggBoxes.map((box) => ({
+          id: box.id,
+          name: box.name ?? "Sans nom",
+        })),
+        consumers: Array.from(consumerMap.values()),
       };
     },
   );

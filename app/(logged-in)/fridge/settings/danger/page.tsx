@@ -49,7 +49,7 @@ export default function DangerZonePage() {
           fridgeData: "Données du frigo",
           exportTitle: "Exporter vos données",
           exportDesc:
-            "Téléchargez une copie de toutes vos données au format CSV",
+            "Téléchargez une copie de toutes vos données au format JSON",
           exportContent:
             "L'export inclut toutes vos boîtes d'œufs, votre historique de consommation et vos préférences.",
           exportCta: "Exporter mes données",
@@ -101,7 +101,7 @@ export default function DangerZonePage() {
           subtitle: "Irreversible actions on your fridge and account",
           fridgeData: "Fridge data",
           exportTitle: "Export your data",
-          exportDesc: "Download a copy of all your data in CSV format",
+          exportDesc: "Download a copy of all your data in JSON format",
           exportContent:
             "Export includes your egg boxes, consumption history, and preferences.",
           exportCta: "Export my data",

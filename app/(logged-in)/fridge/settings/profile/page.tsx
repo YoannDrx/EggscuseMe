@@ -1,11 +1,25 @@
 import { Eggy } from "@/features/mascot";
 import { getRequiredUser } from "@/lib/auth/auth-user";
 import { combineWithParentMetadata } from "@/lib/metadata";
-import { ChevronLeft } from "lucide-react";
+import {
+  Bell,
+  CalendarDays,
+  ChevronLeft,
+  Download,
+  MailCheck,
+  ShieldCheck,
+} from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { Suspense, type ElementType } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import { EditProfileCardForm } from "./edit-profile-form";
+import {
+  NeoCard,
+  NeoCardContent,
+  NeoCardDescription,
+  NeoCardHeader,
+  NeoCardTitle,
+} from "@/components/neo";
 
 export const generateMetadata = combineWithParentMetadata({
   title: "Mon profil",
@@ -43,9 +57,89 @@ export default async function ProfilePage() {
 }
 
 async function ProfileContent() {
+  const t = await getTranslations("fridge.settings.profilePage");
+  const locale = await getLocale();
   const user = await getRequiredUser();
+  const createdAt = new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+  }).format(new Date(user.createdAt));
 
-  return <EditProfileCardForm defaultValues={user} />;
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2">
+        <NeoCard variant="elevated">
+          <NeoCardHeader>
+            <NeoCardTitle className="flex items-center gap-2 text-base">
+              <MailCheck className="size-4" />
+              {t("accountStatus")}
+            </NeoCardTitle>
+            <NeoCardDescription>{t("accountStatusDesc")}</NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border p-3">
+              <p className="text-neo-text-muted text-xs">{t("emailStatus")}</p>
+              <p className="font-medium">
+                {user.emailVerified ? t("emailVerified") : t("emailPending")}
+              </p>
+            </div>
+            <div className="rounded-lg border p-3">
+              <p className="text-neo-text-muted text-xs">{t("createdAt")}</p>
+              <p className="font-medium">{createdAt}</p>
+            </div>
+          </NeoCardContent>
+        </NeoCard>
+
+        <NeoCard variant="elevated">
+          <NeoCardHeader>
+            <NeoCardTitle className="flex items-center gap-2 text-base">
+              <CalendarDays className="size-4" />
+              {t("quickActions")}
+            </NeoCardTitle>
+            <NeoCardDescription>{t("quickActionsDesc")}</NeoCardDescription>
+          </NeoCardHeader>
+          <NeoCardContent className="grid gap-2">
+            <ProfileShortcut
+              href="/fridge/settings/security"
+              icon={ShieldCheck}
+              label={t("security")}
+            />
+            <ProfileShortcut
+              href="/fridge/settings/notifications"
+              icon={Bell}
+              label={t("notifications")}
+            />
+            <ProfileShortcut
+              href="/fridge/settings/danger"
+              icon={Download}
+              label={t("exportData")}
+            />
+          </NeoCardContent>
+        </NeoCard>
+      </div>
+
+      <EditProfileCardForm defaultValues={user} />
+    </div>
+  );
+}
+
+function ProfileShortcut({
+  href,
+  icon: Icon,
+  label,
+}: {
+  href: string;
+  icon: ElementType;
+  label: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="hover:bg-neo-accent/10 flex items-center gap-3 rounded-lg border p-3 text-sm font-medium transition-colors"
+    >
+      <Icon className="text-neo-text-muted size-4" />
+      {label}
+    </Link>
+  );
 }
 
 function ProfileSkeleton() {
