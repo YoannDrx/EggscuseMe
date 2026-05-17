@@ -1,0 +1,4 @@
+-- This migration is intentionally empty.
+-- The scan image URL field was removed before schema rollout, but the dated
+-- migration folder exists in some development workspaces. Keeping an explicit
+-- no-op migration lets Prisma record it consistently.

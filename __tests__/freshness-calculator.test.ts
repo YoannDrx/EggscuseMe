@@ -10,6 +10,7 @@ import {
   getFreshnessColorClass,
   getFreshnessDescriptionFr,
   getCookingTypeLabel,
+  parseDateInputValue,
 } from "@/features/eggs/lib/freshness-calculator";
 import { describe, expect, it } from "vitest";
 
@@ -138,6 +139,12 @@ describe("freshness-calculator", () => {
     });
 
     describe("DCR source date", () => {
+      it("should parse date-only inputs without shifting the ISO calendar day", () => {
+        const dcrDate = parseDateInputValue("2026-06-12");
+
+        expect(dcrDate.toISOString().slice(0, 10)).toBe("2026-06-12");
+      });
+
       it("should calculate days remaining from the DCR date", () => {
         const result = calculateFreshnessFromDcrDate(
           daysFromNow(3),

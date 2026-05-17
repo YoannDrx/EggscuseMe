@@ -1,8 +1,14 @@
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
-import { getServerUrl } from "./src/lib/server-url";
+import dotenv from "dotenv";
 
-const SERVER_URL = process.env.PLAYWRIGHT_TEST_BASE_URL ?? getServerUrl();
+dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
+
+const EXTERNAL_SERVER_URL = process.env.PLAYWRIGHT_TEST_BASE_URL;
+const LOCAL_SERVER_PORT = process.env.PLAYWRIGHT_TEST_PORT ?? "3100";
+const SERVER_URL =
+  EXTERNAL_SERVER_URL ?? `http://localhost:${LOCAL_SERVER_PORT}`;
 
 const HEADLESS = process.env.HEADLESS
   ? process.env.HEADLESS.toLowerCase() === "true"
@@ -50,16 +56,15 @@ const config: PlaywrightTestConfig = {
     navigationTimeout: 15000,
   },
   testDir: "e2e",
-  // Only start the web server if PLAYWRIGHT_TEST_BASE_URL is not set
-  ...(SERVER_URL
+  // Only start the web server if PLAYWRIGHT_TEST_BASE_URL is not set.
+  ...(EXTERNAL_SERVER_URL
     ? {}
     : {
         webServer: {
-          command: "pnpm run build; pnpm run start",
+          command: `PLAYWRIGHT_TEST_BASE_URL=${SERVER_URL} pnpm run build && PLAYWRIGHT_TEST_BASE_URL=${SERVER_URL} PORT=${LOCAL_SERVER_PORT} pnpm run start`,
           url: SERVER_URL,
           timeout: 120 * 1000,
-          reuseExistingServer:
-            process.env.NODE_ENV === "development" ? !process.env.CI : true,
+          reuseExistingServer: process.env.PLAYWRIGHT_REUSE_SERVER === "true",
         },
       }),
 };

@@ -9,7 +9,10 @@ import {
   createEggBoxAction,
   updateEggBoxAction,
 } from "@/features/fridge/fridge.action";
-import { calculateFreshnessFromDcrDate } from "@/features/eggs/lib/freshness-calculator";
+import {
+  calculateFreshnessFromDcrDate,
+  parseDateInputValue,
+} from "@/features/eggs/lib/freshness-calculator";
 import {
   Calculator,
   Calendar,
@@ -80,7 +83,7 @@ export function AddEggBoxForm({ eggBox }: AddEggBoxFormProps) {
   const freshnessPreview = useMemo(() => {
     if (!formData.dcrDate) return null;
 
-    const dcrDate = new Date(`${formData.dcrDate}T00:00:00`);
+    const dcrDate = parseDateInputValue(formData.dcrDate);
     if (Number.isNaN(dcrDate.getTime())) return null;
 
     const freshness = calculateFreshnessFromDcrDate(dcrDate);
@@ -165,7 +168,7 @@ export function AddEggBoxForm({ eggBox }: AddEggBoxFormProps) {
         return;
       }
 
-      const dcrDate = new Date(`${formData.dcrDate}T00:00:00`);
+      const dcrDate = parseDateInputValue(formData.dcrDate);
       if (Number.isNaN(dcrDate.getTime())) {
         toast.error(t("dateError"));
         return;
@@ -193,9 +196,7 @@ export function AddEggBoxForm({ eggBox }: AddEggBoxFormProps) {
           lotNumber:
             isChef && formData.lotNumber ? formData.lotNumber : undefined,
           producerCode:
-            isChef && formData.producerCode
-              ? formData.producerCode
-              : undefined,
+            isChef && formData.producerCode ? formData.producerCode : undefined,
         });
 
         if (result.data?.eggBox) {

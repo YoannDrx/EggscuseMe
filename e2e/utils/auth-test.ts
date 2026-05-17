@@ -56,7 +56,9 @@ export async function createTestAccount(options: {
     .fill(userData.password);
 
   // Get the submit button and ensure it's ready
-  const submitButton = options.page.getByRole("button", { name: /sign up/i });
+  const submitButton = options.page.getByRole("button", {
+    name: /sign up|create account|s'inscrire|créer un compte/i,
+  });
   await expect(submitButton).toBeEnabled();
 
   // Submit the form
