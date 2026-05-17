@@ -104,6 +104,7 @@ export const SignInWithEmailOTP = (props: {
             <motion.div
               key="otp-email-form"
               variants={variants}
+              initial="initial"
               animate="active"
               exit="exit"
               transition={{ duration: 0.15 }}

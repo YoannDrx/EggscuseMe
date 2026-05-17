@@ -163,14 +163,23 @@ export function DialogComponent(props: { dialog: Dialog }) {
           {dialog.title ? (
             <AlertDialogHeader>
               <AlertDialogTitle>{dialog.title}</AlertDialogTitle>
-              {dialog.description && (
+              {dialog.description ? (
                 <AlertDialogDescription>
                   {dialog.description}
+                </AlertDialogDescription>
+              ) : (
+                <AlertDialogDescription className="sr-only">
+                  Dialog content
                 </AlertDialogDescription>
               )}
             </AlertDialogHeader>
           ) : (
-            <AlertDialogTitle className="sr-only">Dialog</AlertDialogTitle>
+            <>
+              <AlertDialogTitle className="sr-only">Dialog</AlertDialogTitle>
+              <AlertDialogDescription className="sr-only">
+                Dialog content
+              </AlertDialogDescription>
+            </>
           )}
           {dialog.children}
         </AlertDialogContent>
