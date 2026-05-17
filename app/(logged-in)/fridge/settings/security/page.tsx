@@ -25,7 +25,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -41,122 +41,29 @@ type ActiveSession = {
 };
 
 export default function SecurityPage() {
+  const t = useTranslations("fridge.settings.securityPage");
   const locale = useLocale();
-  const copy =
-    locale === "fr"
-      ? {
-          title: "Sécurité",
-          subtitle: "Gérez vos identifiants de connexion",
-          back: "Retour aux paramètres",
-          changePassword: "Changer le mot de passe",
-          changePasswordDesc:
-            "Mettez à jour votre mot de passe pour sécuriser votre compte",
-          currentPassword: "Mot de passe actuel",
-          newPassword: "Nouveau mot de passe",
-          confirmPassword: "Confirmer le mot de passe",
-          mismatch: "Les mots de passe ne correspondent pas",
-          passwordRequired: "Mot de passe actuel requis",
-          passwordMin: "Le mot de passe doit contenir au moins 8 caractères",
-          revokeOther: "Déconnecter les autres appareils",
-          revokeDesc: "Vous serez déconnecté de tous les autres appareils",
-          submitPassword: "Changer le mot de passe",
-          toastPassword: "Mot de passe modifié avec succès",
-          changeEmail: "Changer l'adresse email",
-          changeEmailDesc:
-            "Un email de vérification sera envoyé à la nouvelle adresse",
-          emailLabel: "Nouvelle adresse email",
-          emailPlaceholder: "nouveau@email.com",
-          toastEmail:
-            "Email de vérification envoyé. Vérifiez votre boîte de réception.",
-          verifyEmail: "Vérifier l'email",
-          backToSettings: "Retour aux paramètres",
-          sessions: "Sessions actives",
-          sessionsDesc:
-            "Consultez les appareils connectés et révoquez les accès que vous ne reconnaissez pas.",
-          currentSession: "Session actuelle",
-          otherSession: "Autre session",
-          lastActive: "Dernière activité",
-          expiresAt: "Expire le",
-          ipAddress: "IP",
-          unknownDevice: "Appareil inconnu",
-          unknownIp: "IP inconnue",
-          revokeSession: "Déconnecter",
-          revokeOtherSessions: "Déconnecter les autres sessions",
-          loadingSessions: "Chargement des sessions...",
-          noSessions: "Aucune session active trouvée",
-          sessionRevoked: "Session déconnectée",
-          otherSessionsRevoked: "Autres sessions déconnectées",
-          sessionsError: "Impossible de charger les sessions",
-          desktopDevice: "Ordinateur",
-          mobileDevice: "Mobile",
-          tabletDevice: "Tablette",
-        }
-      : {
-          title: "Security",
-          subtitle: "Manage your login details",
-          back: "Back to settings",
-          changePassword: "Change password",
-          changePasswordDesc: "Update your password to secure your account",
-          currentPassword: "Current password",
-          newPassword: "New password",
-          confirmPassword: "Confirm password",
-          mismatch: "Passwords do not match",
-          passwordRequired: "Current password is required",
-          passwordMin: "Password must be at least 8 characters",
-          revokeOther: "Sign out other devices",
-          revokeDesc: "You'll be signed out on all other devices",
-          submitPassword: "Change password",
-          toastPassword: "Password updated",
-          changeEmail: "Change email address",
-          changeEmailDesc:
-            "A verification email will be sent to the new address",
-          emailLabel: "New email address",
-          emailPlaceholder: "new@email.com",
-          toastEmail: "Verification email sent. Check your inbox.",
-          verifyEmail: "Verify email",
-          backToSettings: "Back to settings",
-          sessions: "Active sessions",
-          sessionsDesc:
-            "Review connected devices and revoke access you don't recognize.",
-          currentSession: "Current session",
-          otherSession: "Other session",
-          lastActive: "Last active",
-          expiresAt: "Expires",
-          ipAddress: "IP",
-          unknownDevice: "Unknown device",
-          unknownIp: "Unknown IP",
-          revokeSession: "Sign out",
-          revokeOtherSessions: "Sign out other sessions",
-          loadingSessions: "Loading sessions...",
-          noSessions: "No active sessions found",
-          sessionRevoked: "Session signed out",
-          otherSessionsRevoked: "Other sessions signed out",
-          sessionsError: "Unable to load sessions",
-          desktopDevice: "Desktop",
-          mobileDevice: "Mobile",
-          tabletDevice: "Tablet",
-        };
+  const deviceLabels = {
+    desktopDevice: t("desktopDevice"),
+    mobileDevice: t("mobileDevice"),
+    tabletDevice: t("tabletDevice"),
+    unknownDevice: t("unknownDevice"),
+  };
 
   const ChangePasswordFormSchema = z
     .object({
-      currentPassword: z.string().min(1, copy.passwordRequired),
-      newPassword: z.string().min(8, copy.passwordMin),
-      confirmPassword: z.string().min(8, copy.passwordMin),
+      currentPassword: z.string().min(1, t("passwordRequired")),
+      newPassword: z.string().min(8, t("passwordMin")),
+      confirmPassword: z.string().min(8, t("passwordMin")),
       revokeOtherSessions: z.boolean().default(true),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
-      message: copy.mismatch,
+      message: t("mismatch"),
       path: ["confirmPassword"],
     });
 
   const ChangeEmailFormSchema = z.object({
-    newEmail: z
-      .string()
-      .email(
-        locale === "fr"
-          ? "Veuillez entrer une adresse email valide"
-          : "Please enter a valid email address",
-      ),
+    newEmail: z.string().email(t("invalidEmail")),
   });
 
   type ChangePasswordFormType = z.infer<typeof ChangePasswordFormSchema>;
@@ -189,7 +96,7 @@ export default function SecurityPage() {
       toast.error(error.message);
     },
     onSuccess: () => {
-      toast.success(copy.toastPassword);
+      toast.success(t("toastPassword"));
       passwordForm.reset();
     },
   });
@@ -207,7 +114,7 @@ export default function SecurityPage() {
       toast.error(error.message);
     },
     onSuccess: () => {
-      toast.success(copy.toastEmail);
+      toast.success(t("toastEmail"));
       router.refresh();
     },
   });
@@ -220,7 +127,7 @@ export default function SecurityPage() {
       toast.error(error.message);
     },
     onSuccess: async () => {
-      toast.success(copy.sessionRevoked);
+      toast.success(t("sessionRevoked"));
       await sessionsQuery.refetch();
     },
   });
@@ -233,7 +140,7 @@ export default function SecurityPage() {
       toast.error(error.message);
     },
     onSuccess: async () => {
-      toast.success(copy.otherSessionsRevoked);
+      toast.success(t("otherSessionsRevoked"));
       await sessionsQuery.refetch();
     },
   });
@@ -279,15 +186,15 @@ export default function SecurityPage() {
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm transition-colors"
       >
         <ChevronLeft className="size-4" />
-        {copy.backToSettings}
+        {t("backToSettings")}
       </Link>
 
       {/* Header */}
       <div className="flex items-center gap-4">
         <Eggy mood="happy" size="lg" />
         <div>
-          <h1 className="font-heading text-2xl font-bold">{copy.title}</h1>
-          <p className="text-muted-foreground">{copy.subtitle}</p>
+          <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 
@@ -296,16 +203,16 @@ export default function SecurityPage() {
         <NeoCardHeader>
           <NeoCardTitle className="flex items-center gap-2">
             <KeyRound className="size-5" />
-            {copy.changePassword}
+            {t("changePassword")}
           </NeoCardTitle>
-          <NeoCardDescription>{copy.changePasswordDesc}</NeoCardDescription>
+          <NeoCardDescription>{t("changePasswordDesc")}</NeoCardDescription>
         </NeoCardHeader>
         <Form form={passwordForm}>
           <NeoCardContent className="space-y-4">
             <passwordForm.AppField name="currentPassword">
               {(field) => (
                 <field.Field>
-                  <field.Label>{copy.currentPassword}</field.Label>
+                  <field.Label>{t("currentPassword")}</field.Label>
                   <field.Content>
                     <field.Input type="password" />
                     <field.Message />
@@ -316,7 +223,7 @@ export default function SecurityPage() {
             <passwordForm.AppField name="newPassword">
               {(field) => (
                 <field.Field>
-                  <field.Label>{copy.newPassword}</field.Label>
+                  <field.Label>{t("newPassword")}</field.Label>
                   <field.Content>
                     <field.Input type="password" />
                     <field.Message />
@@ -327,7 +234,7 @@ export default function SecurityPage() {
             <passwordForm.AppField name="confirmPassword">
               {(field) => (
                 <field.Field>
-                  <field.Label>{copy.confirmPassword}</field.Label>
+                  <field.Label>{t("confirmPassword")}</field.Label>
                   <field.Content>
                     <field.Input type="password" />
                     <field.Message />
@@ -339,15 +246,15 @@ export default function SecurityPage() {
               {(field) => (
                 <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                   <div className="space-y-0.5">
-                    <field.Label>{copy.revokeOther}</field.Label>
-                    <field.Description>{copy.revokeDesc}</field.Description>
+                    <field.Label>{t("revokeOther")}</field.Label>
+                    <field.Description>{t("revokeDesc")}</field.Description>
                   </div>
                   <field.Switch />
                 </div>
               )}
             </passwordForm.AppField>
             <passwordForm.SubmitButton className="w-full">
-              {copy.submitPassword}
+              {t("submitPassword")}
             </passwordForm.SubmitButton>
           </NeoCardContent>
         </Form>
@@ -359,9 +266,9 @@ export default function SecurityPage() {
           <div>
             <NeoCardTitle className="flex items-center gap-2">
               <ShieldCheck className="size-5" />
-              {copy.sessions}
+              {t("sessions")}
             </NeoCardTitle>
-            <NeoCardDescription>{copy.sessionsDesc}</NeoCardDescription>
+            <NeoCardDescription>{t("sessionsDesc")}</NeoCardDescription>
           </div>
           <NeoButton
             type="button"
@@ -372,20 +279,20 @@ export default function SecurityPage() {
             onClick={() => revokeOtherSessionsMutation.mutate()}
           >
             <LogOut className="size-4" />
-            {copy.revokeOtherSessions}
+            {t("revokeOtherSessions")}
           </NeoButton>
         </NeoCardHeader>
         <NeoCardContent className="space-y-3">
           {sessionsQuery.isPending && (
             <div className="text-neo-text-muted flex items-center gap-2 rounded-lg border p-4 text-sm">
               <Loader2 className="size-4 animate-spin" />
-              {copy.loadingSessions}
+              {t("loadingSessions")}
             </div>
           )}
 
           {sessionsQuery.isError && (
             <div className="text-destructive rounded-lg border p-4 text-sm">
-              {copy.sessionsError}
+              {t("sessionsError")}
             </div>
           )}
 
@@ -393,12 +300,15 @@ export default function SecurityPage() {
             !sessionsQuery.isError &&
             activeSessions.length === 0 && (
               <div className="text-neo-text-muted rounded-lg border p-4 text-sm">
-                {copy.noSessions}
+                {t("noSessions")}
               </div>
             )}
 
           {activeSessions.map((activeSession) => {
-            const device = getDeviceDetails(activeSession.userAgent, copy);
+            const device = getDeviceDetails(
+              activeSession.userAgent,
+              deviceLabels,
+            );
             const isCurrentSession =
               activeSession.token === currentSessionToken;
             const isRevoking =
@@ -420,8 +330,8 @@ export default function SecurityPage() {
                         <p className="font-medium">{device.label}</p>
                         <span className="rounded-full border px-2 py-0.5 text-xs">
                           {isCurrentSession
-                            ? copy.currentSession
-                            : copy.otherSession}
+                            ? t("currentSession")
+                            : t("otherSession")}
                         </span>
                       </div>
                       {activeSession.userAgent && (
@@ -435,16 +345,22 @@ export default function SecurityPage() {
                   <div className="text-neo-text-muted flex flex-wrap gap-x-4 gap-y-1 text-xs">
                     <span className="flex items-center gap-1">
                       <Clock className="size-3.5" />
-                      {copy.lastActive}:{" "}
-                      {formatSessionDate(activeSession.updatedAt, dateFormatter)}
+                      {t("lastActive")}:{" "}
+                      {formatSessionDate(
+                        activeSession.updatedAt,
+                        dateFormatter,
+                      )}
                     </span>
                     <span>
-                      {copy.expiresAt}:{" "}
-                      {formatSessionDate(activeSession.expiresAt, dateFormatter)}
+                      {t("expiresAt")}:{" "}
+                      {formatSessionDate(
+                        activeSession.expiresAt,
+                        dateFormatter,
+                      )}
                     </span>
                     <span>
-                      {copy.ipAddress}:{" "}
-                      {activeSession.ipAddress ?? copy.unknownIp}
+                      {t("ipAddress")}:{" "}
+                      {activeSession.ipAddress ?? t("unknownIp")}
                     </span>
                   </div>
                 </div>
@@ -460,7 +376,7 @@ export default function SecurityPage() {
                   }
                 >
                   <LogOut className="size-4" />
-                  {copy.revokeSession}
+                  {t("revokeSession")}
                 </NeoButton>
               </div>
             );
@@ -473,20 +389,20 @@ export default function SecurityPage() {
         <NeoCardHeader>
           <NeoCardTitle className="flex items-center gap-2">
             <Mail className="size-5" />
-            {copy.changeEmail}
+            {t("changeEmail")}
           </NeoCardTitle>
-          <NeoCardDescription>{copy.changeEmailDesc}</NeoCardDescription>
+          <NeoCardDescription>{t("changeEmailDesc")}</NeoCardDescription>
         </NeoCardHeader>
         <Form form={emailForm}>
           <NeoCardContent className="space-y-4">
             <emailForm.AppField name="newEmail">
               {(field) => (
                 <field.Field>
-                  <field.Label>{copy.emailLabel}</field.Label>
+                  <field.Label>{t("emailLabel")}</field.Label>
                   <field.Content>
                     <field.Input
                       type="email"
-                      placeholder={copy.emailPlaceholder}
+                      placeholder={t("emailPlaceholder")}
                     />
                     <field.Message />
                   </field.Content>
@@ -494,7 +410,7 @@ export default function SecurityPage() {
               )}
             </emailForm.AppField>
             <emailForm.SubmitButton className="w-full">
-              {copy.changeEmail}
+              {t("changeEmail")}
             </emailForm.SubmitButton>
           </NeoCardContent>
         </Form>
