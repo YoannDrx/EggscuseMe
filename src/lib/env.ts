@@ -21,7 +21,10 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),
     RESEND_AUDIENCE_ID: z.string().optional(),
-    EMAIL_FROM: z.string().optional(),
+    EMAIL_FROM: z
+      .string()
+      .optional()
+      .default("EggscuseMe <contact@do-not-reply.app>"),
     STRIPE_SECRET_KEY: z.string().optional(),
     NODE_ENV: z.enum(["development", "production", "test"]),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
@@ -35,7 +38,10 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_BASE_URL: z.string().url().optional(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
-    NEXT_PUBLIC_EMAIL_CONTACT: z.string().optional(),
+    NEXT_PUBLIC_EMAIL_CONTACT: z
+      .string()
+      .optional()
+      .default("hello@eggscuseme.app"),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
