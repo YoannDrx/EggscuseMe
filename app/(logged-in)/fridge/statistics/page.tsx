@@ -11,7 +11,6 @@ import {
 import {
   IconChartSticker,
   IconEggSticker,
-  SavingsSummary,
 } from "@/components/eggscuseme/illustrations";
 import { MobileHeader } from "@/components/eggscuseme/navigation/mobile-header";
 import { Badge } from "@/components/ui/badge";
@@ -447,9 +446,9 @@ export default function StatisticsPage() {
               <StatsCard
                 icon={<Euro className="text-fresh size-5" />}
                 iconBg="bg-fresh/20"
-                value={`${stats.moneySaved.toFixed(0)}EUR`}
-                label={t("savings")}
-                trendLabel={t("antiWasteEstimate")}
+                value={`${stats.trackedValueEstimate.toFixed(0)} EUR`}
+                label={t("trackedValue")}
+                trendLabel={t("trackedValueBasis")}
               />
               <StatsCard
                 icon={<Leaf className="text-fresh-extra size-5" />}
@@ -496,16 +495,16 @@ export default function StatisticsPage() {
               <NeoCard variant="elevated" padding="md">
                 <NeoCardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <NeoCardTitle className="text-sm font-medium">
-                    {t("savings")}
+                    {t("trackedValue")}
                   </NeoCardTitle>
                   <Euro className="text-fresh size-4" />
                 </NeoCardHeader>
                 <NeoCardContent>
                   <div className="text-2xl font-bold">
-                    {stats.moneySaved.toFixed(2)} EUR
+                    {stats.trackedValueEstimate.toFixed(2)} EUR
                   </div>
                   <p className="text-neo-text-muted text-xs">
-                    {t("antiWasteEstimate")}
+                    {t("trackedValueBasis")}
                   </p>
                 </NeoCardContent>
               </NeoCard>
@@ -604,16 +603,17 @@ export default function StatisticsPage() {
             </>
           )}
 
-          {/* Savings Summary */}
+          {/* Transparent consumption estimate */}
           <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-emerald-500/30 bg-emerald-500/5 p-6">
-            <p className="text-neo-text-muted text-sm font-medium">
-              {t("antiWasteEstimate")}
+            <p className="text-neo-text text-center text-lg font-bold">
+              {t("trackedConsumptionSummary", {
+                count: stats.totalConsumed,
+                value: stats.trackedValueEstimate.toFixed(2),
+              })}
             </p>
-            <SavingsSummary
-              money={stats.moneySaved}
-              eggs={stats.totalConsumed}
-              size="lg"
-            />
+            <p className="text-neo-text-muted max-w-2xl text-center text-sm">
+              {t("trackedValueExplanation")}
+            </p>
           </div>
 
           {/* Freshness at consumption - Full width on both */}

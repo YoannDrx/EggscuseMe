@@ -12,7 +12,6 @@ import {
 import {
   createCheckoutAction,
   createPortalSessionAction,
-  upgradeSubscriptionAction,
 } from "@/features/fridge/billing.action";
 import { Eggy } from "@/features/mascot";
 import { PlanCard } from "@/features/plans/plan-card";
@@ -22,14 +21,13 @@ import {
   normalizePlanTypeForDisplay,
   type Locale,
 } from "@/lib/auth/stripe/plan-features";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   AlertTriangle,
   ArrowLeft,
   Clock,
   Crown,
   Loader2,
-  Sparkles,
   Users,
   Zap,
 } from "lucide-react";
@@ -75,34 +73,14 @@ export default function BillingPage() {
   const isChef = currentPlan === "chef";
   const isPaid = isBrigade || isChef;
 
-  const upgradeToBrigadeMutation = useMutation({
-    mutationFn: async () => {
-      return resolveActionResult(
-        createCheckoutAction({
-          plan: "brigade",
-          annual: false,
-          successUrl: "/fridge/settings/billing?success=true",
-          cancelUrl: "/fridge/settings/billing?canceled=true",
-        }),
-      );
-    },
-    onSuccess: (data) => {
-      toast.info(copy.upgrading);
-      window.location.href = data.url;
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   const upgradeToChefMutation = useMutation({
     mutationFn: async () => {
       return resolveActionResult(
         createCheckoutAction({
           plan: "chef",
-          annual: false,
           successUrl: "/fridge/settings/billing?success=true",
           cancelUrl: "/fridge/settings/billing?canceled=true",
+          requestId: crypto.randomUUID(),
         }),
       );
     },
@@ -128,41 +106,11 @@ export default function BillingPage() {
     },
   });
 
-  // Upgrade Brigade → Chef via server action (not new checkout)
-  const queryClient = useQueryClient();
-  const upgradeToChefFromBrigadeMutation = useMutation({
-    mutationFn: async () => {
-      return resolveActionResult(
-        upgradeSubscriptionAction({
-          targetPlan: "chef",
-          annual: false,
-        }),
-      );
-    },
-    onSuccess: () => {
-      toast.success(
-        locale === "fr"
-          ? "Félicitations ! Vous êtes maintenant Chef !"
-          : "Congratulations! You are now a Chef!",
-      );
-      // Refresh the page to get updated subscription data
-      void queryClient.invalidateQueries();
-      window.location.reload();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   if (!fridgeState) {
     return null;
   }
 
-  const isLoading =
-    upgradeToBrigadeMutation.isPending ||
-    upgradeToChefMutation.isPending ||
-    upgradeToChefFromBrigadeMutation.isPending ||
-    portalMutation.isPending;
+  const isLoading = upgradeToChefMutation.isPending || portalMutation.isPending;
 
   // Get plan-specific display info
   const getPlanIcon = () => {
@@ -262,7 +210,7 @@ export default function BillingPage() {
             </div>
           )}
 
-          {isPaid ? (
+          {fridgeState.hasRecurringSubscription ? (
             <NeoButton
               variant="outline"
               onClick={() => portalMutation.mutate()}
@@ -274,74 +222,31 @@ export default function BillingPage() {
               {copy.manage}
             </NeoButton>
           ) : (
-            <div className="flex flex-wrap gap-3">
-              <NeoButton
-                variant="primary"
-                onClick={() => upgradeToBrigadeMutation.mutate()}
-                disabled={isLoading}
-              >
-                {upgradeToBrigadeMutation.isPending ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <Users className="mr-2 size-4" />
-                )}
-                {copy.chooseBrigade} - {copy.brigadePrice}
-                {copy.brigadePriceSuffix}
-              </NeoButton>
-              <NeoButton
-                variant="secondary"
-                className="bg-amber-500 text-white hover:bg-amber-600"
-                onClick={() => upgradeToChefMutation.mutate()}
-                disabled={isLoading}
-              >
-                {upgradeToChefMutation.isPending ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <Crown className="mr-2 size-4" />
-                )}
-                {copy.chooseChef} - {copy.chefPrice}
-                {copy.chefPriceSuffix}
-              </NeoButton>
-            </div>
-          )}
-
-          {/* Upgrade to Chef from Brigade (uses server action, no new checkout) */}
-          {isBrigade && (
-            <div className="border-border mt-4 border-t pt-4">
-              <p className="text-muted-foreground mb-3 text-sm">
-                {locale === "fr"
-                  ? "Envie de plus ? Passez Chef pour débloquer toutes les fonctionnalités pro !"
-                  : "Want more? Go Chef to unlock all pro features!"}
-              </p>
-              <NeoButton
-                variant="secondary"
-                className="bg-amber-500 text-white hover:bg-amber-600"
-                onClick={() => upgradeToChefFromBrigadeMutation.mutate()}
-                disabled={isLoading}
-              >
-                {upgradeToChefFromBrigadeMutation.isPending ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-2 size-4" />
-                )}
-                {copy.chooseChef} - {copy.chefPrice}
-                {copy.chefPriceSuffix}
-              </NeoButton>
-            </div>
+            !isChef && (
+              <div className="flex flex-wrap gap-3">
+                <NeoButton
+                  variant="primary"
+                  className="bg-amber-500 text-white hover:bg-amber-600"
+                  onClick={() => upgradeToChefMutation.mutate()}
+                  disabled={isLoading}
+                >
+                  {upgradeToChefMutation.isPending ? (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  ) : (
+                    <Crown className="mr-2 size-4" />
+                  )}
+                  {copy.chooseChef} - {copy.chefPrice}
+                  {copy.chefPriceSuffix}
+                </NeoButton>
+              </div>
+            )
           )}
         </NeoCardContent>
       </NeoCard>
 
-      {/* Plan Comparison - 3 plans */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Public offer: free Solo or one-time lifetime Chef. */}
+      <div className="grid gap-4 md:grid-cols-2">
         <PlanCard plan="solo" isCurrentPlan={isSolo} showButton={false} />
-        <PlanCard
-          plan="brigade"
-          isCurrentPlan={isBrigade}
-          onSelect={() => upgradeToBrigadeMutation.mutate()}
-          isLoading={upgradeToBrigadeMutation.isPending}
-          showButton={isSolo}
-        />
         <PlanCard
           plan="chef"
           isCurrentPlan={isChef}

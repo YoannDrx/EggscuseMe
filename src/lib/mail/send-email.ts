@@ -101,3 +101,13 @@ export const sendEmail = async (params: SendEmailParams) => {
 
   return result;
 };
+
+export async function sendEmailOrThrow(params: SendEmailParams) {
+  const result = await sendEmail(params);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return result.data;
+}

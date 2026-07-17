@@ -1,4 +1,6 @@
 import { AUTH_PLANS } from "@/lib/auth/stripe/auth-plans";
+import { resolveEffectiveBillingEntitlement } from "@/features/fridge/billing-entitlement";
+import { Prisma } from "@/generated/prisma";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/prisma";
@@ -51,6 +53,14 @@ const getPlanFromSubscription = (subscription: Stripe.Subscription) => {
 };
 
 export const POST = async (req: NextRequest) => {
+  if (!env.STRIPE_WEBHOOK_SECRET) {
+    logger.error("Stripe webhook secret is not configured");
+    return NextResponse.json(
+      { error: "Stripe webhook is not configured" },
+      { status: 503 },
+    );
+  }
+
   const headerList = await headers();
   const body = await req.text();
 
@@ -61,12 +71,12 @@ export const POST = async (req: NextRequest) => {
     event = stripe.webhooks.constructEvent(
       body,
       stripeSignature ?? "",
-      env.STRIPE_WEBHOOK_SECRET ?? "",
+      env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err: unknown) {
     logger.error("Stripe webhook signature verification failed:", err);
     return NextResponse.json(
-      { error: "Invalid Stripe webhook signature", details: err },
+      { error: "Invalid Stripe webhook signature" },
       { status: 400 },
     );
   }
@@ -74,7 +84,14 @@ export const POST = async (req: NextRequest) => {
   try {
     switch (event.type) {
       case "checkout.session.completed":
-        await checkoutSessionCompleted(event.data.object);
+        if (
+          event.data.object.mode === "payment" &&
+          event.data.object.payment_status === "paid"
+        ) {
+          await oneTimeCheckoutSessionCompleted(event.data.object);
+        } else if (event.data.object.mode === "subscription") {
+          await subscriptionCheckoutSessionCompleted(event.data.object);
+        }
         break;
       case "customer.subscription.updated":
         await customerSubscriptionUpdated(event.data.object);
@@ -99,7 +116,7 @@ export const POST = async (req: NextRequest) => {
   });
 };
 
-const checkoutSessionCompleted = async (
+const subscriptionCheckoutSessionCompleted = async (
   sessionData: Stripe.Checkout.Session,
 ) => {
   const session = sessionData;
@@ -150,8 +167,15 @@ const checkoutSessionCompleted = async (
     where: { userId: user.id },
   });
 
+  const effective = resolveEffectiveBillingEntitlement({
+    subscriptionPlan: plan.name,
+    subscriptionStatus: stripeSubscription.status,
+    oneTimePlan: existingSubscription?.oneTimePlan ?? null,
+  });
   const subscriptionData = {
-    plan: plan.name,
+    ...effective,
+    subscriptionPlan: plan.name,
+    subscriptionStatus: stripeSubscription.status,
     stripeCustomerId: customerId,
     stripeSubscriptionId: subscriptionId,
     status: stripeSubscription.status,
@@ -183,6 +207,92 @@ const checkoutSessionCompleted = async (
   );
 };
 
+const oneTimeCheckoutSessionCompleted = async (
+  session: Stripe.Checkout.Session,
+) => {
+  const userId = session.metadata?.userId;
+  const plan = session.metadata?.plan;
+  const customerId =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id;
+  const paymentIntentId =
+    typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : session.payment_intent?.id;
+
+  if (
+    !userId ||
+    plan !== "chef" ||
+    !customerId ||
+    !paymentIntentId ||
+    session.payment_status !== "paid"
+  ) {
+    logger.warn("Incomplete one-time Chef checkout session");
+    return;
+  }
+
+  const paidAt = new Date(session.created * 1000);
+
+  try {
+    await prisma.$transaction(async (transaction) => {
+      const existingPurchase = await transaction.billingPurchase.findUnique({
+        where: { checkoutSessionId: session.id },
+      });
+      if (existingPurchase) return;
+
+      const current = await transaction.userSubscription.findUnique({
+        where: { userId },
+      });
+
+      await transaction.billingPurchase.create({
+        data: {
+          userId,
+          plan: "chef",
+          checkoutSessionId: session.id,
+          paymentIntentId,
+          amount: session.amount_total ?? 0,
+          currency: session.currency ?? "eur",
+          paidAt,
+        },
+      });
+
+      await transaction.userSubscription.upsert({
+        where: { userId },
+        update: {
+          plan: "chef",
+          status: "active",
+          stripeCustomerId: customerId,
+          oneTimePlan: "chef",
+          oneTimeGrantedAt: current?.oneTimeGrantedAt ?? paidAt,
+        },
+        create: {
+          userId,
+          plan: "chef",
+          status: "active",
+          stripeCustomerId: customerId,
+          oneTimePlan: "chef",
+          oneTimeGrantedAt: paidAt,
+        },
+      });
+    });
+  } catch (error) {
+    // Stripe retries and concurrent deliveries are expected. A duplicate ledger
+    // key proves that another delivery already granted the same purchase.
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      logger.info(`Duplicate Chef purchase ignored: ${session.id}`);
+      return;
+    }
+
+    throw error;
+  }
+
+  logger.info(`Lifetime Chef access granted to user: ${userId}`);
+};
+
 const customerSubscriptionUpdated = async (
   subscriptionData: Stripe.Subscription,
 ) => {
@@ -203,13 +313,19 @@ const customerSubscriptionUpdated = async (
     return;
   }
 
-  const planName = plan?.name ?? userSubscription.plan;
+  const subscriptionPlan = plan?.name ?? userSubscription.subscriptionPlan;
+  const effective = resolveEffectiveBillingEntitlement({
+    subscriptionPlan,
+    subscriptionStatus: subscription.status,
+    oneTimePlan: userSubscription.oneTimePlan,
+  });
 
   await prisma.userSubscription.update({
     where: { id: userSubscription.id },
     data: {
-      plan: planName,
-      status: subscription.status,
+      ...effective,
+      subscriptionPlan,
+      subscriptionStatus: subscription.status,
       periodStart: new Date(
         subscription.items.data[0].current_period_start * 1000,
       ),
@@ -240,17 +356,25 @@ const customerSubscriptionDeleted = async (
     return;
   }
 
+  const effective = resolveEffectiveBillingEntitlement({
+    subscriptionPlan: userSubscription.subscriptionPlan,
+    subscriptionStatus: "canceled",
+    oneTimePlan: userSubscription.oneTimePlan,
+  });
+
   await prisma.userSubscription.update({
     where: { id: userSubscription.id },
     data: {
-      plan: "free",
-      status: "canceled",
+      ...effective,
+      stripeSubscriptionId: null,
+      subscriptionPlan: null,
+      subscriptionStatus: "canceled",
       cancelAtPeriodEnd: false,
       periodEnd: new Date(),
     },
   });
 
   logger.info(
-    `UserSubscription canceled and reverted to free: ${subscription.id}`,
+    `Recurring subscription canceled; effective plan is ${effective.plan}: ${subscription.id}`,
   );
 };

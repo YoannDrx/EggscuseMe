@@ -3,7 +3,9 @@ import {
   extractEggDateScanOutputFromText,
   getEggDateScanPrompt,
   isValidIsoDate,
+  ScanTimeoutError,
   selectScanProviders,
+  withScanTimeout,
 } from "@/features/scan/egg-date-scan";
 import { describe, expect, it } from "vitest";
 
@@ -106,5 +108,23 @@ describe("egg-date-scan", () => {
     expect(prompt).toContain("DCR");
     expect(prompt).toContain("best-before");
     expect(prompt).toContain("Ignore laying dates");
+  });
+
+  describe("withScanTimeout", () => {
+    it("returns a provider result before the deadline", async () => {
+      await expect(
+        withScanTimeout(Promise.resolve("2026-06-12"), 50, "test provider"),
+      ).resolves.toBe("2026-06-12");
+    });
+
+    it("rejects a provider that exceeds its deadline", async () => {
+      await expect(
+        withScanTimeout(
+          new Promise(() => undefined),
+          5,
+          "test provider",
+        ),
+      ).rejects.toBeInstanceOf(ScanTimeoutError);
+    });
   });
 });

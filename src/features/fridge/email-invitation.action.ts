@@ -7,7 +7,7 @@ import {
   canModifyFridge,
   getOrCreateFridge,
 } from "@/lib/fridge/get-fridge-access";
-import { sendEmail } from "@/lib/mail/send-email";
+import { sendEmailOrThrow } from "@/lib/mail/send-email";
 import { prisma } from "@/lib/prisma";
 import FridgeInvitationEmail from "@email/fridge-invitation.email";
 import { nanoid } from "nanoid";
@@ -99,16 +99,23 @@ export const createEmailInvitationAction = authAction
     });
 
     // Send the invitation email
-    await sendEmail({
-      to: normalizedEmail,
-      subject: `${user.name} vous invite a rejoindre son frigo sur EggscuseMe`,
-      html: FridgeInvitationEmail({
-        inviterName: user.name,
-        fridgeName: invitation.fridge.name,
-        inviteToken: invitation.token,
-        expiresAt,
-      }),
-    });
+    try {
+      await sendEmailOrThrow({
+        to: normalizedEmail,
+        subject: `${user.name} vous invite a rejoindre son frigo sur EggscuseMe`,
+        html: FridgeInvitationEmail({
+          inviterName: user.name,
+          fridgeName: invitation.fridge.name,
+          inviteToken: invitation.token,
+          expiresAt,
+        }),
+      });
+    } catch {
+      revalidatePath("/fridge/settings/sharing");
+      throw new ActionError(
+        "L'invitation a ete creee, mais l'email n'a pas pu etre envoye. Vous pourrez le renvoyer depuis les reglages du frigo.",
+      );
+    }
 
     revalidatePath("/fridge/settings/sharing");
     return { invitation };
@@ -364,26 +371,31 @@ export const resendEmailInvitationAction = authAction
       );
     }
 
-    // Extend expiration and update lastSentAt
     const newExpiresAt = addDays(new Date(), INVITATION_EXPIRY_DAYS);
+    try {
+      await sendEmailOrThrow({
+        to: invitation.email,
+        subject: `Rappel : ${user.name} vous invite a rejoindre son frigo sur EggscuseMe`,
+        html: FridgeInvitationEmail({
+          inviterName: user.name,
+          fridgeName: invitation.fridge.name,
+          inviteToken: invitation.token,
+          expiresAt: newExpiresAt,
+        }),
+      });
+    } catch {
+      throw new ActionError(
+        "L'email n'a pas pu etre renvoye. Verifiez la configuration puis reessayez.",
+      );
+    }
+
+    // Start the cooldown only after Resend confirms the delivery request.
     await prisma.fridgeEmailInvitation.update({
       where: { id: invitationId },
       data: {
         expiresAt: newExpiresAt,
         lastSentAt: new Date(),
       },
-    });
-
-    // Resend the email
-    await sendEmail({
-      to: invitation.email,
-      subject: `Rappel : ${user.name} vous invite a rejoindre son frigo sur EggscuseMe`,
-      html: FridgeInvitationEmail({
-        inviterName: user.name,
-        fridgeName: invitation.fridge.name,
-        inviteToken: invitation.token,
-        expiresAt: newExpiresAt,
-      }),
     });
 
     revalidatePath("/fridge/settings/sharing");

@@ -1,14 +1,10 @@
 "use client";
 
-import { NeoBadge, NeoSwitch } from "@/components/neo";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { PlanCard } from "./plan-card";
 
 export function Pricing() {
-  const [isYearly, setIsYearly] = useState(false);
   const t = useTranslations("landing.pricing");
 
   // Sur la landing page, on redirige vers signup avec le plan en paramètre
@@ -17,14 +13,8 @@ export function Pricing() {
     window.location.href = "/auth/signup";
   };
 
-  const handleSelectBrigade = () => {
-    const plan = isYearly ? "brigade-yearly" : "brigade";
-    window.location.href = `/auth/signup?plan=${plan}`;
-  };
-
   const handleSelectChef = () => {
-    const plan = isYearly ? "chef-yearly" : "chef";
-    window.location.href = `/auth/signup?plan=${plan}`;
+    window.location.href = "/auth/signup?plan=chef";
   };
 
   return (
@@ -39,51 +29,18 @@ export function Pricing() {
               {t("subtitle")}
             </p>
           </div>
-
-          <div className="bg-neo-card border-neo-border/30 mt-8 flex items-center space-x-4 rounded-full border-[length:var(--border-neo)] p-2 shadow-[var(--shadow-neo-sm)]">
-            <span
-              className={cn(
-                "rounded-full px-4 py-2 text-sm font-bold transition-all duration-200",
-                !isYearly
-                  ? "bg-neo-bg text-neo-text shadow-[var(--shadow-neo-sm)]"
-                  : "text-neo-text-muted",
-              )}
-            >
-              {t("monthly")}
-            </span>
-            <NeoSwitch checked={isYearly} onCheckedChange={setIsYearly} />
-            <div
-              className={cn(
-                "flex items-center rounded-full px-4 py-2 transition-all duration-200",
-                isYearly
-                  ? "bg-neo-bg text-neo-text shadow-[var(--shadow-neo-sm)]"
-                  : "text-neo-text-muted",
-              )}
-            >
-              <span className="text-sm font-bold">{t("yearly")}</span>
-              <NeoBadge variant="outline" className="ml-2">
-                {t("discount")}
-              </NeoBadge>
-            </div>
-          </div>
         </div>
 
-        {/* Grille 3 colonnes pour les 3 plans */}
-        <div className="mx-auto mt-16 grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="mx-auto mt-16 grid max-w-3xl gap-6 md:grid-cols-2 lg:gap-8">
           <PlanCard
             plan="solo"
             onSelect={handleSelectSolo}
             showYearly={false}
           />
           <PlanCard
-            plan="brigade"
-            onSelect={handleSelectBrigade}
-            showYearly={isYearly}
-          />
-          <PlanCard
             plan="chef"
             onSelect={handleSelectChef}
-            showYearly={isYearly}
+            showYearly={false}
           />
         </div>
 

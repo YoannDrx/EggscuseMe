@@ -3,7 +3,9 @@ import {
   extractEggDateScanOutputFromText,
   getEggDateScanPrompt,
   isValidIsoDate,
+  ScanTimeoutError,
   selectScanProviders,
+  withScanTimeout,
   type AiScanProvider,
   type EggDateScanOutput,
 } from "@/features/scan/egg-date-scan";
@@ -21,6 +23,8 @@ const DAILY_SCAN_LIMIT = 20;
 const SUPPORTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const DEFAULT_OPENAI_VISION_MODEL = "gpt-5-mini";
 const DEFAULT_GOOGLE_VISION_MODEL = "gemini-1.5-flash";
+const PROVIDER_TIMEOUT_MS = 8_000;
+const GLOBAL_SCAN_BUDGET_MS = 14_000;
 
 type ScanErrorCode =
   | "not_configured"
@@ -28,6 +32,7 @@ type ScanErrorCode =
   | "unsupported_type"
   | "file_too_large"
   | "rate_limit"
+  | "timeout"
   | "no_date"
   | "invalid_date"
   | "provider_failed";
@@ -172,24 +177,40 @@ export const POST = authRoute.handler(async (req, { ctx }) => {
 
   const base64Image = Buffer.from(await file.arrayBuffer()).toString("base64");
   let lastError: unknown;
+  let lastOutputError:
+    | Extract<ScanErrorCode, "no_date" | "invalid_date">
+    | undefined;
+  const deadline = Date.now() + GLOBAL_SCAN_BUDGET_MS;
 
   for (const provider of providers) {
+    const remainingBudget = deadline - Date.now();
+    if (remainingBudget <= 0) {
+      lastError = new ScanTimeoutError("Global scan budget", 0);
+      break;
+    }
+
     try {
       // Provider fallback must stay ordered: OpenAI first, Google only if needed.
       // eslint-disable-next-line no-await-in-loop
-      const result = await scanWithProvider(provider, {
-        base64Image,
-        mimeType: file.type,
-        todayIsoDate,
-      });
+      const result = await withScanTimeout(
+        scanWithProvider(provider, {
+          base64Image,
+          mimeType: file.type,
+          todayIsoDate,
+        }),
+        Math.min(PROVIDER_TIMEOUT_MS, remainingBudget),
+        `${provider} vision scan`,
+      );
       const date = result.date?.trim() ?? null;
 
       if (!date) {
-        return scanError("no_date", "No date found", 422);
+        lastOutputError = "no_date";
+        continue;
       }
 
       if (!isValidIsoDate(date)) {
-        return scanError("invalid_date", "Invalid date format", 422);
+        lastOutputError = "invalid_date";
+        continue;
       }
 
       return {
@@ -212,6 +233,18 @@ export const POST = authRoute.handler(async (req, { ctx }) => {
     providers,
     message: lastError instanceof Error ? lastError.message : String(lastError),
   });
+
+  if (lastOutputError === "invalid_date") {
+    return scanError("invalid_date", "Invalid date format", 422);
+  }
+
+  if (lastOutputError === "no_date") {
+    return scanError("no_date", "No date found", 422);
+  }
+
+  if (lastError instanceof ScanTimeoutError) {
+    return scanError("timeout", "Vision scan timed out", 504);
+  }
 
   return scanError("provider_failed", "Vision scan failed", 502);
 });

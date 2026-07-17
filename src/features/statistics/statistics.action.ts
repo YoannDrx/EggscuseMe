@@ -116,8 +116,10 @@ export const getStatisticsAction = authAction.action(
       avgFreshnessScore = Math.round(totalDaysRemaining / totalEggs);
     }
 
-    // Money saved estimate
-    const moneySaved = totalConsumed * 0.25;
+    // Transparent estimate of the value represented by logged consumptions.
+    // This is not presented as money saved: consuming an egg does not prove
+    // that it would otherwise have been wasted.
+    const trackedValueEstimate = totalConsumed * 0.25;
 
     return {
       stats: {
@@ -126,7 +128,7 @@ export const getStatisticsAction = authAction.action(
         totalConsumed,
         totalBoxes,
         activeBoxes,
-        moneySaved,
+        trackedValueEstimate,
         avgFreshnessScore,
 
         // Charts data

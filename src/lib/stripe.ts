@@ -15,6 +15,7 @@ const createStripeProxy = (): Stripe => {
 
 export const stripe: Stripe = env.STRIPE_SECRET_KEY
   ? new Stripe(env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-09-30.clover",
       typescript: true,
     })
   : createStripeProxy();

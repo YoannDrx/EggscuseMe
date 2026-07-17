@@ -7,4 +7,3 @@ export {
   type CookingType,
 } from "./timer";
 export { GuideView } from "./guide";
-export { StatsView, NumberCounter } from "./stats";

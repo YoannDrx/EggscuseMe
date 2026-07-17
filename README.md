@@ -126,15 +126,15 @@ pnpm test:e2e:ci  # Run e2e tests
 - Basic timer
 - Freshness recommendations
 
-### Brigade / Chef Plans
+### Chef lifetime purchase
 
-- Unlimited egg boxes
-- Full consumption history
-- Detailed statistics
-- Push notifications
-- Exclusive recipes
-- Data export
-- Multi-fridge and traceability features on Chef
+- One-time purchase with lifetime access
+- Unlimited egg boxes and full consumption history
+- Detailed statistics and push notifications
+- Exclusive recipes, exports, multi-fridge and traceability features
+
+The former Brigade subscription remains supported for historical accounts but
+is no longer offered to new customers.
 
 ## Contributing
 

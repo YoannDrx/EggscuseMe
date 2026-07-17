@@ -14,26 +14,11 @@ import { LoginCredentialsFormScheme } from "./signup.schema";
 
 /**
  * Parse le paramètre de plan depuis l'URL
- * Gère: brigade, brigade-yearly, chef, chef-yearly, premium (legacy), premium-yearly (legacy)
+ * Seul Chef est proposé aux nouveaux utilisateurs. Les anciens paramètres
+ * Brigade/Premium sont ignorés et redirigent vers l'offre gratuite.
  */
-const getPlanInfo = (
-  param: string | null,
-): { plan: string | null; isYearly: boolean } => {
-  if (!param) return { plan: null, isYearly: false };
-
-  const isYearly = param.endsWith("-yearly");
-  const basePlan = param.replace("-yearly", "");
-
-  // Normaliser les plans legacy (premium → brigade)
-  const normalizedPlan = basePlan === "premium" ? "brigade" : basePlan;
-
-  // Vérifier si c'est un plan payant valide
-  const isPaidPlan = normalizedPlan === "brigade" || normalizedPlan === "chef";
-
-  return {
-    plan: isPaidPlan ? normalizedPlan : null,
-    isYearly,
-  };
+const getPlanInfo = (param: string | null): { plan: "chef" | null } => {
+  return { plan: param === "chef" ? "chef" : null };
 };
 
 export const SignUpCredentialsForm = () => {
@@ -76,9 +61,9 @@ export const SignUpCredentialsForm = () => {
         // Rediriger vers Stripe checkout avec le plan sélectionné
         createCheckout({
           plan: planInfo.plan,
-          annual: planInfo.isYearly,
           successUrl: "/fridge/settings/billing?success=true",
           cancelUrl: "/fridge",
+          requestId: crypto.randomUUID(),
         });
       } else {
         // Redirection classique

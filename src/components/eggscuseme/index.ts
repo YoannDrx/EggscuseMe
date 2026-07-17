@@ -18,8 +18,6 @@ export {
   getCookingTime,
   type CookingType,
   GuideView,
-  StatsView,
-  NumberCounter,
 } from "./views";
 
 // Motion Components

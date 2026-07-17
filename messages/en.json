@@ -314,6 +314,11 @@
     "resume": "Resume",
     "reset": "Reset",
     "done": "Done!",
+    "eggReady": "Your eggs are ready.",
+    "removeFromWater": "Remove them from the water to stop cooking.",
+    "runningBanner": "Timer · {time}",
+    "pausedBanner": "Timer paused",
+    "openTimer": "Open timer — {status}",
     "cooking": "Cooking...",
     "cookingTime": "Cooking time",
     "minutes": "{count} min",
@@ -412,7 +417,7 @@
     },
     "pricing": {
       "title": "Choose your plan",
-      "subtitle": "Start for free, upgrade to Brigade or Chef when you're ready.",
+      "subtitle": "Start free, then unlock Chef once and keep it forever.",
       "monthly": "Monthly",
       "yearly": "Yearly",
       "discount": "-50%",
@@ -449,10 +454,10 @@
       },
       "chef": {
         "title": "Chef",
-        "price": "€14.99",
-        "period": "/month",
-        "description": "For pros and high volume",
-        "badge": "Pro",
+        "price": "€29.99",
+        "period": " one time",
+        "description": "Every premium feature, forever",
+        "badge": "Lifetime",
         "features": [
           "Multi-fridges",
           "PDF/CSV export",
@@ -514,7 +519,7 @@
       },
       "q6": {
         "question": "Is there a free plan?",
-        "answer": "Yes! The free plan lets you track up to 2 egg boxes with basic features. Premium unlocks unlimited boxes, detailed statistics, and notifications."
+        "answer": "Yes. The free plan tracks up to 2 egg boxes. A one-time Chef purchase unlocks unlimited boxes, detailed statistics, sharing, and notifications for life."
       }
     },
     "cta": {
@@ -759,7 +764,7 @@
       },
       "access": {
         "title": "Access to the Service",
-        "content": "The Service is freely accessible to any User with internet access. All costs related to accessing the Service, whether hardware, software, or internet access fees, are solely the responsibility of the user.\n\nSome features are reserved for Premium subscribers (Brigade or Chef plans)."
+        "content": "The Service is freely accessible to any User with internet access. All costs related to accessing the Service, whether hardware, software, or internet access fees, are solely the responsibility of the user.\n\nSome features are unlocked for life through the one-time Chef purchase. Historical Brigade subscriptions remain honored for affected accounts."
       },
       "personalData": {
         "title": "Personal Data",
@@ -1221,8 +1226,10 @@
       "currentStock": "Current stock",
       "consumed": "Consumed",
       "last90days": "Over the last 90 days",
-      "savings": "Savings",
-      "antiWasteEstimate": "Anti-waste estimate",
+      "trackedValue": "Estimated consumed value",
+      "trackedValueBasis": "Indicative basis: €0.25 per logged egg",
+      "trackedConsumptionSummary": "{count, plural, =0 {No logged egg consumption} =1 {1 logged egg consumed · €{value}} other {# logged eggs consumed · €{value}}}",
+      "trackedValueExplanation": "This value describes consumptions logged over 90 days. It is not proven savings and is not presented as measured food-waste impact.",
       "avgFreshness": "Average freshness",
       "beforeExpiry": "Before expiry on average",
       "dailyConsumption": "Daily consumption",
@@ -1377,6 +1384,8 @@
       "detected": "Date detected",
       "detectedTitle": "Date detected",
       "detectedDescription": "{date} via {provider}",
+      "sourceLabel": "Detected label: {label}",
+      "confidence": "Reading confidence: {value}%",
       "providerOpenai": "OpenAI",
       "providerGoogle": "Google",
       "useDate": "Use this date",
@@ -1392,6 +1401,7 @@
       "errorInvalidFileType": "Unsupported image format. Use JPEG, PNG, or WebP.",
       "errorNotConfigured": "AI scanning is not configured.",
       "errorProviderFailed": "AI scanning failed. Try again with a clearer photo.",
+      "errorTimeout": "The scan took too long. Try again or enter the date manually.",
       "errorNetwork": "Connection error. Check your internet connection.",
       "errorUnknown": "An unexpected error occurred. Please try again."
     }
