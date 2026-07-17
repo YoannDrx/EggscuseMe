@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { admin, emailOTP, lastLoginMethod } from "better-auth/plugins";
 
-import { sendEmail } from "@/lib/mail/send-email";
+import { sendEmailOrThrow } from "@/lib/mail/send-email";
 import { SiteConfig } from "@/site-config";
 import ChangeEmailEmail from "@email/change-email.email";
 import DeleteAccountEmail from "@email/delete-account.email";
@@ -141,7 +141,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     async sendResetPassword({ user, url }) {
-      await sendEmail({
+      await sendEmailOrThrow({
         to: user.email,
         subject: `Reinitialisation de votre mot de passe - ${SiteConfig.title}`,
         html: ResetPasswordEmail({ user, url }),
@@ -152,7 +152,7 @@ export const auth = betterAuth({
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async ({ newEmail, url }) => {
-        await sendEmail({
+        await sendEmailOrThrow({
           to: newEmail,
           subject: `Confirmez votre nouvelle adresse email - ${SiteConfig.title}`,
           html: ChangeEmailEmail({ newEmail, url }),
@@ -163,7 +163,7 @@ export const auth = betterAuth({
       enabled: true,
       sendDeleteAccountVerification: async ({ user, token }) => {
         const url = `${getServerUrl()}/auth/confirm-delete?token=${token}&callbackUrl=/auth/goodbye`;
-        await sendEmail({
+        await sendEmailOrThrow({
           to: user.email,
           subject: `Confirmation de suppression de compte - ${SiteConfig.title}`,
           html: DeleteAccountEmail({ user, url }),
@@ -173,7 +173,7 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
-      await sendEmail({
+      await sendEmailOrThrow({
         to: user.email,
         subject: `Bienvenue sur ${SiteConfig.title} ! Verifiez votre email`,
         html: EmailVerificationEmail({ user, url }),
@@ -186,7 +186,7 @@ export const auth = betterAuth({
       sendVerificationOTP: async ({ email, otp }) => {
         logger.debug("Sending OTP", { email, otp });
         const autoLoginUrl = `${getServerUrl()}/auth/signin/otp?email=${email}&otp=${otp}`;
-        await sendEmail({
+        await sendEmailOrThrow({
           to: email,
           subject: `${otp} - Votre code de connexion ${SiteConfig.title}`,
           html: OtpSigninEmail({ email, otp, autoLoginUrl }),

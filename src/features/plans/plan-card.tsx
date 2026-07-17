@@ -184,7 +184,7 @@ export function PlanCard({
           )}
 
           {/* Free trial pour les plans payants */}
-          {isPaid && (
+          {isBrigade && (
             <div className="bg-neo-accent/10 text-neo-accent mt-3 inline-flex items-center rounded-full px-3 py-1 text-sm font-bold">
               <Clock className="mr-1.5 size-3.5" />
               {copy.freeTrial}

@@ -14,6 +14,35 @@ export const EggDateScanOutputSchema = z.object({
 
 export type EggDateScanOutput = z.infer<typeof EggDateScanOutputSchema>;
 
+export class ScanTimeoutError extends Error {
+  constructor(label: string, timeoutMs: number) {
+    super(`${label} timed out after ${timeoutMs}ms`);
+    this.name = "ScanTimeoutError";
+  }
+}
+
+export async function withScanTimeout<T>(
+  operation: Promise<T>,
+  timeoutMs: number,
+  label: string,
+): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new ScanTimeoutError(label, timeoutMs)),
+          timeoutMs,
+        );
+      }),
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 export function isValidIsoDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
 

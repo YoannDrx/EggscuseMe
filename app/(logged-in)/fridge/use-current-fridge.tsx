@@ -31,6 +31,7 @@ type FridgeStoreState = {
   periodEnd: Date | null;
   cancelAtPeriodEnd: boolean;
   isTrialing: boolean;
+  hasRecurringSubscription: boolean;
 };
 
 export const useCurrentFridge = create<FridgeStoreState | null>(() => null);
@@ -52,6 +53,7 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
   const periodEnd = subscription?.periodEnd ?? null;
   const cancelAtPeriodEnd = subscription?.cancelAtPeriodEnd ?? false;
   const isTrialing = subscriptionStatus === "trialing";
+  const hasRecurringSubscription = Boolean(subscription?.stripeSubscriptionId);
   const hasUsableSubscription =
     subscriptionStatus === "active" ||
     subscriptionStatus === "trialing" ||
@@ -78,6 +80,7 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
       periodEnd,
       cancelAtPeriodEnd,
       isTrialing,
+      hasRecurringSubscription,
     });
   }
 
@@ -96,6 +99,7 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
       periodEnd,
       cancelAtPeriodEnd,
       isTrialing,
+      hasRecurringSubscription,
     });
   }, [
     fridge,
@@ -106,6 +110,7 @@ export function InjectCurrentFridgeStore({ fridge, children }: InjectProps) {
     periodEnd,
     cancelAtPeriodEnd,
     isTrialing,
+    hasRecurringSubscription,
   ]);
 
   return <>{children}</>;

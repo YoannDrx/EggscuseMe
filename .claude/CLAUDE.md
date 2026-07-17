@@ -4,17 +4,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-## grepai - OBLIGATOIRE
-
-**Tu DOIS utiliser les commandes CLI grepai pour TOUTE recherche de code.**
-
-- ❌ INTERDIT : Grep, Glob, grep, find, rg
-- ✅ OBLIGATOIRE : `grepai search "query"` via Bash
-
-Voir `~/.claude/CLAUDE.md` pour les instructions complètes.
-
----
-
 ## About the project EggscuseMe
 
 **EggscuseMe** is a web application that helps users manage the freshness of their eggs, avoid food waste, and cook eggs optimally based on their laying date.

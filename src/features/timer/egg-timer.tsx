@@ -24,6 +24,13 @@ import {
   type YolkPreference,
 } from "./cooking-times";
 import { CircularProgress } from "./circular-progress";
+import {
+  getPersistentTimerRemaining,
+  readPersistentTimer,
+  TIMER_UPDATED_EVENT,
+  type PersistentTimerSnapshot,
+  writePersistentTimer,
+} from "./persistent-timer";
 
 const SIZES: EggSize[] = ["S", "M", "L", "XL"];
 const TEMPERATURES: EggTemperature[] = ["fridge", "room"];
@@ -108,67 +115,153 @@ export function EggTimer() {
   const [totalTime, setTotalTime] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [targetAt, setTargetAt] = useState<number | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentColor = yolkColors[yolkPreference];
 
-  // Calculate time when settings change (only if timer hasn't started)
+  const applySnapshot = useCallback((snapshot: PersistentTimerSnapshot) => {
+    const remaining = getPersistentTimerRemaining(snapshot);
+    const completed =
+      snapshot.status === "completed" ||
+      (snapshot.status === "running" && remaining === 0);
+
+    setSize(snapshot.size);
+    setTemperature(snapshot.temperature);
+    setYolkPreference(snapshot.yolkPreference);
+    setTotalTime(snapshot.totalSeconds);
+    setTimeRemaining(remaining);
+    setTargetAt(completed ? null : snapshot.targetAt);
+    setIsRunning(snapshot.status === "running" && remaining > 0);
+    setIsDone(completed);
+    setHasStarted(snapshot.status !== "idle");
+  }, []);
+
   useEffect(() => {
-    if (!hasStarted) {
+    const storedTimer = readPersistentTimer();
+    if (storedTimer) applySnapshot(storedTimer);
+    setIsHydrated(true);
+
+    const handleTimerUpdate = (event: Event) => {
+      const snapshot = (event as CustomEvent<PersistentTimerSnapshot>).detail;
+      applySnapshot(snapshot);
+    };
+    window.addEventListener(TIMER_UPDATED_EVENT, handleTimerUpdate);
+    return () =>
+      window.removeEventListener(TIMER_UPDATED_EVENT, handleTimerUpdate);
+  }, [applySnapshot]);
+
+  // Calculate time when settings change (only if timer hasn't started).
+  useEffect(() => {
+    if (isHydrated && !hasStarted) {
       const time = calculateCookingTime(size, temperature, yolkPreference);
       setTimeRemaining(time);
       setTotalTime(time);
       setIsDone(false);
     }
-  }, [size, temperature, yolkPreference, hasStarted]);
+  }, [size, temperature, yolkPreference, hasStarted, isHydrated]);
 
-  // Timer logic
+  // Derive remaining time from an absolute timestamp so background tab
+  // suspension and route changes cannot slow the timer down.
   useEffect(() => {
-    if (isRunning && timeRemaining > 0) {
-      intervalRef.current = setInterval(() => {
-        setTimeRemaining((prev) => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            setIsDone(true);
-            playTimerDoneSound();
-            sendMessageToServiceWorker({
-              type: "TIMER_COMPLETE",
-              message: t("done"),
-            });
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
+    if (!isRunning || targetAt === null) return;
+
+    const tick = () => {
+      const remaining = Math.max(0, Math.ceil((targetAt - Date.now()) / 1000));
+      setTimeRemaining(remaining);
+
+      if (remaining > 0) return;
+
+      setIsRunning(false);
+      setIsDone(true);
+      setTargetAt(null);
+      const completed: PersistentTimerSnapshot = {
+        version: 1,
+        status: "completed",
+        targetAt: null,
+        remainingSeconds: 0,
+        totalSeconds: totalTime,
+        size,
+        temperature,
+        yolkPreference,
+      };
+      writePersistentTimer(completed);
+      playTimerDoneSound();
+      sendMessageToServiceWorker({
+        type: "TIMER_COMPLETE",
+        message: t("done"),
+      });
+    };
+
+    tick();
+    intervalRef.current = setInterval(tick, 500);
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, timeRemaining, t]);
+  }, [isRunning, size, t, targetAt, temperature, totalTime, yolkPreference]);
 
   const handleStart = useCallback(() => {
     if (timeRemaining > 0) {
+      const nextTargetAt = Date.now() + timeRemaining * 1000;
       setIsRunning(true);
       setHasStarted(true);
       setIsDone(false);
+      setTargetAt(nextTargetAt);
+      writePersistentTimer({
+        version: 1,
+        status: "running",
+        targetAt: nextTargetAt,
+        remainingSeconds: timeRemaining,
+        totalSeconds: totalTime,
+        size,
+        temperature,
+        yolkPreference,
+      });
     }
-  }, [timeRemaining]);
+  }, [size, temperature, timeRemaining, totalTime, yolkPreference]);
 
   const handlePause = useCallback(() => {
+    const remaining = targetAt
+      ? Math.max(0, Math.ceil((targetAt - Date.now()) / 1000))
+      : timeRemaining;
     setIsRunning(false);
-  }, []);
+    setTargetAt(null);
+    setTimeRemaining(remaining);
+    writePersistentTimer({
+      version: 1,
+      status: "paused",
+      targetAt: null,
+      remainingSeconds: remaining,
+      totalSeconds: totalTime,
+      size,
+      temperature,
+      yolkPreference,
+    });
+  }, [size, targetAt, temperature, timeRemaining, totalTime, yolkPreference]);
 
   const handleReset = useCallback(() => {
     setIsRunning(false);
     setHasStarted(false);
+    setTargetAt(null);
     const time = calculateCookingTime(size, temperature, yolkPreference);
     setTimeRemaining(time);
     setTotalTime(time);
     setIsDone(false);
+    writePersistentTimer({
+      version: 1,
+      status: "idle",
+      targetAt: null,
+      remainingSeconds: time,
+      totalSeconds: time,
+      size,
+      temperature,
+      yolkPreference,
+    });
   }, [size, temperature, yolkPreference]);
 
   const progress = totalTime > 0 ? (totalTime - timeRemaining) / totalTime : 0;

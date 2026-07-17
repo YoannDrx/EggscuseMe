@@ -131,6 +131,7 @@ export function AddEggBoxForm({ eggBox }: AddEggBoxFormProps) {
           not_configured: scanT("errorNotConfigured"),
           provider_failed: scanT("errorProviderFailed"),
           rate_limit: scanT("errorRateLimit"),
+          timeout: scanT("errorTimeout"),
           unsupported_type: scanT("errorInvalidFileType"),
         };
 
@@ -302,6 +303,19 @@ export function AddEggBoxForm({ eggBox }: AddEggBoxFormProps) {
                       : scanT("providerOpenai"),
                 })}
               </p>
+              {pendingScan.sourceLabel && (
+                <p className="text-neo-text-muted text-xs">
+                  {scanT("sourceLabel", { label: pendingScan.sourceLabel })}
+                </p>
+              )}
+              {pendingScan.confidence !== null &&
+                pendingScan.confidence !== undefined && (
+                  <p className="text-neo-text-muted text-xs">
+                    {scanT("confidence", {
+                      value: Math.round(pendingScan.confidence * 100),
+                    })}
+                  </p>
+                )}
               {pendingScan.remainingScans !== undefined && (
                 <p className="text-neo-text-muted text-xs">
                   {scanT("remaining", { count: pendingScan.remainingScans })}

@@ -90,8 +90,8 @@ export const sendEmail = async (params: SendEmailParams) => {
 
   const result = await mailAdapter.send({
     ...params,
-    from:
-      params.from ?? env.EMAIL_FROM ?? "EggscuseMe <noreply@do-not-reply.app>",
+    from: params.from ?? env.EMAIL_FROM,
+    replyTo: params.replyTo ?? env.NEXT_PUBLIC_EMAIL_CONTACT,
     html,
   });
 
@@ -101,3 +101,13 @@ export const sendEmail = async (params: SendEmailParams) => {
 
   return result;
 };
+
+export async function sendEmailOrThrow(params: SendEmailParams) {
+  const result = await sendEmail(params);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  return result.data;
+}

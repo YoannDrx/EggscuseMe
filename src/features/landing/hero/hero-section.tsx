@@ -7,7 +7,6 @@ import { Egg, Sparkles } from "lucide-react";
 import { PhoneMockup } from "./phone-mockup";
 import { PhoneAppPreview } from "./phone-app-preview";
 import { FloatingBadge } from "./floating-badge";
-import { SocialProof } from "./social-proof";
 import { useTranslations } from "next-intl";
 import { NeoButton } from "@/components/neo";
 
@@ -33,7 +32,7 @@ export function HeroSection({ className }: HeroSectionProps) {
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="border-neo-accent/30 bg-neo-accent/10 mb-6 inline-flex items-center gap-2 rounded-full border-[length:var(--border-neo)] px-4 py-1.5"
@@ -46,7 +45,7 @@ export function HeroSection({ className }: HeroSectionProps) {
 
             {/* Title */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
               className="font-heading text-neo-text text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
@@ -85,7 +84,7 @@ export function HeroSection({ className }: HeroSectionProps) {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
               className="text-neo-text-muted mt-6 max-w-xl text-lg"
@@ -95,7 +94,7 @@ export function HeroSection({ className }: HeroSectionProps) {
 
             {/* CTA Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
               className="mt-8 flex flex-wrap gap-4"
@@ -109,16 +108,6 @@ export function HeroSection({ className }: HeroSectionProps) {
               <NeoButton asChild variant="secondary" size="lg">
                 <Link href="#features">{t("hero.ctaSecondary")}</Link>
               </NeoButton>
-            </motion.div>
-
-            {/* Social Proof */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="mt-10"
-            >
-              <SocialProof />
             </motion.div>
           </div>
 
@@ -144,35 +133,6 @@ export function HeroSection({ className }: HeroSectionProps) {
             </PhoneMockup>
           </div>
         </div>
-
-        {/* Bottom Stats - Optional */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="border-neo-border/30 mt-20 grid grid-cols-2 gap-8 border-t-[length:var(--border-neo)] pt-12 sm:grid-cols-4"
-        >
-          {[
-            { value: "10K+", label: t("stats.users") },
-            { value: "2.4M", label: t("stats.eggsSaved") },
-            { value: "4.9/5", label: t("stats.appStoreRating") },
-            { value: "0€", label: t("stats.freeToStart") },
-          ].map((stat, index) => (
-            <div key={stat.label} className="text-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.7 + index * 0.1, type: "spring" }}
-                className="text-neo-accent text-3xl font-bold"
-              >
-                {stat.value}
-              </motion.div>
-              <div className="text-neo-text-muted mt-1 text-sm">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );

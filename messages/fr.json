@@ -314,6 +314,11 @@
     "resume": "Reprendre",
     "reset": "Réinitialiser",
     "done": "C'est prêt !",
+    "eggReady": "Vos œufs sont prêts.",
+    "removeFromWater": "Retirez-les de l'eau pour arrêter la cuisson.",
+    "runningBanner": "Minuteur · {time}",
+    "pausedBanner": "Minuteur en pause",
+    "openTimer": "Ouvrir le minuteur — {status}",
     "cooking": "En cuisson...",
     "cookingTime": "Temps de cuisson",
     "minutes": "{count} min",
@@ -412,7 +417,7 @@
     },
     "pricing": {
       "title": "Équipez votre cuisine",
-      "subtitle": "Du cuisinier du dimanche au chef de brigade.",
+      "subtitle": "Commencez gratuitement, puis passez Chef une seule fois.",
       "monthly": "Mensuel",
       "yearly": "Annuel",
       "discount": "-50%",
@@ -449,10 +454,10 @@
       },
       "chef": {
         "title": "Chef Exécutif",
-        "price": "14,99€",
-        "period": "/mois",
-        "description": "Pour les pros et grandes tablées",
-        "badge": "Pro",
+        "price": "29,99€",
+        "period": " une fois",
+        "description": "Toutes les fonctions premium, pour toujours",
+        "badge": "À vie",
         "features": [
           "Multi-frigos",
           "Export Inventaire",
@@ -514,7 +519,7 @@
       },
       "q6": {
         "question": "Y a-t-il un coût ?",
-        "answer": "Les fonctionnalités essentielles (suivi, minuteur, guide) sont gratuites pour toujours. Les fonctions avancées (illimité, partage, export) sont sur abonnement."
+        "answer": "Les fonctionnalités essentielles sont gratuites pour toujours. L'achat unique Chef débloque à vie l'illimité, le partage et les exports."
       }
     },
     "cta": {
@@ -759,7 +764,7 @@
       },
       "access": {
         "title": "Accès au service",
-        "content": "Le Service est accessible gratuitement à tout Utilisateur disposant d'un accès à internet. Tous les coûts afférents à l'accès au Service, que ce soit les frais matériels, logiciels ou d'accès à internet sont exclusivement à la charge de l'utilisateur.\n\nCertaines fonctionnalités sont réservées aux abonnés Premium (Offres Brigade ou Chef)."
+        "content": "Le Service est accessible gratuitement à tout Utilisateur disposant d'un accès à internet. Tous les coûts afférents à l'accès au Service, que ce soit les frais matériels, logiciels ou d'accès à internet sont exclusivement à la charge de l'utilisateur.\n\nCertaines fonctionnalités sont déverrouillées à vie par l'achat unique Chef. Les anciens abonnements Brigade restent honorés pour les comptes concernés."
       },
       "personalData": {
         "title": "Données personnelles",
@@ -1221,8 +1226,10 @@
       "currentStock": "Stock actuel",
       "consumed": "Consommés",
       "last90days": "Sur les 90 derniers jours",
-      "savings": "Économies",
-      "antiWasteEstimate": "Estimation anti-gaspi",
+      "trackedValue": "Valeur consommée estimée",
+      "trackedValueBasis": "Base indicative : 0,25 € par œuf consigné",
+      "trackedConsumptionSummary": "{count, plural, =0 {Aucun œuf consommé consigné} =1 {1 œuf consommé consigné · {value} €} other {# œufs consommés consignés · {value} €}}",
+      "trackedValueExplanation": "Cette valeur décrit les consommations enregistrées sur 90 jours. Elle ne constitue pas une économie prouvée et n'est pas présentée comme un impact anti-gaspillage mesuré.",
       "avgFreshness": "Fraîcheur moyenne",
       "beforeExpiry": "Avant expiration en moyenne",
       "dailyConsumption": "Consommation quotidienne",
@@ -1377,6 +1384,8 @@
       "detected": "Date détectée",
       "detectedTitle": "Date détectée",
       "detectedDescription": "{date} via {provider}",
+      "sourceLabel": "Libellé détecté : {label}",
+      "confidence": "Confiance de lecture : {value} %",
       "providerOpenai": "OpenAI",
       "providerGoogle": "Google",
       "useDate": "Utiliser cette date",
@@ -1392,6 +1401,7 @@
       "errorInvalidFileType": "Format d'image non supporté. Utilisez JPEG, PNG ou WebP.",
       "errorNotConfigured": "Le scan IA n'est pas configuré.",
       "errorProviderFailed": "Le scan IA a échoué. Réessayez avec une photo plus nette.",
+      "errorTimeout": "Le scan a pris trop de temps. Vous pouvez réessayer ou saisir la date manuellement.",
       "errorNetwork": "Erreur de connexion. Vérifiez votre connexion internet.",
       "errorUnknown": "Une erreur inattendue s'est produite. Réessayez."
     }

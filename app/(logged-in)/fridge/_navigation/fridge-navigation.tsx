@@ -1,4 +1,5 @@
 import { BottomNavBar } from "@/components/eggscuseme/navigation/bottom-nav-bar";
+import { PersistentTimerBanner } from "@/features/timer/persistent-timer-banner";
 import {
   NeoSidebarProvider,
   NeoSidebarInset,
@@ -52,6 +53,7 @@ export function FridgeNavigation({ children, role }: FridgeNavigationProps) {
         </div>
 
         {/* Mobile Bottom Navigation */}
+        <PersistentTimerBanner />
         <BottomNavBar isOwner={isOwner} />
       </NeoSidebarInset>
     </NeoSidebarProvider>

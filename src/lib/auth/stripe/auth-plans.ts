@@ -50,6 +50,7 @@ type HookCtx = {
 };
 
 export type AppAuthPlan = {
+  billingKind?: "free" | "subscription" | "one_time";
   priceId?: string | undefined;
   lookupKey?: string | undefined;
   annualDiscountPriceId?: string | undefined;
@@ -92,6 +93,7 @@ export const AUTH_PLANS: AppAuthPlan[] = [
   // Plan Solo (gratuit)
   {
     name: "solo",
+    billingKind: "free",
     description: "Pour cuisiner tes œufs rien que pour toi",
     limits: DEFAULT_LIMIT,
     price: 0,
@@ -101,6 +103,8 @@ export const AUTH_PLANS: AppAuthPlan[] = [
   // Plan Brigade (ex-Premium)
   {
     name: "brigade",
+    billingKind: "subscription",
+    isHidden: true,
     isPopular: true,
     description: "Pour cuisiner à plusieurs, en équipe",
     priceId:
@@ -142,9 +146,9 @@ export const AUTH_PLANS: AppAuthPlan[] = [
   // Plan Chef (Pro)
   {
     name: "chef",
-    description: "Pour les pros et gros volumes",
+    billingKind: "one_time",
+    description: "Toutes les fonctions premium, pour toujours",
     priceId: process.env.STRIPE_CHEF_PLAN_ID ?? "",
-    annualDiscountPriceId: process.env.STRIPE_CHEF_YEARLY_PLAN_ID ?? "",
     limits: {
       eggBoxes: SiteConfig.plans.chef.maxEggBoxes,
       notifications: 1,
@@ -157,20 +161,7 @@ export const AUTH_PLANS: AppAuthPlan[] = [
       exclusiveRecipes: 1,
       prioritySupport: 1,
     },
-    freeTrial: {
-      days: 7,
-      onTrialStart: async (subscription) => {
-        logger.debug(`Essai Chef démarré pour ${subscription.userId}`);
-      },
-      onTrialExpired: async (subscription) => {
-        logger.debug(`Essai Chef expiré pour ${subscription.userId}`);
-      },
-      onTrialEnd: async ({ subscription }) => {
-        logger.debug(`Essai Chef terminé pour ${subscription.userId}`);
-      },
-    },
-    price: 14.99,
-    yearlyPrice: 99.99,
+    price: 29.99,
     currency: "EUR",
   },
 ];

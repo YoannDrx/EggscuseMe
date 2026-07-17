@@ -137,9 +137,30 @@ model UserSubscription {
   periodStart          DateTime?
   periodEnd            DateTime?
   cancelAtPeriodEnd    Boolean   @default(false)
+  subscriptionPlan     String?
+  subscriptionStatus   String?
+  oneTimePlan          String?
+  oneTimeGrantedAt     DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("user_subscription")
+}
+
+model BillingPurchase {
+  id                String   @id @default(nanoid(11))
+  userId            String
+  plan              String
+  checkoutSessionId String   @unique
+  paymentIntentId   String   @unique
+  amount            Int
+  currency          String
+  paidAt            DateTime
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, paidAt])
+  @@map("billing_purchase")
 }
