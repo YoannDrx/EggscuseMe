@@ -22,7 +22,7 @@ export const contactSupportAction = action
 
     try {
       await sendEmailOrThrow({
-        to: env.NEXT_PUBLIC_EMAIL_CONTACT ?? "contact@eggscuseme.app",
+        to: env.NEXT_PUBLIC_EMAIL_CONTACT,
         subject: `Support needed from ${email} - ${subject}`,
         text: message,
         html: `<p>${escapedMessage}</p>`,

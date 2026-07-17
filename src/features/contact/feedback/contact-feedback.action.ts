@@ -26,7 +26,7 @@ export const feedbackAction = action
 
     try {
       await sendEmailOrThrow({
-        to: env.NEXT_PUBLIC_EMAIL_CONTACT ?? "contact@eggscuseme.app",
+        to: env.NEXT_PUBLIC_EMAIL_CONTACT,
         subject: `New feedback from ${email}`,
         text: `Review: ${feedback.review}\n\nMessage: ${feedback.message}`,
         replyTo: email,
