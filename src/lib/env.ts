@@ -24,7 +24,7 @@ export const env = createEnv({
     EMAIL_FROM: z
       .string()
       .optional()
-      .default("EggscuseMe <contact@do-not-reply.app>"),
+      .default("EggscuseMe <eggscuseme@yodev.fr>"),
     STRIPE_SECRET_KEY: z.string().optional(),
     NODE_ENV: z.enum(["development", "production", "test"]),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),

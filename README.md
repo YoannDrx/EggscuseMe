@@ -98,7 +98,7 @@ GOOGLE_VISION_MODEL="gemini-1.5-flash"
 
 # Email
 RESEND_API_KEY="your-resend-key"
-EMAIL_FROM="EggscuseMe <contact@do-not-reply.app>"
+EMAIL_FROM="EggscuseMe <eggscuseme@yodev.fr>"
 NEXT_PUBLIC_EMAIL_CONTACT="hello@eggscuseme.app"
 BLOB_READ_WRITE_TOKEN="vercel-blob-token"
 
